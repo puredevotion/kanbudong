@@ -119,6 +119,38 @@ describe('menu-animal organ set: ⺼/月 reverse-error guard (DESIGN.md §7.1)',
       expect(decomposed.has(hanzi), `${hanzi} is missing its CharacterDecomposition`).toBe(true);
     }
   });
+
+  /**
+   * Re-verification pass against Make Me a Hanzi's `dictionary.txt` (same
+   * gitignored scratch copy as STAND_SEMANTIC/EARTH_SEMANTIC): none of the
+   * remaining seven semantic-only organ characters clear the GAN_PHONETIC/
+   * ZHAN_PHONETIC/CHENG_PHONETIC exact-match bar (target reading == phonetic
+   * component's own reading, same syllable and tone). Per-character reason:
+   *   肠 cháng / phonetic 昜 yáng — different syllable entirely.
+   *   肚 dǔ / phonetic 土 tǔ — same rime and tone, different initial (t/d).
+   *   腰 yāo / phonetic 要 — 要's primary reading is yào, tone mismatch; an
+   *     archaic yāo reading of 要 exists in pinyin-data but is not the
+   *     character's common reading, so it fails the same bar this project
+   *     already rejects 站/占-style near-misses on (DESIGN.md §3.3.3(6)).
+   *   脑 nǎo — dictionary.txt records no single phonetic component at all.
+   *   肺 fèi / phonetic 巿 fú — different rime and tone.
+   *   肾 shèn — no phonetic component in the simplified form; the traditional
+   *     腎's phonetic 臤 is qiān, unrelated to shèn.
+   *   胗 zhēn / phonetic 㐱 zhěn — same syllable, different tone.
+   * A wrong or near-miss phonetic hint is worse than none (DESIGN.md
+   * §3.3.3(6)), so all seven stay semantic-only.
+   */
+  it('does not claim a phonetic component for any near-miss organ character', () => {
+    const NEAR_MISS_NO_PHONETIC = new Set(['肠', '肚', '腰', '脑', '肺', '肾', '胗']);
+    for (const d of organDecompositions) {
+      if (NEAR_MISS_NO_PHONETIC.has(d.hanzi)) {
+        expect(
+          d.components.some((c) => c.role === 'phonetic'),
+          `${d.hanzi} should not carry a phonetic component`,
+        ).toBe(false);
+      }
+    }
+  });
 });
 
 describe('Phase 2 backfill: 站/城/茶/快递 decomposition claims (market/transit/street strands)', () => {
