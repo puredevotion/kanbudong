@@ -43,7 +43,10 @@ export default defineConfig({
         // capable rather than merely installable. `.wasm` covers
         // fsrs-browser's optimizer - without it, the personal-FSRS-fit path
         // would silently stop working the moment the app goes offline.
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2,wasm}'],
+        // `.json` covers scripts/build-strokes.mjs's generated stroke data -
+        // without it, StrokeOrderPanel would need a live network round trip
+        // the first time a player opens it offline.
+        globPatterns: ['**/*.{js,css,html,png,svg,woff2,wasm,json}'],
         navigateFallback: 'index.html',
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },

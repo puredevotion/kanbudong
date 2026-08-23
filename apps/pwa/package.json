@@ -18,6 +18,7 @@
     "@kanbudong/engine": "workspace:*",
     "@kanbudong/net": "workspace:*",
     "fsrs-browser": "^6.6.0",
+    "hanzi-writer": "^3.7.3",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.4",
     "react": "^19.2.8",

@@ -11,6 +11,7 @@ import {
   type SelfExplanationCue,
   type Transparency,
 } from '@kanbudong/engine';
+import HanziWriter, { type CharacterJson } from 'hanzi-writer';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { withGlyphs } from './glyphs.jsx';
 
@@ -177,6 +178,111 @@ export function DecompositionPanel({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+const STROKE_DATA_URL = '/strokes/data.json';
+let strokeDataPromise: Promise<Readonly<Record<string, CharacterJson>>> | null = null;
+
+/**
+ * Fetches scripts/build-strokes.mjs's build-time-generated, per-bank-
+ * character subset of Make Me a Hanzi's stroke data (docs/LICENSING.md's
+ * Arphic gate is what unblocked this) once per page load and caches the
+ * result module-wide, so mounting several {@link StrokeOrderPanel}s in one
+ * session (solo review after solo review) never re-fetches. Resolves to `{}`
+ * on any failure - missing data is the same "render nothing" case as a
+ * character Make Me a Hanzi never covered.
+ */
+function loadStrokeData(): Promise<Readonly<Record<string, CharacterJson>>> {
+  strokeDataPromise ??= fetch(STROKE_DATA_URL)
+    .then((res) => (res.ok ? (res.json() as Promise<Record<string, CharacterJson>>) : {}))
+    .catch(() => ({}));
+  return strokeDataPromise;
+}
+
+/**
+ * One character's animated stroke order, mounted only once the panel above
+ * is actually revealed - `HanziWriter.create` is handed the bundled
+ * `CharacterJson` directly via `charDataLoader` rather than letting the
+ * library fetch its own default (CDN-hosted, and this app must work
+ * offline). Loops rather than plays once, since this sits inside an
+ * already-tap-gated panel a player lingers on by choice.
+ */
+function StrokeOrderGlyph({
+  character,
+  data,
+}: {
+  character: string;
+  data: CharacterJson;
+}): ReactNode {
+  const targetRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (targetRef.current === null) return;
+    const writer = HanziWriter.create(targetRef.current, character, {
+      width: 96,
+      height: 96,
+      padding: 6,
+      showOutline: true,
+      charDataLoader: (_char, onLoad) => onLoad(data),
+    });
+    void writer.loopCharacterAnimation();
+  }, [character, data]);
+
+  return <div ref={targetRef} className='rounded-xl border border-border bg-surface' />;
+}
+
+/**
+ * DESIGN.md §3.3.1 (Hou & Jiang 2022): stroke-order animation shown during
+ * timed recognition decreases accuracy - the same resolution
+ * `DecompositionPanel`/`SelfExplanationPrompt` already use for that finding
+ * applies here identically, so this never renders anywhere but inside the
+ * already-tap-gated breakdown. One more explicit tap (matching
+ * `SiblingsPanel`'s convention) reveals every distinct character in `hanzi`,
+ * in the order it appears - a multi-character word gets one glyph per
+ * character rather than a picker, mirroring how `DecompositionPanel`'s word
+ * tiles already lay out per-character.
+ *
+ * Renders nothing - not even the toggle - if the generated dataset covers
+ * none of `hanzi`'s characters, the same graceful-absence convention every
+ * other panel here follows.
+ */
+export function StrokeOrderPanel({ hanzi }: { hanzi: string | undefined }): ReactNode {
+  const [coverage, setCoverage] = useState<Readonly<Record<string, CharacterJson>> | null>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void loadStrokeData().then((data) => {
+      if (!cancelled) setCoverage(data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (hanzi === undefined || coverage === null) return null;
+  const chars = [...new Set(hanzi)].filter((c) => coverage[c] !== undefined);
+  if (chars.length === 0) return null;
+
+  if (!shown) {
+    return (
+      <button
+        type='button'
+        onClick={() => setShown(true)}
+        className='w-full rounded-xl border border-border px-3 py-2 text-[0.65rem] uppercase tracking-wide text-muted'
+      >
+        See how it&apos;s written
+      </button>
+    );
+  }
+
+  return (
+    <div className='anim-fade-in flex gap-2'>
+      {chars.map((c) => (
+        <StrokeOrderGlyph key={c} character={c} data={coverage[c] as CharacterJson} />
+      ))}
     </div>
   );
 }

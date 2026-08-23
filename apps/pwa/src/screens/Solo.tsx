@@ -33,6 +33,7 @@ import {
   LociMnemonicPrompt,
   SelfExplanationPrompt,
   SiblingsPanel,
+  StrokeOrderPanel,
   useRevealDwell,
   useStage1HanziAlone,
 } from '../ui/reveal.jsx';
@@ -306,6 +307,8 @@ export function Solo(): ReactNode {
                       transparency={current.face?.transparency}
                       structure={current.face?.structure}
                     />
+
+                    <StrokeOrderPanel hanzi={current.face?.hanzi} />
 
                     {showSelfExplain && showLoci && (
                       <div className='flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted'>

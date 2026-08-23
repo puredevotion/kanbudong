@@ -92,4 +92,43 @@ describe('Solo', () => {
 
     expect(getByText('Session complete')).toBeTruthy();
   });
+
+  /**
+   * StrokeOrderPanel (apps/pwa/src/ui/reveal.tsx) is wired in right after
+   * DecompositionPanel inside the tap-gated breakdown - this drives all the
+   * way to that tap so a regression in its coverage fetch or hanzi-writer
+   * mount (jsdom has no layout engine, but hanzi-writer's SVG renderer must
+   * not throw constructing one) would actually be exercised, not just the
+   * panel's own no-op "not shown yet" branch every other reveal test stops
+   * before reaching.
+   */
+  it('does not crash opening the breakdown, where StrokeOrderPanel now mounts', async () => {
+    vi.useFakeTimers();
+    const identity = createIdentity('Ada');
+    const lastItem = SEED_PACK.questions.at(-1);
+    if (lastItem === undefined) throw new Error('SEED_PACK has no questions');
+    seedSatisfiedMemory(identity.id, Date.now(), lastItem.id);
+    useApp.setState({ identity });
+
+    const { getByText, queryByText, getAllByRole } = render(<Solo />);
+    const optionButtons = getAllByRole('button').filter(
+      (button) => button.textContent !== 'Stop for now',
+    );
+    const firstOption = optionButtons[0];
+    if (firstOption === undefined) throw new Error('no answer options rendered');
+    fireEvent.click(firstOption);
+
+    await act(async () => {
+      vi.advanceTimersByTime(2_000);
+    });
+
+    fireEvent.click(getByText('Show the breakdown'));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(queryByText('Show the breakdown')).toBeNull();
+    expect(getByText('Next')).toBeTruthy();
+  });
 });

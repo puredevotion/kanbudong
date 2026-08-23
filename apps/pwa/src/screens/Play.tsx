@@ -53,6 +53,7 @@ import {
   LociMnemonicPrompt,
   SelfExplanationPrompt,
   SiblingsPanel,
+  StrokeOrderPanel,
   useRevealDwell,
   useStage1HanziAlone,
 } from '../ui/reveal.jsx';
@@ -530,6 +531,8 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                     transparency={face?.transparency}
                     structure={face?.structure}
                   />
+
+                  <StrokeOrderPanel hanzi={face?.hanzi} />
 
                   {showSelfExplain && showLoci && (
                     <div className='flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted'>
