@@ -11,6 +11,7 @@ import {
   hasSelfExplanationPrompt,
   isActingPlayer,
   isBanned,
+  lociTiles,
   questionById,
   SEED_PACK,
   scoreboard,
@@ -24,12 +25,14 @@ import {
 import { Button, Card, Chip, ProgressBar } from '@heroui/react';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
+import { recordMnemonicPromptUsed } from '../lib/mnemonicPromptLog.js';
 import { recordSessionStart } from '../lib/sessionLog.js';
 import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
 import { withGlyphs } from '../ui/glyphs.jsx';
 import {
   DecompositionPanel,
+  LociMnemonicPrompt,
   SelfExplanationPrompt,
   useRevealDwell,
   useStage1HanziAlone,
@@ -385,6 +388,7 @@ function BetweenTurns({
  * "the reveal's primary optional layer" (§3.3), never shown automatically.
  */
 function Outcome({ record, state }: { record: TurnRecord; state: GameState }): ReactNode {
+  const identity = useApp((s) => s.identity);
   const question = questionById(SEED_PACK, record.questionId);
   const team = state.teams.find((t) => t.id === record.teamId);
   const correctText = question?.options[question.answer];
@@ -392,6 +396,29 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
   const hanziAlone = useStage1HanziAlone(record.turnIndex);
   const [stage2, setStage2] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [mnemonicMode, setMnemonicMode] = useState<'self_explanation' | 'loci'>('self_explanation');
+
+  const showSelfExplain = question !== undefined && hasSelfExplanationPrompt(question);
+  const tiles = question !== undefined ? lociTiles(question) : undefined;
+  const showLoci = tiles !== undefined;
+
+  // DESIGN.md §10's instrumentation ruling: log exactly one outcome per
+  // reveal that actually offered a mnemonic prompt, defaulting to 'none' so
+  // "shown and ignored" is distinguishable from "never shown" - see
+  // packages/engine/src/mnemonicPromptLog.ts.
+  const breakdownOpenedRef = useRef(false);
+  const mnemonicKindRef = useRef<'self_explanation' | 'loci' | 'none'>('none');
+  useEffect(() => {
+    return () => {
+      if (identity !== null && breakdownOpenedRef.current && (showSelfExplain || showLoci)) {
+        recordMnemonicPromptUsed(identity.id, record.questionId, mnemonicKindRef.current);
+      }
+    };
+    // Deliberately empty deps: this must fire exactly once, on this Outcome
+    // unmounting (it is keyed per turnIndex by its caller) - re-running on
+    // every render would log the reveal as "used" mid-interaction.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Card className="anim-reveal" variant={record.correct ? 'secondary' : 'tertiary'}>
@@ -466,13 +493,52 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
               {(question.decomposition !== undefined || face?.transparency === 'opaque') && (
                 <>
                   {!showBreakdown ? (
-                    <Button variant="ghost" size="sm" fullWidth onPress={() => setShowBreakdown(true)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      fullWidth
+                      onPress={() => {
+                        breakdownOpenedRef.current = true;
+                        setShowBreakdown(true);
+                      }}
+                    >
                       See how it&apos;s made
                     </Button>
                   ) : (
                     <div className="anim-fade-in flex flex-col gap-2">
-                      {hasSelfExplanationPrompt(question) && (
-                        <SelfExplanationPrompt cues={discriminatingCues(question)} />
+                      {showSelfExplain && showLoci && (
+                        <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
+                          <button
+                            type="button"
+                            onClick={() => setMnemonicMode('self_explanation')}
+                            className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
+                          >
+                            which part means it
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setMnemonicMode('loci')}
+                            className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
+                          >
+                            picture it instead
+                          </button>
+                        </div>
+                      )}
+                      {showSelfExplain && (mnemonicMode === 'self_explanation' || !showLoci) && (
+                        <SelfExplanationPrompt
+                          cues={discriminatingCues(question)}
+                          onPicked={() => {
+                            mnemonicKindRef.current = 'self_explanation';
+                          }}
+                        />
+                      )}
+                      {showLoci && (mnemonicMode === 'loci' || !showSelfExplain) && (
+                        <LociMnemonicPrompt
+                          tiles={tiles}
+                          onUsed={() => {
+                            mnemonicKindRef.current = 'loci';
+                          }}
+                        />
                       )}
                       <DecompositionPanel
                         decomposition={question.decomposition}

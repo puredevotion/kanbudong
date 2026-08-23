@@ -2,6 +2,7 @@ import {
   resolveComponent,
   type CharacterStructure,
   type Decomposition,
+  type LociTile,
   type SelfExplanationCue,
   type Transparency,
 } from '@kanbudong/engine';
@@ -146,7 +147,14 @@ export function DecompositionPanel({
  * cue combination renders nothing rather than guess at an unsupported shape.
  * Never scored: this is a self-check, not part of the graded loop (§2.5).
  */
-export function SelfExplanationPrompt({ cues }: { cues: readonly SelfExplanationCue[] }): ReactNode {
+export function SelfExplanationPrompt({
+  cues,
+  onPicked,
+}: {
+  cues: readonly SelfExplanationCue[];
+  /** Fires once, the first time the player picks either tile - for Phase 9's mnemonic-prompt-usage log, not scoring. */
+  onPicked?: () => void;
+}): ReactNode {
   const [picked, setPicked] = useState<string | null>(null);
   const semantic = cues.find((c) => c.kind === 'semantic_radical');
   const phonetic = cues.find((c) => c.kind === 'phonetic_hint');
@@ -169,7 +177,10 @@ export function SelfExplanationPrompt({ cues }: { cues: readonly SelfExplanation
               key={cue.componentId}
               type="button"
               disabled={picked !== null}
-              onClick={() => setPicked(cue.componentId as string)}
+              onClick={() => {
+                setPicked(cue.componentId as string);
+                onPicked?.();
+              }}
               className={`grow rounded-xl border px-3 py-3 text-center ${
                 revealCorrect ? 'border-2 border-foreground' : 'border-border'
               }`}
@@ -187,6 +198,71 @@ export function SelfExplanationPrompt({ cues }: { cues: readonly SelfExplanation
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/**
+ * PLAN.md's "loci hedge" - see `lociMnemonic.ts` for why this is deliberately
+ * NOT shipped as a validated mechanic the way {@link SelfExplanationPrompt}
+ * is: method-of-loci's evidence is lab-wordlist/ordered-list recall, not
+ * meaning-retrieval-from-a-sign. It exists purely because some players
+ * already use loci-style imagery on their own and find it works; this reuses
+ * the two authored components as fixed named positions rather than building
+ * any spatial UI. Entirely optional and never scored, same as the prompt
+ * above - a player who ignores the button loses nothing.
+ */
+export function LociMnemonicPrompt({
+  tiles,
+  onUsed,
+}: {
+  tiles: readonly LociTile[];
+  /** Fires once, when the player taps through - for Phase 9's mnemonic-prompt-usage log, not scoring. */
+  onUsed?: () => void;
+}): ReactNode {
+  const [pictured, setPictured] = useState(false);
+  const first = tiles[0];
+  if (first === undefined) return null;
+  const isRow = first.position === 'left' || first.position === 'right';
+
+  return (
+    <div className="rounded-xl border border-border bg-surface px-3 py-3">
+      <p className="text-xs text-muted">
+        Some people remember shapes better as a small scene. Picture this one as a two-part room.
+      </p>
+      <div className={`mt-2 flex gap-2 ${isRow ? '' : 'flex-col'}`}>
+        {tiles.map((tile) => {
+          const component = resolveComponent(tile.componentId);
+          return (
+            <div
+              key={tile.componentId}
+              className="grow rounded-xl border border-border bg-surface px-3 py-3 text-center"
+            >
+              <div className="font-han text-[2rem] font-medium leading-none">
+                {component?.displayGlyph ?? '?'}
+              </div>
+              <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
+                {tile.position} spot &middot;{' '}
+                {tile.role === 'semantic' ? 'always the same kind of furniture' : 'what the room sounds like'}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {!pictured ? (
+        <button
+          type="button"
+          onClick={() => {
+            setPictured(true);
+            onUsed?.();
+          }}
+          className="mt-2 w-full rounded-xl border border-border px-3 py-2 text-[0.65rem] uppercase tracking-wide text-muted"
+        >
+          I pictured it
+        </button>
+      ) : (
+        <p className="mt-2 text-[0.65rem] uppercase tracking-wide text-muted">noted</p>
+      )}
     </div>
   );
 }
