@@ -1,4 +1,4 @@
-import { HAND_RADICAL } from '../components.js';
+import { HAND_RADICAL, PERSON_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -56,8 +56,13 @@ export const MARKET_LABEL: CategoryContent = {
       ['price', 'special', 'members\' price'],
       0,
       'jià · prijs (price). Seen in 特价 (special price) and 会员价 (members\' price). Picture 价 as a person (亻) standing right between (介) buyer and seller, settling on a price: jià.',
-      { hanzi: '价', pinyin: 'jià', nl: 'prijs', en: 'price' },
-      undefined,
+      { hanzi: '价', pinyin: 'jià', nl: 'prijs', en: 'price', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '价',
+        components: [{ componentId: PERSON_RADICAL.id, role: 'semantic' }],
+        semantic_radical: PERSON_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [

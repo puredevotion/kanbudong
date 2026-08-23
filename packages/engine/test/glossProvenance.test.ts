@@ -5,12 +5,21 @@ import { SEED_PACK } from '../src/index.js';
 /**
  * DESIGN.md §3.3.3(7): `glossProvenance: 'mnemonic-only'` labels an invented
  * memory aid so it is never mistaken for real etymology (the Chineasy
- * reputational liability DESIGN.md §1.7 #31 warns against). These two checks
- * guard the two ways that labelling could quietly rot:
+ * reputational liability DESIGN.md §1.7 #31 warns against). These checks
+ * guard the ways that labelling could quietly rot:
  *
- * - a `mnemonic-only` item picking up a `decomposition` later would present
- *   an invented story and a verified one side by side, blurring exactly the
- *   line this field exists to keep sharp;
+ * - a `mnemonic-only` item's `decomposition`, when present, must never claim
+ *   a `phonetic` role - a phonetic claim needs the exact-match verification
+ *   bar the rest of this bank holds it to, and a mnemonic-only item is
+ *   definitionally one where that couldn't be verified. A `semantic`-only
+ *   decomposition (a real, Kangxi-verified radical) is fine alongside a
+ *   mnemonic-only *prose* story: `DecompositionPanel` only ever renders
+ *   verified structural facts regardless of `glossProvenance`, which labels
+ *   the explanation text, not the decomposition data. 价 (jià) is the worked
+ *   case: real semantic radical 亻 (verified, Make Me a Hanzi), phonetic half
+ *   介 fails the exact-tone-and-syllable bar (jiè/gè vs jià) so no phonetic
+ *   claim is made, and the mnemonic story uses 介's real standalone meaning
+ *   ("between") as a memory hook without asserting it explains the sound;
  * - the explanation prose drifting into confident-sounding etymological
  *   language ("originally", "derived from", "ancient"), which reads as a
  *   historical claim regardless of what the UI label says next to it.
@@ -27,9 +36,11 @@ describe('glossProvenance: mnemonic-only', () => {
     expect(mnemonicOnly.length).toBeGreaterThanOrEqual(90);
   });
 
-  it('never carries a decomposition alongside a mnemonic-only gloss', () => {
-    const withBoth = mnemonicOnly.filter((q) => q.decomposition !== undefined);
-    expect(withBoth.map((q) => q.id)).toEqual([]);
+  it('never claims a phonetic role in a decomposition alongside a mnemonic-only gloss', () => {
+    const offenders = mnemonicOnly.filter(
+      (q) => q.decomposition?.kind === 'character' && q.decomposition.components.some((c) => c.role === 'phonetic'),
+    );
+    expect(offenders.map((q) => q.id)).toEqual([]);
   });
 
   it('never carries etymological-sounding language in the explanation', () => {
