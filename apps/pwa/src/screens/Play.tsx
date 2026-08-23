@@ -410,9 +410,12 @@ function BetweenTurns({
  * DESIGN.md §2.5/§5.5: the reveal is two stages. Stage 1 is automatic - the
  * hanzi alone for ~800 ms, then the correct answer plus (when a lure was
  * chosen) that lure named and marked wrong, all at full size, nothing else.
- * Stage 2 is an explicit tap: every option glossed, wrong rows kept fully
- * legible. The component breakdown is a further explicit tap beyond that -
- * "the reveal's primary optional layer" (§3.3), never shown automatically.
+ * Stage 2 is a single explicit tap that unveils everything else at once:
+ * every option glossed, the component breakdown, its contrasting confusable,
+ * and the mnemonic prompt - "the reveal's primary optional layer" (§3.3.3),
+ * never shown automatically, but not split into a second sequential tap
+ * either. Siblings ("the same move again") stay a further nested tap beyond
+ * this - they are not part of the target/decomposition/contrast budget.
  */
 function Outcome({ record, state }: { record: TurnRecord; state: GameState }): ReactNode {
   const identity = useApp((s) => s.identity);
@@ -421,10 +424,8 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
   const correctText = question?.options[question.answer];
   const face = question?.face;
   const hanziAlone = useStage1HanziAlone(record.turnIndex);
-  const [stage2, setStage2] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const [showSiblings, setShowSiblings] = useState(false);
-  const [showConfusables, setShowConfusables] = useState(false);
   const [mnemonicMode, setMnemonicMode] = useState<'self_explanation' | 'loci'>('self_explanation');
 
   const showSelfExplain = question !== undefined && hasSelfExplanationPrompt(question);
@@ -493,13 +494,21 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
             </div>
           )}
 
-          {!hanziAlone && !stage2 && (
-            <Button variant="ghost" size="sm" fullWidth onPress={() => setStage2(true)}>
-              Show every option
+          {!hanziAlone && !revealed && (
+            <Button
+              variant="ghost"
+              size="sm"
+              fullWidth
+              onPress={() => {
+                breakdownOpenedRef.current = true;
+                setRevealed(true);
+              }}
+            >
+              Show the breakdown
             </Button>
           )}
 
-          {!hanziAlone && stage2 && (
+          {!hanziAlone && revealed && (
             <div className="anim-fade-in flex flex-col gap-2">
               {question.options.map((option, i) => {
                 const isCorrect = i === question.answer;
@@ -522,90 +531,63 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
               })}
 
               {(question.decomposition !== undefined || face?.transparency === 'opaque') && (
-                <>
-                  {!showBreakdown ? (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      fullWidth
-                      onPress={() => {
-                        breakdownOpenedRef.current = true;
-                        setShowBreakdown(true);
-                      }}
-                    >
-                      See how it&apos;s made
-                    </Button>
-                  ) : (
-                    <div className="anim-fade-in flex flex-col gap-2">
-                      {showSelfExplain && showLoci && (
-                        <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
-                          <button
-                            type="button"
-                            onClick={() => setMnemonicMode('self_explanation')}
-                            className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
-                          >
-                            which part means it
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setMnemonicMode('loci')}
-                            className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
-                          >
-                            picture it instead
-                          </button>
-                        </div>
-                      )}
-                      {showSelfExplain && (mnemonicMode === 'self_explanation' || !showLoci) && (
-                        <SelfExplanationPrompt
-                          cues={discriminatingCues(question)}
-                          onPicked={() => {
-                            mnemonicKindRef.current = 'self_explanation';
-                          }}
-                        />
-                      )}
-                      {showLoci && (mnemonicMode === 'loci' || !showSelfExplain) && (
-                        <LociMnemonicPrompt
-                          tiles={tiles}
-                          onUsed={() => {
-                            mnemonicKindRef.current = 'loci';
-                          }}
-                        />
-                      )}
-                      <DecompositionPanel
-                        decomposition={question.decomposition}
-                        transparency={face?.transparency}
-                        structure={face?.structure}
-                      />
+                <div className="anim-fade-in flex flex-col gap-2">
+                  <DecompositionPanel
+                    decomposition={question.decomposition}
+                    transparency={face?.transparency}
+                    structure={face?.structure}
+                  />
 
-                      {siblings.length > 0 &&
-                        (!showSiblings ? (
-                          <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
-                            See the same move again
-                          </Button>
-                        ) : (
-                          <div className="anim-fade-in">
-                            <SiblingsPanel siblings={siblings} />
-                          </div>
-                        ))}
-
-                      {confusables.length > 0 &&
-                        (!showConfusables ? (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            fullWidth
-                            onPress={() => setShowConfusables(true)}
-                          >
-                            See what this is easy to confuse with
-                          </Button>
-                        ) : (
-                          <div className="anim-fade-in">
-                            <ConfusablePanel confusables={confusables} confusionType={question.confusion_type} />
-                          </div>
-                        ))}
+                  {showSelfExplain && showLoci && (
+                    <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
+                      <button
+                        type="button"
+                        onClick={() => setMnemonicMode('self_explanation')}
+                        className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
+                      >
+                        which part means it
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMnemonicMode('loci')}
+                        className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
+                      >
+                        picture it instead
+                      </button>
                     </div>
                   )}
-                </>
+                  {showSelfExplain && (mnemonicMode === 'self_explanation' || !showLoci) && (
+                    <SelfExplanationPrompt
+                      cues={discriminatingCues(question)}
+                      onPicked={() => {
+                        mnemonicKindRef.current = 'self_explanation';
+                      }}
+                    />
+                  )}
+                  {showLoci && (mnemonicMode === 'loci' || !showSelfExplain) && (
+                    <LociMnemonicPrompt
+                      tiles={tiles}
+                      onUsed={() => {
+                        mnemonicKindRef.current = 'loci';
+                      }}
+                    />
+                  )}
+
+                  {confusables.length > 0 && (
+                    <ConfusablePanel confusables={confusables} confusionType={question.confusion_type} />
+                  )}
+
+                  {siblings.length > 0 &&
+                    (!showSiblings ? (
+                      <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
+                        See the same move again
+                      </Button>
+                    ) : (
+                      <div className="anim-fade-in">
+                        <SiblingsPanel siblings={siblings} />
+                      </div>
+                    ))}
+                </div>
               )}
             </div>
           )}

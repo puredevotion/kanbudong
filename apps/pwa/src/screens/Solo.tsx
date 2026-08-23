@@ -52,10 +52,8 @@ export function Solo(): ReactNode {
   const [reviewed, setReviewed] = useState(0);
   const [reveal, setReveal] = useState<{ chosenIndex: number; correct: boolean } | null>(null);
   const [done, setDone] = useState(false);
-  const [stage2, setStage2] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const [showSiblings, setShowSiblings] = useState(false);
-  const [showConfusables, setShowConfusables] = useState(false);
   const [mnemonicMode, setMnemonicMode] = useState<'self_explanation' | 'loci'>('self_explanation');
 
   const playerId = identity?.id ?? null;
@@ -193,10 +191,8 @@ export function Solo(): ReactNode {
     setReviewed((n) => n + 1);
     setCurrent(null);
     setReveal(null);
-    setStage2(false);
-    setShowBreakdown(false);
+    setRevealed(false);
     setShowSiblings(false);
-    setShowConfusables(false);
     setMnemonicMode('self_explanation');
   };
 
@@ -279,13 +275,21 @@ export function Solo(): ReactNode {
               </p>
             )}
 
-            {!hanziAlone && !stage2 && (
-              <Button variant="ghost" size="sm" fullWidth onPress={() => setStage2(true)}>
-                Show every option
+            {!hanziAlone && !revealed && (
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                onPress={() => {
+                  breakdownOpenedRef.current = true;
+                  setRevealed(true);
+                }}
+              >
+                Show the breakdown
               </Button>
             )}
 
-            {!hanziAlone && stage2 && presentedQuestion !== null && (
+            {!hanziAlone && revealed && presentedQuestion !== null && (
               <div className="anim-fade-in flex flex-col gap-2">
                 {current.options.map((option, i) => {
                   const isCorrect = i === current.answer;
@@ -309,90 +313,63 @@ export function Solo(): ReactNode {
                 })}
 
                 {(current.decomposition !== undefined || current.face?.transparency === 'opaque') && (
-                  <>
-                    {!showBreakdown ? (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        fullWidth
-                        onPress={() => {
-                          breakdownOpenedRef.current = true;
-                          setShowBreakdown(true);
-                        }}
-                      >
-                        See how it&apos;s made
-                      </Button>
-                    ) : (
-                      <div className="anim-fade-in flex flex-col gap-2">
-                        {showSelfExplain && showLoci && (
-                          <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
-                            <button
-                              type="button"
-                              onClick={() => setMnemonicMode('self_explanation')}
-                              className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
-                            >
-                              which part means it
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setMnemonicMode('loci')}
-                              className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
-                            >
-                              picture it instead
-                            </button>
-                          </div>
-                        )}
-                        {showSelfExplain && (mnemonicMode === 'self_explanation' || !showLoci) && (
-                          <SelfExplanationPrompt
-                            cues={discriminatingCues(current)}
-                            onPicked={() => {
-                              mnemonicKindRef.current = 'self_explanation';
-                            }}
-                          />
-                        )}
-                        {showLoci && (mnemonicMode === 'loci' || !showSelfExplain) && (
-                          <LociMnemonicPrompt
-                            tiles={tiles}
-                            onUsed={() => {
-                              mnemonicKindRef.current = 'loci';
-                            }}
-                          />
-                        )}
-                        <DecompositionPanel
-                          decomposition={current.decomposition}
-                          transparency={current.face?.transparency}
-                          structure={current.face?.structure}
-                        />
+                  <div className="anim-fade-in flex flex-col gap-2">
+                    <DecompositionPanel
+                      decomposition={current.decomposition}
+                      transparency={current.face?.transparency}
+                      structure={current.face?.structure}
+                    />
 
-                        {siblings.length > 0 &&
-                          (!showSiblings ? (
-                            <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
-                              See the same move again
-                            </Button>
-                          ) : (
-                            <div className="anim-fade-in">
-                              <SiblingsPanel siblings={siblings} />
-                            </div>
-                          ))}
-
-                        {confusables.length > 0 &&
-                          (!showConfusables ? (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              fullWidth
-                              onPress={() => setShowConfusables(true)}
-                            >
-                              See what this is easy to confuse with
-                            </Button>
-                          ) : (
-                            <div className="anim-fade-in">
-                              <ConfusablePanel confusables={confusables} confusionType={current.confusion_type} />
-                            </div>
-                          ))}
+                    {showSelfExplain && showLoci && (
+                      <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
+                        <button
+                          type="button"
+                          onClick={() => setMnemonicMode('self_explanation')}
+                          className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
+                        >
+                          which part means it
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMnemonicMode('loci')}
+                          className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
+                        >
+                          picture it instead
+                        </button>
                       </div>
                     )}
-                  </>
+                    {showSelfExplain && (mnemonicMode === 'self_explanation' || !showLoci) && (
+                      <SelfExplanationPrompt
+                        cues={discriminatingCues(current)}
+                        onPicked={() => {
+                          mnemonicKindRef.current = 'self_explanation';
+                        }}
+                      />
+                    )}
+                    {showLoci && (mnemonicMode === 'loci' || !showSelfExplain) && (
+                      <LociMnemonicPrompt
+                        tiles={tiles}
+                        onUsed={() => {
+                          mnemonicKindRef.current = 'loci';
+                        }}
+                      />
+                    )}
+
+                    {confusables.length > 0 && (
+                      <ConfusablePanel confusables={confusables} confusionType={current.confusion_type} />
+                    )}
+
+                    {siblings.length > 0 &&
+                      (!showSiblings ? (
+                        <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
+                          See the same move again
+                        </Button>
+                      ) : (
+                        <div className="anim-fade-in">
+                          <SiblingsPanel siblings={siblings} />
+                        </div>
+                      ))}
+                  </div>
                 )}
               </div>
             )}
