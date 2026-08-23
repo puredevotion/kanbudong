@@ -291,27 +291,6 @@ export function Solo(): ReactNode {
 
             {!hanziAlone && revealed && presentedQuestion !== null && (
               <div className="anim-fade-in flex flex-col gap-2">
-                {current.options.map((option, i) => {
-                  const isCorrect = i === current.answer;
-                  const isChosenWrong =
-                    !isCorrect && presentedQuestion.options[reveal.chosenIndex] === option;
-                  return (
-                    <div
-                      key={option}
-                      className={`rounded-xl border px-3 py-2 ${
-                        isCorrect
-                          ? 'border-l-4 border-l-success border-default-200/40'
-                          : 'border-default-200/40'
-                      }`}
-                    >
-                      <span className={isChosenWrong ? 'font-medium text-danger-text' : ''}>
-                        {option}
-                      </span>
-                      {isChosenWrong && <span className="text-danger-text"> — wrong</span>}
-                    </div>
-                  );
-                })}
-
                 {(current.decomposition !== undefined || current.face?.transparency === 'opaque') && (
                   <div className="anim-fade-in flex flex-col gap-2">
                     <DecompositionPanel

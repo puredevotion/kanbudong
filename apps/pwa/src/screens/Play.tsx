@@ -510,26 +510,6 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
 
           {!hanziAlone && revealed && (
             <div className="anim-fade-in flex flex-col gap-2">
-              {question.options.map((option, i) => {
-                const isCorrect = i === question.answer;
-                const isChosenWrong = !isCorrect && option === record.chosenText;
-                return (
-                  <div
-                    key={option}
-                    className={`rounded-xl border px-3 py-2.5 text-[0.9rem] ${
-                      isCorrect
-                        ? 'border-l-4 border-l-success border-default-200/40'
-                        : 'border-default-200/40'
-                    }`}
-                  >
-                    <span className={isChosenWrong ? 'font-medium text-danger-text' : ''}>
-                      {option}
-                    </span>
-                    {isChosenWrong && <span className="text-danger-text"> — wrong</span>}
-                  </div>
-                );
-              })}
-
               {(question.decomposition !== undefined || face?.transparency === 'opaque') && (
                 <div className="anim-fade-in flex flex-col gap-2">
                   <DecompositionPanel
