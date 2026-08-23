@@ -118,7 +118,10 @@ export function Home(): ReactNode {
         </div>
 
         <div className="flex flex-col gap-3">
-          <Button variant="primary" size="lg" fullWidth onPress={() => navigate('/create')}>
+          <Button variant="primary" size="lg" fullWidth onPress={() => navigate('/solo')}>
+            Practice
+          </Button>
+          <Button variant="secondary" size="lg" fullWidth onPress={() => navigate('/create')}>
             Host a game
           </Button>
           <Button variant="secondary" size="lg" fullWidth onPress={() => navigate('/join')}>
