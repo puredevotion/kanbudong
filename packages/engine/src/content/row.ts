@@ -1,3 +1,4 @@
+import type { Decomposition } from '../components.js';
 import { createRng } from '../rng.js';
 import type { CategoryId, Difficulty, Question, SignFace } from '../types.js';
 
@@ -21,6 +22,8 @@ export type Row = readonly [
   explanation: string,
   /** What the sign template draws. Absent on items that are not a sign. */
   face?: SignFace,
+  /** Most rows have none; see DESIGN.md §3.3.3(5) on why this is not on `face`. */
+  decomposition?: Decomposition,
 ];
 
 export type CategoryContent = Readonly<Record<Difficulty, readonly Row[]>>;
@@ -39,7 +42,7 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
   for (const difficulty of ['low', 'mid', 'high'] as const) {
     const rows = chunks.flatMap((chunk) => chunk[difficulty]);
     rows.forEach((row, index) => {
-      const [prompt, options, answer, explanation, face] = row;
+      const [prompt, options, answer, explanation, face, decomposition] = row;
       const id = `${category}-${difficulty}-${index + 1}`;
       out.push({
         ...rotate(options, answer, id),
@@ -49,6 +52,7 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
         prompt,
         explanation,
         ...(face === undefined ? {} : { face }),
+        ...(decomposition === undefined ? {} : { decomposition }),
       });
     });
   }

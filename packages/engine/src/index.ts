@@ -7,6 +7,7 @@
  */
 
 export * from './types.js';
+export * from './components.js';
 export * from './rules.js';
 export * from './canonical.js';
 export * from './rng.js';

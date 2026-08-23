@@ -4,6 +4,8 @@
  * and must compile identically in all three.
  */
 
+import type { Decomposition } from './components.js';
+
 /** `dh_` + 12 lowercase base32 chars, derived from an Ed25519 public key. */
 export type PlayerId = string;
 /** `team_` + 6 lowercase base32 chars. */
@@ -27,20 +29,53 @@ export interface Category {
 }
 
 /**
+ * DESIGN.md §3.3.3(3): whether a multi-character span's parts add up to its
+ * meaning. Absent on a {@link SignFace} means "not yet authored", not "opaque" -
+ * those are distinguishable states so content review can tell unfinished
+ * spans from spans that were deliberately marked non-compositional.
+ */
+export type Transparency = 'transparent' | 'semi' | 'opaque';
+
+/**
+ * DESIGN.md §3.3.3(4): which reveal layout a character's decomposition gets.
+ * `atomic` covers both true pictographs/ideographs and the directional-
+ * complement signs (入口, 出站) that are never decomposed regardless of origin.
+ */
+export type CharacterStructure = 'left-right' | 'top-bottom' | 'enclosure' | 'atomic';
+
+/**
  * What a sign template actually draws. Held apart from `prompt` because the
  * prompt is a sentence and this is an object on a surface: the renderer needs the
  * characters on their own to set them at display size in the app's own face.
  *
- * A step towards DESIGN.md §6.1's span model, not the whole of it — there is no
- * `transparency` field and no component table yet.
+ * A step towards DESIGN.md §6.1's span model. `pinyin` is the field the reveal
+ * currently renders; `pinyin_citation`/`pinyin_surface` are separate per
+ * DESIGN.md §4.6.5/§3.3.3(14) (citation vs post-sandhi form, e.g. 不 bù vs bú)
+ * and are additive so existing content authored against `pinyin` keeps
+ * compiling - populating them for real content is Phase 2's job, not this
+ * one's.
  */
 export interface SignFace {
   /** The span as it appears on the surface. One to four characters. */
   readonly hanzi: string;
   /** Tone-marked, verified against a reference table at build time. */
   readonly pinyin: string;
+  /** Dictionary/citation-form pronunciation, before any sandhi is applied. */
+  readonly pinyin_citation?: string;
+  /** As actually spoken in this span's context, sandhi applied (水饺 shuíjiǎo). */
+  readonly pinyin_surface?: string;
   /** Dutch gloss. The English one is the correct answer, so it is not repeated. */
   readonly nl: string;
+  /**
+   * English gloss, kept separate from the answer text per DESIGN.md §7's
+   * "author both gloss languages from day one" ruling. Optional here because
+   * the 16 existing content files only authored `nl`; backfilling `en` is
+   * Phase 2 content work, not a schema change.
+   */
+  readonly en?: string;
+  readonly transparency?: Transparency;
+  /** Meaningful only for a single-character span; unset for a multi-character one. */
+  readonly structure?: CharacterStructure;
 }
 
 export interface Question {
@@ -60,6 +95,14 @@ export interface Question {
   readonly explanation: string;
   /** Absent on items that are a question about a sign rather than a sign itself. */
   readonly face?: SignFace;
+  /**
+   * DESIGN.md §3.3.3(5): word- and character-level decomposition are separate
+   * schema objects, "one boolean cannot express both". Most questions have
+   * neither - opaque compounds get an explicit `transparency: 'opaque'` marker
+   * on `face` instead, so "no decomposition" and "not yet authored" stay
+   * distinguishable.
+   */
+  readonly decomposition?: Decomposition;
 }
 
 export interface ContentPack {

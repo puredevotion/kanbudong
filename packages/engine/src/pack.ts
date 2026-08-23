@@ -1,5 +1,6 @@
 import { canonicalJson, sha256Hex } from './canonical.js';
 import { CATEGORY_IDS } from './categories.js';
+import { COMPONENTS } from './components.js';
 import { createRng } from './rng.js';
 import { DIFFICULTY_ORDER } from './rules.js';
 import type { CategoryId, ContentPack, Difficulty, Question, QuestionId } from './types.js';
@@ -25,6 +26,7 @@ export function packHash(pack: ContentPack): string {
         // The rendered characters are what the player is asked to read, so a
         // change here is a change to the game, not to presentation.
         face: q.face === undefined ? null : q.face.hanzi,
+        decomposition: q.decomposition ?? null,
       }),
     )
     .sort();
@@ -162,6 +164,17 @@ export function validatePack(pack: ContentPack): string[] {
     if (q.answer < 0 || q.answer > 3) problems.push(`${q.id}: answer out of range`);
     if (q.explanation.trim().length === 0) problems.push(`${q.id}: missing explanation`);
     if (q.prompt.trim().length === 0) problems.push(`${q.id}: missing prompt`);
+    if (q.decomposition?.kind === 'character') {
+      for (const { componentId } of q.decomposition.components) {
+        if (!(componentId in COMPONENTS)) {
+          problems.push(`${q.id}: unknown component id ${componentId}`);
+        }
+      }
+      const radical = q.decomposition.semantic_radical;
+      if (radical !== undefined && !(radical in COMPONENTS)) {
+        problems.push(`${q.id}: unknown semantic_radical component id ${radical}`);
+      }
+    }
   }
   return problems;
 }
