@@ -1,8 +1,10 @@
 import {
   MEAT_RADICAL,
   GAN_PHONETIC,
+  YAO_PHONETIC,
   ANIMAL_RADICAL,
   FOOD_RADICAL,
+  FAN_PHONETIC,
   METAL_RADICAL,
   GUO_PHONETIC,
   GRAIN_RADICAL,
@@ -26,16 +28,26 @@ import type { CategoryContent } from './row.js';
  * A decomposition-backfill pass (Aug 2026) added four more, all verified
  * against the gitignored Make Me a Hanzi scratch copy: 猪 carries the animal
  * radical `ANIMAL_RADICAL` (犭, MMH's own hint is 'animal', not 'dog' — a
- * generic beast radical, not a claim that pigs are dogs); 饭/饺 carry the
- * food radical `FOOD_RADICAL` (饣), both semantic-only — their phonetic
- * halves (反/交) are tone-only near misses (fǎn/fàn, jiāo/jiǎo), not the
- * exact match this bank requires; 锅's phonetic half, 呙 (guō), IS an exact
- * tone-and-syllable match for guō, the same 'exact' bar as `GAN_PHONETIC`;
- * 粉 carries the grain radical `GRAIN_RADICAL` (米, MMH's hint is 'grain'),
- * semantic-only since its phonetic half 分 (fēn) is a tone-only near miss for
- * fěn. 面 (noodles) is left undecomposed: Make Me a Hanzi has no
- * decomposition data for it at all (it is itself a pictograph, "a person's
- * face", with no component breakdown recorded).
+ * generic beast radical, not a claim that pigs are dogs); 饺 carries the
+ * food radical `FOOD_RADICAL` (饣), semantic-only — its phonetic half 交
+ * (jiāo only) is a tone-only near miss for jiǎo, not the exact match this
+ * bank requires; 锅's phonetic half, 呙 (guō), IS an exact tone-and-syllable
+ * match for guō, the same 'exact' bar as `GAN_PHONETIC`; 粉 carries the
+ * grain radical `GRAIN_RADICAL` (米, MMH's hint is 'grain'), semantic-only
+ * since its phonetic half 分 (fēn/fèn/fén) has no reading matching fěn. 面
+ * (noodles) is left undecomposed: Make Me a Hanzi has no decomposition data
+ * for it at all (it is itself a pictograph, "a person's face", with no
+ * component breakdown recorded).
+ *
+ * Full-reading-list re-audit (Aug 2026, prompted by the 份/分 catch): 饭's
+ * phonetic half 反 was originally checked only against its primary reading
+ * (fǎn) versus fàn, and logged as a tone-only near miss - but `pinyin-data`
+ * lists 反 as a genuine heteronym (fǎn/fàn), so fàn is itself one of 反's
+ * attested readings, an exact match. 饭 now ships `FAN_PHONETIC` alongside
+ * `FOOD_RADICAL` (see `FAN_PHONETIC`'s doc comment in components.ts). 交
+ * (jiāo only) and 官/guǎn's 官 (guān only) were re-checked the same way and
+ * remain genuine near misses - no other reading of either matches - so 饺/馆
+ * are unaffected by this pass.
  *
  * Rest-of-bank coverage pass (Aug 2026): 鸡 gets a verified CharacterDecomposition
  * (semantic 鸟, `BIRD_RADICAL`; MMH's own hint for its other half, 又, is
@@ -183,12 +195,15 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['cooked rice; also "meal"', 'stir-fry', 'tossed, dressed'],
       0,
-      'fàn · rijst, maaltijd (cooked rice; also "meal") — as in 炒饭 (fried rice), 米饭 (steamed rice).',
+      'fàn · rijst, maaltijd (cooked rice; also "meal") — as in 炒饭 (fried rice), 米饭 (steamed rice). Built from 饣 (food) plus 反, which happens to give the whole character its exact reading, fàn.',
       { hanzi: '饭', pinyin: 'fàn', nl: 'rijst, maaltijd', en: 'cooked rice; also "meal"', structure: 'left-right' },
       {
         kind: 'character',
         hanzi: '饭',
-        components: [{ componentId: FOOD_RADICAL.id, role: 'semantic' }],
+        components: [
+          { componentId: FOOD_RADICAL.id, role: 'semantic' },
+          { componentId: FAN_PHONETIC.id, role: 'phonetic' },
+        ],
         semantic_radical: FOOD_RADICAL.id,
       },
       { tier: 1 },
@@ -317,12 +332,15 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['kidney', 'boil', 'cold dishes'],
       0,
-      'yāo · nier (kidney) — as in 腰花. The same character also means "waist".',
+      'yāo · nier (kidney) — as in 腰花. The same character also means "waist". Built from 肉 (meat, bound as the shape 月 inside this character) plus 要, which happens to give the whole character its exact reading, yāo.',
       { hanzi: '腰', pinyin: 'yāo', nl: 'nier', en: 'kidney', structure: 'left-right' },
       {
         kind: 'character',
         hanzi: '腰',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [
+          { componentId: MEAT_RADICAL.id, role: 'semantic' },
+          { componentId: YAO_PHONETIC.id, role: 'phonetic' },
+        ],
         semantic_radical: MEAT_RADICAL.id,
       },
       { tier: 2, freqRank: 1489, isomorph_group_id: 'menu-animal-organ-meat-radical' },

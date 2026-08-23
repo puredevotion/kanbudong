@@ -105,6 +105,26 @@ export const GAN_PHONETIC: Component = {
 };
 
 /**
+ * 腰 yāo and 要 (yào, yāo, yǎo) share an attested reading including tone -
+ * verified against `pinyin-data`'s full reading list for 要, not just its
+ * primary yào. The organ-set backfill's original pass noted 要'
+ * primary reading is yào and dismissed the yāo reading as "not the
+ * character's common reading" without checking it against the exact-match
+ * bar the rest of this bank applies - the same class of miss as 份/分 (`FEN_SEMANTIC`) and 饭/反
+ * (`FAN_PHONETIC`) before this fix. Make Me a Hanzi classifies 腰/要 as
+ * `pictophonetic` (phonetic: "要", semantic: "⺼"), so 腰 now ships both
+ * `MEAT_RADICAL` and this phonetic - it is the second exact phonetic hint
+ * for the organ set alongside `GAN_PHONETIC`.
+ */
+export const YAO_PHONETIC: Component = {
+  id: 'phonetic-yao',
+  displayGlyph: '要',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'to want; important; to demand',
+};
+
+/**
  * 站 zhàn = ⿰立占 (stand + 占). Verified against Make Me a Hanzi's
  * `dictionary.txt` (LGPL-3.0-or-later, gitignored scratch copy fetched by
  * `docs/research/corpus/fetch.sh`, verification-only per DESIGN.md §9.2 —
@@ -246,15 +266,37 @@ export const ANIMAL_RADICAL: Component = {
 
 /**
  * 饭/饺/馆 = ⿰饣X (food + X), all three MMH `pictophonetic`/`ideographic`
- * with a food-radical semantic half. None of the three phonetic halves
- * (反/交/官) is an exact-tone match for 饭/饺/馆 - each is a near miss on tone
- * only (fǎn/fàn, jiāo/jiǎo, guān/guǎn), logged as such rather than shipped.
+ * with a food-radical semantic half. A prior pass checked all three phonetic
+ * halves (反/交/官) against fàn/jiǎo/guǎn and called every one a tone-only
+ * near miss - but that checked 反 only against its reading as it appears
+ * paired with fǎn, missing that `pinyin-data` lists 反 as a genuine heteronym
+ * with TWO readings, fǎn/fàn, so fàn (饭's own reading) is itself one of 反's
+ * attested readings, not a mismatch. 饭 therefore ships 反 as `FAN_PHONETIC`
+ * (see below), the same correction pattern as 份/分 (`FEN_SEMANTIC`). 交
+ * (jiāo only) and 官 (guān only) remain genuine near misses against jiǎo/guǎn
+ * - no reading of either matches - so 饺/馆 stay semantic-only.
  */
 export const FOOD_RADICAL: Component = {
   id: 'kangxi-184-food',
   displayGlyph: '饣',
   role: 'semantic',
   meaning: 'food, to eat',
+};
+
+/**
+ * 饭 fàn and 反 (fǎn, fàn) share an attested reading including tone -
+ * verified against `pinyin-data`'s full reading list for 反, not just its
+ * primary fǎn - the same 'exact' bar as `GAN_PHONETIC`/`FEN_SEMANTIC`'s
+ * correction. Make Me a Hanzi classifies 饭/反 as `pictophonetic` (phonetic:
+ * "反", semantic: "饣"), so this ships as a genuine phonetic component, not
+ * an ideographic pairing like 份/分.
+ */
+export const FAN_PHONETIC: Component = {
+  id: 'phonetic-fan',
+  displayGlyph: '反',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'to reverse, to oppose',
 };
 
 /**
@@ -533,6 +575,7 @@ export const HEART_RADICAL: Component = {
 export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [MEAT_RADICAL.id]: MEAT_RADICAL,
   [GAN_PHONETIC.id]: GAN_PHONETIC,
+  [YAO_PHONETIC.id]: YAO_PHONETIC,
   [STAND_SEMANTIC.id]: STAND_SEMANTIC,
   [ZHAN_PHONETIC.id]: ZHAN_PHONETIC,
   [EARTH_SEMANTIC.id]: EARTH_SEMANTIC,
@@ -546,6 +589,7 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [WATER_RADICAL.id]: WATER_RADICAL,
   [ANIMAL_RADICAL.id]: ANIMAL_RADICAL,
   [FOOD_RADICAL.id]: FOOD_RADICAL,
+  [FAN_PHONETIC.id]: FAN_PHONETIC,
   [HAND_RADICAL.id]: HAND_RADICAL,
   [BAN_PHONETIC.id]: BAN_PHONETIC,
   [METAL_RADICAL.id]: METAL_RADICAL,

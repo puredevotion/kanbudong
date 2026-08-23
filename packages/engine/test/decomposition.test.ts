@@ -153,26 +153,27 @@ describe('menu-animal organ set: ⺼/月 reverse-error guard (DESIGN.md §7.1)',
 
   /**
    * Re-verification pass against Make Me a Hanzi's `dictionary.txt` (same
-   * gitignored scratch copy as STAND_SEMANTIC/EARTH_SEMANTIC): none of the
-   * remaining seven semantic-only organ characters clear the GAN_PHONETIC/
+   * gitignored scratch copy as STAND_SEMANTIC/EARTH_SEMANTIC): the remaining
+   * six semantic-only organ characters do not clear the GAN_PHONETIC/
    * ZHAN_PHONETIC/CHENG_PHONETIC exact-match bar (target reading == phonetic
-   * component's own reading, same syllable and tone). Per-character reason:
+   * component's own reading, same syllable and tone, checked against the
+   * candidate's FULL `pinyin-data` reading list, not just its primary
+   * reading). Per-character reason:
    *   肠 cháng / phonetic 昜 yáng — different syllable entirely.
-   *   肚 dǔ / phonetic 土 tǔ — same rime and tone, different initial (t/d).
-   *   腰 yāo / phonetic 要 — 要's primary reading is yào, tone mismatch; an
-   *     archaic yāo reading of 要 exists in pinyin-data but is not the
-   *     character's common reading, so it fails the same bar this project
-   *     already rejects 站/占-style near-misses on (DESIGN.md §3.3.3(6)).
+   *   肚 dǔ / phonetic 土 (tǔ, dù, chǎ, tú) — none of 土's readings is dǔ
+   *     (dù is a near-miss tone away, not a match).
    *   脑 nǎo — dictionary.txt records no single phonetic component at all.
-   *   肺 fèi / phonetic 巿 fú — different rime and tone.
+   *   肺 fèi / phonetic 巿 (fú, pó) — no reading matches fèi.
    *   肾 shèn — no phonetic component in the simplified form; the traditional
-   *     腎's phonetic 臤 is qiān, unrelated to shèn.
-   *   胗 zhēn / phonetic 㐱 zhěn — same syllable, different tone.
+   *     腎's phonetic 臤 (qiān, xián, qìn) has no reading matching shèn.
+   *   胗 zhēn / phonetic 㐱 zhěn — same syllable, different tone, and zhěn is
+   *     㐱's only listed reading.
    * A wrong or near-miss phonetic hint is worse than none (DESIGN.md
-   * §3.3.3(6)), so all seven stay semantic-only.
+   * §3.3.3(6)), so all six stay semantic-only. (腰 was originally in this
+   * set too - see the "corrected misses" test below for why it moved out.)
    */
   it('does not claim a phonetic component for any near-miss organ character', () => {
-    const NEAR_MISS_NO_PHONETIC = new Set(['肠', '肚', '腰', '脑', '肺', '肾', '胗']);
+    const NEAR_MISS_NO_PHONETIC = new Set(['肠', '肚', '脑', '肺', '肾', '胗']);
     for (const d of organDecompositions) {
       if (NEAR_MISS_NO_PHONETIC.has(d.hanzi)) {
         expect(
@@ -181,6 +182,23 @@ describe('menu-animal organ set: ⺼/月 reverse-error guard (DESIGN.md §7.1)',
         ).toBe(false);
       }
     }
+  });
+
+  /**
+   * Full-reading-list re-audit (Aug 2026, prompted by a user catching that
+   * 份/分 was wrongly rejected on a primary-reading-only check). 腰's
+   * original rejection made the identical mistake: it compared yāo against
+   * 要's primary reading yào and stopped there, even though `pinyin-data`
+   * lists 要 as a genuine heteronym (yào, yāo, yǎo) - yāo is itself an
+   * attested reading, an exact match. Make Me a Hanzi classifies 腰/要 as
+   * `pictophonetic`, so this ships as a real phonetic hint, not an
+   * ideographic pairing like 份/分 turned out to be.
+   */
+  it('ships 腰 with a verified exact phonetic component (要, yāo = yāo) after the full-reading-list re-audit', () => {
+    const d = organDecompositions.find((d) => d.hanzi === '腰');
+    expect(d).toBeDefined();
+    expect(d?.components).toContainEqual({ componentId: 'phonetic-yao', role: 'phonetic' });
+    expect(COMPONENTS['phonetic-yao']?.reliability).toBe('exact');
   });
 });
 
@@ -315,9 +333,8 @@ describe('decomposition-backfill pass (Aug 2026): fire/water/animal/food/hand/me
     }
   });
 
-  it('tags 饭/饺/馆 with the food radical, all semantic-only (near-miss tone on every phonetic half)', () => {
+  it('tags 饺/馆 with the food radical, semantic-only (no reading of 交/官 matches jiǎo/guǎn)', () => {
     for (const [category, hanzi] of [
-      ['menu-animal', '饭'],
       ['menu-animal', '饺'],
       ['transit-ticket', '馆'],
     ] as const) {
@@ -327,6 +344,24 @@ describe('decomposition-backfill pass (Aug 2026): fire/water/animal/food/hand/me
         expect(d.semantic_radical).toBe(FOOD_RADICAL.id);
         expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
       }
+    }
+  });
+
+  /**
+   * Full-reading-list re-audit (Aug 2026, prompted by the 份/分 catch): 饭's
+   * phonetic half 反 was originally checked only against its primary
+   * reading (fǎn) and logged as a tone-only near miss for fàn - but
+   * `pinyin-data` lists 反 as a genuine heteronym (fǎn, fàn), so fàn is
+   * itself an attested reading of 反, an exact match. 饭 now ships
+   * `FAN_PHONETIC` alongside the food radical.
+   */
+  it('tags 饭 with the food radical plus an exact-match phonetic (反, fàn = fàn) after the full-reading-list re-audit', () => {
+    const decomps = findCharDecomps('menu-animal', '饭');
+    expect(decomps.length).toBeGreaterThan(0);
+    for (const d of decomps) {
+      expect(d.semantic_radical).toBe(FOOD_RADICAL.id);
+      expect(d.components).toContainEqual({ componentId: 'phonetic-fan', role: 'phonetic' });
+      expect(COMPONENTS['phonetic-fan']?.reliability).toBe('exact');
     }
   });
 
