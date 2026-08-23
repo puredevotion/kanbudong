@@ -28,7 +28,7 @@ export function Onboarding(): ReactNode {
             </div>
           </div>
           <Typography.Heading level={1} className="text-3xl font-semibold tracking-tight">
-            Dohhh
+            看不懂
           </Typography.Heading>
           <Typography.Paragraph className="mx-auto mt-3 max-w-xs text-sm text-muted">
             Eighteen categories. Three levels of nerve. Fifteen points if you are right about the

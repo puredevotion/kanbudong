@@ -112,7 +112,7 @@ export function Create(): ReactNode {
           size="lg"
           fullWidth
           isDisabled={!targetOk}
-          onPress={() => host(name.trim().length === 0 ? 'Dohhh game' : name.trim(), rules)}
+          onPress={() => host(name.trim().length === 0 ? '看不懂 game' : name.trim(), rules)}
         >
           Open the lobby
         </Button>
