@@ -36,3 +36,10 @@ export * from './attemptLog.js';
 export * from './sessionGaps.js';
 export { SEED_PACK, SEED_PACK_HASH } from './content/index.js';
 export * from './content/row.js';
+export {
+  CITY_PACKS,
+  SHENZHEN_PACK,
+  SHENZHEN_PACK_HASH,
+  SINGAPORE_PACK,
+  SINGAPORE_PACK_HASH,
+} from './content/cityPacks/index.js';

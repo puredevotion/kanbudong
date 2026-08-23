@@ -208,6 +208,14 @@ export function validatePack(pack: ContentPack): string[] {
         problems.push(`${q.id}: unknown component_char_ids entry ${charId}`);
       }
     }
+    if (q.distractorRationale !== undefined) {
+      const distractorTexts = q.options.filter((_, i) => i !== q.answer);
+      for (const text of distractorTexts) {
+        if (!(text in q.distractorRationale)) {
+          problems.push(`${q.id}: distractor "${text}" has no whyPlausible entry in distractorRationale (DESIGN.md §11.6 correction 3)`);
+        }
+      }
+    }
   }
   return problems;
 }

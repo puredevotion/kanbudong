@@ -201,6 +201,15 @@ export interface Question {
    * exactly that, not "unlabelled."
    */
   readonly glossProvenance?: GlossProvenance;
+  /**
+   * DESIGN.md §11.6 correction 3/§9.1: "all distractor sets carry
+   * `whyPlausible`". Keyed by the option text itself (not position), because
+   * `options` gets rotated by `expand()` and this map has to survive that.
+   * Every key must be one of `options` other than the entry at `answer`.
+   * Optional because most of the bank predates this field - it is required
+   * only where a pack's own validation demands it (see the city-pack tests).
+   */
+  readonly distractorRationale?: Readonly<Record<string, string>>;
 }
 
 export interface ContentPack {

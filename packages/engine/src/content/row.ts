@@ -25,6 +25,8 @@ export interface RowMeta {
   readonly interference_set?: readonly QuestionId[];
   /** Set only when `explanation` carries an origin story; see DESIGN.md §3.3.3(7). */
   readonly glossProvenance?: GlossProvenance;
+  /** DESIGN.md §11.6 correction 3; see {@link Question.distractorRationale}. */
+  readonly distractorRationale?: Readonly<Record<string, string>>;
 }
 
 /**
@@ -90,6 +92,9 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
         ...(meta?.glossProvenance === undefined
           ? {}
           : { glossProvenance: meta.glossProvenance }),
+        ...(meta?.distractorRationale === undefined
+          ? {}
+          : { distractorRationale: meta.distractorRationale }),
       });
     });
   }
