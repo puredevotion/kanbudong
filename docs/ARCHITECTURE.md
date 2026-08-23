@@ -121,7 +121,7 @@ downstream of a game event.
   device cannot precompute what it will be asked even though the algorithm is
   public and the whole bank is on its disk.
 - **Option order:** seeded by nonce plus question id, so every device shows the
-  same four buttons in the same order and an answer index means one thing.
+  same three buttons in the same order and an answer index means one thing.
 
 ## Storage
 
