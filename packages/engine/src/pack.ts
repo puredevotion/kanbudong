@@ -138,7 +138,7 @@ export interface PresentedQuestion {
  */
 export function presentQuestion(question: Question, nonce: string): PresentedQuestion {
   const rng = createRng(nonce, 'options', question.id);
-  const order = rng.shuffle([0, 1, 2, 3]);
+  const order = rng.shuffle([0, 1, 2]);
   return {
     question,
     options: order.map((i) => question.options[i] as string),
@@ -160,9 +160,9 @@ export function validatePack(pack: ContentPack): string[] {
     seen.add(q.id);
     if (!categories.has(q.category)) problems.push(`${q.id}: unknown category ${q.category}`);
     if (!DIFFICULTY_ORDER.includes(q.difficulty)) problems.push(`${q.id}: unknown difficulty ${q.difficulty}`);
-    if (q.options.length !== 4) problems.push(`${q.id}: needs exactly 4 options`);
+    if (q.options.length !== 3) problems.push(`${q.id}: needs exactly 3 options`);
     if (new Set(q.options).size !== q.options.length) problems.push(`${q.id}: duplicate options`);
-    if (q.answer < 0 || q.answer > 3) problems.push(`${q.id}: answer out of range`);
+    if (q.answer < 0 || q.answer > 2) problems.push(`${q.id}: answer out of range`);
     if (q.explanation.trim().length === 0) problems.push(`${q.id}: missing explanation`);
     if (q.prompt.trim().length === 0) problems.push(`${q.id}: missing prompt`);
     if (q.decomposition?.kind === 'character') {

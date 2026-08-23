@@ -14,7 +14,7 @@ export const MENU_ANIMAL: CategoryContent = {
   low: [
     [
       'On the menu. What are you about to eat?',
-      ['meat — by default pork', 'small portion', 'brain', 'kidney'],
+      ['meat — by default pork', 'brain', 'kidney'],
       0,
       'ròu · vlees (meat) — on menus this means pork unless another meat is specified.',
       { hanzi: '肉', pinyin: 'ròu', nl: 'vlees — standaard varkensvlees', en: 'meat — by default pork' },
@@ -23,7 +23,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['vegetarian', 'steam', 'house specialty', 'signature dish'],
+      ['vegetarian', 'steam', 'house specialty'],
       0,
       'sù · vegetarisch (vegetarian) — though "vegetarian" dishes are often still cooked with oyster sauce or meat stock.',
       { hanzi: '素', pinyin: 'sù', nl: 'vegetarisch', en: 'vegetarian' },
@@ -32,7 +32,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['meat-containing', 'dumpling', 'steam', 'standard portion'],
+      ['meat-containing', 'steam', 'standard portion'],
       0,
       'hūn · met vlees (meat-containing) — often used as the "meat" heading paired against 素 ("vegetarian").',
       { hanzi: '荤', pinyin: 'hūn', nl: 'met vlees', en: 'meat-containing' },
@@ -43,7 +43,7 @@ export const MENU_ANIMAL: CategoryContent = {
   mid: [
     [
       'On the menu. What are you about to eat?',
-      ['chicken', 'intestine', 'market price', 'flash-fry'],
+      ['chicken', 'intestine', 'flash-fry'],
       0,
       'jī · kip (chicken).',
       { hanzi: '鸡', pinyin: 'jī', nl: 'kip', en: 'chicken' },
@@ -52,7 +52,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['beef', 'kidney', 'tendon', 'sweet'],
+      ['beef', 'kidney', 'tendon'],
       0,
       'niú · rund (beef).',
       { hanzi: '牛', pinyin: 'niú', nl: 'rund', en: 'beef' },
@@ -61,7 +61,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['pig', 'covered braise', 'tongue', 'beef'],
+      ['pig', 'tongue', 'beef'],
       0,
       'zhū · varken (pig).',
       { hanzi: '猪', pinyin: 'zhū', nl: 'varken', en: 'pig' },
@@ -70,7 +70,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['lamb, mutton, goat', 'vegetarian', 'pan-fry', 'shrimp, prawn'],
+      ['lamb, mutton, goat', 'vegetarian', 'shrimp, prawn'],
       0,
       'yáng · lam, schaap, geit — one character covers lamb, mutton and goat.',
       { hanzi: '羊', pinyin: 'yáng', nl: 'lam, schaap, geit', en: 'lamb, mutton, goat' },
@@ -79,7 +79,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['fish', 'tongue', 'brain', 'dumpling'],
+      ['fish', 'tongue', 'brain'],
       0,
       'yú · vis (fish) — one of the most common proteins you\'ll see on a menu.',
       { hanzi: '鱼', pinyin: 'yú', nl: 'vis', en: 'fish' },
@@ -88,7 +88,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['shrimp, prawn', 'roast, grill', 'chicken', 'brain'],
+      ['shrimp, prawn', 'chicken', 'brain'],
       0,
       'xiā · garnaal (shrimp, prawn) — worth recognizing if you have a shellfish allergy.',
       { hanzi: '虾', pinyin: 'xiā', nl: 'garnaal', en: 'shrimp, prawn' },
@@ -97,7 +97,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['egg', 'sweet', 'soup', 'shrimp, prawn'],
+      ['egg', 'soup', 'shrimp, prawn'],
       0,
       'dàn · ei (egg).',
       { hanzi: '蛋', pinyin: 'dàn', nl: 'ei', en: 'egg' },
@@ -106,7 +106,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['cooked rice; also "meal"', 'vegetarian', 'stir-fry', 'tossed, dressed'],
+      ['cooked rice; also "meal"', 'stir-fry', 'tossed, dressed'],
       0,
       'fàn · rijst, maaltijd (cooked rice; also "meal") — as in 炒饭 (fried rice), 米饭 (steamed rice).',
       { hanzi: '饭', pinyin: 'fàn', nl: 'rijst, maaltijd', en: 'cooked rice; also "meal"' },
@@ -115,7 +115,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['wheat noodles; also "flour"', 'pan-fry', 'meat-containing', 'shrimp, prawn'],
+      ['wheat noodles; also "flour"', 'pan-fry', 'shrimp, prawn'],
       0,
       'miàn · tarwenoedels (wheat noodles; also "flour"). Shows up in compounds like 面馆 (noodle shop).',
       { hanzi: '面', pinyin: 'miàn', nl: 'tarwenoedels', en: 'wheat noodles; also "flour"' },
@@ -124,7 +124,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['rice noodles; also "powder"', 'swish in broth', 'staples: rice, noodles, buns', 'chicken'],
+      ['rice noodles; also "powder"', 'swish in broth', 'staples: rice, noodles, buns'],
       0,
       'fěn · rijstnoedels (rice noodles) — the same character can also mean "powder", but on a menu it means noodles.',
       { hanzi: '粉', pinyin: 'fěn', nl: 'rijstnoedels', en: 'rice noodles; also "powder"' },
@@ -133,7 +133,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['dumpling', 'rice noodles; also "powder"', 'boil', 'liver'],
+      ['dumpling', 'rice noodles; also "powder"', 'boil'],
       0,
       'jiǎo · dumpling.',
       { hanzi: '饺', pinyin: 'jiǎo', nl: 'dumpling', en: 'dumpling' },
@@ -142,7 +142,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['filled steamed bun', 'tendon', 'swish in broth', 'gizzard'],
+      ['filled steamed bun', 'swish in broth', 'gizzard'],
       0,
       'bāo · gevuld gestoomd broodje (filled steamed bun) — unlike 馒头, which is the plain, unfilled version.',
       { hanzi: '包', pinyin: 'bāo', nl: 'gevuld gestoomd broodje', en: 'filled steamed bun' },
@@ -151,7 +151,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['pot', 'large portion', 'small portion', 'meat — by default pork'],
+      ['pot', 'large portion', 'small portion'],
       0,
       'guō · pan, pot (pot) — as in 火锅 (hotpot), 砂锅 (clay pot), 干锅 (dry pot).',
       { hanzi: '锅', pinyin: 'guō', nl: 'pan', en: 'pot' },
@@ -162,7 +162,7 @@ export const MENU_ANIMAL: CategoryContent = {
   high: [
     [
       'On the menu. What are you about to eat?',
-      ['intestine', 'pan-fry', 'large portion', 'master-stock braise'],
+      ['intestine', 'pan-fry', 'master-stock braise'],
       0,
       'cháng · darm (intestine) — as in 肥肠, 大肠.',
       { hanzi: '肠', pinyin: 'cháng', nl: 'darm', en: 'intestine', structure: 'left-right' },
@@ -176,7 +176,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['tripe, stomach', 'liver', 'stir-fry', 'tendon'],
+      ['tripe, stomach', 'liver', 'tendon'],
       0,
       'dǔ · pens, maag (tripe, stomach) — as in 毛肚 on hotpot menus. Read with a different tone, dù, it instead means "belly".',
       { hanzi: '肚', pinyin: 'dǔ', nl: 'pens, maag', en: 'tripe, stomach', structure: 'left-right' },
@@ -190,7 +190,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['liver', 'cold dishes', 'lung', 'sweet'],
+      ['liver', 'cold dishes', 'lung'],
       0,
       'gān · lever (liver) — as in 猪肝 (pork liver), 鹅肝 (foie gras). Built from 肉 (⺼, meat) plus 干, which happens to give the whole character its exact reading, gān.',
       { hanzi: '肝', pinyin: 'gān', nl: 'lever', en: 'liver', structure: 'left-right' },
@@ -207,7 +207,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['kidney', 'boil', 'cold dishes', 'wheat noodles; also "flour"'],
+      ['kidney', 'boil', 'cold dishes'],
       0,
       'yāo · nier (kidney) — as in 腰花. The same character also means "waist".',
       { hanzi: '腰', pinyin: 'yāo', nl: 'nier', en: 'kidney', structure: 'left-right' },
@@ -221,7 +221,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['lung', 'pot', 'sweet', 'wheat noodles; also "flour"'],
+      ['lung', 'pot', 'wheat noodles; also "flour"'],
       0,
       'fèi · long (lung) — despite its name, 夫妻肺片 no longer actually contains lung.',
       { hanzi: '肺', pinyin: 'fèi', nl: 'long', en: 'lung', structure: 'left-right' },
@@ -235,7 +235,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['kidney', 'swish in broth', 'gizzard', 'large portion'],
+      ['kidney', 'swish in broth', 'gizzard'],
       0,
       'shèn · nier (kidney).',
       { hanzi: '肾', pinyin: 'shèn', nl: 'nier', en: 'kidney', structure: 'top-bottom' },
@@ -249,7 +249,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['brain', 'steam', 'large portion', 'master-stock braise'],
+      ['brain', 'steam', 'master-stock braise'],
       0,
       'nǎo · hersenen (brain) — as in 脑花.',
       { hanzi: '脑', pinyin: 'nǎo', nl: 'hersenen', en: 'brain', structure: 'left-right' },
@@ -263,7 +263,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['gizzard', 'soft drinks', 'large portion', 'signature dish'],
+      ['gizzard', 'large portion', 'signature dish'],
       0,
       'zhēn · spiermaag (gizzard). By frequency alone this is unreachable - rank 7,674 in a hundred-million-token corpus - but on a hotpot order sheet it is one of the most consequential characters on the page.',
       { hanzi: '胗', pinyin: 'zhēn', nl: 'spiermaag', en: 'gizzard', structure: 'left-right' },
@@ -277,7 +277,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['blood, as a set curd', 'swish in broth', 'liver', 'standard portion'],
+      ['blood, as a set curd', 'swish in broth', 'liver'],
       0,
       'xuè · bloed, als gestolde koek (blood, served as a set curd) — as in 鸭血 (duck blood), 毛血旺. Despite sitting beside seven ⺼ characters on this menu, 血 does not carry the meat radical at all - its own radical is 血.',
       { hanzi: '血', pinyin: 'xuè', nl: 'bloed, als gestolde koek', en: 'blood, as a set curd' },
@@ -286,7 +286,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['tongue', 'signature dish', 'egg', 'blood, as a set curd'],
+      ['tongue', 'egg', 'blood, as a set curd'],
       0,
       'shé · tong (tongue) — as in 牛舌 (beef tongue). Also does not carry the meat radical: it is 千 over 口.',
       { hanzi: '舌', pinyin: 'shé', nl: 'tong', en: 'tongue', structure: 'top-bottom' },
@@ -295,7 +295,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['tendon', 'kidney', 'market price', 'standard portion'],
+      ['tendon', 'kidney', 'standard portion'],
       0,
       'jīn · pees (tendon).',
       { hanzi: '筋', pinyin: 'jīn', nl: 'pees', en: 'tendon' },
@@ -304,7 +304,7 @@ export const MENU_ANIMAL: CategoryContent = {
     ],
     [
       'On the menu. What are you about to eat?',
-      ['skin, crackling', 'pig', 'kidney', 'signature dish'],
+      ['skin, crackling', 'pig', 'kidney'],
       0,
       'pí · huid, zwoerd (skin, crackling) — as in 猪皮 (pork skin), 皮蛋 (preserved egg). A third organ-set character with no meat radical - 皮 is its own radical.',
       { hanzi: '皮', pinyin: 'pí', nl: 'huid, zwoerd', en: 'skin, crackling', structure: 'atomic' },

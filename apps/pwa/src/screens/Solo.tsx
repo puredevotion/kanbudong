@@ -17,6 +17,7 @@ import { navigate } from '../lib/router.js';
 import { getItemMemory, loadAllMemory, putItemMemory } from '../lib/soloMemory.js';
 import { useApp } from '../lib/store.js';
 import { ActionBar, Screen } from '../ui/atoms.jsx';
+import { DecompositionPanel, useRevealDwell, useStage1HanziAlone } from '../ui/reveal.jsx';
 
 /**
  * The solo daily surface (docs/DESIGN.md §11.9). No opponent, no bet tiers, no
@@ -32,6 +33,8 @@ export function Solo(): ReactNode {
   const [reviewed, setReviewed] = useState(0);
   const [reveal, setReveal] = useState<{ chosenIndex: number; correct: boolean } | null>(null);
   const [done, setDone] = useState(false);
+  const [stage2, setStage2] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   const playerId = identity?.id ?? null;
 
@@ -56,6 +59,14 @@ export function Solo(): ReactNode {
       setCurrent(next);
     }
   }, [queue, current, done, presented, reviewed]);
+
+  // DESIGN.md §2.5/§5.5: stage 1's hanzi-alone dwell and the minimum reveal
+  // dwell both count from the moment a reveal appears, not from when the
+  // question was shown - "none" while there is no reveal keeps both hooks
+  // unarmed without making their call conditional (rules of hooks).
+  const revealArmKey = current !== null && reveal !== null ? `${current.id}-${reviewed}` : 'none';
+  const hanziAlone = useStage1HanziAlone(revealArmKey);
+  const dwellElapsed = useRevealDwell(revealArmKey);
 
   if (playerId === null || queue === null) return null;
 
@@ -95,6 +106,8 @@ export function Solo(): ReactNode {
     setReviewed((n) => n + 1);
     setCurrent(null);
     setReveal(null);
+    setStage2(false);
+    setShowBreakdown(false);
   };
 
   return (
@@ -139,10 +152,81 @@ export function Solo(): ReactNode {
       {reveal !== null && (
         <Card variant={reveal.correct ? 'secondary' : 'tertiary'}>
           <Card.Content className="flex flex-col gap-2 text-sm">
-            <p className={reveal.correct ? 'font-medium text-success' : 'font-medium text-danger-text'}>
-              {reveal.correct ? 'Correct' : 'Not quite'}
-            </p>
-            <p className="text-muted">{current.explanation}</p>
+            {/* Stage 1: the target hanzi alone, then the correction - nothing else. */}
+            {current.face !== undefined && (
+              <div className="font-han text-center text-[3rem] font-medium leading-none">
+                {current.face.hanzi}
+              </div>
+            )}
+            {!hanziAlone && (
+              <p
+                className={reveal.correct ? 'font-medium text-success' : 'font-medium text-danger-text'}
+              >
+                {reveal.correct ? 'Correct' : 'Not quite'}
+              </p>
+            )}
+            {!reveal.correct && !hanziAlone && presentedQuestion !== null && (
+              <p>
+                <span className="text-muted">You said: </span>
+                <span className="font-medium text-danger-text">
+                  {presentedQuestion.options[reveal.chosenIndex]} — wrong
+                </span>
+              </p>
+            )}
+
+            {!hanziAlone && !stage2 && (
+              <Button variant="ghost" size="sm" fullWidth onPress={() => setStage2(true)}>
+                Show every option
+              </Button>
+            )}
+
+            {!hanziAlone && stage2 && presentedQuestion !== null && (
+              <div className="flex flex-col gap-2">
+                {current.options.map((option, i) => {
+                  const isCorrect = i === current.answer;
+                  const isChosenWrong =
+                    !isCorrect && presentedQuestion.options[reveal.chosenIndex] === option;
+                  return (
+                    <div
+                      key={option}
+                      className={`rounded-xl border px-3 py-2 ${
+                        isCorrect
+                          ? 'border-l-4 border-l-success border-default-200/40'
+                          : 'border-default-200/40'
+                      }`}
+                    >
+                      <span className={isChosenWrong ? 'font-medium text-danger-text' : ''}>
+                        {option}
+                      </span>
+                      {isChosenWrong && <span className="text-danger-text"> — wrong</span>}
+                    </div>
+                  );
+                })}
+
+                {(current.decomposition !== undefined || current.face?.transparency === 'opaque') && (
+                  <>
+                    {!showBreakdown ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth
+                        onPress={() => setShowBreakdown(true)}
+                      >
+                        See how it&apos;s made
+                      </Button>
+                    ) : (
+                      <DecompositionPanel
+                        decomposition={current.decomposition}
+                        transparency={current.face?.transparency}
+                        structure={current.face?.structure}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
+            {!hanziAlone && <p className="text-muted">{current.explanation}</p>}
           </Card.Content>
         </Card>
       )}
@@ -153,7 +237,7 @@ export function Solo(): ReactNode {
             Stop for now
           </Button>
         ) : (
-          <Button variant="primary" size="lg" fullWidth onPress={advance}>
+          <Button variant="primary" size="lg" fullWidth isDisabled={!dwellElapsed} onPress={advance}>
             Next
           </Button>
         )}

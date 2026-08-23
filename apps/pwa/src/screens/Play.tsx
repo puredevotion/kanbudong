@@ -25,6 +25,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
 import { withGlyphs } from '../ui/glyphs.jsx';
+import { DecompositionPanel, useRevealDwell, useStage1HanziAlone } from '../ui/reveal.jsx';
 import { Sign, domainOf } from '../ui/signs.jsx';
 
 export function Play(): ReactNode {
@@ -314,10 +315,14 @@ function BetweenTurns({
   canDealNow: boolean;
 }): ReactNode {
   const actingTeam = scoreboard(state).find((row) => row.isActing)?.team;
+  // DESIGN.md §5.5: minimum reveal dwell before the equivalent of "Next" (here,
+  // dealing the next turn) enables - keyed on the turn so a fresh reveal always
+  // gets its own dwell, not whatever is left over from the previous one.
+  const dwellElapsed = useRevealDwell(lastTurn?.turnIndex ?? -1);
 
   return (
     <div className="flex flex-col gap-4">
-      {lastTurn !== null && <Outcome record={lastTurn} state={state} />}
+      {lastTurn !== null && <Outcome key={lastTurn.turnIndex} record={lastTurn} state={state} />}
 
       <Card>
         <Card.Header>
@@ -330,7 +335,13 @@ function BetweenTurns({
         </Card.Header>
         {canDealNow && (
           <Card.Footer>
-            <Button variant="primary" size="lg" fullWidth onPress={onDeal}>
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              isDisabled={lastTurn !== null && !dwellElapsed}
+              onPress={onDeal}
+            >
               Deal three categories
             </Button>
           </Card.Footer>
@@ -350,14 +361,21 @@ function BetweenTurns({
  * reading, ahead of vocabulary size (DESIGN.md §1), so this is the screen that
  * teaches and it gets the room. It never auto-advances; the table dismisses it.
  *
- * It expands the item by exactly one level and stops. Piling on every interesting
- * pattern at once is what the coherence principle warns against.
+ * DESIGN.md §2.5/§5.5: the reveal is two stages. Stage 1 is automatic - the
+ * hanzi alone for ~800 ms, then the correct answer plus (when a lure was
+ * chosen) that lure named and marked wrong, all at full size, nothing else.
+ * Stage 2 is an explicit tap: every option glossed, wrong rows kept fully
+ * legible. The component breakdown is a further explicit tap beyond that -
+ * "the reveal's primary optional layer" (§3.3), never shown automatically.
  */
 function Outcome({ record, state }: { record: TurnRecord; state: GameState }): ReactNode {
   const question = questionById(SEED_PACK, record.questionId);
   const team = state.teams.find((t) => t.id === record.teamId);
   const correctText = question?.options[question.answer];
   const face = question?.face;
+  const hanziAlone = useStage1HanziAlone(record.turnIndex);
+  const [stage2, setStage2] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   return (
     <Card variant={record.correct ? 'secondary' : 'tertiary'}>
@@ -378,51 +396,76 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
       {question !== undefined && (
         <Card.Content className="flex flex-col gap-4 text-sm">
           {face !== undefined && (
-            <>
-              {/* The word, on the light ground the sign used: what you just read
-                  is what you now study. */}
-              <div className="rounded-[3px] bg-[#f4f4f2] px-5 py-5 text-center">
-                <div className="font-han text-[3.4rem] font-medium leading-none tracking-[0.05em] text-[#14140f]">
-                  {face.hanzi}
-                </div>
-                <div className="mt-3 text-[1.05rem] font-medium text-[#5a5a52]">{face.pinyin}</div>
-                <div className="mt-2.5 border-t border-black/10 pt-2.5 text-[0.95rem] text-[#14140f]">
-                  <strong className="font-semibold">{correctText}</strong>
-                  <span className="text-[#5a5a52]"> &middot; {face.nl}</span>
-                </div>
+            <div className="rounded-[3px] bg-[#f4f4f2] px-5 py-5 text-center">
+              <div className="font-han text-[3.4rem] font-medium leading-none tracking-[0.05em] text-[#14140f]">
+                {face.hanzi}
               </div>
-
-              {/* One level down: the characters it comes apart into. Glossing each
-                  needs a component table the bank does not carry yet (§6.1), so
-                  for now a multi-character span is shown split and no more. */}
-              {[...face.hanzi].length > 1 && (
-                <div>
-                  <div className="text-[0.68rem] font-bold tracking-[0.16em] text-muted">
-                    IT COMES APART
+              {!hanziAlone && (
+                <>
+                  <div className="mt-3 text-[1.05rem] font-medium text-[#5a5a52]">{face.pinyin}</div>
+                  <div className="mt-2.5 border-t border-black/10 pt-2.5 text-[0.95rem] text-[#14140f]">
+                    <strong className="font-semibold">{correctText}</strong>
+                    <span className="text-[#5a5a52]"> &middot; {face.nl}</span>
                   </div>
-                  <div className="mt-2 flex gap-2">
-                    {[...face.hanzi].map((ch, i) => (
-                      <div
-                        key={`${ch}-${i}`}
-                        className="grow rounded-xl border border-border bg-surface py-3 text-center"
-                      >
-                        <span className="font-han text-[2rem] font-medium leading-none">{ch}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  {record.chosenText !== null && !record.correct && (
+                    <p className="mt-2 text-[0.9rem]">
+                      <span className="text-[#5a5a52]">They said: </span>
+                      <span className="font-medium text-danger-text">{record.chosenText}</span>
+                      <span className="text-danger-text"> — wrong</span>
+                    </p>
+                  )}
+                </>
               )}
-            </>
+            </div>
           )}
 
-          {record.chosenText !== null && !record.correct && (
-            <p>
-              <span className="text-muted">They said: </span>
-              <span className="font-medium text-danger-text">{record.chosenText}</span>
-            </p>
+          {!hanziAlone && !stage2 && (
+            <Button variant="ghost" size="sm" fullWidth onPress={() => setStage2(true)}>
+              Show every option
+            </Button>
           )}
 
-          <p className="text-muted">{withGlyphs(question.explanation)}</p>
+          {!hanziAlone && stage2 && (
+            <div className="flex flex-col gap-2">
+              {question.options.map((option, i) => {
+                const isCorrect = i === question.answer;
+                const isChosenWrong = !isCorrect && option === record.chosenText;
+                return (
+                  <div
+                    key={option}
+                    className={`rounded-xl border px-3 py-2.5 text-[0.9rem] ${
+                      isCorrect
+                        ? 'border-l-4 border-l-success border-default-200/40'
+                        : 'border-default-200/40'
+                    }`}
+                  >
+                    <span className={isChosenWrong ? 'font-medium text-danger-text' : ''}>
+                      {option}
+                    </span>
+                    {isChosenWrong && <span className="text-danger-text"> — wrong</span>}
+                  </div>
+                );
+              })}
+
+              {(question.decomposition !== undefined || face?.transparency === 'opaque') && (
+                <>
+                  {!showBreakdown ? (
+                    <Button variant="ghost" size="sm" fullWidth onPress={() => setShowBreakdown(true)}>
+                      See how it&apos;s made
+                    </Button>
+                  ) : (
+                    <DecompositionPanel
+                      decomposition={question.decomposition}
+                      transparency={face?.transparency}
+                      structure={face?.structure}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {!hanziAlone && <p className="text-muted">{withGlyphs(question.explanation)}</p>}
         </Card.Content>
       )}
     </Card>

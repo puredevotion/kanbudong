@@ -1,6 +1,14 @@
 import type { Decomposition } from '../components.js';
 import { createRng } from '../rng.js';
-import type { CategoryId, Difficulty, Question, SignFace, Tier } from '../types.js';
+import type {
+  CategoryId,
+  ConfusionType,
+  Difficulty,
+  Question,
+  QuestionId,
+  SignFace,
+  Tier,
+} from '../types.js';
 
 /**
  * Fields authored rarely enough that giving each one its own positional tuple
@@ -11,6 +19,9 @@ import type { CategoryId, Difficulty, Question, SignFace, Tier } from '../types.
 export interface RowMeta {
   readonly tier?: Tier;
   readonly freqRank?: number;
+  readonly confusion_type?: ConfusionType;
+  readonly confusable_with?: readonly QuestionId[];
+  readonly interference_set?: readonly QuestionId[];
 }
 
 /**
@@ -28,8 +39,9 @@ export interface RowMeta {
  */
 export type Row = readonly [
   prompt: string,
-  options: readonly [string, string, string, string],
-  answer: 0 | 1 | 2 | 3,
+  /** DESIGN.md §2.3/§1.2 P6: three options, not four. */
+  options: readonly [string, string, string],
+  answer: 0 | 1 | 2,
   explanation: string,
   /** What the sign template draws. Absent on items that are not a sign. */
   face?: SignFace,
@@ -67,6 +79,11 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
         ...(decomposition === undefined ? {} : { decomposition }),
         ...(meta?.tier === undefined ? {} : { tier: meta.tier }),
         ...(meta?.freqRank === undefined ? {} : { freqRank: meta.freqRank }),
+        ...(meta?.confusion_type === undefined ? {} : { confusion_type: meta.confusion_type }),
+        ...(meta?.confusable_with === undefined ? {} : { confusable_with: meta.confusable_with }),
+        ...(meta?.interference_set === undefined
+          ? {}
+          : { interference_set: meta.interference_set }),
       });
     });
   }
@@ -89,16 +106,15 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
  * the answer index moved by the same amount.
  */
 function rotate(
-  options: readonly [string, string, string, string],
-  answer: 0 | 1 | 2 | 3,
+  options: readonly [string, string, string],
+  answer: 0 | 1 | 2,
   id: string,
-): { options: [string, string, string, string]; answer: 0 | 1 | 2 | 3 } {
-  const by = createRng('rotate', id).int(4);
-  const rotated = options.map((_, i) => options[(i + by) % 4] as string) as [
-    string,
+): { options: [string, string, string]; answer: 0 | 1 | 2 } {
+  const by = createRng('rotate', id).int(3);
+  const rotated = options.map((_, i) => options[(i + by) % 3] as string) as [
     string,
     string,
     string,
   ];
-  return { options: rotated, answer: (((answer - by + 4) % 4) as 0 | 1 | 2 | 3) };
+  return { options: rotated, answer: (((answer - by + 3) % 3) as 0 | 1 | 2) };
 }

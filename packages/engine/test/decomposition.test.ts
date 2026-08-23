@@ -56,7 +56,7 @@ describe('opaque compounds', () => {
     low: [
       [
         'What does this shop sign mean?',
-        ['sundries, odds and ends', 'east', 'west', 'north'],
+        ['sundries, odds and ends', 'east', 'west'],
         0,
         'dōngxi · this compound does not come apart into "east+west" meaning - learn it whole.',
         { hanzi: '东西', pinyin: 'dōngxi', nl: 'spullen', transparency: 'opaque' },
@@ -121,7 +121,7 @@ describe('validatePack component references', () => {
       low: [
         [
           'Prompt?',
-          ['right', 'w1', 'w2', 'w3'],
+          ['right', 'w1', 'w2'],
           0,
           'because',
           undefined,

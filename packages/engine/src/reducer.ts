@@ -338,11 +338,11 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       const question = questionById(pack, active.questionId);
       if (question === undefined) return 'question missing from pack';
       const presented = presentQuestion(question, active.nonce);
-      if (!Number.isInteger(body.chosenIndex) || body.chosenIndex < 0 || body.chosenIndex > 3) {
+      if (!Number.isInteger(body.chosenIndex) || body.chosenIndex < 0 || body.chosenIndex > 2) {
         return 'option out of range';
       }
-      // Just validated as an integer 0-3 above.
-      const chosenIndex = body.chosenIndex as 0 | 1 | 2 | 3;
+      // Just validated as an integer 0-2 above.
+      const chosenIndex = body.chosenIndex as 0 | 1 | 2;
       return resolve(state, active, {
         answererId: author,
         chosenIndex,
@@ -414,7 +414,7 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
 
 interface Resolution {
   readonly answererId: PlayerId | null;
-  readonly chosenIndex: 0 | 1 | 2 | 3 | -1;
+  readonly chosenIndex: 0 | 1 | 2 | -1;
   readonly chosenText: string | null;
   readonly correct: boolean;
   readonly difficulty: Difficulty;

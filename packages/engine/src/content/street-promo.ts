@@ -12,7 +12,7 @@ export const STREET_PROMO: CategoryContent = {
   low: [
     [
       'On a shopfront window. What does this sign mean?',
-      ['on sale, discounted', 'closed today', 'members only', 'no parking'],
+      ['on sale, discounted', 'closed today', 'members only'],
       0,
       'dǎzhé · korting (discount) — literally "hit a percentage": the fraction is what you pay, not what you save.',
       { hanzi: '打折', pinyin: 'dǎzhé', nl: 'korting', en: 'on sale, discounted' },
@@ -21,7 +21,7 @@ export const STREET_PROMO: CategoryContent = {
     ],
     [
       'On a shopfront window. What does this sign mean?',
-      ['clearance sale', 'grand opening', 'out of stock', 'reserved'],
+      ['clearance sale', 'grand opening', 'out of stock'],
       0,
       'shuǎimài · uitverkoop (clearance sale) — everything must go, usually before a shop closes or moves.',
       { hanzi: '甩卖', pinyin: 'shuǎimài', nl: 'uitverkoop', en: 'clearance sale' },
@@ -32,7 +32,7 @@ export const STREET_PROMO: CategoryContent = {
   mid: [
     [
       'On a shopfront window. What does this sign mean?',
-      ['stock clearance, everything must go', 'on sale, discounted', 'grand opening', 'members only'],
+      ['stock clearance, everything must go', 'on sale, discounted', 'grand opening'],
       0,
       'qīngcāng · alles moet weg (stock clearance) — a step past 打折: the whole inventory is being sold off, not just discounted.',
       { hanzi: '清仓', pinyin: 'qīngcāng', nl: 'alles moet weg', en: 'stock clearance, everything must go' },
@@ -41,7 +41,7 @@ export const STREET_PROMO: CategoryContent = {
     ],
     [
       'On a shopfront window. What does this sign mean?',
-      ['big promotion, big sale', 'clearance sale', 'no parking', 'reserved'],
+      ['big promotion, big sale', 'clearance sale', 'reserved'],
       0,
       'dàcùxiāo · grote aanbieding (big promotion) — a general "big sale" banner, without saying by how much.',
       { hanzi: '大促销', pinyin: 'dàcùxiāo', nl: 'grote aanbieding', en: 'big promotion, big sale' },
@@ -52,7 +52,7 @@ export const STREET_PROMO: CategoryContent = {
   high: [
     [
       'On a shopfront window. What does this sign mean?',
-      ['special offer, discount', 'stock clearance, everything must go', 'grand opening', 'out of stock'],
+      ['special offer, discount', 'stock clearance, everything must go', 'grand opening'],
       0,
       'yōuhuì · aanbieding, korting (special offer) — a softer, more general word than 打折; it does not commit to a specific mechanism.',
       { hanzi: '优惠', pinyin: 'yōuhuì', nl: 'aanbieding, korting', en: 'special offer, discount' },
@@ -61,7 +61,7 @@ export const STREET_PROMO: CategoryContent = {
     ],
     [
       'On a shopfront window. What does this sign mean?',
-      ['grand opening', 'special offer, discount', 'out of stock', 'reserved'],
+      ['grand opening', 'special offer, discount', 'reserved'],
       0,
       'kāizhāng dàjí · grote opening (grand opening) — a launch banner, not a discount at all; a common source of confusion with the sale posters around it.',
       { hanzi: '开张大吉', pinyin: 'kāizhāng dàjí', nl: 'grote opening', en: 'grand opening' },

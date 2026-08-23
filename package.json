@@ -17,7 +17,7 @@
     "fonts:subset": "python3 scripts/build-fonts.py",
     "build": "pnpm fonts && pnpm --filter @kanbudong/pwa build",
     "dev": "pnpm --filter @kanbudong/pwa dev",
-    "lint": "oxlint .",
+    "lint": "oxlint . && node scripts/check-no-glyph-match.mjs",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {

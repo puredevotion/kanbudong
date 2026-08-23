@@ -153,7 +153,7 @@ export class Table {
     const state = this.state();
     const presented = activeQuestion(state, SEED_PACK);
     if (presented === null) throw new Error('no live question to answer');
-    const chosen = correct ? presented.correctIndex : (presented.correctIndex + 1) % 4;
+    const chosen = correct ? presented.correctIndex : (presented.correctIndex + 1) % 3;
     this.push(answerTurn(this.log, this.player(this.actorIndex()), state.turnIndex, chosen));
   }
 

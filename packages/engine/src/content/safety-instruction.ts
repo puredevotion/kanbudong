@@ -5,7 +5,7 @@ export const SAFETY_INSTRUCTION: CategoryContent = {
   low: [
     [
       'On a blue sign. What is it telling you to do?',
-      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
       0,
       'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
       { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
@@ -14,7 +14,7 @@ export const SAFETY_INSTRUCTION: CategoryContent = {
   mid: [
     [
       'On a blue sign. What is it telling you to do?',
-      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
       0,
       'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
       { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
@@ -23,7 +23,7 @@ export const SAFETY_INSTRUCTION: CategoryContent = {
   high: [
     [
       'On a blue sign. What is it telling you to do?',
-      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
       0,
       'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
       { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },

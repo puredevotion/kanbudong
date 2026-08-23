@@ -5,14 +5,14 @@ export const MENU_FLAVOUR: CategoryContent = {
   low: [
     [
       'Beside a dish. What is it warning you about?',
-      ['chilli-hot', 'cold dishes', 'sweet', 'liver'],
+      ['chilli-hot', 'cold dishes', 'sweet'],
       0,
       'là · pittig, heet (chilli-hot, spicy). The most important warning character to recognize.',
       { hanzi: '辣', pinyin: 'là', nl: 'pittig, heet' },
     ],
     [
       'Beside a dish. What is it warning you about?',
-      ['numbing, lip-tingling', 'sour', '"from" (a price)', 'soft drinks'],
+      ['numbing, lip-tingling', 'sour', 'soft drinks'],
       0,
       'má · verdovend, tintelend (numbing, lip-tingling). This is not spicy heat — it is a tingling, numbing sensation with no exact Dutch or English word.',
       { hanzi: '麻', pinyin: 'má', nl: 'verdovend, tintelend' },
@@ -21,21 +21,21 @@ export const MENU_FLAVOUR: CategoryContent = {
   mid: [
     [
       'Beside a dish. What is it warning you about?',
-      ['salty', 'vegetarian', 'soft drinks', 'numbing, lip-tingling'],
+      ['salty', 'vegetarian', 'soft drinks'],
       0,
       'xián · zout (salty). Dishes labelled this way tend to be saltier than "salty" usually implies in Dutch or English.',
       { hanzi: '咸', pinyin: 'xián', nl: 'zout' },
     ],
     [
       'Beside a dish. What is it warning you about?',
-      ['sour', 'tossed, dressed', 'kidney', 'cold dishes'],
+      ['sour', 'tossed, dressed', 'cold dishes'],
       0,
       'suān · zuur (sour). Also marks pickled-vegetable dishes.',
       { hanzi: '酸', pinyin: 'suān', nl: 'zuur' },
     ],
     [
       'Beside a dish. What is it warning you about?',
-      ['sweet', 'house specialty', 'egg', 'brain'],
+      ['sweet', 'house specialty', 'egg'],
       0,
       'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added.',
       { hanzi: '甜', pinyin: 'tián', nl: 'zoet' },
@@ -44,7 +44,7 @@ export const MENU_FLAVOUR: CategoryContent = {
   high: [
     [
       'Beside a dish. What is it warning you about?',
-      ['sweet', 'tendon', 'skin, crackling', 'lamb, mutton, goat'],
+      ['sweet', 'skin, crackling', 'lamb, mutton, goat'],
       0,
       'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added.',
       { hanzi: '甜', pinyin: 'tián', nl: 'zoet' },

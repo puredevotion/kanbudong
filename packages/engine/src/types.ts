@@ -37,6 +37,15 @@ export interface Category {
 export type Transparency = 'transparent' | 'semi' | 'opaque';
 
 /**
+ * DESIGN.md §2.3/§3.4: four values, not a boolean - form-confusable (人/入)
+ * needs staged introduction; meaning-confusable-visually-distinct (麻/辣) can
+ * be shown together from day one; both; and shared-morpheme (出口/入口) is a
+ * fourth category no cited study covers and must be instrumented separately
+ * rather than assumed to behave like the others.
+ */
+export type ConfusionType = 'form' | 'meaning-visually-distinct' | 'both' | 'shared-morpheme';
+
+/**
  * DESIGN.md §3.3.3(4): which reveal layout a character's decomposition gets.
  * `atomic` covers both true pictographs/ideographs and the directional-
  * complement signs (入口, 出站) that are never decomposed regardless of origin.
@@ -94,10 +103,15 @@ export interface Question {
   readonly category: CategoryId;
   readonly difficulty: Difficulty;
   readonly prompt: string;
-  /** Authored order; the presented order is shuffled per turn nonce. */
-  readonly options: readonly [string, string, string, string];
+  /**
+   * Authored order; the presented order is shuffled per turn nonce.
+   * DESIGN.md §2.3/§1.2 P6: three options, not four - Rodriguez's
+   * meta-analysis found more items per unit time with no psychometric loss
+   * when the retained options are effective competitors, not filler.
+   */
+  readonly options: readonly [string, string, string];
   /** Index into `options` of the correct answer, in authored order. */
-  readonly answer: 0 | 1 | 2 | 3;
+  readonly answer: 0 | 1 | 2;
   /**
    * Shown to everyone once the answer resolves. This is the mechanism by which
    * a disputed post-doc question becomes an argument with the explanation
@@ -132,6 +146,22 @@ export interface Question {
    * (gate 13) - it lives here purely as the diagnostic §6.3(1) calls for.
    */
   readonly freqRank?: number;
+  /**
+   * DESIGN.md §2.3/§3.4: how this item relates to the items in
+   * `confusable_with`. Distractor confusability is a function of exposure
+   * state - unrelated-but-domain-plausible before consolidation,
+   * component-sharing/confusable-family only after an intervening night -
+   * so `confusion_type` and the two id sets below are schema-only in this
+   * phase: they record which items form a confusable family, but selecting
+   * distractors *from* that family based on a player's consolidation state
+   * is deferred (build-time precomputation of every distractor set for the
+   * whole bank is out of this phase's scope; see PLAN.md Phase 5).
+   */
+  readonly confusion_type?: ConfusionType;
+  /** Shown together at resolution once both members are consolidated (§3.4). Opposite of `interference_set` - never fuse the two. */
+  readonly confusable_with?: readonly QuestionId[];
+  /** Must not be scheduled in the same acquisition block (§2.3). Opposite of `confusable_with` - never fuse the two. */
+  readonly interference_set?: readonly QuestionId[];
 }
 
 export interface ContentPack {
@@ -166,7 +196,7 @@ export interface TurnRecord {
   readonly difficulty: Difficulty;
   readonly questionId: QuestionId;
   /** Index into the *presented* option order; -1 for a timeout. */
-  readonly chosenIndex: 0 | 1 | 2 | 3 | -1;
+  readonly chosenIndex: 0 | 1 | 2 | -1;
   /**
    * The actual text of the chosen option, captured at resolution time. Null
    * for a timeout (nothing was chosen). Recomputing this later from

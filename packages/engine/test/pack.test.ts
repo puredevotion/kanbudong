@@ -79,11 +79,11 @@ describe('seed pack', () => {
     expect(new Set(CATEGORIES.map((c) => c.glyph)).size).toBe(CATEGORIES.length);
   });
 
-  it('has a prompt, four distinct options and an explanation everywhere', () => {
+  it('has a prompt, three distinct options and an explanation everywhere', () => {
     for (const question of SEED_PACK.questions) {
       expect(question.prompt.length).toBeGreaterThan(10);
-      expect(question.options).toHaveLength(4);
-      expect(new Set(question.options).size).toBe(4);
+      expect(question.options).toHaveLength(3);
+      expect(new Set(question.options).size).toBe(3);
       expect(question.explanation.length).toBeGreaterThan(10);
     }
   });
@@ -91,28 +91,28 @@ describe('seed pack', () => {
   it('spreads the presented answer position evenly across the pack', () => {
     // Authored position is irrelevant - presentQuestion always shuffles - so
     // what has to be uniform is where the answer actually lands on screen.
-    const counts = new Array<number>(4).fill(0);
+    const counts = new Array<number>(3).fill(0);
     for (const question of SEED_PACK.questions) {
       const index = presentQuestion(question, 'fixed-nonce-for-audit').correctIndex;
       counts[index] = (counts[index] ?? 0) + 1;
     }
-    const expected = SEED_PACK.questions.length / 4;
+    const expected = SEED_PACK.questions.length / 3;
     for (const count of counts) {
       expect(count).toBeGreaterThan(expected * 0.6);
       expect(count).toBeLessThan(expected * 1.4);
     }
   });
 
-  it('spreads the answer evenly across the four stored positions', () => {
+  it('spreads the answer evenly across the three stored positions', () => {
     // The authoring convention is "correct option first", so the raw content is
     // almost entirely index 0. `expand` rotates it out. Without that, anything
     // reading the pack directly - a custom client, an inspection, an export -
     // sees a bank that looks rigged even though play is unaffected.
-    const counts = new Array<number>(4).fill(0);
+    const counts = new Array<number>(3).fill(0);
     for (const question of SEED_PACK.questions) {
       counts[question.answer] = (counts[question.answer] ?? 0) + 1;
     }
-    const expected = SEED_PACK.questions.length / 4;
+    const expected = SEED_PACK.questions.length / 3;
     for (const count of counts) {
       expect(count).toBeGreaterThan(expected * 0.7);
       expect(count).toBeLessThan(expected * 1.3);
@@ -123,13 +123,13 @@ describe('seed pack', () => {
     // The rotation is only safe if it is meaning-preserving, so assert it
     // directly rather than trusting the arithmetic.
     const chunk = {
-      low: [['Prompt?', ['right', 'w1', 'w2', 'w3'], 0, 'because'] as const],
-      mid: [['Prompt?', ['w1', 'right', 'w2', 'w3'], 1, 'because'] as const],
-      high: [['Prompt?', ['w1', 'w2', 'w3', 'right'], 3, 'because'] as const],
+      low: [['Prompt?', ['right', 'w1', 'w2'], 0, 'because'] as const],
+      mid: [['Prompt?', ['w1', 'right', 'w2'], 1, 'because'] as const],
+      high: [['Prompt?', ['w1', 'w2', 'right'], 2, 'because'] as const],
     };
     for (const question of expand('menu-cooking', chunk)) {
       expect(question.options[question.answer]).toBe('right');
-      expect([...question.options].sort()).toEqual(['right', 'w1', 'w2', 'w3']);
+      expect([...question.options].sort()).toEqual(['right', 'w1', 'w2']);
     }
   });
 
@@ -147,7 +147,8 @@ describe('seed pack', () => {
     // The one content bias that survives shuffling, and the one that matters:
     // if the correct answer is reliably the wordiest, a player who knows
     // nothing can profit at the low tier and the whole betting mechanic
-    // (R-13) collapses. Chance is 25 per cent.
+    // (R-13) collapses. Chance is ~33 per cent (three options, per
+    // DESIGN.md §2.3/§1.2 P6).
     //
     // This gate has now caught the same authoring habit twice - writing the
     // justification into the correct option rather than into `explanation` -
@@ -160,10 +161,13 @@ describe('seed pack', () => {
       if (lengths[question.answer] === Math.max(...lengths)) longestWins += 1;
     }
     const rate = longestWins / SEED_PACK.questions.length;
-    // Break-even for the exploit is 50 per cent at low, 37.5 at PhD and
-    // 40 at high, so anything at or above ~37 per cent is profitable for a
-    // player who knows nothing. 32 per cent measured; chance is 25.
-    expect(rate).toBeLessThan(0.33);
+    // Break-even for the exploit is award/(award+|penalty|) per DIFFICULTY_TIERS -
+    // 50 per cent at low, 37.5 at mid, 40 at high - independent of option count,
+    // so anything at or above ~37.5 per cent is profitable for a player who knows
+    // nothing. Phase 5's three-option cut raised chance itself from 25 to ~33 per
+    // cent; ~35 per cent measured sits between the two and still clears every
+    // tier's break-even.
+    expect(rate).toBeLessThan(0.36);
   });
 
   it('states who each tier is aimed at, because the bank is authored against it', () => {
@@ -190,7 +194,7 @@ describe('pack hashing', () => {
     expect(packHash({ ...SEED_PACK, name: 'Renamed', version: '9.9.9' })).toBe(SEED_PACK_HASH);
 
     const first = SEED_PACK.questions[0] as Question;
-    const edited: Question = { ...first, options: ['a', 'b', 'c', 'd'] };
+    const edited: Question = { ...first, options: ['a', 'b', 'c'] };
     const changed = { ...SEED_PACK, questions: [edited, ...SEED_PACK.questions.slice(1)] };
     expect(packHash(changed)).not.toBe(SEED_PACK_HASH);
   });
@@ -271,10 +275,10 @@ describe('option presentation', () => {
   it('shuffles deterministically and tracks the correct index', () => {
     for (const question of SEED_PACK.questions.slice(0, 30)) {
       const shown = presentQuestion(question, 'nonce-1234');
-      expect(shown.options).toHaveLength(4);
-      expect(new Set(shown.options).size).toBe(4);
+      expect(shown.options).toHaveLength(3);
+      expect(new Set(shown.options).size).toBe(3);
       expect(shown.options[shown.correctIndex]).toBe(question.options[question.answer]);
-      // Same nonce, same order: every device must show the same four buttons.
+      // Same nonce, same order: every device must show the same three buttons.
       expect(presentQuestion(question, 'nonce-1234').options).toEqual(shown.options);
     }
   });
