@@ -19,9 +19,8 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      # The web subset only. `pnpm verify` also typechecks apps/native, which
-      # would drag the whole Expo tree into every run to gate a scaffold that
-      # takes no actions yet. Add it here when that shell does something.
+      # The web subset. There is no native app: the Expo scaffold did not come
+      # across in the fork, because the product is a PWA.
       - run: pnpm install:web --frozen-lockfile
 
       - run: pnpm -r --filter @kanbudong/engine --filter @kanbudong/net --filter @kanbudong/pwa typecheck
