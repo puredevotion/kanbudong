@@ -67,6 +67,15 @@ unknown, and the reviewers were told to flag every case where a brief presented 
 lab result as though it were settled for real learning. Read that field before
 leaning on a memory claim.
 
+## A note on paths
+
+Several passes quote absolute paths from the machine they were written on
+(`/home/user/dohhh/...`, `/tmp/...`). They are left as written. These files are a
+record of what each agent actually produced, and silently rewriting them would
+make them a worse record — the value of keeping a draft is that it says what the
+draft said. `docs/DESIGN.md` is a living document and has been corrected; these
+are not.
+
 ## Provenance
 
 Two research workflows and one synthesis workflow, 23 agents, no failures. Every

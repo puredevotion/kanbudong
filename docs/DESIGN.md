@@ -18,6 +18,23 @@ four research digests, then synthesised, attacked on its reasoning, and revised.
 > reviewed drafts whose reviser was itself truncated before reaching them. §§2.6–2.7
 > and §§4.7–4.12 carry the full revision. Everything from §5 onward is complete.
 
+## The design artefacts this document goes with
+
+The rulings in §§3–5 were made against a visual design, and reading them without
+it is harder than it needs to be.
+
+| Where | What |
+| --- | --- |
+| [`design/cards/`](../design/cards/) | Canvas source: the clickable turn loop, the breakdown surface, and the five sign treatments side by side, with the reasoning for each in its README. |
+| [Claude Design canvas](https://claude.ai/code/artifact/d1bcd5e7-5792-4114-8a0b-fb47a6d491df) | The same thing published and pannable. Page 1 is the turn loop, page 2 the breakdown, page 3 the sign sheet. |
+| [`docs/img/sign-templates.png`](img/sign-templates.png) | The templates as they actually render in the built app. |
+| [`docs/img/meat-radical-glyphs.png`](img/meat-radical-glyphs.png) | The rendered evidence behind the ⺼ / 月 ruling in §3.3. |
+| [`docs/research/`](research/) | The 426 findings, 160 corrections and 574 sources this was condensed from. |
+
+The canvas is currently re-seeded from the copy in the **dohhh** branch this was
+forked out of. Move that home to `design/cards/` here before editing it, or an
+edit will land in a closed branch of the wrong repository.
+
 ---
 
 # Section 1: What the evidence supports
@@ -2377,7 +2394,7 @@ The last row is not a counterweight to be noted and set aside; **it is the findi
 
 ### The ⺼ / 月 ruling
 
-Not raised in the earlier draft of this section, and it belongs here because it is a **content** ruling. It is currently wrong in the repo, in commit `b775e0c`, across `/home/user/dohhh/design/cards/README.md`, `/home/user/dohhh/design/cards/canvas.json` and `/home/user/dohhh/design/cards/Breakdown.dc.html`. Verified directly rather than taken on trust:
+Not raised in the earlier draft of this section, and it belongs here because it is a **content** ruling. It **was** wrong in the card copy — `design/cards/README.md`, `design/cards/canvas.json` and `design/cards/Breakdown.dc.html` — and was corrected before the fork, so the paths below describe the fault, not the current state. Verified directly rather than taken on trust:
 
 ```
 U+2EBC '⺼'  CJK RADICAL MEAT            category=So  decomposition=''      (CJK Radicals Supplement, U+2E80–U+2EFF)
@@ -2401,7 +2418,9 @@ NFKC('⺼') → U+2EBC (unchanged).   NFKC('⾁') → 肉 U+8089.
 >
 > **保质期 bǎozhìqī is kept** — not as a substring hazard, which cannot occur, but as the ideal **counterexample card**: a shelf-life label whose 期 looks like the organ component and is not.
 
-**[D] The remedy is a forward correction, not a revert — where I keep a position against the review.** `b775e0c` is also the commit that added `docs/DESIGN.md`; reverting it would delete this document. The fix is a new commit against the three card files (`README.md`, `canvas.json`, `Breakdown.dc.html`), removing every U+2EBC from copy and replacing the claim with the ruling above, plus the `docs/DESIGN.md:99` licence-cite fix from consequence 11.
+**[D] The remedy is a forward correction, not a revert — where I keep a position against the review.** Reverting the commit that introduced the error would also have deleted this document, which the same commit added. The fix was a new commit against the three card files, replacing the claim with the ruling above.
+
+**Done, and it went further than the card copy.** The component is also absent from every Noto Sans SC and Noto Serif SC file — 1,734 scanned — so the app draws it from a stored component id and a label rather than a glyph. Two candidate faces do have U+2EBC, and both were rejected on rendered evidence: they draw the standalone codepoint with *slanted* strokes, while the component inside 肝 is drawn like 月 in the app's own face. See [`docs/img/meat-radical-glyphs.png`](img/meat-radical-glyphs.png). Importing one would have put a shape on screen that appears inside no character in this typeface.
 
 ### One last note on why both must be stored from day one
 
