@@ -93,6 +93,15 @@ export function Solo(): ReactNode {
   const hanziAlone = useStage1HanziAlone(revealArmKey);
   const dwellElapsed = useRevealDwell(revealArmKey);
 
+  const siblings = useMemo(
+    () => (current === null ? [] : siblingsSharingComponent(SEED_PACK, current)),
+    [current],
+  );
+  const confusables = useMemo(
+    () => (current === null ? [] : confusablesFor(SEED_PACK, current)),
+    [current],
+  );
+
   // Fired once the session-complete screen is about to render, never mid-
   // session: `maybeRefitFsrsParameters` is a WASM optimizer pass that must
   // not compete with an active review for the main thread (it hops to a
@@ -143,15 +152,6 @@ export function Solo(): ReactNode {
     });
     setReveal({ chosenIndex, correct });
   };
-
-  const siblings = useMemo(
-    () => (current === null ? [] : siblingsSharingComponent(SEED_PACK, current)),
-    [current],
-  );
-  const confusables = useMemo(
-    () => (current === null ? [] : confusablesFor(SEED_PACK, current)),
-    [current],
-  );
 
   const advance = (): void => {
     setPresented((prev) => new Set(prev).add(current.id));
