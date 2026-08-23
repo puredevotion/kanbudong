@@ -148,6 +148,7 @@ describe('group attempt records from history', () => {
     timedOut: false,
     at: 1_700_000_000_000,
     otherAnswers: [],
+    isomorph: null,
   };
 
   it('assigns answerer to whoever submitted, resolves chosen_item, and carries the event timestamp', () => {

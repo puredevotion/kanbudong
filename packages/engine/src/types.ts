@@ -285,6 +285,35 @@ export interface OtherAnswer {
   readonly correct: boolean;
 }
 
+/**
+ * DESIGN.md §5.1's confer beat: the isomorphic follow-up item every player
+ * answers individually, no discussion. Reuses {@link OtherAnswer}'s shape
+ * (an id plus a graded choice) rather than inventing a parallel type, since
+ * grading an answer against a presented question is the same operation
+ * whether or not the result touches score - only the caller's use of the
+ * result differs.
+ */
+export type IsomorphAnswer = OtherAnswer;
+
+/**
+ * One turn's isomorph-beat follow-up, present only when the resolved
+ * question carried an `isomorph_group_id`, a sibling was available, and the
+ * table has `rules.conferBeatEnabled` on. `answers` starts empty at
+ * resolution and fills in as each seated player's `commit/revealed` lands -
+ * same late-arrival tolerance as {@link TurnRecord.otherAnswers}, and for the
+ * same reason (replay order must not matter). None of these answers ever
+ * touch score, streak or the bet (§5.1: "the load-bearing part of the
+ * clicker result" tests whether peer instruction produced real
+ * understanding, not a second scoring opportunity) - they still feed each
+ * player's own FSRS review queue via `attemptRecordsFromHistory`, because
+ * unlike the recall beat's dropped `spoken_attempt` (see DESIGN.md §11.1),
+ * this is a genuine graded retrieval attempt.
+ */
+export interface IsomorphRecord {
+  readonly questionId: QuestionId;
+  readonly answers: readonly IsomorphAnswer[];
+}
+
 /** One resolved question, kept for the recap screen and for auditing scores. */
 export interface TurnRecord {
   readonly turnIndex: number;
@@ -320,6 +349,8 @@ export interface TurnRecord {
    * which touched score or the bet (§5.1 beat 4). See {@link OtherAnswer}.
    */
   readonly otherAnswers: readonly OtherAnswer[];
+  /** DESIGN.md §5.1's confer beat follow-up. `null` when this turn had none (rule off, no isomorph sibling, or a timeout). */
+  readonly isomorph: IsomorphRecord | null;
 }
 
 /** The live question, between `turn/drawn` and its resolution. */

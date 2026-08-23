@@ -3,6 +3,7 @@ import {
   actingTeam,
   answeredPlayerIds,
   canAnswer,
+  canAnswerIsomorph,
   canChooseCategory,
   canChooseDifficulty,
   canDraw,
@@ -12,9 +13,13 @@ import {
   DIFFICULTY_TIERS,
   discriminatingCues,
   hasAnswered,
+  hasAnsweredIsomorph,
   hasSelfExplanationPrompt,
   isActingPlayer,
   isBanned,
+  isomorphAnsweredPlayerIds,
+  isomorphAnswersForTurn,
+  isomorphForTurn,
   lociTiles,
   questionById,
   SEED_PACK,
@@ -53,6 +58,7 @@ export function Play(): ReactNode {
   const pickCategory = useApp((s) => s.pickCategory);
   const bet = useApp((s) => s.bet);
   const answer = useApp((s) => s.answer);
+  const answerIsomorph = useApp((s) => s.answerIsomorph);
   const callTime = useApp((s) => s.callTime);
   const error = useApp((s) => s.error);
   const dismissError = useApp((s) => s.dismissError);
@@ -144,6 +150,7 @@ export function Play(): ReactNode {
           lastTurn={lastTurn}
           onDeal={deal}
           canDealNow={canDraw(state, me)}
+          onAnswerIsomorph={answerIsomorph}
         />
       ) : active.categoryId === null ? (
         <ChooseCategory
@@ -334,12 +341,14 @@ function BetweenTurns({
   lastTurn,
   onDeal,
   canDealNow,
+  onAnswerIsomorph,
 }: {
   state: GameState;
   me: string;
   lastTurn: TurnRecord | null;
   onDeal: () => void;
   canDealNow: boolean;
+  onAnswerIsomorph: (turnIndex: number, chosenIndex: number) => void;
 }): ReactNode {
   const actingTeam = scoreboard(state).find((row) => row.isActing)?.team;
   // DESIGN.md §5.5: minimum reveal dwell before the equivalent of "Next" (here,
@@ -350,6 +359,16 @@ function BetweenTurns({
   return (
     <div className="flex flex-col gap-4">
       {lastTurn !== null && <Outcome key={lastTurn.turnIndex} record={lastTurn} state={state} />}
+
+      {lastTurn !== null && lastTurn.isomorph !== null && (
+        <ConferBeat
+          key={`confer-${lastTurn.turnIndex}`}
+          state={state}
+          me={me}
+          turnIndex={lastTurn.turnIndex}
+          onAnswer={onAnswerIsomorph}
+        />
+      )}
 
       <Card>
         <Card.Header>
@@ -640,6 +659,150 @@ function OtherAnswers({ record, state }: { record: TurnRecord; state: GameState 
   );
 }
 
+const CONFER_BEAT_MS = 5_000;
+
+/**
+ * DESIGN.md §5.1's confer beat: ~5s spoken-question lead-in, table-shared
+ * (everyone watches the same countdown, unlike the recall beat's per-device
+ * timer), before the isomorphic follow-up item's controls unlock. Purely a
+ * pacing gate, keyed per turn so a fresh confer beat always gets its own
+ * window rather than inheriting whatever is left of the previous one.
+ */
+function useConferBeat(turnIndex: number): boolean {
+  const [conferring, setConferring] = useState(true);
+  const armedFor = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (armedFor.current === turnIndex) return;
+    armedFor.current = turnIndex;
+    setConferring(true);
+    const id = setTimeout(() => setConferring(false), CONFER_BEAT_MS);
+    return () => clearTimeout(id);
+  }, [turnIndex]);
+
+  return conferring;
+}
+
+/**
+ * DESIGN.md §5.1: "one spoken question to the highest bettor... Confer
+ * rounds are followed immediately by one isomorphic item answered
+ * individually with no discussion." This codebase has no per-player bet
+ * amount (only the single active player commits a difficulty tier per turn,
+ * `turn/difficulty` in commands.ts) - "highest bettor" maps onto that same
+ * active player, `TurnRecord.answererId`, rather than new multi-bet
+ * infrastructure nobody asked for. The follow-up item itself is real engine
+ * state (`TurnRecord.isomorph`, `answerSubject`-style commit-reveal on
+ * `isomorphSubject`) reusing Phase B/C's universal-answer UI patterns
+ * (`PresenceDots`/`OtherAnswers`) - its outcome never touches score, streak
+ * or the bet at the reducer level (see `resolve()` in reducer.ts).
+ */
+function ConferBeat({
+  state,
+  me,
+  turnIndex,
+  onAnswer,
+}: {
+  state: GameState;
+  me: string;
+  turnIndex: number;
+  onAnswer: (turnIndex: number, chosenIndex: number) => void;
+}): ReactNode {
+  const conferring = useConferBeat(turnIndex);
+  const presented = isomorphForTurn(state, SEED_PACK, turnIndex);
+  const answeredIds = new Set(isomorphAnsweredPlayerIds(state, turnIndex));
+  const playerIds = Object.keys(state.players);
+  const answers = isomorphAnswersForTurn(state, turnIndex);
+  const canAnswerNow = canAnswerIsomorph(state, me, turnIndex);
+  const iHaveAnswered = hasAnsweredIsomorph(state, me, turnIndex);
+  const answererId = state.history.find((r) => r.turnIndex === turnIndex)?.answererId ?? null;
+  const answererName = answererId == null ? null : state.players[answererId]?.username ?? null;
+
+  const picked = useRef<number | null>(null);
+  const [pending, setPending] = useState(false);
+  if (picked.current !== turnIndex) {
+    picked.current = null;
+    if (pending) setPending(false);
+  }
+
+  if (presented === null) return null;
+
+  return (
+    <Card className="anim-enter" variant="tertiary">
+      <Card.Header>
+        <Card.Title>One more, no talking</Card.Title>
+        <Card.Description>
+          {conferring
+            ? `${answererName ?? 'Whoever answered'}: out loud, why isn't it the other option? Then everyone answers this one alone - it never touches the score.`
+            : "Everyone answers alone, no discussion. This one never touches the score."}
+        </Card.Description>
+      </Card.Header>
+
+      {!conferring && (
+        <Card.Content className="flex flex-col gap-2.5">
+          <p className="text-base font-medium">{presented.question.prompt}</p>
+          {presented.options.map((option, index) => (
+            <button
+              key={option}
+              type="button"
+              disabled={pending || !canAnswerNow}
+              onClick={() => {
+                if (picked.current === turnIndex) return;
+                picked.current = turnIndex;
+                setPending(true);
+                onAnswer(turnIndex, index);
+              }}
+              className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
+                pending || !canAnswerNow
+                  ? 'cursor-default border-default-200/20 text-muted'
+                  : 'border-default-200/50 hover:border-primary/70 hover:bg-primary/10'
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+
+          {iHaveAnswered && (
+            <p className="text-center text-sm text-muted">Your answer is locked in.</p>
+          )}
+
+          <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center justify-center gap-1.5">
+              {playerIds.map((id) => (
+                <span
+                  key={id}
+                  aria-hidden="true"
+                  className={`h-2 w-2 rounded-full ${
+                    answeredIds.has(id) ? 'bg-primary' : 'border border-default-200/50'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="sr-only" role="status" aria-live="polite">
+              {answeredIds.size} of {playerIds.length} players have answered.
+            </span>
+          </div>
+
+          {answers.length > 0 && (
+            <div className="flex flex-col gap-1 border-t border-black/10 pt-2.5">
+              {answers.map((a) => {
+                const name = state.players[a.playerId]?.username ?? 'Someone';
+                return (
+                  <p key={a.playerId} className="text-[0.85rem]">
+                    <span className="text-[#5a5a52]">{name}: </span>
+                    <span className={a.correct ? 'font-medium text-success' : 'font-medium text-danger-text'}>
+                      {a.chosenText ?? 'no answer'}
+                    </span>
+                  </p>
+                );
+              })}
+            </div>
+          )}
+        </Card.Content>
+      )}
+    </Card>
+  );
+}
+
 /**
  * Three categories, picked from the bag, offered to whoever is dealing.
  * Nothing here is a bet - the acting team learns which one only once someone
@@ -875,6 +1038,17 @@ function LiveQuestion({
   // phase's purely-visual scope; see PLAN.md Phase 6).
   const timingWarn = remaining > 0 && remaining <= DIFFICULTY_TIERS[difficulty].timeoutMs * 0.2;
 
+  // DESIGN.md §5.1's recall beat: sign alone for ~3s, "say it out loud,"
+  // before the answer controls appear - opt-in per table (rules.ts's
+  // recallBeatEnabled doc comment explains why: the document drops
+  // `spoken_attempt` from the schema entirely, so there is no engine-side
+  // log to write here, only a local UX gate).
+  const recallWaiting = useRecallBeat(turnIndex, state.rules.recallBeatEnabled);
+
+  if (recallWaiting && face !== undefined) {
+    return <RecallBeat face={face} categoryId={categoryId} />;
+  }
+
   return (
     <div className="anim-enter flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
@@ -984,6 +1158,44 @@ function PresenceDots({ state }: { state: GameState }): ReactNode {
       <span className="sr-only" role="status" aria-live="polite">
         {answered.size} of {ids.length} players have answered.
       </span>
+    </div>
+  );
+}
+
+const RECALL_BEAT_MS = 3_000;
+
+/**
+ * DESIGN.md §5.1's recall beat: "sign alone, ~3s, say it out loud" before the
+ * options render. Purely local per-device UX, per-turn - a fresh question
+ * always gets its own window, never inheriting what's left of the previous
+ * one. See rules.ts's `recallBeatEnabled` doc comment for why this reads no
+ * engine state and writes no log entry.
+ */
+function useRecallBeat(turnIndex: number, enabled: boolean): boolean {
+  const [waiting, setWaiting] = useState(enabled);
+  const armedFor = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (armedFor.current === turnIndex) return;
+    armedFor.current = turnIndex;
+    if (!enabled) {
+      setWaiting(false);
+      return;
+    }
+    setWaiting(true);
+    const id = setTimeout(() => setWaiting(false), RECALL_BEAT_MS);
+    return () => clearTimeout(id);
+  }, [turnIndex, enabled]);
+
+  return waiting;
+}
+
+/** The recall beat's own screen: the sign alone, nothing to tap, no timer readout - just the prompt to say it. */
+function RecallBeat({ face, categoryId }: { face: SignFace; categoryId: CategoryId }): ReactNode {
+  return (
+    <div className="anim-enter flex flex-col items-center gap-4 py-6">
+      <Sign template={templateFor(categoryId)} category={categoryId} hanzi={face.hanzi} context={face.context} />
+      <p className="text-sm text-muted">Say it out loud.</p>
     </div>
   );
 }

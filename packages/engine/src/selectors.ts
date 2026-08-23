@@ -3,9 +3,9 @@ import { usernamesConfusable } from './identity.js';
 import type { PresentedQuestion } from './pack.js';
 import { presentQuestion, questionById } from './pack.js';
 import type { GameState } from './reducer.js';
-import { answerSubject, currentTeamId } from './reducer.js';
+import { answerSubject, currentTeamId, isomorphSubject } from './reducer.js';
 import { DIFFICULTY_TIERS } from './rules.js';
-import type { Category, ContentPack, OtherAnswer, PlayerId, Team, TeamId, TurnRecord } from './types.js';
+import type { Category, ContentPack, IsomorphAnswer, OtherAnswer, PlayerId, Team, TeamId, TurnRecord } from './types.js';
 
 /**
  * Read-only views over {@link GameState}. Kept here rather than in a component
@@ -144,6 +144,55 @@ export function answeredPlayerIds(state: GameState): readonly PlayerId[] {
  */
 export function otherAnswersForTurn(state: GameState, turnIndex: number): readonly OtherAnswer[] {
   return state.history.find((record) => record.turnIndex === turnIndex)?.otherAnswers ?? [];
+}
+
+/**
+ * DESIGN.md §5.1's confer beat follow-up, once a turn has one
+ * (`TurnRecord.isomorph`). Unlike {@link canAnswer}/{@link answeredPlayerIds},
+ * these take an explicit `turnIndex` rather than reading `state.active`: the
+ * isomorph beat fires *after* its parent turn resolves, by which point
+ * `active` may already be the next turn or `null` between turns - the
+ * question this beat is about is never the live one.
+ */
+export function isomorphForTurn(state: GameState, pack: ContentPack, turnIndex: number): PresentedQuestion | null {
+  const questionId = state.history.find((record) => record.turnIndex === turnIndex)?.isomorph?.questionId;
+  if (questionId === undefined) return null;
+  const nonce = state.turnNonces[turnIndex];
+  if (nonce === undefined) return null;
+  const question = questionById(pack, questionId);
+  if (question === undefined) return null;
+  return presentQuestion(question, nonce);
+}
+
+/** True once `playerId` has committed or revealed an answer to `turnIndex`'s isomorph follow-up. */
+export function hasAnsweredIsomorph(state: GameState, playerId: PlayerId, turnIndex: number): boolean {
+  const subject = isomorphSubject(turnIndex);
+  return state.pendingCommits[subject]?.[playerId] !== undefined || state.reveals[subject]?.[playerId] !== undefined;
+}
+
+/**
+ * True when `playerId` may still answer `turnIndex`'s isomorph follow-up:
+ * the turn actually has one, and this player has not already committed or
+ * revealed one.
+ */
+export function canAnswerIsomorph(state: GameState, playerId: PlayerId, turnIndex: number): boolean {
+  const hasIsomorph = state.history.some((record) => record.turnIndex === turnIndex && record.isomorph !== null);
+  if (!hasIsomorph) return false;
+  if (state.players[playerId] === undefined) return false;
+  return !hasAnsweredIsomorph(state, playerId, turnIndex);
+}
+
+/** Every player who has committed or revealed an isomorph-beat answer for `turnIndex` - presence only, mirroring {@link answeredPlayerIds}. */
+export function isomorphAnsweredPlayerIds(state: GameState, turnIndex: number): readonly PlayerId[] {
+  const subject = isomorphSubject(turnIndex);
+  const committed = Object.keys(state.pendingCommits[subject] ?? {});
+  const revealed = Object.keys(state.reveals[subject] ?? {});
+  return [...new Set([...committed, ...revealed])];
+}
+
+/** Every seated player's graded isomorph-beat answer for `turnIndex`, none of which touched score. */
+export function isomorphAnswersForTurn(state: GameState, turnIndex: number): readonly IsomorphAnswer[] {
+  return state.history.find((record) => record.turnIndex === turnIndex)?.isomorph?.answers ?? [];
 }
 
 export function activeCategory(state: GameState): Category | undefined {

@@ -120,6 +120,24 @@ function personalAnswer(
 }
 
 /**
+ * `playerId`'s own graded answer to `record`'s isomorph-beat follow-up item
+ * (DESIGN.md §5.1's confer beat), if any. Deliberately the same shape as
+ * {@link personalAnswer} and fed through the same `attemptRecordsFromHistory`
+ * loop below: this is a genuine individual retrieval attempt and earns a real
+ * review row, unlike the recall beat's dropped `spoken_attempt` (self-marked,
+ * "never a learning metric" per DESIGN.md §11.1) - it is excluded from score,
+ * streak and the bet at the reducer level (`resolve()`/`commit/revealed` in
+ * reducer.ts), not from the review log.
+ */
+function personalIsomorphAnswer(
+  record: TurnRecord,
+  playerId: PlayerId,
+): { readonly chosenText: string | null; readonly correct: boolean } | null {
+  const answer = record.isomorph?.answers.find((a) => a.playerId === playerId);
+  return answer === undefined ? null : { chosenText: answer.chosenText, correct: answer.correct };
+}
+
+/**
  * Derives group-mode attempt records straight from the already-synced game
  * log - every peer already folds the same `history`, so there is nothing new
  * to persist for this mode. Before Phase B this always credited every
@@ -146,20 +164,47 @@ export function attemptRecordsFromHistory(
   const out: AttemptRecord[] = [];
   for (const record of history) {
     const personal = personalAnswer(record, playerId);
-    if (personal === null) continue;
-    const question = byId.get(record.questionId);
-    if (question === undefined) continue;
-    out.push({
-      playerId,
-      mode: 'group',
-      role: roleForTurn(record, playerId, myTeamId),
-      targetItem: record.questionId,
-      chosenOption: personal.chosenText,
-      chosenItem: resolveChosenItem(pack, question, personal.chosenText),
-      correct: personal.correct,
-      timestamp: record.at,
-      crossedASleepPeriod: null,
-    });
+    if (personal !== null) {
+      const question = byId.get(record.questionId);
+      if (question !== undefined) {
+        out.push({
+          playerId,
+          mode: 'group',
+          role: roleForTurn(record, playerId, myTeamId),
+          targetItem: record.questionId,
+          chosenOption: personal.chosenText,
+          chosenItem: resolveChosenItem(pack, question, personal.chosenText),
+          correct: personal.correct,
+          timestamp: record.at,
+          crossedASleepPeriod: null,
+        });
+      }
+    }
+
+    // DESIGN.md §5.1's confer beat: a second, independent row for the
+    // isomorph follow-up item, when this player answered one. Every
+    // participant answers as `role: 'answerer'` - the beat has no acting
+    // team of its own, everyone answers individually - and this never
+    // touched score at the reducer level regardless of what role this same
+    // player held on the parent turn above.
+    const isomorphAnswer = personalIsomorphAnswer(record, playerId);
+    const isomorphQuestionId = record.isomorph?.questionId;
+    if (isomorphAnswer !== null && isomorphQuestionId !== undefined) {
+      const isomorphQuestion = byId.get(isomorphQuestionId);
+      if (isomorphQuestion !== undefined) {
+        out.push({
+          playerId,
+          mode: 'group',
+          role: 'answerer',
+          targetItem: isomorphQuestionId,
+          chosenOption: isomorphAnswer.chosenText,
+          chosenItem: resolveChosenItem(pack, isomorphQuestion, isomorphAnswer.chosenText),
+          correct: isomorphAnswer.correct,
+          timestamp: record.at,
+          crossedASleepPeriod: null,
+        });
+      }
+    }
   }
   return out;
 }

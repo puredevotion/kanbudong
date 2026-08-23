@@ -12,6 +12,7 @@ import type {
   Difficulty,
   GameId,
   GamePhase,
+  IsomorphRecord,
   OtherAnswer,
   Player,
   PlayerId,
@@ -102,6 +103,17 @@ export interface GameState {
   readonly turnNonces: Readonly<Record<number, string>>;
   /** `turnIndex` -> the question dealt for that turn, captured at `turn/difficulty`. See {@link turnNonces}. */
   readonly turnQuestions: Readonly<Record<number, QuestionId>>;
+  /**
+   * DESIGN.md §5.1's confer beat: `turnIndex` -> the isomorphic follow-up
+   * question picked at `resolve()` time, when `rules.conferBeatEnabled` is on
+   * and the resolved question has an `isomorph_group_id` with an available
+   * sibling. Kept outside `TurnRecord.isomorph` (which also names this
+   * question) for the same reason {@link turnQuestions} is kept outside
+   * `ActiveTurn`: grading a late `commit/revealed` on {@link isomorphSubject}
+   * needs to look this up the same way regardless of how long ago the turn
+   * resolved.
+   */
+  readonly isomorphQuestions: Readonly<Record<number, QuestionId>>;
 }
 
 /** A `commit/made` not yet matched by a valid `commit/revealed`. */
@@ -143,6 +155,28 @@ export function answerSubject(turnIndex: number): string {
 /** Inverse of {@link answerSubject}; `null` for any subject that is not one (including a future beat's own subject). */
 export function parseAnswerSubject(subject: string): number | null {
   const match = ANSWER_SUBJECT_RE.exec(subject);
+  if (match === null) return null;
+  const turnIndex = Number(match[1]);
+  return Number.isSafeInteger(turnIndex) ? turnIndex : null;
+}
+
+const ISOMORPH_SUBJECT_PREFIX = 'isomorph:';
+const ISOMORPH_SUBJECT_RE = /^isomorph:(\d+)$/;
+
+/**
+ * The `commit/made`/`commit/revealed` subject for `turnIndex`'s confer-beat
+ * follow-up item (DESIGN.md §5.1's isomorphic item, "answered individually
+ * with no discussion"). A distinct prefix from {@link answerSubject}, per
+ * Phase A/B's own design intent: same generic commit-reveal primitive, a
+ * separate subject namespace so the two never collide on the same turnIndex.
+ */
+export function isomorphSubject(turnIndex: number): string {
+  return `${ISOMORPH_SUBJECT_PREFIX}${turnIndex}`;
+}
+
+/** Inverse of {@link isomorphSubject}; `null` for any subject that is not one. */
+export function parseIsomorphSubject(subject: string): number | null {
+  const match = ISOMORPH_SUBJECT_RE.exec(subject);
   if (match === null) return null;
   const turnIndex = Number(match[1]);
   return Number.isSafeInteger(turnIndex) ? turnIndex : null;
@@ -226,6 +260,7 @@ function createState(event: SignedEvent, body: Extract<GameEventBody, { type: 'g
     reveals: {},
     turnNonces: {},
     turnQuestions: {},
+    isomorphQuestions: {},
   };
 }
 
@@ -522,6 +557,26 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
         },
       };
 
+      // Phase D (confer beat): a subject matching `isomorphSubject()`'s shape
+      // grades against the turn's isomorphic follow-up item instead of its
+      // main question, and - unlike every branch below - never resolves
+      // anything or touches score/streak/bet. See DESIGN.md §5.1's "load-
+      // bearing... but never scored" framing and `resolve()`'s isomorph setup.
+      const isomorphTurnIndex = parseIsomorphSubject(body.subject);
+      if (isomorphTurnIndex !== null) {
+        const gradedIsomorph = gradeIsomorphAnswerPayload(pack, state, isomorphTurnIndex, body.payload);
+        if (gradedIsomorph === null) return 'malformed or unresolvable isomorph answer';
+        const isomorphAnswer: OtherAnswer = { playerId: author, ...gradedIsomorph };
+        return {
+          ...afterReveal,
+          history: afterReveal.history.map((record) =>
+            record.turnIndex === isomorphTurnIndex && record.isomorph !== null
+              ? { ...record, isomorph: { ...record.isomorph, answers: [...record.isomorph.answers, isomorphAnswer] } }
+              : record,
+          ),
+        };
+      }
+
       // Below here is Phase B (universal-answer): `commit/made`/`commit/revealed`
       // stay fully generic (see above and commitReveal.ts) - only a subject
       // matching `answerSubject()`'s shape ever reaches this branch, so a
@@ -651,6 +706,55 @@ function gradeAnswerPayload(
 }
 
 /**
+ * Grades a `commit/revealed` payload against `turnIndex`'s isomorph-beat
+ * follow-up question (see {@link GameState.isomorphQuestions}), reusing the
+ * turn's own answer nonce ({@link GameState.turnNonces}) to shuffle its
+ * options - a different question id produces a different shuffle regardless,
+ * so reusing the nonce namespace costs nothing. `null` when this turn never
+ * got an isomorph follow-up (rule off, no sibling, wrong subject for this
+ * turnIndex) or the payload is not answer-shaped.
+ */
+function gradeIsomorphAnswerPayload(
+  pack: ContentPack,
+  state: GameState,
+  turnIndex: number,
+  payload: unknown,
+): Omit<OtherAnswer, 'playerId'> | null {
+  const parsed = parseAnswerPayload(payload);
+  if (parsed === null) return null;
+  const nonce = state.turnNonces[turnIndex];
+  const questionId = state.isomorphQuestions[turnIndex];
+  if (nonce === undefined || questionId === undefined) return null;
+  const question = questionById(pack, questionId);
+  if (question === undefined) return null;
+  const presented = presentQuestion(question, nonce);
+  const chosenIndex = parsed.chosenIndex;
+  return {
+    chosenIndex,
+    chosenText: presented.options[chosenIndex] ?? null,
+    correct: chosenIndex === presented.correctIndex,
+  };
+}
+
+/**
+ * Picks `question`'s isomorph-beat follow-up: a sibling sharing its
+ * `isomorph_group_id`, chosen deterministically from the turn's own nonce so
+ * every peer resolves the same item with no extra event. `null` when the
+ * question carries no group id or no sibling exists (DESIGN.md §5.1 needs the
+ * bank to author pairs/triples; `validatePack` in pack.ts enforces >=2
+ * members per group, but a lone new item mid-authoring should degrade to "no
+ * follow-up this turn," never a stuck game).
+ */
+function pickIsomorph(pack: ContentPack, question: Question, nonce: string): Question | null {
+  if (question.isomorph_group_id === undefined) return null;
+  const siblings = pack.questions.filter(
+    (q) => q.isomorph_group_id === question.isomorph_group_id && q.id !== question.id,
+  );
+  if (siblings.length === 0) return null;
+  return createRng(nonce, 'isomorph', question.id).pick(siblings);
+}
+
+/**
  * Every seated player's graded answer for `turnIndex` other than
  * `excludeAuthor` (the one whose reveal is resolving the turn, or `null` on
  * a timeout where nobody's outcome is the scoring one). Reads
@@ -686,6 +790,19 @@ function resolve(state: GameState, active: ActiveTurn, res: Resolution, pack: Co
   const raw = previous + delta;
   const score = state.rules.scoreFloor === null ? raw : Math.max(state.rules.scoreFloor, raw);
 
+  // DESIGN.md §5.1's confer beat: eligible only with the table setting on, a
+  // real question dealt (never on a pre-difficulty timeout), and a sibling
+  // sharing its isomorph_group_id in the pack (see pickIsomorph). Computed
+  // here rather than at draw time - the confer beat is a reaction to *this*
+  // outcome, not a thing scheduled in advance.
+  const dealtQuestion = active.questionId === null ? undefined : questionById(pack, active.questionId);
+  const isomorphQuestion =
+    state.rules.conferBeatEnabled && dealtQuestion !== undefined
+      ? pickIsomorph(pack, dealtQuestion, active.nonce)
+      : null;
+  const isomorph: IsomorphRecord | null =
+    isomorphQuestion === null ? null : { questionId: isomorphQuestion.id, answers: [] };
+
   const record: TurnRecord = {
     turnIndex: active.turnIndex,
     roundIndex: active.roundIndex,
@@ -703,6 +820,7 @@ function resolve(state: GameState, active: ActiveTurn, res: Resolution, pack: Co
     timedOut: res.timedOut,
     at: res.at,
     otherAnswers: gatherOtherAnswers(state, pack, active.turnIndex, res.answererId),
+    isomorph,
   };
 
   const streak = res.correct ? state.streak + 1 : 0;
@@ -719,6 +837,10 @@ function resolve(state: GameState, active: ActiveTurn, res: Resolution, pack: Co
     streak: keepTurn ? streak : 0,
     turnIndex: state.turnIndex + 1,
     active: null,
+    isomorphQuestions:
+      isomorphQuestion === null
+        ? state.isomorphQuestions
+        : { ...state.isomorphQuestions, [active.turnIndex]: isomorphQuestion.id },
   };
 
   next = armEndgameIfCrossed(next);

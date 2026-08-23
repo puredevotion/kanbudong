@@ -203,7 +203,13 @@ export const MENU_ANIMAL: CategoryContent = {
         ],
         semantic_radical: MEAT_RADICAL.id,
       },
-      { tier: 2, freqRank: 1829 },
+      // DESIGN.md §5.1's confer beat: 肝/腰/肺 are equivalent-difficulty
+      // alternatives of each other - same category, same tier, same
+      // left-right meat-radical-semantic structure, same "which organ"
+      // question shape, and close freqRanks (1829/1489/2140) - so any one of
+      // them stands in for "did the peer-instruction conversation transfer,"
+      // not "is this specific character now known."
+      { tier: 2, freqRank: 1829, isomorph_group_id: 'menu-animal-organ-meat-radical' },
     ],
     [
       'On the menu. What are you about to eat?',
@@ -217,7 +223,7 @@ export const MENU_ANIMAL: CategoryContent = {
         components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
         semantic_radical: MEAT_RADICAL.id,
       },
-      { tier: 2, freqRank: 1489 },
+      { tier: 2, freqRank: 1489, isomorph_group_id: 'menu-animal-organ-meat-radical' },
     ],
     [
       'On the menu. What are you about to eat?',
@@ -231,7 +237,7 @@ export const MENU_ANIMAL: CategoryContent = {
         components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
         semantic_radical: MEAT_RADICAL.id,
       },
-      { tier: 2, freqRank: 2140 },
+      { tier: 2, freqRank: 2140, isomorph_group_id: 'menu-animal-organ-meat-radical' },
     ],
     [
       'On the menu. What are you about to eat?',

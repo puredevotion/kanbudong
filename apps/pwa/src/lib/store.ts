@@ -4,6 +4,7 @@ import {
   chooseCategory,
   chooseDifficulty,
   commitAnswer,
+  commitIsomorphAnswer,
   createGame,
   createIdentity,
   drawTurn,
@@ -16,6 +17,7 @@ import {
   openTeam,
   randomHex,
   revealAnswer,
+  revealIsomorphAnswer,
   SEED_PACK,
   SEED_PACK_HASH,
   setRoomLocked as setRoomLockedEvent,
@@ -96,6 +98,14 @@ export interface AppState {
   pickCategory: (categoryId: CategoryId) => void;
   bet: (difficulty: Difficulty) => void;
   answer: (chosenIndex: number) => void;
+  /**
+   * DESIGN.md §5.1's confer beat follow-up: `turnIndex` names the *parent*
+   * turn (the one that carried the isomorph beat, per `TurnRecord.isomorph`)
+   * rather than reading `session.state.active`, because by the time this
+   * fires the parent turn has already resolved and `active` may already be
+   * the next turn or null.
+   */
+  answerIsomorph: (turnIndex: number, chosenIndex: number) => void;
   callTime: () => void;
 }
 
@@ -383,6 +393,24 @@ export const useApp = create<AppState>((set, get) => {
         return;
       }
       const revealed = session.commit(revealAnswer(session.log, identity, turnIndex, chosenIndex, salt));
+      if (!revealed.accepted) {
+        set({ error: explainRejection(revealed.reason ?? 'unknown') });
+      }
+    },
+    answerIsomorph: (turnIndex, chosenIndex) => {
+      const { session, identity } = get();
+      if (session === null || identity === null) return;
+      const salt = randomHex(8);
+      const committed = session.commit(
+        commitIsomorphAnswer(session.log, identity, turnIndex, chosenIndex, salt),
+      );
+      if (!committed.accepted) {
+        set({ error: explainRejection(committed.reason ?? 'unknown') });
+        return;
+      }
+      const revealed = session.commit(
+        revealIsomorphAnswer(session.log, identity, turnIndex, chosenIndex, salt),
+      );
       if (!revealed.accepted) {
         set({ error: explainRejection(revealed.reason ?? 'unknown') });
       }

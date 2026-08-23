@@ -83,6 +83,24 @@ export interface RulesConfig {
   readonly allowLateJoin: boolean;
   /** Minimum teams, not players — two players on one team is not a game (R-4). */
   readonly minTeams: number;
+  /**
+   * DESIGN.md §5.1's recall beat: sign alone for ~3s with "say it out loud"
+   * before options render. The design doc gives no concrete rule for which
+   * rounds get "flagged" for this - §11.1's later ruling drops `spoken_attempt`
+   * from the review-log schema entirely ("self-marked, so it is never a
+   * learning metric") - so this ships as an opt-in table setting rather than
+   * a per-round trigger this codebase would have to invent. Purely a local UX
+   * beat: no wire event, no engine state, see apps/pwa/src/screens/Play.tsx.
+   */
+  readonly recallBeatEnabled: boolean;
+  /**
+   * DESIGN.md §5.1's confer beat and its isomorphic follow-up item. Same
+   * opt-in posture as {@link recallBeatEnabled} - "flagged rounds" has no
+   * concrete trigger rule in the document, so this is a table-wide setting.
+   * Unlike the recall beat, the follow-up item is real engine state (see
+   * `TurnRecord.isomorph` in types.ts and `resolve()` in reducer.ts).
+   */
+  readonly conferBeatEnabled: boolean;
 }
 
 export const DEFAULT_RULES: RulesConfig = {
@@ -92,6 +110,8 @@ export const DEFAULT_RULES: RulesConfig = {
   finishTheRound: false,
   allowLateJoin: false,
   minTeams: 2,
+  recallBeatEnabled: false,
+  conferBeatEnabled: false,
 };
 
 /**
@@ -124,6 +144,8 @@ export function normalizeRules(input: Partial<RulesConfig> | undefined): RulesCo
     finishTheRound: r.finishTheRound ?? DEFAULT_RULES.finishTheRound,
     allowLateJoin: r.allowLateJoin ?? DEFAULT_RULES.allowLateJoin,
     minTeams: Math.max(2, numberOr(r.minTeams, DEFAULT_RULES.minTeams)),
+    recallBeatEnabled: r.recallBeatEnabled ?? DEFAULT_RULES.recallBeatEnabled,
+    conferBeatEnabled: r.conferBeatEnabled ?? DEFAULT_RULES.conferBeatEnabled,
   };
 }
 

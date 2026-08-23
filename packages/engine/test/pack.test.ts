@@ -247,6 +247,34 @@ describe('SignFace.context', () => {
   });
 });
 
+describe('isomorph groups (DESIGN.md §5.1 confer beat)', () => {
+  it('tags the menu-animal organ set as a real >=2 member group, and it validates clean', () => {
+    const tagged = SEED_PACK.questions.filter((q) => q.isomorph_group_id === 'menu-animal-organ-meat-radical');
+    expect(tagged.map((q) => q.id).sort()).toEqual([
+      'menu-animal-high-3',
+      'menu-animal-high-4',
+      'menu-animal-high-5',
+    ]);
+    // Genuinely equivalent-difficulty alternatives, not just co-tagged: same
+    // category, same tier, same left-right meat-radical-semantic structure.
+    for (const q of tagged) {
+      expect(q.category).toBe('menu-animal');
+      expect(q.difficulty).toBe('high');
+      expect(q.tier).toBe(2);
+      expect(q.face?.structure).toBe('left-right');
+    }
+    expect(validatePack(SEED_PACK)).toEqual([]);
+  });
+
+  it('rejects a group with only one member', () => {
+    const lone: Question = { ...(SEED_PACK.questions[0] as Question), isomorph_group_id: 'only-one' };
+    const pack: ContentPack = { ...SEED_PACK, questions: [lone, ...SEED_PACK.questions.slice(1)] };
+    expect(validatePack(pack)).toContain(
+      'isomorph_group_id only-one: only one item - DESIGN.md §5.1 needs pairs or triples',
+    );
+  });
+});
+
 describe('pack hashing', () => {
   it('is stable and order independent', () => {
     expect(packHash(SEED_PACK)).toBe(SEED_PACK_HASH);

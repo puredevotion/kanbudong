@@ -5,7 +5,7 @@ import type { Identity } from './identity.js';
 import { newGameId, newTeamId, newTurnNonce } from './ids.js';
 import type { EventLog } from './log.js';
 import { randomJoinCode } from './joincode.js';
-import { answerSubject } from './reducer.js';
+import { answerSubject, isomorphSubject } from './reducer.js';
 import type { RulesConfig } from './rules.js';
 import { normalizeRules } from './rules.js';
 import type { CategoryId, Difficulty, GameId, PlayerId, TeamId } from './types.js';
@@ -172,6 +172,33 @@ export const revealAnswer = (
 
 export const callTimeout = (log: EventLog, identity: Identity, turnIndex: number): SignedEvent =>
   makeEvent(log, identity, { type: 'turn/timeout', turnIndex });
+
+/**
+ * Commits an answer to `turnIndex`'s isomorph-beat follow-up item (DESIGN.md
+ * §5.1's confer beat: "one isomorphic item answered individually with no
+ * discussion"). Same commit-then-reveal shape as {@link commitAnswer}, on its
+ * own subject namespace ({@link isomorphSubject}) so it can never be mistaken
+ * for the turn's main answer - see the `commit/revealed` case in reducer.ts,
+ * which grades this against `GameState.isomorphQuestions` and never resolves
+ * score, streak or the bet from it.
+ */
+export const commitIsomorphAnswer = (
+  log: EventLog,
+  identity: Identity,
+  turnIndex: number,
+  chosenIndex: number,
+  salt: string,
+): SignedEvent =>
+  makeCommit(log, identity, isomorphSubject(turnIndex), commitHash({ chosenIndex }, salt));
+
+/** Opens a prior {@link commitIsomorphAnswer} for the same `turnIndex`, `chosenIndex` and `salt`. */
+export const revealIsomorphAnswer = (
+  log: EventLog,
+  identity: Identity,
+  turnIndex: number,
+  chosenIndex: number,
+  salt: string,
+): SignedEvent => makeReveal(log, identity, isomorphSubject(turnIndex), { chosenIndex }, salt);
 
 /** Host-only; the reducer refuses this from anyone else. */
 export const setRoomLocked = (log: EventLog, identity: Identity, locked: boolean): SignedEvent =>
