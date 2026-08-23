@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   COMPONENT_CREDIT_WEIGHT,
   creditComponentExposure,
+  default_w,
   gradeFromAnswer,
   isDue,
   retrievability,
@@ -123,6 +124,35 @@ describe('isDue', () => {
 
   it('shares its default target with the FSRS request-retention config (§11.8)', () => {
     expect(TARGET_RETENTION).toBe(0.9);
+  });
+});
+
+describe('w parameterization', () => {
+  it('defaults every function to default_w when no w is given', () => {
+    const now = Date.now();
+    expect(retrievability(10, 10)).toBe(retrievability(10, 10, default_w));
+    expect(reviewItem(null, 'good', now)).toEqual(reviewItem(null, 'good', now, 'review', default_w));
+    expect(isDue(null, now)).toBe(isDue(null, now, TARGET_RETENTION, default_w));
+  });
+
+  it('a distinct per-player w actually changes the scheduling math, not just accepted and ignored', () => {
+    const now = Date.now();
+    // A w with a much larger initial-stability weight for "good" (w[2]) than the
+    // stock default should seed a visibly longer initial stability.
+    const boosted = Array.from(default_w);
+    boosted[2] = default_w[2]! * 5;
+
+    const withDefault = reviewItem(null, 'good', now, 'review', default_w)!;
+    const withBoosted = reviewItem(null, 'good', now, 'review', boosted)!;
+    expect(withBoosted.stability).toBeGreaterThan(withDefault.stability);
+  });
+
+  it('a custom w changes retrievability decay too', () => {
+    const slowerDecay = Array.from(default_w);
+    slowerDecay[20] = default_w[20]! * 2; // the FSRS6 decay term
+    const withDefault = retrievability(30, 10, default_w);
+    const withCustom = retrievability(30, 10, slowerDecay);
+    expect(withCustom).not.toBeCloseTo(withDefault, 6);
   });
 });
 

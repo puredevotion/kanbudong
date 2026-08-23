@@ -40,8 +40,10 @@ export default defineConfig({
       workbox: {
         // The whole game is local-first: the bundle and the question pack are
         // all it needs, so precaching them makes the app genuinely offline
-        // capable rather than merely installable.
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+        // capable rather than merely installable. `.wasm` covers
+        // fsrs-browser's optimizer - without it, the personal-FSRS-fit path
+        // would silently stop working the moment the app goes offline.
+        globPatterns: ['**/*.{js,css,html,png,svg,woff2,wasm}'],
         navigateFallback: 'index.html',
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },

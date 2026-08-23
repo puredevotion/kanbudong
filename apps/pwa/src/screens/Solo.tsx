@@ -14,6 +14,7 @@ import { Button, Card, Typography } from '@heroui/react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { recordSoloAttempt } from '../lib/attemptLog.js';
+import { currentFsrsParameters, maybeRefitFsrsParameters } from '../lib/fsrsRefit.js';
 import { navigate } from '../lib/router.js';
 import { recordSessionStart } from '../lib/sessionLog.js';
 import { getItemMemory, loadAllMemory, putItemMemory } from '../lib/soloMemory.js';
@@ -47,12 +48,17 @@ export function Solo(): ReactNode {
     if (playerId !== null) recordSessionStart(playerId, 'solo');
   }, [playerId]);
 
+  // Loaded once per session, same as the queue snapshot below: a personal
+  // fit landing mid-session (see maybeRefitFsrsParameters) should not change
+  // which w this session's due/overdue math is using partway through.
+  const w = useMemo(() => (playerId === null ? null : currentFsrsParameters(playerId)), [playerId]);
+
   // Session snapshot taken once: a session should not re-sort mid-way because
   // an earlier answer in the same session changed what's "due".
   const queue = useMemo(() => {
-    if (playerId === null) return null;
-    return buildSoloQueue(SEED_PACK, loadAllMemory(playerId), Date.now());
-  }, [playerId]);
+    if (playerId === null || w === null) return null;
+    return buildSoloQueue(SEED_PACK, loadAllMemory(playerId), Date.now(), new Set(), w);
+  }, [playerId, w]);
 
   const presentedQuestion = useMemo<PresentedQuestion | null>(() => {
     if (current === null) return null;
@@ -76,6 +82,14 @@ export function Solo(): ReactNode {
   const revealArmKey = current !== null && reveal !== null ? `${current.id}-${reviewed}` : 'none';
   const hanziAlone = useStage1HanziAlone(revealArmKey);
   const dwellElapsed = useRevealDwell(revealArmKey);
+
+  // Fired once the session-complete screen is about to render, never mid-
+  // session: `maybeRefitFsrsParameters` is a WASM optimizer pass that must
+  // not compete with an active review for the main thread (it hops to a
+  // Worker regardless, but this keeps the trigger point honest too).
+  useEffect(() => {
+    if (playerId !== null && done) void maybeRefitFsrsParameters(playerId);
+  }, [playerId, done]);
 
   if (playerId === null || queue === null) return null;
 
@@ -106,7 +120,7 @@ export function Solo(): ReactNode {
     const priorMemory = getItemMemory(playerId, current.id);
     const isFirstEncounter = priorMemory === null;
     const grade = gradeFromAnswer(correct, isFirstEncounter);
-    const updated = reviewItem(priorMemory, grade, Date.now());
+    const updated = reviewItem(priorMemory, grade, Date.now(), 'review', w ?? undefined);
     if (updated !== null) putItemMemory(playerId, current.id, updated);
     // DESIGN.md §10.1: "log chosen_option, not just correct/incorrect" -
     // recorded before the FSRS grade so a confusion-matrix read can still

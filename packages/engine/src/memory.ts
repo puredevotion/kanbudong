@@ -25,6 +25,16 @@
  * not a silent substitution — replace `default_w` with a real pretrain-4 or
  * per-population fit once review data exists to derive one from.
  *
+ * That review history now exists (`apps/pwa/src/lib/attemptLog.ts`), and
+ * `apps/pwa` runs a real full 21-parameter refit against it off this
+ * package's `w`-parameterized functions below (`fsrsRefit.ts` in this
+ * package shapes the training data and gates when a fit is trustworthy; the
+ * WASM optimizer call itself lives in `apps/pwa` because this package stays
+ * platform-free). Every exported function here now accepts an optional `w`
+ * — a per-player fitted vector — and falls back to `default_w` when none is
+ * given, so every existing call site that doesn't know about personalization
+ * keeps working unchanged.
+ *
  * Per-(player, item) state stays the 16 bytes §6.4 specifies — `stability`,
  * `difficulty`, `last_review` — because `FSRSAlgorithm.next_state` (the
  * low-level primitive used here, as opposed to the higher-level `Card`-
@@ -89,20 +99,49 @@ const GRADE_TO_RATING: Record<ReviewGrade, Grade> = {
   good: Rating.Good,
 };
 
-const algorithm = new FSRSAlgorithm(
-  generatorParameters({
-    request_retention: TARGET_RETENTION,
-    w: default_w,
-    enable_fuzz: false,
-    enable_short_term: false,
-  }),
-);
+/** The numeric FSRS rating (1/2/3, ts-fsrs's `Rating` enum) a grade maps to — the same convention `fsrs-browser`'s optimizer expects its `ratings` array in. */
+export function ratingForGrade(grade: ReviewGrade): Grade {
+  return GRADE_TO_RATING[grade];
+}
+
+/** FSRS-6's stock literature weights — this module's fallback whenever no per-player fit exists yet. Re-exported so callers never need their own `ts-fsrs` import just to name the fallback. */
+export { default_w };
+
+/** The length a fitted `w` vector must have to be a valid FSRS-6 parameter set (`default_w.length`, 21: the 4 pretrain weights plus difficulty, forgetting-curve, and short-term terms). */
+export const FSRS_PARAMETER_COUNT = default_w.length;
+
+function buildAlgorithm(w: readonly number[]): FSRSAlgorithm {
+  return new FSRSAlgorithm(
+    generatorParameters({
+      request_retention: TARGET_RETENTION,
+      w: w as number[],
+      enable_fuzz: false,
+      enable_short_term: false,
+    }),
+  );
+}
+
+const defaultAlgorithm = buildAlgorithm(default_w);
+
+// A single-slot cache, not a `Map`: every call site here passes either the
+// module default or the one per-player `w` array a caller loaded once per
+// session, so the last-built algorithm is virtually always the right one
+// to reuse instead of re-parsing `generatorParameters` on every review.
+let cachedCustom: { readonly w: readonly number[]; readonly algorithm: FSRSAlgorithm } | null = null;
+
+function algorithmFor(w: readonly number[] = default_w): FSRSAlgorithm {
+  if (w === default_w) return defaultAlgorithm;
+  if (cachedCustom !== null && cachedCustom.w === w) return cachedCustom.algorithm;
+  const algorithm = buildAlgorithm(w);
+  cachedCustom = { w, algorithm };
+  return algorithm;
+}
 
 /** §6.3's `R(t, S)` — probability of recall `t` days after a review with stability `S`. */
-export function retrievability(elapsedDays: number, stabilityDays: number): number {
+export function retrievability(elapsedDays: number, stabilityDays: number, w: readonly number[] = default_w): number {
   if (stabilityDays <= 0) return 0;
   const t = Math.max(0, elapsedDays);
-  return algorithm.forgetting_curve(t, stabilityDays);
+  return algorithmFor(w).forgetting_curve(t, stabilityDays);
 }
 
 export function elapsedDaysSince(lastReview: number, now: number): number {
@@ -115,9 +154,14 @@ export function elapsedDaysSince(lastReview: number, now: number): number {
  * 0.90, on pain of it being "a bug and not a tuning choice"). A never-
  * reviewed item is always due.
  */
-export function isDue(memory: ItemMemory | null, now: number, target: number = TARGET_RETENTION): boolean {
+export function isDue(
+  memory: ItemMemory | null,
+  now: number,
+  target: number = TARGET_RETENTION,
+  w: readonly number[] = default_w,
+): boolean {
   if (memory === null) return true;
-  return retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability) < target;
+  return retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability, w) < target;
 }
 
 /**
@@ -130,10 +174,15 @@ export function isDue(memory: ItemMemory | null, now: number, target: number = T
  * `null`, when an unseen item is only ever exposed and never actually
  * reviewed) — per §6.3/§6.5's ban on exposure rows feeding the scheduler.
  */
-function fullUpdate(memory: ItemMemory | null, grade: ReviewGrade, now: number): ItemMemory {
+function fullUpdate(
+  memory: ItemMemory | null,
+  grade: ReviewGrade,
+  now: number,
+  w: readonly number[] = default_w,
+): ItemMemory {
   const state: FSRSState | null = memory === null ? null : { stability: memory.stability, difficulty: memory.difficulty };
   const t = memory === null ? 0 : elapsedDaysSince(memory.lastReview, now);
-  const next = algorithm.next_state(state, t, GRADE_TO_RATING[grade]);
+  const next = algorithmFor(w).next_state(state, t, GRADE_TO_RATING[grade]);
   return { stability: next.stability, difficulty: next.difficulty, lastReview: now };
 }
 
@@ -142,9 +191,10 @@ export function reviewItem(
   grade: ReviewGrade,
   now: number,
   role: ReviewRole = 'review',
+  w: readonly number[] = default_w,
 ): ItemMemory | null {
   if (role === 'exposure') return memory;
-  return fullUpdate(memory, grade, now);
+  return fullUpdate(memory, grade, now, w);
 }
 
 /**
@@ -160,8 +210,13 @@ export function reviewItem(
  */
 export const COMPONENT_CREDIT_WEIGHT = 0.25;
 
-export function creditComponentExposure(memory: ItemMemory | null, grade: ReviewGrade, now: number): ItemMemory {
-  const full = fullUpdate(memory, grade, now);
+export function creditComponentExposure(
+  memory: ItemMemory | null,
+  grade: ReviewGrade,
+  now: number,
+  w: readonly number[] = default_w,
+): ItemMemory {
+  const full = fullUpdate(memory, grade, now, w);
   const baseStability = memory?.stability ?? 0;
   const baseDifficulty = memory?.difficulty ?? full.difficulty;
   return {

@@ -5,6 +5,7 @@ import {
   type ContentPack,
   type PlayerId,
   type QuestionId,
+  type RawSoloAttempt,
 } from '@kanbudong/engine';
 
 /**
@@ -66,6 +67,20 @@ export function recordSoloAttempt(
   const attempts = load(playerId);
   const next = [...attempts, { ...attempt, timestamp: now }].slice(-MAX_ATTEMPTS);
   save(playerId, next);
+}
+
+/**
+ * The same stored log, shaped for `@kanbudong/engine`'s `buildFsrsTrainingSet`
+ * instead of DESIGN.md §10.1's schema — no `ContentPack` needed, since a
+ * refit only cares about item id, grade and elapsed time, not display text.
+ */
+export function loadRawSoloAttempts(playerId: PlayerId): RawSoloAttempt[] {
+  return load(playerId).map((attempt) => ({
+    itemId: attempt.questionId,
+    correct: attempt.correct,
+    timestamp: attempt.timestamp,
+    priorLastReview: attempt.priorLastReview,
+  }));
 }
 
 /** The solo half of the attempt log, shaped to DESIGN.md §10.1's schema for inspection or aggregation. */

@@ -12,7 +12,7 @@
  * §11.9's "what it does not get" list.
  */
 
-import { isDue, retrievability, elapsedDaysSince, type ItemMemory } from './memory.js';
+import { default_w, isDue, retrievability, elapsedDaysSince, TARGET_RETENTION, type ItemMemory } from './memory.js';
 import type { ContentPack, Question, QuestionId } from './types.js';
 
 /** §11.9: "ends ... at ~40 retrievals, whichever comes first." */
@@ -35,12 +35,19 @@ export interface SoloQueue {
  * turns on" for turning a massed party game into a spaced one. Writing that
  * set is the caller's job (it crosses the shared-log/local-memory boundary
  * §11.1 draws deliberately narrowly); this function only ever reads it.
+ *
+ * `w` is the same per-player FSRS-6 parameter vector `memory.ts`'s functions
+ * take — defaulting to `default_w` — so that once a caller has a personal
+ * fit, due-ness and overdue ordering agree with the stability/difficulty
+ * math that produced them, rather than judging a personalized memory state
+ * against the stock literature curve.
  */
 export function buildSoloQueue(
   pack: ContentPack,
   memoryFor: (id: QuestionId) => ItemMemory | null,
   now: number,
   seededToday: ReadonlySet<QuestionId> = new Set(),
+  w: readonly number[] = default_w,
 ): SoloQueue {
   const due: Array<{ question: Question; overdueBy: number }> = [];
   const fresh: Question[] = [];
@@ -51,8 +58,8 @@ export function buildSoloQueue(
       fresh.push(question);
       continue;
     }
-    if (!isDue(memory, now)) continue;
-    const r = retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability);
+    if (!isDue(memory, now, TARGET_RETENTION, w)) continue;
+    const r = retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability, w);
     due.push({ question, overdueBy: 1 - r });
   }
 

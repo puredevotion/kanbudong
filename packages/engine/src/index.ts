@@ -24,6 +24,7 @@ export * from './selfExplanation.js';
 export * from './lociMnemonic.js';
 export * from './mnemonicPromptLog.js';
 export * from './memory.js';
+export * from './fsrsRefit.js';
 export * from './itemDifficulty.js';
 export * from './solo.js';
 export * from './groupSchedule.js';
