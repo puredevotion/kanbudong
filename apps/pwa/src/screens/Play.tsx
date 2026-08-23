@@ -7,6 +7,8 @@ import {
   categoryById,
   DIFFICULTY_ORDER,
   DIFFICULTY_TIERS,
+  discriminatingCues,
+  hasSelfExplanationPrompt,
   isActingPlayer,
   isBanned,
   questionById,
@@ -25,7 +27,12 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
 import { withGlyphs } from '../ui/glyphs.jsx';
-import { DecompositionPanel, useRevealDwell, useStage1HanziAlone } from '../ui/reveal.jsx';
+import {
+  DecompositionPanel,
+  SelfExplanationPrompt,
+  useRevealDwell,
+  useStage1HanziAlone,
+} from '../ui/reveal.jsx';
 import { Sign, templateFor } from '../ui/signs.jsx';
 
 export function Play(): ReactNode {
@@ -454,7 +461,10 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                       See how it&apos;s made
                     </Button>
                   ) : (
-                    <div className="anim-fade-in">
+                    <div className="anim-fade-in flex flex-col gap-2">
+                      {hasSelfExplanationPrompt(question) && (
+                        <SelfExplanationPrompt cues={discriminatingCues(question)} />
+                      )}
                       <DecompositionPanel
                         decomposition={question.decomposition}
                         transparency={face?.transparency}
@@ -467,7 +477,16 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
             </div>
           )}
 
-          {!hanziAlone && <p className="text-muted">{withGlyphs(question.explanation)}</p>}
+          {!hanziAlone && (
+            <p className="text-muted">
+              {withGlyphs(question.explanation)}
+              {question.glossProvenance !== undefined && (
+                <span className="ml-1.5 text-[0.65rem] uppercase tracking-wide text-muted/70">
+                  ({question.glossProvenance === 'etymological' ? 'etymological' : 'mnemonic, not history'})
+                </span>
+              )}
+            </p>
+          )}
         </Card.Content>
       )}
     </Card>

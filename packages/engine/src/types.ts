@@ -69,6 +69,15 @@ export type Transparency = 'transparent' | 'semi' | 'opaque';
 export type ConfusionType = 'form' | 'meaning-visually-distinct' | 'both' | 'shared-morpheme';
 
 /**
+ * DESIGN.md §3.3.3(7)/PLAN.md Phase 8: every gloss that carries an origin
+ * story must be marked against a scholarly source, never fabricated - this
+ * field only labels already-sourced content; it does not license inventing
+ * a picture-story for a character that lacks one (Chineasy's reputational
+ * liability, DESIGN.md §1.7 #31).
+ */
+export type GlossProvenance = 'etymological' | 'mnemonic-only';
+
+/**
  * DESIGN.md §3.3.3(4): which reveal layout a character's decomposition gets.
  * `atomic` covers both true pictographs/ideographs and the directional-
  * complement signs (入口, 出站) that are never decomposed regardless of origin.
@@ -185,6 +194,13 @@ export interface Question {
   readonly confusable_with?: readonly QuestionId[];
   /** Must not be scheduled in the same acquisition block (§2.3). Opposite of `confusable_with` - never fuse the two. */
   readonly interference_set?: readonly QuestionId[];
+  /**
+   * DESIGN.md §3.3.3(7): set only when `explanation` carries an origin story
+   * (etymological or otherwise), never as a blanket default - most items have
+   * no origin story in their explanation at all, and absence here means
+   * exactly that, not "unlabelled."
+   */
+  readonly glossProvenance?: GlossProvenance;
 }
 
 export interface ContentPack {

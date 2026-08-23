@@ -2,6 +2,7 @@ import {
   resolveComponent,
   type CharacterStructure,
   type Decomposition,
+  type SelfExplanationCue,
   type Transparency,
 } from '@kanbudong/engine';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -130,6 +131,62 @@ export function DecompositionPanel({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/**
+ * PLAN.md Phase 8 / DESIGN.md §2.5 & §3.3.3(6): self-explanation only earns
+ * its evidenced effect (g=0.55) when the player generates or selects a
+ * domain proposition, not when they are simply shown the labelled tree - so
+ * this asks "which part carries the meaning?" before either tile is
+ * labelled, rather than restating {@link DecompositionPanel}'s callout.
+ * Scoped to the one pairing real content ships (a semantic_radical cue next
+ * to a hand-verified phonetic_hint cue, e.g. 肝's ⺼ beside 干); any other
+ * cue combination renders nothing rather than guess at an unsupported shape.
+ * Never scored: this is a self-check, not part of the graded loop (§2.5).
+ */
+export function SelfExplanationPrompt({ cues }: { cues: readonly SelfExplanationCue[] }): ReactNode {
+  const [picked, setPicked] = useState<string | null>(null);
+  const semantic = cues.find((c) => c.kind === 'semantic_radical');
+  const phonetic = cues.find((c) => c.kind === 'phonetic_hint');
+
+  if (semantic?.componentId === undefined || phonetic?.componentId === undefined) return null;
+
+  const options = [semantic, phonetic] as const;
+
+  return (
+    <div className="rounded-xl border border-border bg-surface px-3 py-3">
+      <p className="text-xs text-muted">Which part told you what this means?</p>
+      <div className="mt-2 flex gap-2">
+        {options.map((cue) => {
+          const component = resolveComponent(cue.componentId as string);
+          const isPicked = picked === cue.componentId;
+          const revealCorrect = picked !== null && cue.kind === 'semantic_radical';
+          const revealWrong = picked !== null && isPicked && cue.kind === 'phonetic_hint';
+          return (
+            <button
+              key={cue.componentId}
+              type="button"
+              disabled={picked !== null}
+              onClick={() => setPicked(cue.componentId as string)}
+              className={`grow rounded-xl border px-3 py-3 text-center ${
+                revealCorrect ? 'border-2 border-foreground' : 'border-border'
+              }`}
+            >
+              <div className="font-han text-[2rem] font-medium leading-none">
+                {component?.displayGlyph ?? '?'}
+              </div>
+              {picked !== null && (
+                <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
+                  {cue.kind === 'semantic_radical' ? 'meaning - this one' : 'sound, not meaning'}
+                </div>
+              )}
+              {revealWrong && <div className="mt-0.5 text-[0.65rem] text-danger-text">not this one</div>}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

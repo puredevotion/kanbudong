@@ -4,6 +4,7 @@ import type {
   CategoryId,
   ConfusionType,
   Difficulty,
+  GlossProvenance,
   Question,
   QuestionId,
   SignFace,
@@ -22,6 +23,8 @@ export interface RowMeta {
   readonly confusion_type?: ConfusionType;
   readonly confusable_with?: readonly QuestionId[];
   readonly interference_set?: readonly QuestionId[];
+  /** Set only when `explanation` carries an origin story; see DESIGN.md §3.3.3(7). */
+  readonly glossProvenance?: GlossProvenance;
 }
 
 /**
@@ -84,6 +87,9 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
         ...(meta?.interference_set === undefined
           ? {}
           : { interference_set: meta.interference_set }),
+        ...(meta?.glossProvenance === undefined
+          ? {}
+          : { glossProvenance: meta.glossProvenance }),
       });
     });
   }
