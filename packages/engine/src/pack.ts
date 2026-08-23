@@ -165,6 +165,8 @@ function forbiddenCodepointStrings(q: Question): readonly [string, string][] {
     ['face.pinyin', q.face?.pinyin ?? ''],
     ['face.nl', q.face?.nl ?? ''],
     ['face.en', q.face?.en ?? ''],
+    ['face.context.before', q.face?.context?.before ?? ''],
+    ['face.context.after', q.face?.context?.after ?? ''],
   ];
 }
 

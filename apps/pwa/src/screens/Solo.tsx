@@ -156,6 +156,7 @@ export function Solo(): ReactNode {
                 template={templateFor(presentedQuestion.question.category)}
                 category={presentedQuestion.question.category}
                 hanzi={presentedQuestion.question.face.hanzi}
+                context={presentedQuestion.question.face.context}
               />
             )}
             <Card.Title className="text-xl">{presentedQuestion.question.prompt}</Card.Title>

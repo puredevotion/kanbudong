@@ -822,6 +822,7 @@ function LiveQuestion({
             category={categoryId}
             hanzi={face.hanzi}
             pinyin={difficulty === 'low' ? face.pinyin : undefined}
+            context={face.context}
           />
         </div>
       )}

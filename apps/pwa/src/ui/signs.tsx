@@ -58,6 +58,12 @@ export function domainOf(category: CategoryId): SignDomain {
   return (['menu', 'market', 'street', 'safety', 'transit'] as const).find((d) => d === head) ?? 'transit';
 }
 
+/** Real text the target sits inside on the object; see {@link SignFace.context}. */
+export interface SignContext {
+  readonly before?: string | undefined;
+  readonly after?: string | undefined;
+}
+
 interface SignProps {
   readonly template: TemplateId;
   /** Full scene id — the safety templates need it to pick their GB 2894 category. */
@@ -65,6 +71,8 @@ interface SignProps {
   readonly hanzi: string;
   /** Shown only at the lowest stake, where the bet buys scaffolding. */
   readonly pinyin?: string | undefined;
+  /** Genuine surrounding label/sign text the target is embedded in, if authored. */
+  readonly context?: SignContext | undefined;
 }
 
 /** Scale the characters down as the span gets longer, so a 4-char sign still fits a phone. */
@@ -76,19 +84,19 @@ function sizeFor(hanzi: string): string {
   return '2.7rem';
 }
 
-export function Sign({ template, category, hanzi, pinyin }: SignProps): ReactNode {
+export function Sign({ template, category, hanzi, pinyin, context }: SignProps): ReactNode {
   const size = sizeFor(hanzi);
   const body = {
-    transit: <TransitPlate hanzi={hanzi} size={size} />,
-    menu: <MenuSection hanzi={hanzi} size={size} />,
-    'menu-order': <MenuOrderScreen hanzi={hanzi} size={size} />,
-    street: <ShopFascia hanzi={hanzi} size={size} />,
-    'street-promo': <PromoBanner hanzi={hanzi} size={size} />,
-    'street-way': <WayfindingSign hanzi={hanzi} size={size} />,
-    market: <PriceLabel hanzi={hanzi} size={size} />,
-    'market-panel': <PackageLabel hanzi={hanzi} size={size} />,
-    'market-checkout': <CheckoutScreen hanzi={hanzi} size={size} />,
-    safety: <SafetyBoard hanzi={hanzi} size={size} kind={SAFETY_KIND[category] ?? 'warning'} />,
+    transit: <TransitPlate hanzi={hanzi} size={size} context={context} />,
+    menu: <MenuSection hanzi={hanzi} size={size} context={context} />,
+    'menu-order': <MenuOrderScreen hanzi={hanzi} size={size} context={context} />,
+    street: <ShopFascia hanzi={hanzi} size={size} context={context} />,
+    'street-promo': <PromoBanner hanzi={hanzi} size={size} context={context} />,
+    'street-way': <WayfindingSign hanzi={hanzi} size={size} context={context} />,
+    market: <PriceLabel hanzi={hanzi} size={size} context={context} />,
+    'market-panel': <PackageLabel hanzi={hanzi} size={size} context={context} />,
+    'market-checkout': <CheckoutScreen hanzi={hanzi} size={size} context={context} />,
+    safety: <SafetyBoard hanzi={hanzi} size={size} context={context} kind={SAFETY_KIND[category] ?? 'warning'} />,
   }[template];
 
   return (
@@ -109,10 +117,64 @@ export function Sign({ template, category, hanzi, pinyin }: SignProps): ReactNod
 interface Face {
   readonly hanzi: string;
   readonly size: string;
+  readonly context?: SignContext | undefined;
+}
+
+/**
+ * Renders the target either alone at hero size — today's layout, kept as the
+ * fallback for every item that has not yet been authored with `context` — or,
+ * when the item's own `SignFace.context` supplies real surrounding text,
+ * inline inside that text at the object's own print size with a highlight
+ * marking exactly which span the question is about.
+ *
+ * The highlight is a sharp-cornered outline in the template's own ink, not a
+ * rounded app-chrome pill: design/cards/README.md's invariant is that a sign
+ * looks like the real object, never like the app, so this has to read as
+ * something drawn *on* the object — a price-gun circle, a proofreading box —
+ * not a UI affordance.
+ */
+function TargetSpan({
+  hanzi,
+  size,
+  context,
+  fontClass,
+  ink,
+  mark,
+  heroWeight = 'font-medium',
+}: {
+  readonly hanzi: string;
+  readonly size: string;
+  readonly context: SignContext | undefined;
+  /** Font family/tracking classes, without weight (weight differs hero vs. inline). */
+  readonly fontClass: string;
+  readonly ink: string;
+  /** Highlight outline colour — must read as belonging to this object, not the app accent. */
+  readonly mark: string;
+  readonly heroWeight?: string;
+}): ReactNode {
+  if (context === undefined || (context.before === undefined && context.after === undefined)) {
+    return (
+      <span className={`${fontClass} ${heroWeight} leading-none`} style={{ fontSize: size, color: ink }}>
+        {hanzi}
+      </span>
+    );
+  }
+  return (
+    <span className={`${fontClass} inline leading-snug`} style={{ fontSize: `calc(${size} * 0.4)`, color: ink }}>
+      {context.before}
+      <span
+        className="font-bold"
+        style={{ outline: `2px solid ${mark}`, outlineOffset: '0.1em', padding: '0 0.05em', borderRadius: 0 }}
+      >
+        {hanzi}
+      </span>
+      {context.after}
+    </span>
+  );
 }
 
 /** Station wayfinding: enamel plate, blue band, exit letter, arrow. */
-function TransitPlate({ hanzi, size }: Face): ReactNode {
+function TransitPlate({ hanzi, size, context }: Face): ReactNode {
   return (
     <>
       <div className="flex items-center justify-between gap-3 bg-[oklch(0.42_0.13_250)] px-3.5 py-2">
@@ -123,9 +185,14 @@ function TransitPlate({ hanzi, size }: Face): ReactNode {
         <span className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#14140f] text-[1.4rem] font-bold text-[#f4f4f2]">
           B
         </span>
-        <span className="font-han font-medium leading-none tracking-[0.04em] text-[#14140f]" style={{ fontSize: size }}>
-          {hanzi}
-        </span>
+        <TargetSpan
+          hanzi={hanzi}
+          size={size}
+          context={context}
+          fontClass="font-han tracking-[0.04em]"
+          ink="#14140f"
+          mark="oklch(0.42 0.13 250)"
+        />
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#14140f" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
           <path d="M4 12h15" /><path d="M13 6l6 6-6 6" />
         </svg>
@@ -139,7 +206,7 @@ function TransitPlate({ hanzi, size }: Face): ReactNode {
  * is reading a layout before it is reading a character — the section header and
  * the neighbouring rows are what tell you the price column is a price column.
  */
-function MenuSection({ hanzi, size }: Face): ReactNode {
+function MenuSection({ hanzi, size, context }: Face): ReactNode {
   return (
     <div className="bg-[#f6f1e7]">
       <div className="flex items-center justify-between gap-3 bg-[oklch(0.42_0.16_28)] px-4 py-2">
@@ -149,7 +216,15 @@ function MenuSection({ hanzi, size }: Face): ReactNode {
       <div className="py-1.5">
         <MenuRow name="宫保鸡丁" price="42" dim />
         <div className="flex items-baseline gap-2.5 border-l-[3px] border-[oklch(0.52_0.19_28)] bg-[rgba(180,40,30,0.09)] px-4 py-3">
-          <span className="font-han-serif font-bold leading-tight text-[#1a1410]" style={{ fontSize: size }}>{hanzi}</span>
+          <TargetSpan
+            hanzi={hanzi}
+            size={size}
+            context={context}
+            fontClass="font-han-serif leading-tight"
+            ink="#1a1410"
+            mark="oklch(0.42 0.16 28)"
+            heroWeight="font-bold"
+          />
           <span className="-translate-y-1 grow border-b border-dotted border-black/30" />
           <span className="font-mono text-[1.05rem] font-semibold text-[#1a1410]">68</span>
         </div>
@@ -177,7 +252,8 @@ function MenuRow({ name, price, dim }: { name: string; price: string; dim?: bool
  * Still clears WCAG AA contrast (§7.1: the exemption is from the type-size
  * floor, never from contrast).
  */
-function MenuOrderScreen({ hanzi }: Face): ReactNode {
+function MenuOrderScreen({ hanzi, context }: Face): ReactNode {
+  const hasContext = context !== undefined && (context.before !== undefined || context.after !== undefined);
   return (
     <div className="bg-[#efefef]">
       <div className="flex items-center justify-between bg-[#1a1a1a] px-3.5 py-2 text-white">
@@ -187,7 +263,17 @@ function MenuOrderScreen({ hanzi }: Face): ReactNode {
       <div className="flex flex-col gap-[1px] bg-[#dcdcdc] py-[1px]">
         <MenuOrderRow name="宫保鸡丁" price="42" />
         <div className="flex items-center justify-between gap-3 bg-[#fff8e8] px-3.5 py-2.5">
-          <span className="font-han text-[15px] font-medium leading-tight text-[#14140f]">{hanzi}</span>
+          {hasContext ? (
+            <span className="font-han text-[15px] leading-tight text-[#14140f]">
+              {context.before}
+              <span className="font-bold" style={{ outline: '2px solid oklch(0.42 0.16 28)', outlineOffset: '0.08em', padding: '0 0.05em' }}>
+                {hanzi}
+              </span>
+              {context.after}
+            </span>
+          ) : (
+            <span className="font-han text-[15px] font-medium leading-tight text-[#14140f]">{hanzi}</span>
+          )}
           <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[oklch(0.52_0.20_28)] text-[13px] font-bold leading-none text-white">
             +
           </span>
@@ -214,16 +300,19 @@ function MenuOrderRow({ name, price }: { name: string; price: string }): ReactNo
 }
 
 /** A fascia board: gold on red, display weight, inset rule. Loud, like the real thing. */
-function ShopFascia({ hanzi, size }: Face): ReactNode {
+function ShopFascia({ hanzi, size, context }: Face): ReactNode {
   return (
     <div className="bg-[oklch(0.40_0.15_28)] p-[7px]">
-      <div className="border-2 border-[oklch(0.78_0.13_85)] px-4 py-7 text-center">
-        <div
-          className="font-han font-bold leading-none tracking-[0.1em] text-[oklch(0.84_0.14_88)] [text-shadow:0_2px_0_rgba(0,0,0,0.25)]"
-          style={{ fontSize: size }}
-        >
-          {hanzi}
-        </div>
+      <div className="border-2 border-[oklch(0.78_0.13_85)] px-4 py-7 text-center [text-shadow:0_2px_0_rgba(0,0,0,0.25)]">
+        <TargetSpan
+          hanzi={hanzi}
+          size={size}
+          context={context}
+          fontClass="font-han tracking-[0.1em]"
+          ink="oklch(0.84 0.14 88)"
+          mark="oklch(0.92 0.19 96)"
+          heroWeight="font-bold"
+        />
       </div>
     </div>
   );
@@ -235,7 +324,7 @@ function ShopFascia({ hanzi, size }: Face): ReactNode {
  * {@link ShopFascia}: a fascia identifies the shop, a promo poster is
  * disposable and gets torn down and replaced every week.
  */
-function PromoBanner({ hanzi, size }: Face): ReactNode {
+function PromoBanner({ hanzi, size, context }: Face): ReactNode {
   return (
     <div className="relative overflow-hidden bg-[oklch(0.58_0.22_28)] p-[10px]">
       <svg
@@ -248,13 +337,16 @@ function PromoBanner({ hanzi, size }: Face): ReactNode {
           <line key={i} x1={-20 + i * 20} y1="120" x2={20 + i * 20} y2="-20" stroke="#fff" strokeWidth="6" />
         ))}
       </svg>
-      <div className="relative border-[3px] border-dashed border-[oklch(0.92_0.19_96)] px-4 py-6 text-center">
-        <div
-          className="font-han font-bold leading-none tracking-[0.06em] text-[oklch(0.96_0.05_96)] [text-shadow:0_2px_0_rgba(0,0,0,0.3)]"
-          style={{ fontSize: size }}
-        >
-          {hanzi}
-        </div>
+      <div className="relative border-[3px] border-dashed border-[oklch(0.92_0.19_96)] px-4 py-6 text-center [text-shadow:0_2px_0_rgba(0,0,0,0.3)]">
+        <TargetSpan
+          hanzi={hanzi}
+          size={size}
+          context={context}
+          fontClass="font-han tracking-[0.06em]"
+          ink="oklch(0.96 0.05 96)"
+          mark="#14140f"
+          heroWeight="font-bold"
+        />
       </div>
     </div>
   );
@@ -266,19 +358,21 @@ function PromoBanner({ hanzi, size }: Face): ReactNode {
  * enamel: this is the sign that points *between* buildings, not into a
  * station.
  */
-function WayfindingSign({ hanzi, size }: Face): ReactNode {
+function WayfindingSign({ hanzi, size, context }: Face): ReactNode {
   return (
     <div className="bg-white">
       <div className="flex items-center justify-center gap-4 border-b-4 border-[oklch(0.48_0.16_255)] px-4 py-8">
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="oklch(0.48 0.16 255)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
           <path d="M12 19V6" /><path d="M6 12l6-6 6 6" />
         </svg>
-        <span
-          className="font-han font-medium leading-none tracking-[0.04em] text-[oklch(0.30_0.10_255)]"
-          style={{ fontSize: size }}
-        >
-          {hanzi}
-        </span>
+        <TargetSpan
+          hanzi={hanzi}
+          size={size}
+          context={context}
+          fontClass="font-han tracking-[0.04em]"
+          ink="oklch(0.30 0.10 255)"
+          mark="oklch(0.48 0.16 255)"
+        />
       </div>
     </div>
   );
@@ -289,7 +383,7 @@ function WayfindingSign({ hanzi, size }: Face): ReactNode {
  * the price shouts over it — which is the trap, so it is reproduced rather than
  * corrected.
  */
-function PriceLabel({ hanzi, size }: Face): ReactNode {
+function PriceLabel({ hanzi, size, context }: Face): ReactNode {
   return (
     <div className="bg-[#fdf7dd]">
       <div className="flex items-center justify-between bg-[oklch(0.52_0.20_28)] px-3.5 py-1">
@@ -298,7 +392,14 @@ function PriceLabel({ hanzi, size }: Face): ReactNode {
       </div>
       <div className="flex items-end justify-between gap-3 px-4 pb-2.5 pt-4">
         <div className="min-w-0">
-          <div className="font-han font-medium leading-tight text-[#14140f]" style={{ fontSize: size }}>{hanzi}</div>
+          <TargetSpan
+            hanzi={hanzi}
+            size={size}
+            context={context}
+            fontClass="font-han leading-tight"
+            ink="#14140f"
+            mark="oklch(0.52 0.20 28)"
+          />
           <div className="mt-1.5 font-mono text-[0.8rem] text-[#6b6b5e]">原价 <span className="line-through">12.80</span></div>
         </div>
         <div className="shrink-0 whitespace-nowrap text-right text-[oklch(0.50_0.20_28)]">
@@ -323,8 +424,18 @@ function PriceLabel({ hanzi, size }: Face): ReactNode {
  * block, small print in a dense grid. Distinct from {@link PriceLabel}: a
  * shelf tag is one big number you read across a shop floor, a back panel is
  * several small fields you read holding the packet in your hand.
+ *
+ * The 净含量/生产日期/保质期 rows this used to render were fixed placeholders,
+ * regardless of what the item actually was — the confirmed bug (号/时/点 shown
+ * inside shelf-life chrome that has nothing to do with any of them). When
+ * `context` supplies the real field the target sits in (e.g. 号 inside a
+ * genuine "产品批号" line), that replaces the placeholder row entirely; when
+ * it is absent, the label shows only what is true of every package — the
+ * header and the barcode — rather than inventing specifics for a term that
+ * may not be a package field at all.
  */
-function PackageLabel({ hanzi, size }: Face): ReactNode {
+function PackageLabel({ hanzi, size, context }: Face): ReactNode {
+  const hasContext = context !== undefined && (context.before !== undefined || context.after !== undefined);
   return (
     <div className="bg-white">
       <div className="border-b border-[#d8d8d0] px-3.5 py-1.5 text-center">
@@ -333,14 +444,26 @@ function PackageLabel({ hanzi, size }: Face): ReactNode {
         </span>
       </div>
       <div className="flex flex-col gap-1.5 px-4 py-3.5">
-        <LabelField label="净含量" value="500g" />
-        <div className="flex items-baseline gap-2.5 border-y border-[#e8e8e0] py-2">
-          <span className="font-han font-medium leading-tight text-[#14140f]" style={{ fontSize: size }}>
-            {hanzi}
-          </span>
-        </div>
-        <LabelField label="生产日期" value="2026.08.22" />
-        <LabelField label="保质期" value="12个月" />
+        {hasContext ? (
+          <div className="flex items-baseline gap-2.5 border-y border-[#e8e8e0] py-2.5 text-[0.78rem]">
+            <span className="font-han text-[#14140f]">
+              {context.before}
+              <span
+                className="font-bold"
+                style={{ outline: '2px solid oklch(0.52 0.20 28)', outlineOffset: '0.08em', padding: '0 0.05em' }}
+              >
+                {hanzi}
+              </span>
+              {context.after}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-baseline gap-2.5 py-2">
+            <span className="font-han font-medium leading-tight text-[#14140f]" style={{ fontSize: size }}>
+              {hanzi}
+            </span>
+          </div>
+        )}
       </div>
       <svg viewBox="0 0 300 20" preserveAspectRatio="none" className="block h-5 w-full px-4 pb-2.5" aria-hidden="true">
         <g fill="#14140f">
@@ -353,21 +476,12 @@ function PackageLabel({ hanzi, size }: Face): ReactNode {
   );
 }
 
-function LabelField({ label, value }: { label: string; value: string }): ReactNode {
-  return (
-    <div className="flex items-baseline justify-between gap-3 text-[0.78rem]">
-      <span className="font-han text-[#5a5a52]">{label}</span>
-      <span className="font-mono text-[#14140f]">{value}</span>
-    </div>
-  );
-}
-
 /**
  * The checkout counter — a till screen with the running total and the QR
  * payment code, not a price tag. Distinct from {@link PriceLabel}: this is
  * where the number gets paid, not where it's advertised.
  */
-function CheckoutScreen({ hanzi, size }: Face): ReactNode {
+function CheckoutScreen({ hanzi, size, context }: Face): ReactNode {
   return (
     <div className="bg-[#0f1410]">
       <div className="flex items-center justify-between px-3.5 py-2">
@@ -375,12 +489,14 @@ function CheckoutScreen({ hanzi, size }: Face): ReactNode {
         <span className="h-2.5 w-2.5 rounded-full bg-[#8fdba0]" />
       </div>
       <div className="flex flex-col items-center gap-2 px-4 py-6">
-        <span
-          className="font-han font-medium leading-none tracking-[0.04em] text-[#e4fbe9]"
-          style={{ fontSize: size }}
-        >
-          {hanzi}
-        </span>
+        <TargetSpan
+          hanzi={hanzi}
+          size={size}
+          context={context}
+          fontClass="font-han tracking-[0.04em]"
+          ink="#e4fbe9"
+          mark="#8fdba0"
+        />
         <span className="font-mono text-[1.6rem] font-bold text-[#8fdba0]">¥ 32.80</span>
       </div>
       <div className="flex items-center justify-center gap-2 border-t border-[#1f2b22] px-4 py-2.5">
@@ -419,7 +535,7 @@ const SAFETY: Record<SafetyKind, { bg: string; ink: string; label: string; icon:
   },
 };
 
-function SafetyBoard({ hanzi, size, kind }: Face & { kind: SafetyKind }): ReactNode {
+function SafetyBoard({ hanzi, size, context, kind }: Face & { kind: SafetyKind }): ReactNode {
   const s = SAFETY[kind];
   return (
     <div className="border-[5px] border-[#14140f]" style={{ background: s.bg }}>
@@ -428,9 +544,15 @@ function SafetyBoard({ hanzi, size, kind }: Face & { kind: SafetyKind }): ReactN
           {s.icon}
         </svg>
         <div className="min-w-0">
-          <div className="font-han font-bold leading-tight tracking-[0.04em]" style={{ fontSize: size, color: s.ink }}>
-            {hanzi}
-          </div>
+          <TargetSpan
+            hanzi={hanzi}
+            size={size}
+            context={context}
+            fontClass="font-han tracking-[0.04em]"
+            ink={s.ink}
+            mark={s.ink}
+            heroWeight="font-bold"
+          />
           <div className="mt-1.5 text-[0.69rem] font-bold tracking-[0.16em] opacity-70" style={{ color: s.ink }}>
             {s.label}
           </div>

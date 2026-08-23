@@ -128,6 +128,29 @@ export interface SignFace {
   readonly transparency?: Transparency;
   /** Meaningful only for a single-character span; unset for a multi-character one. */
   readonly structure?: CharacterStructure;
+  /**
+   * Genuine surrounding text the target sits inside on the real object - e.g.
+   * 时 inside "营业时间 09:00–22:00" on a shop door, not a bare glyph glued
+   * onto decoration that has nothing to do with it (the bug this field fixes:
+   * 号/时/点 were rendered inside PackageLabel's fixed 净含量/生产日期/保质期
+   * chrome regardless of what the item actually was). The renderer
+   * (apps/pwa/src/ui/signs.tsx) sets `before` and `after` around `hanzi` at
+   * the template's own print size and marks `hanzi` with a highlight, rather
+   * than blowing the target up to hero size and stranding it.
+   *
+   * Optional and additive: none of the ~330 existing items across
+   * `packages/engine/src/content/*.ts` author this yet. Every template must
+   * render sensibly in its absence - today's hero-glyph-alone layout, or a
+   * generic-but-honest chrome, never a fixed field that may not describe the
+   * item at all. Backfilling real context onto the rest of the bank is a
+   * later content-authoring phase, not this schema change.
+   */
+  readonly context?: {
+    /** Real text immediately before the target on the object. */
+    readonly before?: string;
+    /** Real text immediately after the target on the object. */
+    readonly after?: string;
+  };
 }
 
 export interface Question {

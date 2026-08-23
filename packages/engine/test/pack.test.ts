@@ -15,6 +15,7 @@ import {
   SEED_PACK_HASH,
   selectQuestion,
   validatePack,
+  type ContentPack,
   type Question,
 } from '../src/index.js';
 
@@ -180,6 +181,43 @@ describe('seed pack', () => {
       expect(tier.blurb.length).toBeGreaterThan(10);
       expect(tier.blurb.length).toBeLessThan(60);
     }
+  });
+});
+
+describe('SignFace.context', () => {
+  it('is optional and does not disturb validation for content that omits it', () => {
+    // Only the proof-of-concept items (号/时/点) author `context` so far - the
+    // schema addition has to be a no-op for every other item in the pack, not
+    // merely accepted by the type.
+    const withContext = SEED_PACK.questions.filter((q) => q.face?.context !== undefined);
+    expect(withContext.map((q) => q.face?.hanzi).sort()).toEqual(['号', '时', '点']);
+    expect(validatePack(SEED_PACK)).toEqual([]);
+  });
+
+  it('round-trips through expand() and passes validation once authored', () => {
+    const chunk = {
+      low: [
+        [
+          'On a shop door. What does it mean?',
+          ['o\'clock; time', 'w1', 'w2'],
+          0,
+          'because',
+          { hanzi: '时', pinyin: 'shí', nl: 'uur; tijd', context: { before: '营业', after: '间 09:00–22:00' } },
+        ] as const,
+      ],
+      mid: [],
+      high: [],
+    };
+    const [question] = expand('street-open', chunk);
+    expect(question?.face?.context).toEqual({ before: '营业', after: '间 09:00–22:00' });
+    const pack: ContentPack = { ...SEED_PACK, questions: [question as Question] };
+    expect(validatePack(pack)).toEqual([]);
+  });
+
+  it('does not change the hash of an item whose context is absent', () => {
+    // packHash only folds in face.hanzi, so adding context to the schema must
+    // not retroactively change the hash of content that has not adopted it.
+    expect(packHash(SEED_PACK)).toBe(SEED_PACK_HASH);
   });
 });
 
