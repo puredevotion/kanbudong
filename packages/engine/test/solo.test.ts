@@ -22,8 +22,8 @@ describe('buildSoloQueue', () => {
     const [a, b] = SEED_PACK.questions;
     if (a === undefined || b === undefined) throw new Error('pack too small for this test');
 
-    const overdue = reviewItem(null, 'good', now - 100 * DAY);
-    const fresh = reviewItem(null, 'good', now);
+    const overdue = reviewItem(null, 'good', now - 100 * DAY)!;
+    const fresh = reviewItem(null, 'good', now)!;
 
     const queue = buildSoloQueue(SEED_PACK, memoryMap({ [a.id]: overdue, [b.id]: fresh }), now);
 
@@ -39,7 +39,7 @@ describe('nextSoloItem', () => {
     const now = Date.now();
     const [a, b] = SEED_PACK.questions;
     if (a === undefined || b === undefined) throw new Error('pack too small for this test');
-    const overdue = reviewItem(null, 'good', now - 100 * DAY);
+    const overdue = reviewItem(null, 'good', now - 100 * DAY)!;
     const queue = buildSoloQueue(SEED_PACK, memoryMap({ [a.id]: overdue }), now);
     const next = nextSoloItem(queue, new Set());
     expect(next?.id).toBe(a.id);

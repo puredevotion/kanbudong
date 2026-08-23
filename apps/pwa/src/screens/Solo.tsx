@@ -86,7 +86,7 @@ export function Solo(): ReactNode {
     const isFirstEncounter = getItemMemory(playerId, current.id) === null;
     const grade = gradeFromAnswer(correct, isFirstEncounter);
     const updated = reviewItem(getItemMemory(playerId, current.id), grade, Date.now());
-    putItemMemory(playerId, current.id, updated);
+    if (updated !== null) putItemMemory(playerId, current.id, updated);
     setReveal({ chosenIndex, correct });
   };
 

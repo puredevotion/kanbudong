@@ -20,6 +20,7 @@ export * from './log.js';
 export * from './categories.js';
 export * from './pack.js';
 export * from './memory.js';
+export * from './itemDifficulty.js';
 export * from './solo.js';
 export * from './reducer.js';
 export * from './selectors.js';

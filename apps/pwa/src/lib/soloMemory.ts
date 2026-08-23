@@ -9,8 +9,13 @@ import type { ItemMemory, PlayerId, QuestionId } from '@kanbudong/engine';
 
 type MemoryByItem = Record<QuestionId, ItemMemory>;
 
+// v2: ItemMemory's stability/difficulty now come from ts-fsrs's FSRS-6 update
+// (see packages/engine/src/memory.ts) instead of the old hand-rolled
+// heuristic — the numbers are not comparable, so this is a clean-break
+// version bump (docs/PLAN.md §0), not a migration. Old v1 rows are simply
+// orphaned, unread by this code.
 function storageKey(playerId: PlayerId): string {
-  return `kanbudong.soloMemory.v1.${playerId}`;
+  return `kanbudong.soloMemory.v2.${playerId}`;
 }
 
 function load(playerId: PlayerId): MemoryByItem {

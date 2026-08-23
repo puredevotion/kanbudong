@@ -1,21 +1,59 @@
 /**
- * The solo review scheduler (docs/DESIGN.md §6.3, §11.9).
+ * The solo review scheduler (docs/DESIGN.md §6.3, §6.4, §11.9, §11.8).
  *
- * This is a simplified spaced-repetition model, not full FSRS: the design
- * document specifies FSRS's retrievability curve and its Elo-style item
- * difficulty precisely, but never gives FSRS's own ~19-parameter stability
- * update (that requires a fit against real review data this product does not
- * have yet). `reviewItem` below approximates that update with a small,
- * documented heuristic so a real solo loop can ship; replacing it with a
- * proper FSRS fit later does not change anything that calls it, because the
- * interface (`ItemMemory` in, `ItemMemory` out) is what a real fit would also
- * expose.
+ * Delegates the stability/difficulty update to `ts-fsrs`'s FSRS-6 algorithm
+ * (`FSRSVersion` at the pinned version is "v5.4.1 using FSRS-6.0" — the
+ * generation §11.8 requires, not FSRS-7) instead of the hand-rolled
+ * heuristic this module used to carry. `w[20]`/`FSRS6_DEFAULT_DECAY` — the
+ * one constant §4 of the phase plan calls out as "verbatim, worth
+ * preserving exactly" — matches this library's own `FSRS6_DEFAULT_DECAY`
+ * (0.1542) and its `forgetting_curve`'s formula matches §6.3's `R(t,S)`
+ * term for term, so `retrievability` below is a thin, citable wrapper
+ * rather than a reimplementation.
+ *
+ * [SIMPLIFICATION] §11.8 specifies shipping FSRS-6 "pretrain-4" — only the
+ * four per-grade initial-stability weights (`w[0..3]`) refit, the rest of
+ * `w` left at their literature defaults — rather than either a full 21-
+ * parameter per-user fit (needs review history this product does not have)
+ * or the stock all-defaults config the same section calls out as
+ * benchmarking *below* a zero-parameter moving average. A real pretrain-4
+ * fit is itself computed from a large per-collection corpus we do not have
+ * access to in this repo, so this module ships `ts-fsrs`'s published
+ * `default_w` unmodified rather than inventing numbers for `w[0..3]` that
+ * would carry no citation. This is a further, explicitly-flagged narrowing
+ * of the phase plan's own already-acknowledged pretrain-4 simplification,
+ * not a silent substitution — replace `default_w` with a real pretrain-4 or
+ * per-population fit once review data exists to derive one from.
+ *
+ * Per-(player, item) state stays the 16 bytes §6.4 specifies — `stability`,
+ * `difficulty`, `last_review` — because `FSRSAlgorithm.next_state` (the
+ * low-level primitive used here, as opposed to the higher-level `Card`-
+ * based `Scheduler`) only ever needs that pair in and that pair out; it has
+ * no use for review/lapse counts, so widening the stored shape to carry
+ * them would add bytes DESIGN.md does not ask for.
+ *
+ * Direction (§6.1: sign → meaning, fixed, no production mode in v1) is not
+ * threaded through this module's API. §6.1 says direction "sits in the key"
+ * for a future audio mode, but with a single constant direction in v1 there
+ * is nothing for a second value to disambiguate yet — the per-item state
+ * this module stores is already scoped to one direction implicitly, same as
+ * the identity of the item itself. Confirmed against DESIGN.md's current
+ * text per the phase plan's flag, rather than assumed moot.
  *
  * Storage is deliberately not this module's job: §6.4 keeps the memory store
  * local to the device and out of the synced game log, which for this package
  * (imported by a browser bundle, an Expo bundle and node tests alike) means
  * no persistence API can be assumed here. The caller persists `ItemMemory`.
  */
+
+import {
+  FSRSAlgorithm,
+  Rating,
+  default_w,
+  generatorParameters,
+  type FSRSState,
+  type Grade,
+} from 'ts-fsrs';
 
 /** Per `(player, item)`. Stability and the review clock are in days / ms. */
 export interface ItemMemory {
@@ -27,23 +65,44 @@ export interface ItemMemory {
 /** How a single response is graded, per the mapping in §6.3. */
 export type ReviewGrade = 'again' | 'hard' | 'good';
 
+/**
+ * §6.3/§6.5: whether a response counts as evidence for the scheduler.
+ * Pinyin-scaffolded answers, commit-window timeouts, and at-most-one-per-
+ * session "too easy" freebies (`R_p > 0.95`) are `exposure` — logged to the
+ * game log elsewhere, but must never move `stability`/`difficulty` here.
+ * The caller (whatever records the attempt) decides the role; this module
+ * only enforces that an `exposure` role is a no-op on memory.
+ */
+export type ReviewRole = 'review' | 'exposure';
+
 const MS_PER_DAY = 86_400_000;
 
-/** From §6.3: fit to Ebbinghaus-style forgetting, R = 0.9 at t = S. */
-export const RETRIEVABILITY_DECAY = 0.1542;
-const RETRIEVABILITY_FACTOR = 0.9 ** (1 / -RETRIEVABILITY_DECAY) - 1;
+/** §6.3/§11.8: target retention, shared by the selector and the scheduler on purpose. */
+export const TARGET_RETENTION = 0.9;
 
-const NEW_ITEM_STABILITY_DAYS = 1;
-const NEW_ITEM_DIFFICULTY = 5;
-const MIN_DIFFICULTY = 1;
-const MAX_DIFFICULTY = 10;
-const MIN_STABILITY_DAYS = 0.2;
+/** §6.3's fixed constant, verbatim — see `FSRSAlgorithm`'s own `FSRS6_DEFAULT_DECAY`. */
+export const RETRIEVABILITY_DECAY = 0.1542;
+
+const GRADE_TO_RATING: Record<ReviewGrade, Grade> = {
+  again: Rating.Again,
+  hard: Rating.Hard,
+  good: Rating.Good,
+};
+
+const algorithm = new FSRSAlgorithm(
+  generatorParameters({
+    request_retention: TARGET_RETENTION,
+    w: default_w,
+    enable_fuzz: false,
+    enable_short_term: false,
+  }),
+);
 
 /** §6.3's `R(t, S)` — probability of recall `t` days after a review with stability `S`. */
 export function retrievability(elapsedDays: number, stabilityDays: number): number {
   if (stabilityDays <= 0) return 0;
   const t = Math.max(0, elapsedDays);
-  return (1 + (RETRIEVABILITY_FACTOR * t) / stabilityDays) ** -RETRIEVABILITY_DECAY;
+  return algorithm.forgetting_curve(t, stabilityDays);
 }
 
 export function elapsedDaysSince(lastReview: number, now: number): number {
@@ -52,55 +111,38 @@ export function elapsedDaysSince(lastReview: number, now: number): number {
 
 /**
  * An item is due when its retrievability has decayed under the session
- * target (§6.3's observed-accuracy target, 0.9 by default here since solo has
- * no format-tier correction to make). A never-reviewed item is always due.
+ * target (§11.8: the selector and the scheduler must read the same target,
+ * 0.90, on pain of it being "a bug and not a tuning choice"). A never-
+ * reviewed item is always due.
  */
-export function isDue(memory: ItemMemory | null, now: number, target = 0.9): boolean {
+export function isDue(memory: ItemMemory | null, now: number, target: number = TARGET_RETENTION): boolean {
   if (memory === null) return true;
   return retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability) < target;
 }
 
 /**
- * Applies one graded review. `memory === null` is a first-ever encounter,
- * seeded per §6.3's cold-start clamp (`initial_interval` inside `[0.5x, 1.5x]`
- * the global new-item interval) rather than computed from a retrievability
- * that does not exist yet.
+ * Applies one graded review via FSRS-6's own stability/difficulty update.
+ * `memory === null` is a first-ever encounter: `FSRSAlgorithm.next_state`
+ * seeds it from `w[grade-1]` (initial stability) and the `w[4]`/`w[5]`
+ * initial-difficulty formula, rather than a fixed table.
+ *
+ * `role: 'exposure'` is a no-op — returns `memory` unchanged (including
+ * `null`, when an unseen item is only ever exposed and never actually
+ * reviewed) — per §6.3/§6.5's ban on exposure rows feeding the scheduler.
  */
-export function reviewItem(memory: ItemMemory | null, grade: ReviewGrade, now: number): ItemMemory {
-  if (memory === null) {
-    const stability =
-      grade === 'again'
-        ? MIN_STABILITY_DAYS
-        : grade === 'hard'
-          ? NEW_ITEM_STABILITY_DAYS * 0.7
-          : NEW_ITEM_STABILITY_DAYS;
-    return { stability, difficulty: NEW_ITEM_DIFFICULTY, lastReview: now };
-  }
+export function reviewItem(
+  memory: ItemMemory | null,
+  grade: ReviewGrade,
+  now: number,
+  role: ReviewRole = 'review',
+): ItemMemory | null {
+  if (role === 'exposure') return memory;
 
-  const r = retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability);
-  let { stability, difficulty } = memory;
+  const state: FSRSState | null = memory === null ? null : { stability: memory.stability, difficulty: memory.difficulty };
+  const t = memory === null ? 0 : elapsedDaysSince(memory.lastReview, now);
+  const next = algorithm.next_state(state, t, GRADE_TO_RATING[grade]);
 
-  switch (grade) {
-    case 'again':
-      // A lapse both shrinks the interval and makes the item harder to grow
-      // back, mirroring FSRS's own lapse behaviour without its exact constants.
-      difficulty = Math.min(MAX_DIFFICULTY, difficulty + 1);
-      stability = Math.max(MIN_STABILITY_DAYS, stability * 0.5);
-      break;
-    case 'hard':
-      difficulty = Math.min(MAX_DIFFICULTY, difficulty + 0.3);
-      stability *= 1 + 0.3 * (1 - r);
-      break;
-    case 'good':
-      // The lower the retrievability at the moment of recall, the harder the
-      // retrieval was, and the more the interval is allowed to grow — this is
-      // the spacing effect, and the one property a heuristic must preserve.
-      difficulty = Math.max(MIN_DIFFICULTY, difficulty - 0.1);
-      stability *= 1 + (11 - difficulty) * (1 - r) * 0.5;
-      break;
-  }
-
-  return { stability, difficulty, lastReview: now };
+  return { stability: next.stability, difficulty: next.difficulty, lastReview: now };
 }
 
 /**
