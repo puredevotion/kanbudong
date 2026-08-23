@@ -1,4 +1,4 @@
-import { WATER_RADICAL } from '../components.js';
+import { CAI_PHONETIC, GRASS_RADICAL, WATER_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -172,10 +172,17 @@ export const MENU_ORDER: CategoryContent = {
       'On the menu. What does this mean?',
       ['dish, vegetable', 'cold dishes', 'hot dishes'],
       0,
-      'cài · gerecht, groente (dish, vegetable). Seen in 凉菜/热菜 (cold/hot dishes) on a menu section header. Picture 菜 as a hand (采) picking greens (艹) fresh for the table: cài.',
-      { hanzi: '菜', pinyin: 'cài', nl: 'gerecht, groente', en: 'dish, vegetable' },
-      undefined,
-      { glossProvenance: 'mnemonic-only' },
+      'cài · gerecht, groente (dish, vegetable). Seen in 凉菜/热菜 (cold/hot dishes) on a menu section header. 采 (picking) under 艹 (plant): cài, produce picked for the table.',
+      { hanzi: '菜', pinyin: 'cài', nl: 'gerecht, groente', en: 'dish, vegetable', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '菜',
+        components: [
+          { componentId: GRASS_RADICAL.id, role: 'semantic' },
+          { componentId: CAI_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: GRASS_RADICAL.id,
+      },
     ],
     [
       'On the menu. What does this mean?',

@@ -181,6 +181,24 @@ export const GRASS_RADICAL: Component = {
 };
 
 /**
+ * 菜 cài = ⿱艹采 (grass over 采), MMH's own `pictophonetic` type: semantic 艹,
+ * phonetic 采. Found via an independent Dong Chinese cross-check (a third
+ * verification source alongside MMH and pinyin-data) after 份/价 exposed the
+ * "only checked the primary reading" miss class - 采's own primary reading is
+ * cǎi, but `pinyin-data` lists a second reading, cài, an exact match to 菜.
+ * A second Dong-Chinese-suggested candidate (炒/少) was checked and rejected:
+ * 炒 is chǎo, 少 is shǎo/shào - same rime and tone as one of 少's readings but
+ * a different initial (ch- vs sh-), not the same syllable, so no match.
+ */
+export const CAI_PHONETIC: Component = {
+  id: 'phonetic-cai',
+  displayGlyph: '采',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'to pick, to gather',
+};
+
+/**
  * 炒/炖/烤/烧/焖/爆 = ⿰火X (fire + X), verified against the gitignored Make Me a
  * Hanzi scratch copy - every one of the six is MMH's own `pictophonetic` type
  * with `semantic: '火'`, not an ideographic reading imposed after the fact.
@@ -581,6 +599,7 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [EARTH_SEMANTIC.id]: EARTH_SEMANTIC,
   [CHENG_PHONETIC.id]: CHENG_PHONETIC,
   [GRASS_RADICAL.id]: GRASS_RADICAL,
+  [CAI_PHONETIC.id]: CAI_PHONETIC,
   [FIRE_RADICAL.id]: FIRE_RADICAL,
   [KAO_PHONETIC.id]: KAO_PHONETIC,
   [MEN_PHONETIC.id]: MEN_PHONETIC,
