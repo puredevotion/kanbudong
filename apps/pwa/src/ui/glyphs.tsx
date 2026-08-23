@@ -13,14 +13,23 @@ import type { ReactNode } from 'react';
  * reads in the wild, so drawing them costs nothing pedagogically: a reader who
  * does not know the notation still sees the shape of the composition.
  *
- * NOT shimmed, deliberately: ⺼ U+2EBC, the bound form of 肉. It is also absent
- * from every Noto SC file, but drawing a distinctive glyph for it would teach a
- * shape that does not appear on a real sign — in the PRC 新字形 forms this app
- * uses, the component inside 肝 肠 肚 腰 脑 is drawn exactly like 月. The
- * distinction is one of identity, not of rendering: it is carried by the stored
- * component id and the label ("flesh"), never by the picture. Substituting the
- * *character* 月 in data would be the error; showing its *shape* is what a learner
- * must actually recognise.
+ * NOT shimmed, and not sourced from another font either: ⺼ U+2EBC, the bound
+ * form of 肉. It is absent from every Noto SC file, and the obvious fixes — draw
+ * it, or add a fallback face that has it — were both tested and both rejected on
+ * evidence. See docs/img/meat-radical-glyphs.png:
+ *
+ *   - In Noto Sans SC AND in WenQuanYi Zen Hei, the component inside 肝 is drawn
+ *     identically to 月: two horizontal inner strokes.
+ *   - The standalone U+2EBC codepoint, in the one available face that has it,
+ *     is drawn with SLANTED strokes — the traditional radical form.
+ *
+ * So importing a face for U+2EBC would put a shape on screen that appears inside
+ * no character in the app's own typeface, directly beside the character it is
+ * supposed to be decomposing. The distinction between 肉's bound form and the
+ * moon is one of IDENTITY, carried by the stored component id and the label
+ * ("flesh"), and it must never be carried by the picture. Substituting the
+ * character 月 in data is the error the design rules out; drawing its shape is
+ * what a learner has to recognise on a menu.
  */
 
 const S = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
