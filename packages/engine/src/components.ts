@@ -312,6 +312,24 @@ export const GRAIN_RADICAL: Component = {
 };
 
 /**
+ * 份 fèn = ⿰亻分 (person + 分). Make Me a Hanzi classifies this pairing
+ * `ideographic`, not pictophonetic - its own etymology hint is "the lot or
+ * portion 分 allotted to a man 亻." A prior pass checked 分 only against its
+ * primary reading (fēn) against fèn, called it a tone-only near miss, and
+ * dropped it entirely - missing that `pinyin-data` lists 分 as a genuine
+ * heteronym with THREE readings, fēn/fèn/fén, so fèn is itself one of 分's
+ * attested readings, not a mismatch. 份 therefore ships both components as
+ * semantic (per MMH's own ideographic classification), not one semantic/one
+ * rejected-phonetic.
+ */
+export const FEN_SEMANTIC: Component = {
+  id: 'kangxi-18-fen-portion',
+  displayGlyph: '分',
+  role: 'semantic',
+  meaning: 'to divide; a portion, a share',
+};
+
+/**
  * Rest-of-bank decomposition/mnemonic pass (Aug 2026, DESIGN.md §9.1 coverage
  * push): components for the remaining still-undecomposed single characters in
  * market-checkout/market-panel/menu-animal/street-open, verified against the
@@ -533,6 +551,7 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [METAL_RADICAL.id]: METAL_RADICAL,
   [GUO_PHONETIC.id]: GUO_PHONETIC,
   [GRAIN_RADICAL.id]: GRAIN_RADICAL,
+  [FEN_SEMANTIC.id]: FEN_SEMANTIC,
   [TAP_RADICAL.id]: TAP_RADICAL,
   [SILK_RADICAL.id]: SILK_RADICAL,
   [SHELL_RADICAL.id]: SHELL_RADICAL,

@@ -1,4 +1,4 @@
-import { AGAIN_RADICAL, MOUTH_RADICAL, PERSON_RADICAL } from '../components.js';
+import { AGAIN_RADICAL, FEN_SEMANTIC, MOUTH_RADICAL, PERSON_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -24,8 +24,12 @@ import type { CategoryContent } from './row.js';
  * Rest-of-bank coverage pass (Aug 2026): 号 gets a verified CharacterDecomposition
  * (semantic 口, `MOUTH_RADICAL`; its phonetic half 丂 is not a tone-or-syllable
  * match for hào, so semantic-only). 份 reuses `PERSON_RADICAL` (亻, from
- * street-open.ts's 停); its phonetic half 分 (fēn) is a tone-only near miss for
- * fèn, so semantic-only. 双 is a genuine ⿰又又 - the same "又 doubled" hint its
+ * street-open.ts's 停) alongside `FEN_SEMANTIC` (分) - corrected against Make
+ * Me a Hanzi's own `ideographic` classification (see `FEN_SEMANTIC`'s doc
+ * comment in components.ts): 分 is a genuine heteronym (fēn/fèn/fén per
+ * pinyin-data), so fèn is an attested reading, not the "tone-only near miss"
+ * an earlier pass assumed from checking only 分's primary reading. 双 is a
+ * genuine ⿰又又 - the same "又 doubled" hint its
  * own explanation already gave before this field existed - so it carries
  * `AGAIN_RADICAL` twice with no phonetic claim. 个/半/只 have no MMH semantic/
  * phonetic split clean enough to verify (个 and 半 are ideographic with no
@@ -168,15 +172,18 @@ export const MARKET_PANEL: CategoryContent = {
       'On the back of the packet. What does it mean?',
       ['portion, serving', 'half', 'buy one get one free'],
       0,
-      'fèn · portie (portion, serving). Seen in 大份/中份/小份/半份 (large/medium/small/half portion) on menus. Looks similar to 分 (which can also be read fèn) — focus on what the word means rather than the tone. Carries the 亻 (person) radical, the same one in 停 (to stop).',
+      'fèn · portie (portion, serving). Seen in 大份/中份/小份/半份 (large/medium/small/half portion) on menus. Literally the lot 分 (to divide; a share) allotted to a person 亻 — a person\'s portion.',
       { hanzi: '份', pinyin: 'fèn', nl: 'portie', en: 'portion, serving', structure: 'left-right' },
       {
         kind: 'character',
         hanzi: '份',
-        components: [{ componentId: PERSON_RADICAL.id, role: 'semantic' }],
+        components: [
+          { componentId: PERSON_RADICAL.id, role: 'semantic' },
+          { componentId: FEN_SEMANTIC.id, role: 'semantic' },
+        ],
         semantic_radical: PERSON_RADICAL.id,
       },
-      { tier: 1, freqRank: 784 },
+      { tier: 1, freqRank: 784, glossProvenance: 'etymological' },
     ],
     [
       'On the back of the packet. What does it mean?',
