@@ -1,7 +1,10 @@
 import {
   buildSoloQueue,
   confusablesFor,
+  discriminatingCues,
   gradeFromAnswer,
+  hasSelfExplanationPrompt,
+  lociTiles,
   nextSoloItem,
   presentQuestion,
   reviewItem,
@@ -13,10 +16,11 @@ import {
   type QuestionId,
 } from '@kanbudong/engine';
 import { Button, Card, Typography } from '@heroui/react';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
 import { recordSoloAttempt } from '../lib/attemptLog.js';
 import { currentFsrsParameters, maybeRefitFsrsParameters } from '../lib/fsrsRefit.js';
+import { recordMnemonicPromptUsed } from '../lib/mnemonicPromptLog.js';
 import { navigate } from '../lib/router.js';
 import { recordSessionStart } from '../lib/sessionLog.js';
 import { getItemMemory, loadAllMemory, putItemMemory } from '../lib/soloMemory.js';
@@ -25,6 +29,8 @@ import { ActionBar, Screen } from '../ui/atoms.jsx';
 import {
   ConfusablePanel,
   DecompositionPanel,
+  LociMnemonicPrompt,
+  SelfExplanationPrompt,
   SiblingsPanel,
   useRevealDwell,
   useStage1HanziAlone,
@@ -49,6 +55,7 @@ export function Solo(): ReactNode {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [showSiblings, setShowSiblings] = useState(false);
   const [showConfusables, setShowConfusables] = useState(false);
+  const [mnemonicMode, setMnemonicMode] = useState<'self_explanation' | 'loci'>('self_explanation');
 
   const playerId = identity?.id ?? null;
 
@@ -101,6 +108,33 @@ export function Solo(): ReactNode {
     () => (current === null ? [] : confusablesFor(SEED_PACK, current)),
     [current],
   );
+
+  const showSelfExplain = useMemo(
+    () => current !== null && hasSelfExplanationPrompt(current),
+    [current],
+  );
+  const tiles = useMemo(() => (current === null ? undefined : lociTiles(current)), [current]);
+  const showLoci = tiles !== undefined;
+
+  // DESIGN.md §10's instrumentation ruling: log exactly one outcome per
+  // reveal that actually offered a mnemonic prompt, defaulting to 'none' so
+  // "shown and ignored" is distinguishable from "never shown" - see
+  // packages/engine/src/mnemonicPromptLog.ts. Solo has no per-turn Outcome
+  // component to key a mount/unmount effect on (unlike Play.tsx), so this is
+  // keyed on `revealArmKey` instead: that key goes back to 'none' the moment
+  // `advance()` clears `current`/`reveal`, which is exactly when a reveal closes.
+  const breakdownOpenedRef = useRef(false);
+  const mnemonicKindRef = useRef<'self_explanation' | 'loci' | 'none'>('none');
+  useEffect(() => {
+    return () => {
+      if (playerId !== null && current !== null && breakdownOpenedRef.current && (showSelfExplain || showLoci)) {
+        recordMnemonicPromptUsed(playerId, current.id, mnemonicKindRef.current);
+      }
+      breakdownOpenedRef.current = false;
+      mnemonicKindRef.current = 'none';
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealArmKey]);
 
   // Fired once the session-complete screen is about to render, never mid-
   // session: `maybeRefitFsrsParameters` is a WASM optimizer pass that must
@@ -162,6 +196,7 @@ export function Solo(): ReactNode {
     setShowBreakdown(false);
     setShowSiblings(false);
     setShowConfusables(false);
+    setMnemonicMode('self_explanation');
   };
 
   return (
@@ -279,12 +314,49 @@ export function Solo(): ReactNode {
                         variant="ghost"
                         size="sm"
                         fullWidth
-                        onPress={() => setShowBreakdown(true)}
+                        onPress={() => {
+                          breakdownOpenedRef.current = true;
+                          setShowBreakdown(true);
+                        }}
                       >
                         See how it&apos;s made
                       </Button>
                     ) : (
                       <div className="anim-fade-in flex flex-col gap-2">
+                        {showSelfExplain && showLoci && (
+                          <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
+                            <button
+                              type="button"
+                              onClick={() => setMnemonicMode('self_explanation')}
+                              className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
+                            >
+                              which part means it
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setMnemonicMode('loci')}
+                              className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
+                            >
+                              picture it instead
+                            </button>
+                          </div>
+                        )}
+                        {showSelfExplain && (mnemonicMode === 'self_explanation' || !showLoci) && (
+                          <SelfExplanationPrompt
+                            cues={discriminatingCues(current)}
+                            onPicked={() => {
+                              mnemonicKindRef.current = 'self_explanation';
+                            }}
+                          />
+                        )}
+                        {showLoci && (mnemonicMode === 'loci' || !showSelfExplain) && (
+                          <LociMnemonicPrompt
+                            tiles={tiles}
+                            onUsed={() => {
+                              mnemonicKindRef.current = 'loci';
+                            }}
+                          />
+                        )}
                         <DecompositionPanel
                           decomposition={current.decomposition}
                           transparency={current.face?.transparency}
