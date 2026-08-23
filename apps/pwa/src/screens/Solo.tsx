@@ -20,6 +20,7 @@ import { getItemMemory, loadAllMemory, putItemMemory } from '../lib/soloMemory.j
 import { useApp } from '../lib/store.js';
 import { ActionBar, Screen } from '../ui/atoms.jsx';
 import { DecompositionPanel, useRevealDwell, useStage1HanziAlone } from '../ui/reveal.jsx';
+import { Sign, templateFor } from '../ui/signs.jsx';
 
 /**
  * The solo daily surface (docs/DESIGN.md §11.9). No opponent, no bet tiers, no
@@ -135,9 +136,16 @@ export function Solo(): ReactNode {
     >
       {presentedQuestion !== null && (
         <Card key={presentedQuestion.question.id} className="anim-enter">
-          <Card.Header>
+          <Card.Content className="flex flex-col gap-4 pt-4">
+            {presentedQuestion.question.face !== undefined && (
+              <Sign
+                template={templateFor(presentedQuestion.question.category)}
+                category={presentedQuestion.question.category}
+                hanzi={presentedQuestion.question.face.hanzi}
+              />
+            )}
             <Card.Title className="text-xl">{presentedQuestion.question.prompt}</Card.Title>
-          </Card.Header>
+          </Card.Content>
           <Card.Content className="flex flex-col gap-2">
             {presentedQuestion.options.map((option, index) => {
               const isChosen = reveal?.chosenIndex === index;
