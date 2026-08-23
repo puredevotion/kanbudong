@@ -7,13 +7,13 @@ export const MENU_FLAVOUR: CategoryContent = {
       '辣 — you see this on a sign. What does it mean?',
       ['chilli-hot', 'cold dishes', 'sweet', 'liver'],
       0,
-      'là · pittig, heet. The one warning that must be readable on day one',
+      'là · pittig, heet (chilli-hot, spicy). The most important warning character to recognize.',
     ],
     [
       '麻 — you see this on a sign. What does it mean?',
       ['numbing, lip-tingling', 'sour', '"from" (a price)', 'soft drinks'],
       0,
-      'má · verdovend, tintelend. Not heat. "Pittig" is wrong. No Dutch or English word exists',
+      'má · verdovend, tintelend (numbing, lip-tingling). This is not spicy heat — it is a tingling, numbing sensation with no exact Dutch or English word.',
     ],
   ],
   mid: [
@@ -21,19 +21,19 @@ export const MENU_FLAVOUR: CategoryContent = {
       '咸 — you see this on a sign. What does it mean?',
       ['salty', 'vegetarian', 'soft drinks', 'numbing, lip-tingling'],
       0,
-      'xián · zout. Rank 1,688; Chinese "salty" is saltier',
+      'xián · zout (salty). Dishes labelled this way tend to be saltier than "salty" usually implies in Dutch or English.',
     ],
     [
       '酸 — you see this on a sign. What does it mean?',
       ['sour', 'tossed, dressed', 'kidney', 'cold dishes'],
       0,
-      'suān · zuur. Rank 1,002; also the pickled-vegetable marker',
+      'suān · zuur (sour). Also marks pickled-vegetable dishes.',
     ],
     [
       '甜 — you see this on a sign. What does it mean?',
       ['sweet', 'house specialty', 'egg', 'brain'],
       0,
-      'tián · zoet. Rank 1,749; 甜 in a savoury dish name means sugar in the sauce',
+      'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added.',
     ],
   ],
   high: [
@@ -41,7 +41,7 @@ export const MENU_FLAVOUR: CategoryContent = {
       '甜 — you see this on a sign. What does it mean?',
       ['sweet', 'tendon', 'skin, crackling', 'lamb, mutton, goat'],
       0,
-      'tián · zoet. Rank 1,749; 甜 in a savoury dish name means sugar in the sauce',
+      'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added.',
     ],
   ],
 };

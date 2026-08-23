@@ -7,25 +7,25 @@ export const SAFETY_WARNING: CategoryContent = {
       '禁止 — you see this on a sign. What does it mean?',
       ['prohibition — red circle, diagonal bar', 'be careful, mind', 'strictly forbidden', 'beware'],
       0,
-      'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
+      'jìnzhǐ · verbod (strictly forbidden). Look for a red circle with a diagonal bar — red always means something is forbidden.',
     ],
     [
       '警告 — you see this on a sign. What does it mean?',
       ['warning — yellow triangle, black border', 'be careful, mind', 'mandatory — solid blue circle', 'prohibition — red circle, diagonal bar'],
       0,
-      'jǐnggào · waarschuwing — gele driehoek. Yellow warns. Distinguishing "you may be hurt" from "you may not do this" is the highest-value discrimination in the bank.',
+      'jǐnggào · waarschuwing (warning). A yellow triangle with a black border means "you could get hurt here" — different from a red circle, which means "you may not do this."',
     ],
     [
       '指令 — you see this on a sign. What does it mean?',
       ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
       0,
-      'zhǐlìng · gebod — blauwe cirkel. The one category Europeans systematically misread as informational. Blue is an order.',
+      'zhǐlìng · gebod (mandatory instruction). A solid blue circle is an order — you must do this, not just a suggestion.',
     ],
     [
       '提示 — you see this on a sign. What does it mean?',
       ['notice, safe condition — green square', 'mandatory — solid blue circle', 'be careful, mind', 'prohibition — red circle, diagonal bar'],
       0,
-      'tíshì · aanwijzing — groen vierkant. Green is where safety is, not where danger is. Sets up 安全出口 below.',
+      'tíshì · aanwijzing (safety notice). A green square points to something safe, such as an exit — green marks where safety is, not where danger is.',
     ],
   ],
   mid: [
@@ -33,7 +33,7 @@ export const SAFETY_WARNING: CategoryContent = {
       '禁止 — you see this on a sign. What does it mean?',
       ['prohibition — red circle, diagonal bar', 'beware', 'please do not', 'attention'],
       0,
-      'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
+      'jìnzhǐ · verbod (strictly forbidden). Look for a red circle with a diagonal bar — red always means something is forbidden.',
     ],
   ],
   high: [
@@ -41,7 +41,7 @@ export const SAFETY_WARNING: CategoryContent = {
       '禁止 — you see this on a sign. What does it mean?',
       ['prohibition — red circle, diagonal bar', 'notice, safe condition — green square', 'danger', 'closed down, ceased trading'],
       0,
-      'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
+      'jìnzhǐ · verbod (strictly forbidden). Look for a red circle with a diagonal bar — red always means something is forbidden.',
     ],
   ],
 };
