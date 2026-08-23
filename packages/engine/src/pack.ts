@@ -99,24 +99,34 @@ export function siblingsSharingComponent(pack: ContentPack, question: Question):
   if (decomposition.kind === 'character') {
     const radical = decomposition.semantic_radical;
     if (radical === undefined) return [];
-    return pack.questions
-      .filter(
-        (q) =>
-          q.id !== question.id &&
-          q.decomposition?.kind === 'character' &&
-          q.decomposition.semantic_radical === radical,
-      )
-      .slice(0, SIBLING_CAP);
+    const seen = new Set<string>([question.face?.hanzi ?? question.id]);
+    const out: Question[] = [];
+    for (const q of pack.questions) {
+      if (q.id === question.id) continue;
+      if (q.decomposition?.kind !== 'character' || q.decomposition.semantic_radical !== radical) continue;
+      const hanzi = q.face?.hanzi ?? q.id;
+      if (seen.has(hanzi)) continue;
+      seen.add(hanzi);
+      out.push(q);
+      if (out.length >= SIBLING_CAP) break;
+    }
+    return out;
   }
 
   const spans = new Set(decomposition.morphemes.map((m) => m.span));
-  return pack.questions
-    .filter((q) => {
-      if (q.id === question.id) return false;
-      if (q.decomposition?.kind !== 'word') return false;
-      return q.decomposition.morphemes.some((m) => spans.has(m.span));
-    })
-    .slice(0, SIBLING_CAP);
+  const seen = new Set<string>([question.face?.hanzi ?? question.id]);
+  const out: Question[] = [];
+  for (const q of pack.questions) {
+    if (q.id === question.id) continue;
+    if (q.decomposition?.kind !== 'word') continue;
+    if (!q.decomposition.morphemes.some((m) => spans.has(m.span))) continue;
+    const hanzi = q.face?.hanzi ?? q.id;
+    if (seen.has(hanzi)) continue;
+    seen.add(hanzi);
+    out.push(q);
+    if (out.length >= SIBLING_CAP) break;
+  }
+  return out;
 }
 
 /**

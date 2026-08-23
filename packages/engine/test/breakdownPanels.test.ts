@@ -70,6 +70,34 @@ describe('siblingsSharingComponent', () => {
     if (noDecomp === undefined) throw new Error('fixture missing: expected a question with no decomposition');
     expect(siblingsSharingComponent(SEED_PACK, noDecomp)).toEqual([]);
   });
+
+  /**
+   * A user caught this live: 会员价 (market-label.ts) is authored as three
+   * separate Question rows, one per difficulty tier, all sharing the same
+   * `WordDecomposition` morphemes - so each copy's sibling search matched the
+   * OTHER copies of itself (different question id, identical hanzi), and
+   * "the same move again" showed the word its own reveal was already
+   * showing. The fix de-duplicates by rendered hanzi, not just question id.
+   */
+  it('never returns a different question id for the same rendered hanzi (会员价 across difficulty tiers)', () => {
+    const copies = SEED_PACK.questions.filter((q) => q.face?.hanzi === '会员价');
+    expect(copies.length).toBeGreaterThan(1);
+    for (const copy of copies) {
+      const siblings = siblingsSharingComponent(SEED_PACK, copy);
+      expect(siblings.some((s) => s.face?.hanzi === '会员价')).toBe(false);
+    }
+  });
+
+  it('never returns duplicate hanzi within one sibling list (word-level, 特/特色/特价 family)', () => {
+    const withDuplicateWordSiblings = SEED_PACK.questions.filter(
+      (q) => q.decomposition?.kind === 'word' && siblingsSharingComponent(SEED_PACK, q).length > 0,
+    );
+    for (const q of withDuplicateWordSiblings) {
+      const siblings = siblingsSharingComponent(SEED_PACK, q);
+      const hanziList = siblings.map((s) => s.face?.hanzi ?? s.id);
+      expect(new Set(hanziList).size).toBe(hanziList.length);
+    }
+  });
 });
 
 describe('fire-radical cooking-method sibling set (decomposition-backfill pass, Aug 2026)', () => {
