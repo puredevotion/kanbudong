@@ -145,8 +145,8 @@ export const STREET_PROMO: CategoryContent = {
         kind: 'character',
         hanzi: '惠',
         components: [
-          { componentId: HUI_PHONETIC.id, role: 'phonetic' },
-          { componentId: HEART_RADICAL_FULL.id, role: 'semantic' },
+          { componentId: HUI_PHONETIC.id, role: 'sound' },
+          { componentId: HEART_RADICAL_FULL.id, role: 'meaning' },
         ],
         semantic_radical: HEART_RADICAL_FULL.id,
       },

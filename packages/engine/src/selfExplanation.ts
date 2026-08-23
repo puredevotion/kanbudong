@@ -32,9 +32,14 @@ export function discriminatingCues(question: Question): readonly SelfExplanation
 
   if (question.decomposition?.kind === 'character') {
     for (const { componentId, role } of question.decomposition.components) {
-      if (role === 'semantic') {
+      // `'iconic'` satisfies the same "which part told you the meaning?"
+      // proposition as `'meaning'` - a genuine pictograph is a stronger
+      // meaning-carrier, not a weaker one, so it is not treated as a lesser
+      // case. No other role (sound/remnant/simplified/deleted/distinguishing/
+      // unknown) makes a meaning claim a player could pick.
+      if (role === 'meaning' || role === 'iconic') {
         cues.push({ kind: 'semantic_radical', componentId });
-      } else if (role === 'phonetic') {
+      } else if (role === 'sound') {
         const reliability = resolveComponent(componentId)?.reliability;
         if (reliability !== undefined && reliability !== 'unverified' && reliability !== 'no-cue') {
           cues.push({ kind: 'phonetic_hint', componentId });

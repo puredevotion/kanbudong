@@ -53,10 +53,15 @@ import type { CategoryContent } from './row.js';
  * is what MMH's `radical` field actually assigns. 例/起 both turned up an
  * exact-reading phonetic match (列 lì, 己 qǐ) that a prior pass would have
  * missed by only checking each candidate's more common primary reading
- * (liè, jǐ) - the same miss class `FAN_PHONETIC`/`FEN_SEMANTIC`/`YAO_PHONETIC`
- * document. 位 ships both halves of its ideographic pair (亻 person, 立 to
- * stand) as semantic, the same "two real meaningful parts" pattern
- * `FEN_SEMANTIC` uses for 份.
+ * (liè, jǐ) - the same miss class `FAN_PHONETIC`/`FEN_PHONETIC`/`YAO_PHONETIC`
+ * document. 位 ships both halves of its ideographic pair, 亻 and 立 - the
+ * 8-category Dong Chinese re-audit (Aug 2026) reclassified these from a
+ * flat "both semantic" call to match Dong Chinese's own 位 entry: 亻 as
+ * `'iconic'` (a genuine pictograph of a person, not just "meaning"), and 立
+ * as `'unknown'` - Dong Chinese tags it with a dual "Sound Iconic" label that
+ * does not map onto this bank's single-category-per-usage model, and lì/wèi
+ * share no modern reading anyway, so this ships the honest "not established"
+ * value rather than guessing between the two.
  */
 export const MENU_ORDER: CategoryContent = {
   low: [
@@ -131,7 +136,7 @@ export const MENU_ORDER: CategoryContent = {
       {
         kind: 'character',
         hanzi: '汤',
-        components: [{ componentId: WATER_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: WATER_RADICAL.id, role: 'meaning' }],
         semantic_radical: WATER_RADICAL.id,
       },
       { tier: 1, freqRank: 1618 },
@@ -202,8 +207,8 @@ export const MENU_ORDER: CategoryContent = {
         kind: 'character',
         hanzi: '菜',
         components: [
-          { componentId: GRASS_RADICAL.id, role: 'semantic' },
-          { componentId: CAI_PHONETIC.id, role: 'phonetic' },
+          { componentId: GRASS_RADICAL.id, role: 'meaning' },
+          { componentId: CAI_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: GRASS_RADICAL.id,
       },
@@ -217,7 +222,7 @@ export const MENU_ORDER: CategoryContent = {
       {
         kind: 'character',
         hanzi: '料',
-        components: [{ componentId: DIPPER_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: DIPPER_RADICAL.id, role: 'iconic' }],
         semantic_radical: DIPPER_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -243,8 +248,8 @@ export const MENU_ORDER: CategoryContent = {
         kind: 'character',
         hanzi: '例',
         components: [
-          { componentId: PERSON_RADICAL.id, role: 'semantic' },
-          { componentId: LIE_PHONETIC.id, role: 'phonetic' },
+          { componentId: PERSON_RADICAL.id, role: 'meaning' },
+          { componentId: LIE_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: PERSON_RADICAL.id,
       },
@@ -285,8 +290,8 @@ export const MENU_ORDER: CategoryContent = {
         kind: 'character',
         hanzi: '起',
         components: [
-          { componentId: RUN_RADICAL.id, role: 'semantic' },
-          { componentId: QI_PHONETIC.id, role: 'phonetic' },
+          { componentId: RUN_RADICAL.id, role: 'meaning' },
+          { componentId: QI_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: RUN_RADICAL.id,
       },
@@ -302,8 +307,8 @@ export const MENU_ORDER: CategoryContent = {
         kind: 'character',
         hanzi: '位',
         components: [
-          { componentId: PERSON_RADICAL.id, role: 'semantic' },
-          { componentId: STAND_SEMANTIC.id, role: 'semantic' },
+          { componentId: PERSON_RADICAL.id, role: 'iconic' },
+          { componentId: STAND_SEMANTIC.id, role: 'unknown' },
         ],
         semantic_radical: PERSON_RADICAL.id,
       },

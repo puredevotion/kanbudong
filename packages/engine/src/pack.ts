@@ -268,6 +268,18 @@ export function validatePack(pack: ContentPack): string[] {
       const radical = q.decomposition.semantic_radical;
       if (radical !== undefined && !(radical in COMPONENTS)) {
         problems.push(`${q.id}: unknown semantic_radical component id ${radical}`);
+      } else if (radical !== undefined) {
+        // semantic_radical highlights a meaning-carrier for this SPECIFIC
+        // host - checked against the per-usage role stored on `components`,
+        // not the shared Component's own default role, since the two can
+        // differ (see components.ts's `PERSON_RADICAL`/`AGAIN_RADICAL` doc
+        // comments). 'iconic' counts as a meaning-carrier too: a genuine
+        // pictograph is a stronger claim than plain 'meaning', not a weaker
+        // one that should fail this check.
+        const usage = q.decomposition.components.find((c) => c.componentId === radical);
+        if (usage !== undefined && usage.role !== 'meaning' && usage.role !== 'iconic') {
+          problems.push(`${q.id}: semantic_radical ${radical} has non-meaning role '${usage.role}' for this host`);
+        }
       }
     }
     for (const charId of q.component_char_ids ?? []) {

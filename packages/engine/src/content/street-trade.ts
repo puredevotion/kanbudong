@@ -328,7 +328,7 @@ export const STREET_TRADE: CategoryContent = {
       {
         kind: 'character',
         hanzi: '茶',
-        components: [{ componentId: GRASS_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: GRASS_RADICAL.id, role: 'meaning' }],
         semantic_radical: GRASS_RADICAL.id,
       },
       { tier: 2, freqRank: 1272 },
@@ -343,10 +343,9 @@ export const STREET_TRADE: CategoryContent = {
         kind: 'character',
         hanzi: '所',
         components: [
-          { componentId: DOOR_RADICAL.id, role: 'semantic' },
-          { componentId: AXE_RADICAL.id, role: 'semantic' },
+          { componentId: DOOR_RADICAL.id, role: 'sound' },
+          { componentId: AXE_RADICAL.id, role: 'unknown' },
         ],
-        semantic_radical: DOOR_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
     ],
@@ -359,7 +358,7 @@ export const STREET_TRADE: CategoryContent = {
       {
         kind: 'character',
         hanzi: '院',
-        components: [{ componentId: MOUND_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MOUND_RADICAL.id, role: 'meaning' }],
         semantic_radical: MOUND_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -382,7 +381,7 @@ export const STREET_TRADE: CategoryContent = {
       {
         kind: 'character',
         hanzi: '厅',
-        components: [{ componentId: BUILDING_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: BUILDING_RADICAL.id, role: 'meaning' }],
         semantic_radical: BUILDING_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },

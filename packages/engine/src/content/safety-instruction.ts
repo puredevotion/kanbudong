@@ -68,8 +68,8 @@ export const SAFETY_INSTRUCTION: CategoryContent = {
         kind: 'character',
         hanzi: '指',
         components: [
-          { componentId: HAND_RADICAL.id, role: 'semantic' },
-          { componentId: ZHI_PHONETIC.id, role: 'phonetic' },
+          { componentId: HAND_RADICAL.id, role: 'meaning' },
+          { componentId: ZHI_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: HAND_RADICAL.id,
       },

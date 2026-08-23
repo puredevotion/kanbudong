@@ -38,7 +38,7 @@ describe('discriminatingCues / hasSelfExplanationPrompt', () => {
       decomposition: {
         kind: 'character',
         hanzi: '肚',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
     });
@@ -58,8 +58,8 @@ describe('discriminatingCues / hasSelfExplanationPrompt', () => {
         kind: 'character',
         hanzi: '期',
         components: [
-          { componentId: MEAT_RADICAL.id, role: 'semantic' },
-          { componentId: 'moon-phonetic-unverified', role: 'phonetic' },
+          { componentId: MEAT_RADICAL.id, role: 'meaning' },
+          { componentId: 'moon-phonetic-unverified', role: 'sound' },
         ],
         semantic_radical: MEAT_RADICAL.id,
       },

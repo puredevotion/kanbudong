@@ -222,7 +222,7 @@ export const STREET_WAY: CategoryContent = {
       {
         kind: 'character',
         hanzi: '洗',
-        components: [{ componentId: WATER_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: WATER_RADICAL.id, role: 'meaning' }],
         semantic_radical: WATER_RADICAL.id,
       },
       { freqRank: 1247 },
@@ -246,8 +246,8 @@ export const STREET_WAY: CategoryContent = {
         kind: 'character',
         hanzi: '间',
         components: [
-          { componentId: GATE_RADICAL.id, role: 'semantic' },
-          { componentId: SUN_RADICAL.id, role: 'semantic' },
+          { componentId: GATE_RADICAL.id, role: 'iconic' },
+          { componentId: SUN_RADICAL.id, role: 'iconic' },
         ],
         semantic_radical: GATE_RADICAL.id,
       },
@@ -262,7 +262,7 @@ export const STREET_WAY: CategoryContent = {
       {
         kind: 'character',
         hanzi: '药',
-        components: [{ componentId: GRASS_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: GRASS_RADICAL.id, role: 'meaning' }],
         semantic_radical: GRASS_RADICAL.id,
       },
       { freqRank: 662 },
@@ -277,8 +277,8 @@ export const STREET_WAY: CategoryContent = {
         kind: 'character',
         hanzi: '邮',
         components: [
-          { componentId: CITY_RADICAL.id, role: 'semantic' },
-          { componentId: YOU_PHONETIC.id, role: 'phonetic' },
+          { componentId: CITY_RADICAL.id, role: 'meaning' },
+          { componentId: YOU_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: CITY_RADICAL.id,
       },
@@ -302,7 +302,7 @@ export const STREET_WAY: CategoryContent = {
       {
         kind: 'character',
         hanzi: '快',
-        components: [{ componentId: HEART_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: HEART_RADICAL.id, role: 'meaning' }],
         semantic_radical: HEART_RADICAL.id,
       },
       { freqRank: 366 },
@@ -316,7 +316,7 @@ export const STREET_WAY: CategoryContent = {
       {
         kind: 'character',
         hanzi: '问',
-        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'meaning' }],
         semantic_radical: MOUTH_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -349,8 +349,8 @@ export const STREET_WAY: CategoryContent = {
         kind: 'character',
         hanzi: '递',
         components: [
-          { componentId: WALK_RADICAL.id, role: 'semantic' },
-          { componentId: DI_PHONETIC.id, role: 'phonetic' },
+          { componentId: WALK_RADICAL.id, role: 'meaning' },
+          { componentId: DI_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: WALK_RADICAL.id,
       },

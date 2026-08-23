@@ -2,7 +2,7 @@ import {
   AGAIN_RADICAL,
   BOW_RADICAL,
   CLOTHES_RADICAL,
-  FEN_SEMANTIC,
+  FEN_PHONETIC,
   ICE_RADICAL,
   MOUTH_RADICAL,
   OX_RADICAL,
@@ -41,8 +41,8 @@ import type { CategoryContent } from './row.js';
  * Rest-of-bank coverage pass (Aug 2026): 号 gets a verified CharacterDecomposition
  * (semantic 口, `MOUTH_RADICAL`; its phonetic half 丂 is not a tone-or-syllable
  * match for hào, so semantic-only). 份 reuses `PERSON_RADICAL` (亻, from
- * street-open.ts's 停) alongside `FEN_SEMANTIC` (分) - corrected against Make
- * Me a Hanzi's own `ideographic` classification (see `FEN_SEMANTIC`'s doc
+ * street-open.ts's 停) alongside `FEN_PHONETIC` (分) - corrected against Make
+ * Me a Hanzi's own `ideographic` classification (see `FEN_PHONETIC`'s doc
  * comment in components.ts): 分 is a genuine heteronym (fēn/fèn/fén per
  * pinyin-data), so fèn is an attested reading, not the "tone-only near miss"
  * an earlier pass assumed from checking only 分's primary reading. 双 is a
@@ -65,7 +65,7 @@ import type { CategoryContent } from './row.js';
  * `pinyin-data` reading list, not just its more common yuān reading - the
  * same miss class `FAN_PHONETIC`/`YAO_PHONETIC` document elsewhere. 件 ships
  * both halves of its ideographic pair (亻 person, 牛 ox) as semantic, the
- * same "two real meaningful parts" pattern `FEN_SEMANTIC` uses for 份. 重
+ * same "two real meaningful parts" pattern `FEN_PHONETIC` uses for 份. 重
  * ships both halves of its own ideographic pair (千 thousand, 里 village/
  * distance) the same way - see `THOUSAND_RADICAL`'s doc comment in
  * components.ts for why that component's id carries no "kangxi-" claim.
@@ -188,7 +188,7 @@ export const MARKET_PANEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '号',
-        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'meaning' }],
         semantic_radical: MOUTH_RADICAL.id,
       },
       { tier: 1, freqRank: 487 },
@@ -206,14 +206,14 @@ export const MARKET_PANEL: CategoryContent = {
       'On the back of the packet. What does it mean?',
       ['portion, serving', 'half', 'buy one get one free'],
       0,
-      'fèn · portie (portion, serving). Seen in 大份/中份/小份/半份 (large/medium/small/half portion) on menus. Literally the lot 分 (to divide; a share) allotted to a person 亻 — a person\'s portion.',
+      'fèn · portie (portion, serving). Seen in 大份/中份/小份/半份 (large/medium/small/half portion) on menus. A person 亻 carries the meaning; 分 (a fēn/fèn/fén heteronym) carries the sound — fèn.',
       { hanzi: '份', pinyin: 'fèn', nl: 'portie', en: 'portion, serving', structure: 'left-right' },
       {
         kind: 'character',
         hanzi: '份',
         components: [
-          { componentId: PERSON_RADICAL.id, role: 'semantic' },
-          { componentId: FEN_SEMANTIC.id, role: 'semantic' },
+          { componentId: PERSON_RADICAL.id, role: 'meaning' },
+          { componentId: FEN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: PERSON_RADICAL.id,
       },
@@ -228,7 +228,7 @@ export const MARKET_PANEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '杯',
-        components: [{ componentId: WOOD_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: WOOD_RADICAL.id, role: 'meaning' }],
         semantic_radical: WOOD_RADICAL.id,
       },
       { tier: 1, freqRank: 1396, glossProvenance: 'mnemonic-only' },
@@ -243,8 +243,8 @@ export const MARKET_PANEL: CategoryContent = {
         kind: 'character',
         hanzi: '碗',
         components: [
-          { componentId: STONE_RADICAL.id, role: 'semantic' },
-          { componentId: WAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: STONE_RADICAL.id, role: 'meaning' },
+          { componentId: WAN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: STONE_RADICAL.id,
       },
@@ -259,7 +259,7 @@ export const MARKET_PANEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '瓶',
-        components: [{ componentId: POTTERY_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: POTTERY_RADICAL.id, role: 'meaning' }],
         semantic_radical: POTTERY_RADICAL.id,
       },
       { tier: 1, freqRank: 1703, glossProvenance: 'mnemonic-only' },
@@ -273,7 +273,7 @@ export const MARKET_PANEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '张',
-        components: [{ componentId: BOW_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: BOW_RADICAL.id, role: 'meaning' }],
         semantic_radical: BOW_RADICAL.id,
       },
       { tier: 1, freqRank: 318, glossProvenance: 'mnemonic-only' },
@@ -350,7 +350,7 @@ export const MARKET_PANEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '冷',
-        components: [{ componentId: ICE_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: ICE_RADICAL.id, role: 'meaning' }],
         semantic_radical: ICE_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -399,7 +399,7 @@ export const MARKET_PANEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '只',
-        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'meaning' }],
         semantic_radical: MOUTH_RADICAL.id,
       },
       { tier: 2, freqRank: 97, glossProvenance: 'mnemonic-only' },
@@ -414,8 +414,8 @@ export const MARKET_PANEL: CategoryContent = {
         kind: 'character',
         hanzi: '件',
         components: [
-          { componentId: PERSON_RADICAL.id, role: 'semantic' },
-          { componentId: OX_RADICAL.id, role: 'semantic' },
+          { componentId: PERSON_RADICAL.id, role: 'meaning' },
+          { componentId: OX_RADICAL.id, role: 'meaning' },
         ],
         semantic_radical: PERSON_RADICAL.id,
       },
@@ -431,8 +431,8 @@ export const MARKET_PANEL: CategoryContent = {
         kind: 'character',
         hanzi: '双',
         components: [
-          { componentId: AGAIN_RADICAL.id, role: 'semantic' },
-          { componentId: AGAIN_RADICAL.id, role: 'semantic' },
+          { componentId: AGAIN_RADICAL.id, role: 'iconic' },
+          { componentId: AGAIN_RADICAL.id, role: 'iconic' },
         ],
         semantic_radical: AGAIN_RADICAL.id,
       },
@@ -474,7 +474,7 @@ export const MARKET_PANEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '装',
-        components: [{ componentId: CLOTHES_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: CLOTHES_RADICAL.id, role: 'meaning' }],
         semantic_radical: CLOTHES_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -489,10 +489,9 @@ export const MARKET_PANEL: CategoryContent = {
         kind: 'character',
         hanzi: '重',
         components: [
-          { componentId: THOUSAND_RADICAL.id, role: 'semantic' },
-          { componentId: VILLAGE_RADICAL.id, role: 'semantic' },
+          { componentId: THOUSAND_RADICAL.id, role: 'unknown' },
+          { componentId: VILLAGE_RADICAL.id, role: 'unknown' },
         ],
-        semantic_radical: VILLAGE_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
     ],
@@ -506,8 +505,8 @@ export const MARKET_PANEL: CategoryContent = {
         kind: 'character',
         hanzi: '证',
         components: [
-          { componentId: SPEECH_RADICAL.id, role: 'semantic' },
-          { componentId: ZHENG_PHONETIC.id, role: 'phonetic' },
+          { componentId: SPEECH_RADICAL.id, role: 'meaning' },
+          { componentId: ZHENG_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: SPEECH_RADICAL.id,
       },

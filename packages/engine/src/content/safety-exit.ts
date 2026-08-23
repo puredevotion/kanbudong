@@ -16,7 +16,7 @@ import type { CategoryContent } from './row.js';
  * mnemonic-only prose, which already named both real components (扌 hand,
  * 是 "is, correct"). 是 tí is an exact reading match for 提's own tí, found
  * by checking `pinyin-data`'s full reading list rather than 是's far more
- * common shì reading - the same miss class `FAN_PHONETIC`/`FEN_SEMANTIC`/
+ * common shì reading - the same miss class `FAN_PHONETIC`/`FEN_PHONETIC`/
  * `YAO_PHONETIC` document.
  */
 export const SAFETY_EXIT: CategoryContent = {
@@ -71,8 +71,8 @@ export const SAFETY_EXIT: CategoryContent = {
         kind: 'character',
         hanzi: '提',
         components: [
-          { componentId: HAND_RADICAL.id, role: 'semantic' },
-          { componentId: TI_PHONETIC.id, role: 'phonetic' },
+          { componentId: HAND_RADICAL.id, role: 'meaning' },
+          { componentId: TI_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: HAND_RADICAL.id,
       },

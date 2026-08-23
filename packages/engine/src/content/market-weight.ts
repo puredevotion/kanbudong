@@ -46,7 +46,7 @@ export const MARKET_WEIGHT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '块',
-        components: [{ componentId: EARTH_SEMANTIC.id, role: 'semantic' }],
+        components: [{ componentId: EARTH_SEMANTIC.id, role: 'meaning' }],
         semantic_radical: EARTH_SEMANTIC.id,
       },
       { tier: 0, freqRank: 793, glossProvenance: 'mnemonic-only' },
@@ -121,7 +121,7 @@ export const MARKET_WEIGHT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '分',
-        components: [{ componentId: KNIFE_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: KNIFE_RADICAL.id, role: 'iconic' }],
         semantic_radical: KNIFE_RADICAL.id,
       },
       { tier: 2, freqRank: 79, glossProvenance: 'mnemonic-only' },

@@ -74,7 +74,7 @@ export const STREET_OPEN: CategoryContent = {
       {
         kind: 'character',
         hanzi: '时',
-        components: [{ componentId: SUN_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: SUN_RADICAL.id, role: 'meaning' }],
         semantic_radical: SUN_RADICAL.id,
       },
       { tier: 1, freqRank: 25 },
@@ -113,7 +113,7 @@ export const STREET_OPEN: CategoryContent = {
       {
         kind: 'character',
         hanzi: '点',
-        components: [{ componentId: FIRE_DOTS_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FIRE_DOTS_RADICAL.id, role: 'meaning' }],
         semantic_radical: FIRE_DOTS_RADICAL.id,
       },
       { tier: 1, freqRank: 128 },
@@ -188,8 +188,8 @@ export const STREET_OPEN: CategoryContent = {
         kind: 'character',
         hanzi: '停',
         components: [
-          { componentId: PERSON_RADICAL.id, role: 'semantic' },
-          { componentId: TING_PHONETIC.id, role: 'phonetic' },
+          { componentId: PERSON_RADICAL.id, role: 'meaning' },
+          { componentId: TING_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: PERSON_RADICAL.id,
       },

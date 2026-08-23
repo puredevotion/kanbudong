@@ -30,8 +30,8 @@ describe('lociTiles / hasLociMnemonicPrompt', () => {
     expect(gan).toBeDefined();
     const tiles = lociTiles(gan as Question);
     expect(tiles).toEqual([
-      { componentId: MEAT_RADICAL.id, role: 'semantic', position: 'left' },
-      { componentId: GAN_PHONETIC.id, role: 'phonetic', position: 'right' },
+      { componentId: MEAT_RADICAL.id, role: 'meaning', position: 'left' },
+      { componentId: GAN_PHONETIC.id, role: 'sound', position: 'right' },
     ]);
     expect(hasLociMnemonicPrompt(gan as Question)).toBe(true);
   });
@@ -42,7 +42,7 @@ describe('lociTiles / hasLociMnemonicPrompt', () => {
       decomposition: {
         kind: 'character',
         hanzi: '肚',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
     });
@@ -57,15 +57,15 @@ describe('lociTiles / hasLociMnemonicPrompt', () => {
         kind: 'character',
         hanzi: '肾',
         components: [
-          { componentId: MEAT_RADICAL.id, role: 'semantic' },
-          { componentId: GAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: MEAT_RADICAL.id, role: 'meaning' },
+          { componentId: GAN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: MEAT_RADICAL.id,
       },
     });
     expect(lociTiles(q)).toEqual([
-      { componentId: MEAT_RADICAL.id, role: 'semantic', position: 'top' },
-      { componentId: GAN_PHONETIC.id, role: 'phonetic', position: 'bottom' },
+      { componentId: MEAT_RADICAL.id, role: 'meaning', position: 'top' },
+      { componentId: GAN_PHONETIC.id, role: 'sound', position: 'bottom' },
     ]);
   });
 
@@ -75,8 +75,8 @@ describe('lociTiles / hasLociMnemonicPrompt', () => {
         kind: 'character',
         hanzi: '肝',
         components: [
-          { componentId: MEAT_RADICAL.id, role: 'semantic' },
-          { componentId: GAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: MEAT_RADICAL.id, role: 'meaning' },
+          { componentId: GAN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: MEAT_RADICAL.id,
       },
@@ -89,8 +89,8 @@ describe('lociTiles / hasLociMnemonicPrompt', () => {
         kind: 'character',
         hanzi: '国',
         components: [
-          { componentId: MEAT_RADICAL.id, role: 'semantic' },
-          { componentId: GAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: MEAT_RADICAL.id, role: 'meaning' },
+          { componentId: GAN_PHONETIC.id, role: 'sound' },
         ],
       },
     });

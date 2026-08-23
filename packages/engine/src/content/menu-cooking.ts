@@ -56,8 +56,8 @@ export const MENU_COOKING: CategoryContent = {
         kind: 'character',
         hanzi: '炒',
         components: [
-          { componentId: FIRE_RADICAL.id, role: 'semantic' },
-          { componentId: SHAO_PHONETIC.id, role: 'phonetic' },
+          { componentId: FIRE_RADICAL.id, role: 'meaning' },
+          { componentId: SHAO_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: FIRE_RADICAL.id,
       },
@@ -75,8 +75,8 @@ export const MENU_COOKING: CategoryContent = {
         kind: 'character',
         hanzi: '炒',
         components: [
-          { componentId: FIRE_RADICAL.id, role: 'semantic' },
-          { componentId: SHAO_PHONETIC.id, role: 'phonetic' },
+          { componentId: FIRE_RADICAL.id, role: 'meaning' },
+          { componentId: SHAO_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: FIRE_RADICAL.id,
       },
@@ -101,8 +101,8 @@ export const MENU_COOKING: CategoryContent = {
         kind: 'character',
         hanzi: '烤',
         components: [
-          { componentId: FIRE_RADICAL.id, role: 'semantic' },
-          { componentId: KAO_PHONETIC.id, role: 'phonetic' },
+          { componentId: FIRE_RADICAL.id, role: 'meaning' },
+          { componentId: KAO_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: FIRE_RADICAL.id,
       },
@@ -117,7 +117,7 @@ export const MENU_COOKING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '炸',
-        components: [{ componentId: FIRE_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FIRE_RADICAL.id, role: 'meaning' }],
         semantic_radical: FIRE_RADICAL.id,
       },
       { tier: 1, freqRank: 976, glossProvenance: 'mnemonic-only' },
@@ -131,7 +131,7 @@ export const MENU_COOKING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '煮',
-        components: [{ componentId: FIRE_DOTS_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FIRE_DOTS_RADICAL.id, role: 'meaning' }],
         semantic_radical: FIRE_DOTS_RADICAL.id,
       },
       { tier: 1, freqRank: 2582 },
@@ -145,7 +145,7 @@ export const MENU_COOKING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '烧',
-        components: [{ componentId: FIRE_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FIRE_RADICAL.id, role: 'meaning' }],
         semantic_radical: FIRE_RADICAL.id,
       },
       { tier: 1, freqRank: 1201 },
@@ -159,7 +159,7 @@ export const MENU_COOKING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '炖',
-        components: [{ componentId: FIRE_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FIRE_RADICAL.id, role: 'meaning' }],
         semantic_radical: FIRE_RADICAL.id,
       },
       { tier: 1, freqRank: 3857 },
@@ -174,8 +174,8 @@ export const MENU_COOKING: CategoryContent = {
         kind: 'character',
         hanzi: '焖',
         components: [
-          { componentId: FIRE_RADICAL.id, role: 'semantic' },
-          { componentId: MEN_PHONETIC.id, role: 'phonetic' },
+          { componentId: FIRE_RADICAL.id, role: 'meaning' },
+          { componentId: MEN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: FIRE_RADICAL.id,
       },
@@ -190,7 +190,7 @@ export const MENU_COOKING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '煎',
-        components: [{ componentId: FIRE_DOTS_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FIRE_DOTS_RADICAL.id, role: 'meaning' }],
         semantic_radical: FIRE_DOTS_RADICAL.id,
       },
       { tier: 1, freqRank: 2893 },
@@ -205,8 +205,8 @@ export const MENU_COOKING: CategoryContent = {
         kind: 'character',
         hanzi: '爆',
         components: [
-          { componentId: FIRE_RADICAL.id, role: 'semantic' },
-          { componentId: BAO_PHONETIC.id, role: 'phonetic' },
+          { componentId: FIRE_RADICAL.id, role: 'meaning' },
+          { componentId: BAO_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: FIRE_RADICAL.id,
       },
@@ -222,8 +222,8 @@ export const MENU_COOKING: CategoryContent = {
         kind: 'character',
         hanzi: '拌',
         components: [
-          { componentId: HAND_RADICAL.id, role: 'semantic' },
-          { componentId: BAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: HAND_RADICAL.id, role: 'meaning' },
+          { componentId: BAN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: HAND_RADICAL.id,
       },
@@ -247,7 +247,7 @@ export const MENU_COOKING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '涮',
-        components: [{ componentId: WATER_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: WATER_RADICAL.id, role: 'meaning' }],
         semantic_radical: WATER_RADICAL.id,
       },
       { tier: 1, freqRank: 4527 },
@@ -263,7 +263,7 @@ export const MENU_COOKING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '涮',
-        components: [{ componentId: WATER_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: WATER_RADICAL.id, role: 'meaning' }],
         semantic_radical: WATER_RADICAL.id,
       },
       { tier: 1, freqRank: 4527 },

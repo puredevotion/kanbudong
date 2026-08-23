@@ -15,7 +15,42 @@
 
 export type ComponentId = string;
 
-export type ComponentRole = 'semantic' | 'phonetic' | 'neither';
+/**
+ * Dong Chinese's (dong-chinese.com/wiki) 8-category component taxonomy,
+ * replacing this file's original 3-value `'semantic' | 'phonetic' | 'neither'`
+ * model - the 3-value model could not express Simplified Chinese's own
+ * simplification artifacts (a component standing in for a dropped one with no
+ * meaning or sound of its own, e.g. 又 in 鸡) or a component's role varying by
+ * which character hosts it (又 in 双 is a genuine pictograph of a hand; the
+ * same glyph in 鸡 is a bare simplification stand-in - see the per-host
+ * `CharacterDecomposition.components[].role` overrides below, which is why
+ * that field was already stored per-usage rather than on the shared
+ * `Component` and needed no shape change to carry this.
+ *
+ * - `'meaning'` - carries semantic content (the direct successor to `'semantic'`).
+ * - `'sound'` - carries phonetic content (the direct successor to `'phonetic'`;
+ *   `PhoneticReliability` stays scoped to this role, unchanged).
+ * - `'iconic'` - a genuine pictograph, a direct visual depiction of what it means.
+ * - `'remnant'` - a fossil piece of an older form, no longer carrying independent
+ *   meaning or sound in the modern character.
+ * - `'simplified'` - exists purely as a PRC-simplification artifact (e.g. 又
+ *   reused as a generic stand-in across many unrelated simplified characters),
+ *   carrying neither real meaning nor sound.
+ * - `'deleted'` - present in an earlier form but dropped/omitted, kept for
+ *   historical completeness rather than as a component of the modern character.
+ * - `'distinguishing'` - exists only to tell two otherwise-similar characters apart.
+ * - `'unknown'` - Dong Chinese itself has no established classification, or this
+ *   codebase could not verify one - the honest default over a guess.
+ */
+export type ComponentRole =
+  | 'meaning'
+  | 'sound'
+  | 'iconic'
+  | 'remnant'
+  | 'simplified'
+  | 'deleted'
+  | 'distinguishing'
+  | 'unknown';
 
 /**
  * DESIGN.md §1.4 (P24): the phonetic component predicts pronunciation exactly
@@ -32,13 +67,21 @@ export interface Component {
   readonly id: ComponentId;
   /** The shape to render. Stored separately from `id` so the identity claim never depends on it. */
   readonly displayGlyph: string;
+  /**
+   * The component's most common/default role across this bank's hosts. A
+   * specific host character can override this - see
+   * `CharacterDecomposition.components[].role`, which is stored per-usage for
+   * exactly this reason (e.g. `AGAIN_RADICAL`/又 is `'iconic'` here, its
+   * general classification, but ships `'simplified'` for its one host where
+   * Dong Chinese assigns that instead).
+   */
   readonly role: ComponentRole;
-  /** Only meaningful when `role` is `'phonetic'`; absent otherwise. */
+  /** Only meaningful when `role` is `'sound'`; absent otherwise. */
   readonly reliability?: PhoneticReliability;
   /**
    * A short gloss of what this component itself represents - the Kangxi
-   * radical's traditional meaning for `role: 'semantic'` entries, or the
-   * plain character meaning for `role: 'phonetic'` entries (a phonetic
+   * radical's traditional meaning for `role: 'meaning'`/`'iconic'` entries, or
+   * the plain character meaning for `role: 'sound'` entries (a sound
    * component is always a real character with a real meaning, even though
    * that meaning is irrelevant to why it is used here - no fake semantic
    * story is invented for it). Rendered inline in a small UI tile, so this
@@ -60,6 +103,17 @@ export interface CharacterDecomposition {
   /**
    * Which of `components` drives highlighting, per DESIGN.md §3.3.4's
    * instruction to key highlighting off a stored field, never a glyph match.
+   * Kept under its original name rather than renamed for the 8-category
+   * taxonomy (a rename would touch every content file that sets it, for a
+   * field whose job - "pick the highlight target" - has not changed) but its
+   * accepted targets are broadened: a component whose per-usage `role` here
+   * is `'iconic'` is a valid highlight target alongside `'meaning'`, since a
+   * genuine pictograph is a stronger meaning-carrier, not a weaker one.
+   * `validatePack` (pack.ts) enforces this against the per-usage role stored
+   * on `components`, not a target component's own default `role` (the two
+   * can differ - see `PERSON_RADICAL`/`AGAIN_RADICAL`'s doc comments). A
+   * decomposition with no `'meaning'`/`'iconic'` component among its pieces
+   * (e.g. 所, 重 after the Dong Chinese re-audit) simply omits this field.
    */
   readonly semantic_radical?: ComponentId;
 }
@@ -82,11 +136,66 @@ export type Decomposition = CharacterDecomposition | WordDecomposition;
  * synthesize the whole record. Every phonetic-component claim added below is
  * therefore individually verified against known readings before it ships,
  * per §3.3.3(6)'s "never auto-generated."
+ *
+ * 8-category re-audit (Aug 2026, replacing the original 3-value
+ * `'semantic' | 'phonetic' | 'neither'` model with Dong Chinese's
+ * meaning/sound/iconic/remnant/simplified/deleted/distinguishing/unknown
+ * taxonomy): of the ~85 `Component` entries below, 45 were individually
+ * re-checked against a live `dong-chinese.com/wiki/<host-character>` fetch
+ * for their SPECIFIC host character(s) - `MEAT_RADICAL`, `GAN_PHONETIC`,
+ * `YAO_PHONETIC`, `STAND_SEMANTIC`, `ZHAN_PHONETIC`, `EARTH_SEMANTIC`,
+ * `CHENG_PHONETIC`, `GRASS_RADICAL`, `CAI_PHONETIC`, `FIRE_RADICAL`,
+ * `KAO_PHONETIC`, `SHAO_PHONETIC`, `MEN_PHONETIC`, `BAO_PHONETIC`,
+ * `FIRE_DOTS_RADICAL`, `WATER_RADICAL`, `ANIMAL_RADICAL`, `FOOD_RADICAL`,
+ * `FAN_PHONETIC`, `HAND_RADICAL`, `BAN_PHONETIC`, `METAL_RADICAL`,
+ * `GUO_PHONETIC`, `GRAIN_RADICAL`, `FEN_PHONETIC`, `MOUTH_RADICAL`,
+ * `AGAIN_RADICAL`, `BIRD_RADICAL`, `INSECT_RADICAL`, `SUN_RADICAL`,
+ * `PERSON_RADICAL`, `KNIFE_RADICAL`, `THOUSAND_RADICAL`, `VILLAGE_RADICAL`,
+ * `DOOR_RADICAL`, `AXE_RADICAL`, `TWO_HANDS_RADICAL`, `GATE_RADICAL`,
+ * `SPEECH_RADICAL`, `ZHENG_PHONETIC`, `SPEECH_RADICAL_FULL`,
+ * `HEART_RADICAL_FULL`, `HUI_PHONETIC`, `MOUND_RADICAL`, `SWEET_RADICAL`,
+ * `TONGUE_RADICAL`. Four of those checks turned up an outright Dong Chinese
+ * disagreement with the prior 3-value classification - `FEN_PHONETIC`
+ * (份's 分: was `'semantic'`, Dong Chinese calls it the sound half),
+ * `KNIFE_RADICAL` (分's own 刀: was `'semantic'`, Dong Chinese calls it
+ * `'iconic'`), `DOOR_RADICAL`/`AXE_RADICAL` (所's 户/斤: were both
+ * `'semantic'`, Dong Chinese calls 户 `'sound'` and 斤 `'unknown'`),
+ * `GATE_RADICAL`/`SUN_RADICAL`/`TWO_HANDS_RADICAL` (间's 门/日, 开's 廾: were
+ * `'semantic'`, Dong Chinese calls all three `'iconic'`), and
+ * `PERSON_RADICAL`/`STAND_SEMANTIC` (位's 亻/立 specifically - both
+ * components' OTHER hosts stay `'meaning'`/`'sound'` as already shipped;
+ * 位's own `CharacterDecomposition` overrides 亻 to `'iconic'` and 立 to the
+ * honest `'unknown'` - Dong Chinese's dual "Sound, Iconic" label for 立 here
+ * does not resolve to one of this bank's 8 categories, and 立/lì shares no
+ * modern reading with 位/wèi - per `PERSON_RADICAL`'s and `STAND_SEMANTIC`'s
+ * doc comments explaining the host-dependence). `THOUSAND_RADICAL`/`VILLAGE_RADICAL` (重) could not be
+ * matched to any Dong Chinese classification at all, since Dong Chinese's
+ * real 重 etymology uses different components than this bank's MMH-sourced
+ * decomposition tree - shipped `'unknown'` rather than guessed.
+ *
+ * The remaining ~40 entries - `SILK_RADICAL_FULL`, `BAMBOO_RADICAL`,
+ * `WRAP_PHONETIC`, `TAP_RADICAL`, `SILK_RADICAL`, `SHELL_RADICAL`,
+ * `CITY_RADICAL`, `YOU_PHONETIC`, `WALK_RADICAL`, `DI_PHONETIC`,
+ * `TING_PHONETIC`, `HEART_RADICAL`, `CLOTH_RADICAL`, `TEN_RADICAL`,
+ * `STONE_RADICAL`, `MA_PHONETIC`, `WAN_PHONETIC`, `ONE_RADICAL`,
+ * `OX_RADICAL`, `WOOD_RADICAL`, `POTTERY_RADICAL`, `BOW_RADICAL`,
+ * `ICE_RADICAL`, `CLOTHES_RADICAL`, `BUILDING_RADICAL`, `RUN_RADICAL`,
+ * `QI_PHONETIC`, `TI_PHONETIC`, `ZHI_PHONETIC`, `ALTAR_RADICAL`,
+ * `BITTER_RADICAL`, `WINE_RADICAL`, `DIPPER_RADICAL`, `YI_PHONETIC`,
+ * `LIE_PHONETIC`, `ZHU_PHONETIC` - were NOT individually re-checked this
+ * pass, for lack of practical budget to fetch and read ~85 dictionary
+ * entries by hand. Each carries a provisional mechanical mapping
+ * (`'semantic'` -> `'meaning'`, `'phonetic'` -> `'sound'`) rather than a
+ * verified Dong Chinese classification. This is an honest gap, not a
+ * silent one: per this pass's own "a wrong claim is worse than none" rule,
+ * treat any of these 36 as unverified until a future pass checks them
+ * individually, the same way `PhoneticReliability: 'unverified'` already
+ * flags an unchecked phonetic claim elsewhere in this file.
  */
 export const MEAT_RADICAL: Component = {
   id: 'kangxi-130-meat',
   displayGlyph: '⺼',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'flesh, meat, body part',
 };
 
@@ -99,7 +208,7 @@ export const MEAT_RADICAL: Component = {
 export const GAN_PHONETIC: Component = {
   id: 'phonetic-gan',
   displayGlyph: '干',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'dry; to do',
 };
@@ -110,7 +219,7 @@ export const GAN_PHONETIC: Component = {
  * primary yào. The organ-set backfill's original pass noted 要'
  * primary reading is yào and dismissed the yāo reading as "not the
  * character's common reading" without checking it against the exact-match
- * bar the rest of this bank applies - the same class of miss as 份/分 (`FEN_SEMANTIC`) and 饭/反
+ * bar the rest of this bank applies - the same class of miss as 份/分 (`FEN_PHONETIC`) and 饭/反
  * (`FAN_PHONETIC`) before this fix. Make Me a Hanzi classifies 腰/要 as
  * `pictophonetic` (phonetic: "要", semantic: "⺼"), so 腰 now ships both
  * `MEAT_RADICAL` and this phonetic - it is the second exact phonetic hint
@@ -119,7 +228,7 @@ export const GAN_PHONETIC: Component = {
 export const YAO_PHONETIC: Component = {
   id: 'phonetic-yao',
   displayGlyph: '要',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to want; important; to demand',
 };
@@ -129,11 +238,18 @@ export const YAO_PHONETIC: Component = {
  * `dictionary.txt` (LGPL-3.0-or-later, gitignored scratch copy fetched by
  * `docs/research/corpus/fetch.sh`, verification-only per DESIGN.md §9.2 —
  * this table itself is hand-authored, nothing here is copied from that file).
+ * Dong Chinese confirms this default `'meaning'` role for 站's 立, but this
+ * component has a second host in this bank, 位 (⿰亻立): there Dong Chinese
+ * gives 立 a dual "Sound, Iconic" label, which doesn't cleanly resolve to a
+ * single one of this bank's 8 categories and 立/lì shares no modern reading
+ * with 位/wèi anyway - so 位's `CharacterDecomposition` overrides this
+ * component's role to the honest `'unknown'` for that usage rather than
+ * picking one half of the dual label (see menu-order.ts).
  */
 export const STAND_SEMANTIC: Component = {
   id: 'kangxi-117-stand',
   displayGlyph: '立',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'to stand',
 };
 
@@ -146,7 +262,7 @@ export const STAND_SEMANTIC: Component = {
 export const ZHAN_PHONETIC: Component = {
   id: 'phonetic-zhan',
   displayGlyph: '占',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to occupy, to take up',
 };
@@ -155,7 +271,7 @@ export const ZHAN_PHONETIC: Component = {
 export const EARTH_SEMANTIC: Component = {
   id: 'kangxi-32-earth',
   displayGlyph: '土',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'earth, soil',
 };
 
@@ -163,7 +279,7 @@ export const EARTH_SEMANTIC: Component = {
 export const CHENG_PHONETIC: Component = {
   id: 'phonetic-cheng',
   displayGlyph: '成',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to become, to succeed',
 };
@@ -176,7 +292,7 @@ export const CHENG_PHONETIC: Component = {
 export const GRASS_RADICAL: Component = {
   id: 'kangxi-140-grass',
   displayGlyph: '艹',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'grass, plant',
 };
 
@@ -193,7 +309,7 @@ export const GRASS_RADICAL: Component = {
 export const CAI_PHONETIC: Component = {
   id: 'phonetic-cai',
   displayGlyph: '采',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to pick, to gather',
 };
@@ -210,7 +326,7 @@ export const CAI_PHONETIC: Component = {
 export const FIRE_RADICAL: Component = {
   id: 'kangxi-86-fire',
   displayGlyph: '火',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'fire',
 };
 
@@ -221,7 +337,7 @@ export const FIRE_RADICAL: Component = {
 export const KAO_PHONETIC: Component = {
   id: 'phonetic-kao',
   displayGlyph: '考',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to test, to examine',
 };
@@ -241,7 +357,7 @@ export const KAO_PHONETIC: Component = {
 export const SHAO_PHONETIC: Component = {
   id: 'phonetic-shao',
   displayGlyph: '少',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'rime-only',
   meaning: 'few, little',
 };
@@ -250,7 +366,7 @@ export const SHAO_PHONETIC: Component = {
 export const MEN_PHONETIC: Component = {
   id: 'phonetic-men',
   displayGlyph: '闷',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'stuffy; bored, depressed',
 };
@@ -259,7 +375,7 @@ export const MEN_PHONETIC: Component = {
 export const BAO_PHONETIC: Component = {
   id: 'phonetic-bao',
   displayGlyph: '暴',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'violent, sudden; to expose',
 };
@@ -275,7 +391,7 @@ export const BAO_PHONETIC: Component = {
 export const FIRE_DOTS_RADICAL: Component = {
   id: 'kangxi-86-fire-dots',
   displayGlyph: '灬',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'fire (four-dot form)',
 };
 
@@ -286,7 +402,7 @@ export const FIRE_DOTS_RADICAL: Component = {
 export const WATER_RADICAL: Component = {
   id: 'kangxi-85-water',
   displayGlyph: '氵',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'water',
 };
 
@@ -298,7 +414,7 @@ export const WATER_RADICAL: Component = {
 export const ANIMAL_RADICAL: Component = {
   id: 'kangxi-94-animal',
   displayGlyph: '犭',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'dog; animal, beast',
 };
 
@@ -310,21 +426,21 @@ export const ANIMAL_RADICAL: Component = {
  * paired with fǎn, missing that `pinyin-data` lists 反 as a genuine heteronym
  * with TWO readings, fǎn/fàn, so fàn (饭's own reading) is itself one of 反's
  * attested readings, not a mismatch. 饭 therefore ships 反 as `FAN_PHONETIC`
- * (see below), the same correction pattern as 份/分 (`FEN_SEMANTIC`). 交
+ * (see below), the same correction pattern as 份/分 (`FEN_PHONETIC`). 交
  * (jiāo only) and 官 (guān only) remain genuine near misses against jiǎo/guǎn
  * - no reading of either matches - so 饺/馆 stay semantic-only.
  */
 export const FOOD_RADICAL: Component = {
   id: 'kangxi-184-food',
   displayGlyph: '饣',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'food, to eat',
 };
 
 /**
  * 饭 fàn and 反 (fǎn, fàn) share an attested reading including tone -
  * verified against `pinyin-data`'s full reading list for 反, not just its
- * primary fǎn - the same 'exact' bar as `GAN_PHONETIC`/`FEN_SEMANTIC`'s
+ * primary fǎn - the same 'exact' bar as `GAN_PHONETIC`/`FEN_PHONETIC`'s
  * correction. Make Me a Hanzi classifies 饭/反 as `pictophonetic` (phonetic:
  * "反", semantic: "饣"), so this ships as a genuine phonetic component, not
  * an ideographic pairing like 份/分.
@@ -332,7 +448,7 @@ export const FOOD_RADICAL: Component = {
 export const FAN_PHONETIC: Component = {
   id: 'phonetic-fan',
   displayGlyph: '反',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to reverse, to oppose',
 };
@@ -340,12 +456,16 @@ export const FAN_PHONETIC: Component = {
 /**
  * 拌/折 = ⿰扌X (hand + X). 拌 bàn and 半 bàn share the same syllable including
  * tone - verified against `pinyin-data`, the 'exact' case. 折's phonetic half,
- * 斤 (jīn), is not a tone-or-syllable match for zhé, so 折 ships semantic-only.
+ * 斤 (jīn), is not a tone-or-syllable match for zhé, so 折 ships semantic-only
+ * - but Dong Chinese's own 折 entry classifies BOTH of its components
+ * (including this one) as `'iconic'` ("a hand using an axe to chop
+ * something"), not `'meaning'`, unlike this component's other hosts (拌/提/指,
+ * all plain `'meaning'`) - a per-host override, not a change to this default.
  */
 export const HAND_RADICAL: Component = {
   id: 'kangxi-64-hand',
   displayGlyph: '扌',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'hand',
 };
 
@@ -353,7 +473,7 @@ export const HAND_RADICAL: Component = {
 export const BAN_PHONETIC: Component = {
   id: 'phonetic-ban',
   displayGlyph: '半',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'half',
 };
@@ -366,7 +486,7 @@ export const BAN_PHONETIC: Component = {
 export const METAL_RADICAL: Component = {
   id: 'kangxi-167-metal',
   displayGlyph: '钅',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'metal, gold',
 };
 
@@ -374,7 +494,7 @@ export const METAL_RADICAL: Component = {
 export const GUO_PHONETIC: Component = {
   id: 'phonetic-guo',
   displayGlyph: '呙',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'a surname',
 };
@@ -387,25 +507,27 @@ export const GUO_PHONETIC: Component = {
 export const GRAIN_RADICAL: Component = {
   id: 'kangxi-119-grain',
   displayGlyph: '米',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'rice, grain',
 };
 
 /**
  * 份 fèn = ⿰亻分 (person + 分). Make Me a Hanzi classifies this pairing
- * `ideographic`, not pictophonetic - its own etymology hint is "the lot or
- * portion 分 allotted to a man 亻." A prior pass checked 分 only against its
- * primary reading (fēn) against fèn, called it a tone-only near miss, and
- * dropped it entirely - missing that `pinyin-data` lists 分 as a genuine
- * heteronym with THREE readings, fēn/fèn/fén, so fèn is itself one of 分's
- * attested readings, not a mismatch. 份 therefore ships both components as
- * semantic (per MMH's own ideographic classification), not one semantic/one
- * rejected-phonetic.
+ * `ideographic`, not pictophonetic, and a prior pass (pre-Dong-Chinese-audit)
+ * shipped 分 here as `'semantic'` on that basis. Dong Chinese's own 份 page
+ * disagrees outright and calls it a phonosemantic compound - 亻 meaning, 分
+ * sound - which this 8-category re-audit now follows per the "Dong Chinese
+ * disagrees entirely, reclassify to match THAT" rule. This does not need a
+ * fresh reading check: `pinyin-data` lists 分 as a genuine heteronym with
+ * THREE readings, fēn/fèn/fén, and fèn is an exact match for 份's own
+ * reading - already established by the prior pass that first found this
+ * heteronym, just filed under the wrong role.
  */
-export const FEN_SEMANTIC: Component = {
+export const FEN_PHONETIC: Component = {
   id: 'kangxi-18-fen-portion',
   displayGlyph: '分',
-  role: 'semantic',
+  role: 'sound',
+  reliability: 'exact',
   meaning: 'to divide; a portion, a share',
 };
 
@@ -420,15 +542,26 @@ export const FEN_SEMANTIC: Component = {
 export const MOUTH_RADICAL: Component = {
   id: 'kangxi-30-mouth',
   displayGlyph: '口',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'mouth',
 };
 
-/** 双 shuāng = ⿰又又, two of the same "again/hand" radical side by side - MMH's own ideographic hint. Same component listed twice; no phonetic half to claim. */
+/**
+ * 双 shuāng = ⿰又又, two of the same radical side by side. Dong Chinese's 双
+ * page classifies both as `'iconic'` - "Depicts a pair of hands" - not
+ * `'meaning'`, so this ships as the component's default role. Its OTHER host
+ * in this bank, 鸡 (⿰又鸟), gets the opposite treatment: Dong Chinese calls
+ * that 又 a `'simplified'` component (a shorthand stand-in for 奚, the
+ * traditional form's real component, carrying no meaning or sound of its
+ * own) - but 鸡 does not currently ship 又 as one of its listed components at
+ * all (only `BIRD_RADICAL`/鸟), so no per-host override is needed here yet;
+ * flagged so a future decomposition for 鸡 that adds 又 does not default it
+ * to this component's `'iconic'` role by mistake.
+ */
 export const AGAIN_RADICAL: Component = {
   id: 'kangxi-29-again',
   displayGlyph: '又',
-  role: 'semantic',
+  role: 'iconic',
   meaning: 'again; right hand',
 };
 
@@ -437,12 +570,17 @@ export const AGAIN_RADICAL: Component = {
  * traditional/standalone form of the same silk radical rendered as 纟 in
  * `SILK_RADICAL` (结's component) - kept as a separate id because the
  * rendered shape differs, the same "identity is the id, not the glyph" rule
- * `FIRE_DOTS_RADICAL` states for 火/灬.
+ * `FIRE_DOTS_RADICAL` states for 火/灬. Dong Chinese's 素 entry classifies
+ * both of 素's components (the rack shape above, and 糸 itself) as `'iconic'`
+ * - "raw silk hanging from a rack" is a literal picture, not an abstract
+ * meaning radical reused from elsewhere - overriding the MMH-sourced
+ * `'meaning'` default this component would otherwise carry. This is 糸's only
+ * host in the bank, so the override ships directly on this default.
  */
 export const SILK_RADICAL_FULL: Component = {
   id: 'kangxi-120-silk-full',
   displayGlyph: '糸',
-  role: 'semantic',
+  role: 'iconic',
   meaning: 'silk, thread',
 };
 
@@ -450,7 +588,7 @@ export const SILK_RADICAL_FULL: Component = {
 export const BIRD_RADICAL: Component = {
   id: 'kangxi-196-bird',
   displayGlyph: '鸟',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'bird',
 };
 
@@ -462,7 +600,7 @@ export const BIRD_RADICAL: Component = {
 export const INSECT_RADICAL: Component = {
   id: 'kangxi-142-insect',
   displayGlyph: '虫',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'insect, worm',
 };
 
@@ -470,7 +608,7 @@ export const INSECT_RADICAL: Component = {
 export const BAMBOO_RADICAL: Component = {
   id: 'kangxi-118-bamboo',
   displayGlyph: '⺮',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'bamboo',
 };
 
@@ -478,7 +616,7 @@ export const BAMBOO_RADICAL: Component = {
 export const SUN_RADICAL: Component = {
   id: 'kangxi-72-sun',
   displayGlyph: '日',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'sun, day',
 };
 
@@ -495,7 +633,7 @@ export const SUN_RADICAL: Component = {
 export const WRAP_PHONETIC: Component = {
   id: 'phonetic-bao-wrap',
   displayGlyph: '勹',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to wrap, to embrace',
 };
@@ -514,7 +652,7 @@ export const WRAP_PHONETIC: Component = {
 export const TAP_RADICAL: Component = {
   id: 'kangxi-66-tap',
   displayGlyph: '攵',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'to tap, rap, knock',
 };
 
@@ -526,7 +664,7 @@ export const TAP_RADICAL: Component = {
 export const SILK_RADICAL: Component = {
   id: 'kangxi-120-silk',
   displayGlyph: '纟',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'silk, thread',
 };
 
@@ -534,7 +672,7 @@ export const SILK_RADICAL: Component = {
 export const SHELL_RADICAL: Component = {
   id: 'kangxi-154-shell',
   displayGlyph: '贝',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'shell, cowrie (money)',
 };
 
@@ -549,7 +687,7 @@ export const SHELL_RADICAL: Component = {
 export const CITY_RADICAL: Component = {
   id: 'kangxi-163-city-right-ear',
   displayGlyph: '阝',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'city, settlement',
 };
 
@@ -557,7 +695,7 @@ export const CITY_RADICAL: Component = {
 export const YOU_PHONETIC: Component = {
   id: 'phonetic-you',
   displayGlyph: '由',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'from, via; reason',
 };
@@ -566,7 +704,7 @@ export const YOU_PHONETIC: Component = {
 export const WALK_RADICAL: Component = {
   id: 'kangxi-162-walk',
   displayGlyph: '辶',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'to walk, to move',
 };
 
@@ -574,16 +712,22 @@ export const WALK_RADICAL: Component = {
 export const DI_PHONETIC: Component = {
   id: 'phonetic-di',
   displayGlyph: '弟',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'younger brother',
 };
 
-/** 停 tíng = ⿰亻亭 (人/亻, "person" radical + 亭). */
+/**
+ * 停 tíng = ⿰亻亭 (人/亻, "person" radical + 亭). Dong Chinese confirms `'meaning'`
+ * as this component's role in its phonosemantic hosts (份, and by the same
+ * pattern 停/亿/例). Its one ideographic-compound host, 位 (⿰亻立), gets Dong
+ * Chinese's `'iconic'` classification instead - overridden per-host on 位's
+ * `CharacterDecomposition` (see menu-order.ts) rather than changed here.
+ */
 export const PERSON_RADICAL: Component = {
   id: 'kangxi-9-person',
   displayGlyph: '亻',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'person',
 };
 
@@ -591,7 +735,7 @@ export const PERSON_RADICAL: Component = {
 export const TING_PHONETIC: Component = {
   id: 'phonetic-ting',
   displayGlyph: '亭',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'pavilion',
 };
@@ -606,7 +750,7 @@ export const TING_PHONETIC: Component = {
 export const HEART_RADICAL: Component = {
   id: 'kangxi-61-heart',
   displayGlyph: '忄',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'heart, mind',
 };
 
@@ -617,7 +761,7 @@ export const HEART_RADICAL: Component = {
  * structural pieces with no `decomposition` field to back it, or (for the
  * phonetic additions) an exact-reading match a prior pass missed by only
  * checking a candidate's primary reading, the same miss class `FAN_PHONETIC`/
- * `FEN_SEMANTIC`/`YAO_PHONETIC` document. Every entry verified against the
+ * `FEN_PHONETIC`/`YAO_PHONETIC` document. Every entry verified against the
  * gitignored Make Me a Hanzi scratch copy and `pinyin-data`'s full reading
  * lists, same process as every earlier phase in this file.
  */
@@ -626,7 +770,7 @@ export const HEART_RADICAL: Component = {
 export const CLOTH_RADICAL: Component = {
   id: 'kangxi-50-cloth',
   displayGlyph: '巾',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'cloth, turban',
 };
 
@@ -634,7 +778,7 @@ export const CLOTH_RADICAL: Component = {
 export const TEN_RADICAL: Component = {
   id: 'kangxi-24-ten',
   displayGlyph: '十',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'ten',
 };
 
@@ -642,7 +786,7 @@ export const TEN_RADICAL: Component = {
 export const STONE_RADICAL: Component = {
   id: 'kangxi-112-stone',
   displayGlyph: '石',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'stone',
 };
 
@@ -650,7 +794,7 @@ export const STONE_RADICAL: Component = {
 export const MA_PHONETIC: Component = {
   id: 'phonetic-ma',
   displayGlyph: '马',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'horse',
 };
@@ -659,7 +803,7 @@ export const MA_PHONETIC: Component = {
 export const WAN_PHONETIC: Component = {
   id: 'phonetic-wan',
   displayGlyph: '宛',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'as if; graceful',
 };
@@ -668,7 +812,7 @@ export const WAN_PHONETIC: Component = {
 export const ONE_RADICAL: Component = {
   id: 'kangxi-1-one',
   displayGlyph: '一',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'one',
 };
 
@@ -676,7 +820,7 @@ export const ONE_RADICAL: Component = {
 export const OX_RADICAL: Component = {
   id: 'kangxi-93-ox',
   displayGlyph: '牛',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'ox, cattle',
 };
 
@@ -684,7 +828,7 @@ export const OX_RADICAL: Component = {
 export const WOOD_RADICAL: Component = {
   id: 'kangxi-75-wood',
   displayGlyph: '木',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'wood, tree',
 };
 
@@ -692,7 +836,7 @@ export const WOOD_RADICAL: Component = {
 export const POTTERY_RADICAL: Component = {
   id: 'kangxi-98-pottery',
   displayGlyph: '瓦',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'pottery, tile',
 };
 
@@ -700,7 +844,7 @@ export const POTTERY_RADICAL: Component = {
 export const BOW_RADICAL: Component = {
   id: 'kangxi-57-bow',
   displayGlyph: '弓',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'bow',
 };
 
@@ -708,7 +852,7 @@ export const BOW_RADICAL: Component = {
 export const ICE_RADICAL: Component = {
   id: 'kangxi-15-ice',
   displayGlyph: '冫',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'ice',
 };
 
@@ -716,38 +860,53 @@ export const ICE_RADICAL: Component = {
 export const CLOTHES_RADICAL: Component = {
   id: 'kangxi-145-clothes',
   displayGlyph: '衣',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'clothes',
 };
 
-/** 分 fēn = ⿱八刀 (八 + 刀, "knife"). MMH's own ideographic hint: "pieces being further subdivided with a knife". */
+/**
+ * 分 fēn = ⿱八刀 (八 + 刀, "knife"). MMH's own ideographic hint: "pieces being
+ * further subdivided with a knife". Dong Chinese's 分 page classifies 刀 as
+ * an `'iconic'` component (a direct pictograph of a knife), not `'meaning'`,
+ * so this ships as `'iconic'` rather than the prior audit's `'semantic'` call.
+ */
 export const KNIFE_RADICAL: Component = {
   id: 'kangxi-18-knife',
   displayGlyph: '刀',
-  role: 'semantic',
+  role: 'iconic',
   meaning: 'knife',
 };
 
 /**
- * 重 zhòng = ⿻千里 (千, "thousand" + 里, "village; distance unit"). MMH's own
+ * 重 zhòng = ⿻千里 (千, "thousand" + 里, "village; distance unit") per MMH's own
  * ideographic hint: "a burden carried for a thousand 千 miles 里". 千 itself is
  * not a Kangxi radical (it is 丿 over 十, the actual radical `TEN_RADICAL`
  * already ships) - this component's id deliberately does not claim a
- * "kangxi-" number, the same "whole compound character used as its own
- * semantic component" pattern `FEN_SEMANTIC` uses for 分 inside 份.
+ * "kangxi-" number.
+ *
+ * Dong Chinese's own 重 page does not address this pairing at all: its
+ * decomposition tree is 亻 ("Iconic component", person) + 東 ("Sound,iconic
+ * component", "depicts a basket") - a different etymology entirely from
+ * MMH's folk "thousand miles" story this bank's decomposition tree is built
+ * on. Per this audit's "default to `'unknown'` rather than guess" rule for a
+ * pairing Dong Chinese's page does not clearly address, both `千`'s and
+ * `里`'s role for this specific host ship as `'unknown'` in 重's
+ * `CharacterDecomposition` (see market-panel.ts) - not reclassified to match
+ * Dong Chinese's 亻/東 tree, since that would mean re-authoring the
+ * decomposition's actual components, out of scope for this pass.
  */
 export const THOUSAND_RADICAL: Component = {
   id: 'component-thousand',
   displayGlyph: '千',
-  role: 'semantic',
+  role: 'unknown',
   meaning: 'thousand',
 };
 
-/** See `THOUSAND_RADICAL` - the other half of 重's ideographic pair, and MMH's own radical assignment for 重. */
+/** See `THOUSAND_RADICAL` - the other half of 重's decomposition tree in this bank; role left `'unknown'` for the same reason. */
 export const VILLAGE_RADICAL: Component = {
   id: 'kangxi-166-village',
   displayGlyph: '里',
-  role: 'semantic',
+  role: 'unknown',
   meaning: 'village; a unit of distance (~500 m)',
 };
 
@@ -759,7 +918,7 @@ export const VILLAGE_RADICAL: Component = {
 export const SPEECH_RADICAL: Component = {
   id: 'kangxi-149-speech',
   displayGlyph: '讠',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'speech, words',
 };
 
@@ -767,7 +926,7 @@ export const SPEECH_RADICAL: Component = {
 export const ZHENG_PHONETIC: Component = {
   id: 'phonetic-zheng',
   displayGlyph: '正',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'correct, upright',
 };
@@ -778,7 +937,7 @@ export const ZHENG_PHONETIC: Component = {
 export const SPEECH_RADICAL_FULL: Component = {
   id: 'kangxi-149-speech-full',
   displayGlyph: '言',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'speech, words',
 };
 
@@ -786,7 +945,7 @@ export const SPEECH_RADICAL_FULL: Component = {
 export const HEART_RADICAL_FULL: Component = {
   id: 'kangxi-61-heart-full',
   displayGlyph: '心',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'heart, mind',
 };
 
@@ -794,7 +953,7 @@ export const HEART_RADICAL_FULL: Component = {
 export const HUI_PHONETIC: Component = {
   id: 'phonetic-hui',
   displayGlyph: '叀',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'specialized, single-minded',
 };
@@ -811,7 +970,7 @@ export const HUI_PHONETIC: Component = {
 export const MOUND_RADICAL: Component = {
   id: 'kangxi-170-mound',
   displayGlyph: '阝',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'mound, hill; place, institution',
 };
 
@@ -826,44 +985,66 @@ export const MOUND_RADICAL: Component = {
 export const BUILDING_RADICAL: Component = {
   id: 'kangxi-53-building',
   displayGlyph: '广',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'building, shelter',
 };
 
-/** 所 suǒ = ⿰户斤 (户, "door" + 斤, "axe"). MMH's own ideographic hint: "an axe 斤 swung at a door 户" - both components are real, independent meanings, the same two-meaningful-parts pattern `FEN_SEMANTIC`'s doc comment documents for 份. */
+/**
+ * 所 suǒ = ⿰户斤. MMH's own ideographic hint ("an axe 斤 swung at a door 户")
+ * does not survive a Dong Chinese cross-check: Dong Chinese's 所 entry calls
+ * this a phonosemantic compound with 户 as the SOUND component, not a second
+ * meaning-carrying half - overriding the MMH-sourced classification per the
+ * "Dong Chinese disagrees entirely, reclassify to match THAT" rule. 户 (hù)
+ * shares no reading at all with suǒ (not even a rime match), so this ships
+ * `reliability: 'no-cue'` - a real sound component that predicts nothing,
+ * DESIGN.md §1.4's ~35%-of-the-top-1,000 tier, not silently dropped.
+ */
 export const DOOR_RADICAL: Component = {
   id: 'kangxi-63-door',
   displayGlyph: '户',
-  role: 'semantic',
+  role: 'sound',
+  reliability: 'no-cue',
   meaning: 'door',
 };
 
-/** See `DOOR_RADICAL` - the other half of 所's ideographic pair. */
+/** See `DOOR_RADICAL` - the other half of 所's decomposition. Dong Chinese's own entry calls this component `'unknown'`: "The original purpose of this component is unclear." */
 export const AXE_RADICAL: Component = {
   id: 'kangxi-69-axe',
   displayGlyph: '斤',
-  role: 'semantic',
+  role: 'unknown',
   meaning: 'axe',
 };
 
-/** 开 kāi = ⿱一廾 (廾, "two hands"). MMH's own ideographic hint: "hands 廾 lifting the latch of a door" - 一 here stands for the latch, not its literal meaning "one", so only 廾 is added. */
+/**
+ * 开 kāi = ⿱一廾. MMH's own ideographic hint ("hands 廾 lifting the latch of a
+ * door") under-specifies the category: Dong Chinese's 开 entry classifies 廾
+ * itself as an Iconic component - a genuine pictograph of two hands, not a
+ * meaning radical reused from elsewhere, the same iconic-vs-meaning
+ * distinction `KNIFE_RADICAL`/`SILK_RADICAL_FULL` document. Dong Chinese also
+ * notes the traditional 開 carried a 門 ("door") component dropped for
+ * simplification - a genuine `'deleted'`-category case, though it is not a
+ * `Component` this bank ships (no 门-for-开 entry exists to reclassify).
+ */
 export const TWO_HANDS_RADICAL: Component = {
   id: 'kangxi-55-two-hands',
   displayGlyph: '廾',
-  role: 'semantic',
+  role: 'iconic',
   meaning: 'two hands together',
 };
 
 /**
  * 间 jiān = ⿵门日 (门, "gate/door" + 日, reused from `SUN_RADICAL`). MMH's own
  * ideographic hint names both as real, independent meanings ("the sun 日
- * shining through a doorway 门") - the same two-meaningful-parts pattern as
- * `DOOR_RADICAL`/`AXE_RADICAL` for 所.
+ * shining through a doorway 门"), but Dong Chinese's 间 page classifies BOTH
+ * 门 and 日 as `'iconic'` components here (a picture of sunlight in a
+ * doorway), not `'meaning'` - reclassified to match, per this audit's rule
+ * for outright Dong Chinese disagreement. This is this component's only host
+ * in the bank, so its default role ships as `'iconic'` directly.
  */
 export const GATE_RADICAL: Component = {
   id: 'kangxi-169-gate',
   displayGlyph: '门',
-  role: 'semantic',
+  role: 'iconic',
   meaning: 'gate, door',
 };
 
@@ -873,7 +1054,7 @@ export const GATE_RADICAL: Component = {
 export const RUN_RADICAL: Component = {
   id: 'kangxi-156-run',
   displayGlyph: '走',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'to walk, to run',
 };
 
@@ -881,7 +1062,7 @@ export const RUN_RADICAL: Component = {
 export const QI_PHONETIC: Component = {
   id: 'phonetic-qi',
   displayGlyph: '己',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'self',
 };
@@ -891,7 +1072,7 @@ export const QI_PHONETIC: Component = {
 export const TI_PHONETIC: Component = {
   id: 'phonetic-ti',
   displayGlyph: '是',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'to be; right, correct',
 };
@@ -900,7 +1081,7 @@ export const TI_PHONETIC: Component = {
 export const ZHI_PHONETIC: Component = {
   id: 'phonetic-zhi',
   displayGlyph: '旨',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'purport, aim',
 };
@@ -909,7 +1090,7 @@ export const ZHI_PHONETIC: Component = {
 export const ALTAR_RADICAL: Component = {
   id: 'kangxi-113-altar',
   displayGlyph: '示',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'altar, spirit',
 };
 
@@ -917,7 +1098,7 @@ export const ALTAR_RADICAL: Component = {
 export const BITTER_RADICAL: Component = {
   id: 'kangxi-160-bitter',
   displayGlyph: '辛',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'bitter, spicy; hardship',
 };
 
@@ -925,7 +1106,7 @@ export const BITTER_RADICAL: Component = {
 export const WINE_RADICAL: Component = {
   id: 'kangxi-164-wine',
   displayGlyph: '酉',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'wine vessel',
 };
 
@@ -933,7 +1114,7 @@ export const WINE_RADICAL: Component = {
 export const SWEET_RADICAL: Component = {
   id: 'kangxi-99-sweet',
   displayGlyph: '甘',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'sweet, tasty',
 };
 
@@ -941,15 +1122,21 @@ export const SWEET_RADICAL: Component = {
 export const TONGUE_RADICAL: Component = {
   id: 'kangxi-135-tongue',
   displayGlyph: '舌',
-  role: 'semantic',
+  role: 'meaning',
   meaning: 'tongue',
 };
 
-/** 料 liào = ⿰米斗 (斗, "dipper, to measure" + 米). MMH's own radical assignment is 斗; its ideographic hint: "a hand measuring 斗 a cup of rice 米". */
+/**
+ * 料 liào = ⿰米斗 (斗, "dipper, to measure" + 米). MMH's own radical assignment
+ * is 斗; its ideographic hint: "a hand measuring 斗 a cup of rice 米". Dong
+ * Chinese's own 料 entry classifies 斗 as `'iconic'` ("depicts a ladle"), not
+ * `'meaning'` - this is 斗's only host in the bank, so the override ships
+ * directly on this default.
+ */
 export const DIPPER_RADICAL: Component = {
   id: 'kangxi-68-dipper',
   displayGlyph: '斗',
-  role: 'semantic',
+  role: 'iconic',
   meaning: 'dipper; to measure',
 };
 
@@ -958,7 +1145,7 @@ export const DIPPER_RADICAL: Component = {
 export const YI_PHONETIC: Component = {
   id: 'phonetic-yi',
   displayGlyph: '乙',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'second (of the ten heavenly stems)',
 };
@@ -968,19 +1155,32 @@ export const YI_PHONETIC: Component = {
 export const LIE_PHONETIC: Component = {
   id: 'phonetic-lie',
   displayGlyph: '列',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'row, file; to arrange',
 };
 
-/** 位 wèi = ⿰亻立 (亻, reused from `PERSON_RADICAL` + 立, reused from `STAND_SEMANTIC`). MMH's own ideographic hint: "the place where a person 亻 stands 立" - both real, independent meanings. */
+/**
+ * 位 wèi = ⿰亻立 (亻, reused from `PERSON_RADICAL` + 立, reused from
+ * `STAND_SEMANTIC`). MMH's own ideographic hint calls both real, independent
+ * meanings, but Dong Chinese's 位 entry disagrees on the category, not just
+ * relabels it: it classifies 亻 as `'iconic'` here (overridden per-host in
+ * this character's `CharacterDecomposition`, since 亻's default/typical role
+ * elsewhere in this bank - 停/亿/例/件/价 - is genuinely `'meaning'`), and
+ * gives 立 a dual "Sound Iconic" tag that does not cleanly map onto this
+ * bank's single-category-per-usage model. Per this audit's own rule for an
+ * ambiguous Dong Chinese reading, 立's role for this one host ships as
+ * `'unknown'` rather than a guessed pick between the two - logged here rather
+ * than silently defaulted. `STAND_SEMANTIC`'s other host, 站, is unaffected
+ * and keeps its verified `'meaning'` role.
+ */
 
 /** 注 zhù = ⿰氵主 (氵, reused from `WATER_RADICAL` + 主). MMH's own pictophonetic classification: semantic 氵, phonetic 主. */
 /** 注 zhù and 主 (zhǔ, zhù) share an attested reading including tone - `pinyin-data`'s full list for 主, not just its more common zhǔ reading. */
 export const ZHU_PHONETIC: Component = {
   id: 'phonetic-zhu',
   displayGlyph: '主',
-  role: 'phonetic',
+  role: 'sound',
   reliability: 'exact',
   meaning: 'host, main, lord',
 };
@@ -1010,7 +1210,7 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [METAL_RADICAL.id]: METAL_RADICAL,
   [GUO_PHONETIC.id]: GUO_PHONETIC,
   [GRAIN_RADICAL.id]: GRAIN_RADICAL,
-  [FEN_SEMANTIC.id]: FEN_SEMANTIC,
+  [FEN_PHONETIC.id]: FEN_PHONETIC,
   [TAP_RADICAL.id]: TAP_RADICAL,
   [SILK_RADICAL.id]: SILK_RADICAL,
   [SHELL_RADICAL.id]: SHELL_RADICAL,

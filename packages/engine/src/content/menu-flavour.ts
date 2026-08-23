@@ -44,7 +44,7 @@ export const MENU_FLAVOUR: CategoryContent = {
       {
         kind: 'character',
         hanzi: '辣',
-        components: [{ componentId: BITTER_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: BITTER_RADICAL.id, role: 'meaning' }],
         semantic_radical: BITTER_RADICAL.id,
       },
       { tier: 0, freqRank: 2420, glossProvenance: 'mnemonic-only' },
@@ -103,7 +103,7 @@ export const MENU_FLAVOUR: CategoryContent = {
       {
         kind: 'character',
         hanzi: '咸',
-        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'meaning' }],
         semantic_radical: MOUTH_RADICAL.id,
       },
       { tier: 1, freqRank: 2525, glossProvenance: 'mnemonic-only' },
@@ -117,7 +117,7 @@ export const MENU_FLAVOUR: CategoryContent = {
       {
         kind: 'character',
         hanzi: '酸',
-        components: [{ componentId: WINE_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: WINE_RADICAL.id, role: 'meaning' }],
         semantic_radical: WINE_RADICAL.id,
       },
       { tier: 1, freqRank: 1456, glossProvenance: 'mnemonic-only' },
@@ -132,8 +132,8 @@ export const MENU_FLAVOUR: CategoryContent = {
         kind: 'character',
         hanzi: '甜',
         components: [
-          { componentId: TONGUE_RADICAL.id, role: 'semantic' },
-          { componentId: SWEET_RADICAL.id, role: 'semantic' },
+          { componentId: TONGUE_RADICAL.id, role: 'meaning' },
+          { componentId: SWEET_RADICAL.id, role: 'meaning' },
         ],
         semantic_radical: SWEET_RADICAL.id,
       },
@@ -151,8 +151,8 @@ export const MENU_FLAVOUR: CategoryContent = {
         kind: 'character',
         hanzi: '甜',
         components: [
-          { componentId: TONGUE_RADICAL.id, role: 'semantic' },
-          { componentId: SWEET_RADICAL.id, role: 'semantic' },
+          { componentId: TONGUE_RADICAL.id, role: 'meaning' },
+          { componentId: SWEET_RADICAL.id, role: 'meaning' },
         ],
         semantic_radical: SWEET_RADICAL.id,
       },

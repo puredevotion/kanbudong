@@ -93,7 +93,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '素',
-        components: [{ componentId: SILK_RADICAL_FULL.id, role: 'semantic' }],
+        components: [{ componentId: SILK_RADICAL_FULL.id, role: 'iconic' }],
         semantic_radical: SILK_RADICAL_FULL.id,
       },
       { tier: 0 },
@@ -107,7 +107,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '荤',
-        components: [{ componentId: GRASS_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: GRASS_RADICAL.id, role: 'meaning' }],
         semantic_radical: GRASS_RADICAL.id,
       },
       { tier: 0, freqRank: 3302, glossProvenance: 'mnemonic-only' },
@@ -123,7 +123,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '鸡',
-        components: [{ componentId: BIRD_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: BIRD_RADICAL.id, role: 'meaning' }],
         semantic_radical: BIRD_RADICAL.id,
       },
       { tier: 1, freqRank: 1249 },
@@ -146,7 +146,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '猪',
-        components: [{ componentId: ANIMAL_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: ANIMAL_RADICAL.id, role: 'meaning' }],
         semantic_radical: ANIMAL_RADICAL.id,
       },
       { tier: 1, freqRank: 1633 },
@@ -178,7 +178,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '虾',
-        components: [{ componentId: INSECT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: INSECT_RADICAL.id, role: 'meaning' }],
         semantic_radical: INSECT_RADICAL.id,
       },
       { tier: 1, freqRank: 2460 },
@@ -192,7 +192,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '蛋',
-        components: [{ componentId: INSECT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: INSECT_RADICAL.id, role: 'meaning' }],
         semantic_radical: INSECT_RADICAL.id,
       },
       { tier: 1, freqRank: 1157 },
@@ -207,8 +207,8 @@ export const MENU_ANIMAL: CategoryContent = {
         kind: 'character',
         hanzi: '饭',
         components: [
-          { componentId: FOOD_RADICAL.id, role: 'semantic' },
-          { componentId: FAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: FOOD_RADICAL.id, role: 'meaning' },
+          { componentId: FAN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: FOOD_RADICAL.id,
       },
@@ -232,7 +232,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '粉',
-        components: [{ componentId: GRAIN_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: GRAIN_RADICAL.id, role: 'meaning' }],
         semantic_radical: GRAIN_RADICAL.id,
       },
       { tier: 1 },
@@ -246,7 +246,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '饺',
-        components: [{ componentId: FOOD_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FOOD_RADICAL.id, role: 'meaning' }],
         semantic_radical: FOOD_RADICAL.id,
       },
       { tier: 1, freqRank: 3891 },
@@ -260,7 +260,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '包',
-        components: [{ componentId: WRAP_PHONETIC.id, role: 'phonetic' }],
+        components: [{ componentId: WRAP_PHONETIC.id, role: 'sound' }],
       },
       { tier: 1 },
     ],
@@ -274,8 +274,8 @@ export const MENU_ANIMAL: CategoryContent = {
         kind: 'character',
         hanzi: '锅',
         components: [
-          { componentId: METAL_RADICAL.id, role: 'semantic' },
-          { componentId: GUO_PHONETIC.id, role: 'phonetic' },
+          { componentId: METAL_RADICAL.id, role: 'meaning' },
+          { componentId: GUO_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: METAL_RADICAL.id,
       },
@@ -292,7 +292,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '肠',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
       { tier: 2, freqRank: 1512 },
@@ -306,7 +306,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '肚',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
       { tier: 2 },
@@ -321,8 +321,8 @@ export const MENU_ANIMAL: CategoryContent = {
         kind: 'character',
         hanzi: '肝',
         components: [
-          { componentId: MEAT_RADICAL.id, role: 'semantic' },
-          { componentId: GAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: MEAT_RADICAL.id, role: 'meaning' },
+          { componentId: GAN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: MEAT_RADICAL.id,
       },
@@ -344,8 +344,8 @@ export const MENU_ANIMAL: CategoryContent = {
         kind: 'character',
         hanzi: '腰',
         components: [
-          { componentId: MEAT_RADICAL.id, role: 'semantic' },
-          { componentId: YAO_PHONETIC.id, role: 'phonetic' },
+          { componentId: MEAT_RADICAL.id, role: 'meaning' },
+          { componentId: YAO_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: MEAT_RADICAL.id,
       },
@@ -360,7 +360,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '肺',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
       { tier: 2, freqRank: 2140, isomorph_group_id: 'menu-animal-organ-meat-radical' },
@@ -374,7 +374,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '肾',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
       { tier: 2, freqRank: 2131 },
@@ -388,7 +388,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '脑',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
       { tier: 2, freqRank: 909 },
@@ -402,7 +402,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '胗',
-        components: [{ componentId: MEAT_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MEAT_RADICAL.id, role: 'meaning' }],
         semantic_radical: MEAT_RADICAL.id,
       },
       { tier: 2, freqRank: 7674 },
@@ -434,7 +434,7 @@ export const MENU_ANIMAL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '筋',
-        components: [{ componentId: BAMBOO_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: BAMBOO_RADICAL.id, role: 'meaning' }],
         semantic_radical: BAMBOO_RADICAL.id,
       },
       { tier: 2 },

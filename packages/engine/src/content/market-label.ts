@@ -51,7 +51,7 @@ export const MARKET_LABEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '特',
-        components: [{ componentId: OX_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: OX_RADICAL.id, role: 'meaning' }],
         semantic_radical: OX_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -65,7 +65,7 @@ export const MARKET_LABEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '价',
-        components: [{ componentId: PERSON_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: PERSON_RADICAL.id, role: 'meaning' }],
         semantic_radical: PERSON_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -79,7 +79,7 @@ export const MARKET_LABEL: CategoryContent = {
       {
         kind: 'character',
         hanzi: '折',
-        components: [{ componentId: HAND_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: HAND_RADICAL.id, role: 'iconic' }],
         semantic_radical: HAND_RADICAL.id,
       },
       { tier: 0, freqRank: 1131 },

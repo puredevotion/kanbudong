@@ -96,7 +96,7 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       {
         kind: 'character',
         hanzi: '禁',
-        components: [{ componentId: ALTAR_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: ALTAR_RADICAL.id, role: 'meaning' }],
         semantic_radical: ALTAR_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -110,7 +110,7 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       {
         kind: 'character',
         hanzi: '请',
-        components: [{ componentId: SPEECH_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: SPEECH_RADICAL.id, role: 'meaning' }],
         semantic_radical: SPEECH_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },

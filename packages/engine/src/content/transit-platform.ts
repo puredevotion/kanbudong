@@ -61,8 +61,8 @@ export const TRANSIT_PLATFORM: CategoryContent = {
         kind: 'character',
         hanzi: '站',
         components: [
-          { componentId: STAND_SEMANTIC.id, role: 'semantic' },
-          { componentId: ZHAN_PHONETIC.id, role: 'phonetic' },
+          { componentId: STAND_SEMANTIC.id, role: 'meaning' },
+          { componentId: ZHAN_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: STAND_SEMANTIC.id,
       },
@@ -214,7 +214,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       {
         kind: 'character',
         hanzi: '地',
-        components: [{ componentId: EARTH_SEMANTIC.id, role: 'semantic' }],
+        components: [{ componentId: EARTH_SEMANTIC.id, role: 'meaning' }],
         semantic_radical: EARTH_SEMANTIC.id,
       },
       { freqRank: 21 },
@@ -284,7 +284,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       {
         kind: 'character',
         hanzi: '检',
-        components: [{ componentId: WOOD_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: WOOD_RADICAL.id, role: 'meaning' }],
         semantic_radical: WOOD_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -307,7 +307,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       {
         kind: 'character',
         hanzi: '开',
-        components: [{ componentId: TWO_HANDS_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: TWO_HANDS_RADICAL.id, role: 'iconic' }],
         semantic_radical: TWO_HANDS_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },

@@ -74,7 +74,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '市',
-        components: [{ componentId: CLOTH_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: CLOTH_RADICAL.id, role: 'meaning' }],
         semantic_radical: CLOTH_RADICAL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -153,8 +153,8 @@ export const MARKET_CHECKOUT: CategoryContent = {
         kind: 'character',
         hanzi: '码',
         components: [
-          { componentId: STONE_RADICAL.id, role: 'semantic' },
-          { componentId: MA_PHONETIC.id, role: 'phonetic' },
+          { componentId: STONE_RADICAL.id, role: 'meaning' },
+          { componentId: MA_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: STONE_RADICAL.id,
       },
@@ -169,7 +169,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '百',
-        components: [{ componentId: ONE_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: ONE_RADICAL.id, role: 'meaning' }],
         semantic_radical: ONE_RADICAL.id,
       },
       { tier: 1, freqRank: 407, glossProvenance: 'mnemonic-only' },
@@ -183,7 +183,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '千',
-        components: [{ componentId: TEN_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: TEN_RADICAL.id, role: 'meaning' }],
         semantic_radical: TEN_RADICAL.id,
       },
       { tier: 1, freqRank: 599, glossProvenance: 'mnemonic-only' },
@@ -250,7 +250,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '收',
-        components: [{ componentId: TAP_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: TAP_RADICAL.id, role: 'meaning' }],
         semantic_radical: TAP_RADICAL.id,
       },
       { freqRank: 351 },
@@ -264,7 +264,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '银',
-        components: [{ componentId: METAL_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: METAL_RADICAL.id, role: 'meaning' }],
         semantic_radical: METAL_RADICAL.id,
       },
       { freqRank: 757 },
@@ -278,7 +278,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '台',
-        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'meaning' }],
         semantic_radical: MOUTH_RADICAL.id,
       },
       { freqRank: 388, glossProvenance: 'mnemonic-only' },
@@ -292,7 +292,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '结',
-        components: [{ componentId: SILK_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: SILK_RADICAL.id, role: 'meaning' }],
         semantic_radical: SILK_RADICAL.id,
       },
       { freqRank: 236 },
@@ -306,7 +306,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       {
         kind: 'character',
         hanzi: '账',
-        components: [{ componentId: SHELL_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: SHELL_RADICAL.id, role: 'meaning' }],
         semantic_radical: SHELL_RADICAL.id,
       },
       { freqRank: 2179 },
@@ -323,8 +323,8 @@ export const MARKET_CHECKOUT: CategoryContent = {
         kind: 'character',
         hanzi: '亿',
         components: [
-          { componentId: PERSON_RADICAL.id, role: 'semantic' },
-          { componentId: YI_PHONETIC.id, role: 'phonetic' },
+          { componentId: PERSON_RADICAL.id, role: 'meaning' },
+          { componentId: YI_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: PERSON_RADICAL.id,
       },

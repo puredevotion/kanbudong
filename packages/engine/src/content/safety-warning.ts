@@ -99,7 +99,7 @@ export const SAFETY_WARNING: CategoryContent = {
       {
         kind: 'character',
         hanzi: '警',
-        components: [{ componentId: SPEECH_RADICAL_FULL.id, role: 'semantic' }],
+        components: [{ componentId: SPEECH_RADICAL_FULL.id, role: 'meaning' }],
         semantic_radical: SPEECH_RADICAL_FULL.id,
       },
       { glossProvenance: 'mnemonic-only' },
@@ -123,8 +123,8 @@ export const SAFETY_WARNING: CategoryContent = {
         kind: 'character',
         hanzi: '注',
         components: [
-          { componentId: WATER_RADICAL.id, role: 'semantic' },
-          { componentId: ZHU_PHONETIC.id, role: 'phonetic' },
+          { componentId: WATER_RADICAL.id, role: 'meaning' },
+          { componentId: ZHU_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: WATER_RADICAL.id,
       },

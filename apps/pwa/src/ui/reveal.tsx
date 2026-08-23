@@ -1,16 +1,51 @@
 import {
   resolveComponent,
   type CharacterStructure,
+  type ComponentRole,
   type ConfusionType,
   type Decomposition,
   type GlossProvenance,
   type LociTile,
+  type PhoneticReliability,
   type Question,
   type SelfExplanationCue,
   type Transparency,
 } from '@kanbudong/engine';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { withGlyphs } from './glyphs.jsx';
+
+/**
+ * Player-facing label for each of Dong Chinese's 8 component categories
+ * (`packages/engine/src/components.ts`), rendered in the small uppercase tag
+ * under a decomposition tile. Kept short - this sits in a `0.65rem` tile
+ * footer, not a glossary entry.
+ */
+const ROLE_LABEL: Readonly<Record<ComponentRole, string>> = {
+  meaning: 'meaning',
+  sound: 'sound hint',
+  iconic: 'picture of its meaning',
+  remnant: 'leftover piece, no longer meaningful',
+  simplified: 'simplification stand-in',
+  deleted: 'dropped from the modern form',
+  distinguishing: 'tells this apart from a similar character',
+  unknown: '',
+};
+
+/**
+ * §3.3.3(6)'s "a wrong hint delivered as feedback in the resolution moment is
+ * worse than none" applies to this label the same way it applies to
+ * `selfExplanation.ts`'s cue gate: a `'sound'` component whose registered
+ * `PhoneticReliability` is `'unverified'` or `'no-cue'` makes no real
+ * pronunciation claim (e.g. `DOOR_RADICAL`/户 in 所 - a genuine sound
+ * component per Dong Chinese, but hù and suǒ share no reading at all), so it
+ * must not render the same "sound hint" tag a real pronunciation cue gets.
+ */
+function roleLabel(role: ComponentRole, reliability: PhoneticReliability | undefined): string {
+  if (role === 'sound' && (reliability === undefined || reliability === 'unverified' || reliability === 'no-cue')) {
+    return 'no pronunciation cue';
+  }
+  return ROLE_LABEL[role];
+}
 
 /**
  * DESIGN.md §5.5: "minimum reveal dwell (~2,000 ms) before Next enables" -
@@ -134,7 +169,7 @@ export function DecompositionPanel({
               <div className="mt-1 text-xs leading-snug">{component.meaning}</div>
             )}
             <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
-              {role === 'semantic' ? 'meaning' : role === 'phonetic' ? 'sound hint' : ''}
+              {roleLabel(role, component?.reliability)}
             </div>
           </div>
         );
@@ -375,7 +410,14 @@ export function LociMnemonicPrompt({
               )}
               <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
                 {tile.position} spot &middot;{' '}
-                {tile.role === 'semantic' ? 'always the same kind of furniture' : 'what the room sounds like'}
+                {tile.role === 'meaning' || tile.role === 'iconic'
+                  ? 'always the same kind of furniture'
+                  : tile.role === 'sound' &&
+                      component?.reliability !== undefined &&
+                      component.reliability !== 'unverified' &&
+                      component.reliability !== 'no-cue'
+                    ? 'what the room sounds like'
+                    : 'an odd detail in the room'}
               </div>
             </div>
           );

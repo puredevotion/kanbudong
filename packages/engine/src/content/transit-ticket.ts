@@ -83,7 +83,7 @@ export const TRANSIT_TICKET: CategoryContent = {
       {
         kind: 'character',
         hanzi: '店',
-        components: [{ componentId: BUILDING_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: BUILDING_RADICAL.id, role: 'meaning' }],
         semantic_radical: BUILDING_RADICAL.id,
       },
       { tier: 1, glossProvenance: 'mnemonic-only' },
@@ -99,7 +99,7 @@ export const TRANSIT_TICKET: CategoryContent = {
       {
         kind: 'character',
         hanzi: '店',
-        components: [{ componentId: BUILDING_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: BUILDING_RADICAL.id, role: 'meaning' }],
         semantic_radical: BUILDING_RADICAL.id,
       },
       { tier: 1, glossProvenance: 'mnemonic-only' },
@@ -113,7 +113,7 @@ export const TRANSIT_TICKET: CategoryContent = {
       {
         kind: 'character',
         hanzi: '铺',
-        components: [{ componentId: METAL_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: METAL_RADICAL.id, role: 'meaning' }],
         semantic_radical: METAL_RADICAL.id,
       },
       { tier: 1, freqRank: 1613 },
@@ -136,7 +136,7 @@ export const TRANSIT_TICKET: CategoryContent = {
       {
         kind: 'character',
         hanzi: '馆',
-        components: [{ componentId: FOOD_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: FOOD_RADICAL.id, role: 'meaning' }],
         semantic_radical: FOOD_RADICAL.id,
       },
       { tier: 1, freqRank: 1011 },
@@ -151,8 +151,8 @@ export const TRANSIT_TICKET: CategoryContent = {
         kind: 'character',
         hanzi: '城',
         components: [
-          { componentId: EARTH_SEMANTIC.id, role: 'semantic' },
-          { componentId: CHENG_PHONETIC.id, role: 'phonetic' },
+          { componentId: EARTH_SEMANTIC.id, role: 'meaning' },
+          { componentId: CHENG_PHONETIC.id, role: 'sound' },
         ],
         semantic_radical: EARTH_SEMANTIC.id,
       },
@@ -167,7 +167,7 @@ export const TRANSIT_TICKET: CategoryContent = {
       {
         kind: 'character',
         hanzi: '场',
-        components: [{ componentId: EARTH_SEMANTIC.id, role: 'semantic' }],
+        components: [{ componentId: EARTH_SEMANTIC.id, role: 'meaning' }],
         semantic_radical: EARTH_SEMANTIC.id,
       },
       { tier: 1, freqRank: 249, glossProvenance: 'mnemonic-only' },
@@ -342,7 +342,7 @@ export const TRANSIT_TICKET: CategoryContent = {
       {
         kind: 'character',
         hanzi: '铁',
-        components: [{ componentId: METAL_RADICAL.id, role: 'semantic' }],
+        components: [{ componentId: METAL_RADICAL.id, role: 'meaning' }],
         semantic_radical: METAL_RADICAL.id,
       },
       { freqRank: 779 },
