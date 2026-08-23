@@ -6,6 +6,12 @@ import type { CategoryContent } from './row.js';
  * per-character corpus ranks for 禁/止/严/勿 individually, never a rank for
  * the two-character words 禁止/请勿/严禁 as spans, so no word-level figure is
  * available to cite honestly.
+ *
+ * Coverage push (Aug 2026, DESIGN.md §9.1): 禁止/请勿/严禁 all get
+ * `WordDecomposition`s - each a standard, transparent Chinese prohibition
+ * construction. 禁止 and 严禁 share a new standalone, 禁; 请勿 gets its own new
+ * standalone, 请. 止/勿/严 are not separately authored - each word already
+ * resolves via its other, newly-authored morpheme.
  */
 export const SAFETY_PROHIBITION: CategoryContent = {
   low: [
@@ -15,7 +21,10 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       0,
       'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
       { hanzi: '禁止', pinyin: 'jìnzhǐ', nl: 'verbod — rode cirkel met streep', en: 'prohibition — red circle, diagonal bar' },
-      undefined,
+      { kind: 'word', hanzi: '禁止', morphemes: [
+        { span: '禁', gloss: 'to forbid' },
+        { span: '止', gloss: 'to stop' },
+      ] },
       { tier: 0 },
     ],
     [
@@ -24,7 +33,10 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       0,
       'qǐngwù · gelieve niet. The polite register. Same force as 禁止 in practice — a traveller who reads 请勿 as a suggestion is wrong. 勿 appears almost nowhere else, which is exactly why it is unambiguous once known.',
       { hanzi: '请勿', pinyin: 'qǐngwù', nl: 'gelieve niet', en: 'please do not' },
-      undefined,
+      { kind: 'word', hanzi: '请勿', morphemes: [
+        { span: '请', gloss: 'please' },
+        { span: '勿', gloss: 'do not' },
+      ] },
       { tier: 0 },
     ],
   ],
@@ -35,7 +47,10 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       0,
       'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
       { hanzi: '禁止', pinyin: 'jìnzhǐ', nl: 'verbod — rode cirkel met streep', en: 'prohibition — red circle, diagonal bar' },
-      undefined,
+      { kind: 'word', hanzi: '禁止', morphemes: [
+        { span: '禁', gloss: 'to forbid' },
+        { span: '止', gloss: 'to stop' },
+      ] },
       { tier: 0 },
     ],
     [
@@ -44,7 +59,10 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       0,
       'yánjìn · streng verboden (strictly forbidden). The strongest prohibition wording; also appears in 严禁烟火 (fire and smoking strictly forbidden).',
       { hanzi: '严禁', pinyin: 'yánjìn', nl: 'streng verboden', en: 'strictly forbidden' },
-      undefined,
+      { kind: 'word', hanzi: '严禁', morphemes: [
+        { span: '严', gloss: 'strict' },
+        { span: '禁', gloss: 'to forbid' },
+      ] },
       { tier: 1 },
     ],
   ],
@@ -55,8 +73,29 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       0,
       'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
       { hanzi: '禁止', pinyin: 'jìnzhǐ', nl: 'verbod — rode cirkel met streep', en: 'prohibition — red circle, diagonal bar' },
-      undefined,
+      { kind: 'word', hanzi: '禁止', morphemes: [
+        { span: '禁', gloss: 'to forbid' },
+        { span: '止', gloss: 'to stop' },
+      ] },
       { tier: 0 },
+    ],
+    [
+      'On a sign. What is forbidden?',
+      ['to forbid', 'to stop', 'strictly forbidden'],
+      0,
+      'jìn · verbieden (to forbid). Seen in 禁止 (prohibition) and 严禁 (strictly forbidden). Picture 禁 as two trees (林) fenced off in front of a shrine (示) - forbidden ground: jìn.',
+      { hanzi: '禁', pinyin: 'jìn', nl: 'verbieden', en: 'to forbid' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On a sign. What is forbidden?',
+      ['please', 'do not', 'to forbid'],
+      0,
+      'qǐng · alstublieft (please). Seen in 请勿 (please do not). Picture 请 as fresh, young (青) words (讠), spoken as politely as anyone can manage: qǐng.',
+      { hanzi: '请', pinyin: 'qǐng', nl: 'alstublieft', en: 'please' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
   ],
 };

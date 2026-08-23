@@ -661,3 +661,73 @@ describe('rest-of-bank coverage pass (Aug 2026): remaining single characters', (
     expect(validatePack(SEED_PACK)).toEqual([]);
   });
 });
+
+describe('90%+ coverage push (Aug 2026, DESIGN.md §9.1)', () => {
+  it('marks every genuinely non-compositional span opaque, old and new', () => {
+    const opaqueHanzi = new Set(
+      SEED_PACK.questions
+        .filter((q) => q.face?.transparency === 'opaque')
+        .map((q) => q.face?.hanzi),
+    );
+    // 保质期/时价/招牌/咖啡 predate this pass; the rest are new this pass -
+    // 净含量 (a fixed GB 7718 label field, same treatment as 保质期), 深圳通
+    // (a place-name brand, not a compositional word), 开张大吉/胡同/
+    // 此路不通 (idiomatic register or a historical loanword whose parts do
+    // not predict the whole).
+    for (const hanzi of [
+      '保质期', '时价', '招牌', '咖啡',
+      '净含量', '深圳通', '开张大吉', '胡同', '此路不通',
+    ]) {
+      expect(opaqueHanzi.has(hanzi), `${hanzi} should be marked transparency: 'opaque'`).toBe(true);
+    }
+  });
+
+  it('gives 超市/进口/银行/千克 transparent WordDecompositions with the expected morphemes', () => {
+    const wordDecomp = (hanzi: string): WordDecomposition | undefined =>
+      SEED_PACK.questions
+        .map((q) => q.decomposition)
+        .find((d): d is WordDecomposition => d?.kind === 'word' && d.hanzi === hanzi);
+
+    expect(wordDecomp('超市')?.morphemes.map((m) => m.span)).toEqual(['超', '市']);
+    expect(wordDecomp('进口')?.morphemes.map((m) => m.span)).toEqual(['进', '口']);
+    expect(wordDecomp('银行')?.morphemes.map((m) => m.span)).toEqual(['银', '行']);
+    expect(wordDecomp('千克')?.morphemes.map((m) => m.span)).toEqual(['千', '克']);
+  });
+
+  it('leaves 主食 genuinely bare - no standalone item exists for 主 or 食, and none was authored just for this one word', () => {
+    const q = SEED_PACK.questions.find((qq) => qq.category === 'menu-order' && qq.face?.hanzi === '主食');
+    expect(q?.decomposition).toBeUndefined();
+    expect(q?.glossProvenance).toBeUndefined();
+    expect(q?.face?.transparency).toBeUndefined();
+  });
+
+  it('still leaves 皮/票/行 exactly as earlier phases decided, unaffected by this pass', () => {
+    for (const [category, hanzi] of [
+      ['menu-animal', '皮'],
+      ['transit-platform', '票'],
+      ['transit-ticket', '行'],
+    ] as const) {
+      const q = SEED_PACK.questions.find((qq) => qq.category === category && qq.face?.hanzi === hanzi);
+      expect(q?.decomposition, `${hanzi} should have no decomposition`).toBeUndefined();
+      expect(q?.glossProvenance, `${hanzi} should have no glossProvenance`).toBeUndefined();
+    }
+  });
+
+  it('authors every new standalone character this pass introduced, each with a real resolution', () => {
+    const newStandalones = [
+      '市', '码', '卡', '一', '特', '价', '生', '冷', '口', '装', '重', '证',
+      '菜', '料', '卖', '仓', '大', '惠', '所', '院', '发', '厅', '小',
+      '电', '问', '无', '乘', '检', '向', '开',
+      '提', '指', '禁', '请', '警', '心', '注',
+    ];
+    for (const hanzi of newStandalones) {
+      const q = SEED_PACK.questions.find((qq) => qq.face?.hanzi === hanzi);
+      expect(q, `${hanzi} should exist as a standalone question`).toBeDefined();
+      const resolved =
+        q?.decomposition !== undefined ||
+        q?.glossProvenance === 'mnemonic-only' ||
+        q?.face?.transparency === 'opaque';
+      expect(resolved, `${hanzi} should have a decomposition, mnemonic, or opaque marking`).toBe(true);
+    }
+  });
+});

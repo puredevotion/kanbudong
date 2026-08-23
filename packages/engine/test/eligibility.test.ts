@@ -181,6 +181,33 @@ describe('word decomposition resolves against the real seed pack (eligibility-ga
   });
 });
 
+/**
+ * DESIGN.md §9.1 90%+ coverage push (Aug 2026): the exact bug class the two
+ * prior phases' "previously inert" tests exist to catch, generalized to
+ * every `WordDecomposition` in the bank rather than a hand-picked list -
+ * this pass alone added 101 new ones (111 total, up from 10), so a
+ * per-word allowlist would rot the moment a future pass adds one more. Any
+ * `WordDecomposition` that resolves to zero `component_char_ids` against the
+ * real `SEED_PACK` is exactly the silent-failure mode DESIGN.md §6.1's
+ * eligibility gate depends on nobody shipping.
+ */
+describe('every WordDecomposition in the real seed pack resolves non-empty (DESIGN.md §9.1 coverage push, Aug 2026)', () => {
+  const derived = deriveComponentCharIds(SEED_PACK.questions);
+  const wordQuestions = SEED_PACK.questions.filter((q) => q.decomposition?.kind === 'word');
+
+  it('finds a substantial number of word decompositions to check', () => {
+    expect(wordQuestions.length).toBeGreaterThanOrEqual(100);
+  });
+
+  it('resolves at least one component character for every one of them', () => {
+    const empty = wordQuestions.filter((q) => (derived.get(q.id)?.length ?? 0) === 0);
+    expect(
+      empty.map((q) => `${q.id} (${q.face?.hanzi ?? '?'})`),
+      'these WordDecompositions resolve to zero component_char_ids',
+    ).toEqual([]);
+  });
+});
+
 describe('expand output feeds deriveComponentCharIds unchanged', () => {
   it('exercises the authoring pipeline shape, not just hand-built Question objects', () => {
     const chunk: CategoryContent = {

@@ -22,6 +22,17 @@ import type { CategoryContent } from './row.js';
  * is tagged `confusion_type: 'shared-morpheme'` against 特价
  * (market-label.ts): both start with 特, and the explanation for 特色 already
  * named 特价 as the thing worth telling apart before this field existed.
+ *
+ * Coverage push (Aug 2026, DESIGN.md §9.1): 大份/小份 get `WordDecomposition`s
+ * resolving fully via the existing 份 standalone (market-panel.ts); 打包 and
+ * 购物车 resolve fully via the existing 包/车 standalones. 特色 gets one too,
+ * resolving via market-label.ts's new 特. 凉菜/热菜 share a new standalone,
+ * 菜, authored here (neither 凉/热/菜 existed before). 饮料 gets a new
+ * standalone, 料, also reused by market-panel.ts's 配料表 - 饮 is not
+ * separately authored. 主食 (主 + 食) is left bare: neither morpheme has a
+ * standalone item and authoring one for this single word alone is out of
+ * proportion for this pass - logged as a genuine, still-inert gap rather
+ * than shipped with a `WordDecomposition` that would resolve empty.
  */
 export const MENU_ORDER: CategoryContent = {
   low: [
@@ -31,7 +42,10 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'dà fèn · grote portie (large portion). 份 can also mean "share" or "copy" elsewhere, so read it with 大 for this sense.',
       { hanzi: '大份', pinyin: 'dà fèn', nl: 'grote portie', en: 'large portion' },
-      undefined,
+      { kind: 'word', hanzi: '大份', morphemes: [
+        { span: '大', gloss: 'big' },
+        { span: '份', gloss: 'portion' },
+      ] },
       { tier: 1 },
     ],
   ],
@@ -42,7 +56,10 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'dà fèn · grote portie (large portion). 份 can also mean "share" or "copy" elsewhere, so read it with 大 for this sense.',
       { hanzi: '大份', pinyin: 'dà fèn', nl: 'grote portie', en: 'large portion' },
-      undefined,
+      { kind: 'word', hanzi: '大份', morphemes: [
+        { span: '大', gloss: 'big' },
+        { span: '份', gloss: 'portion' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -51,7 +68,10 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'xiǎo fèn · kleine portie (small portion). Read the two characters together as one term, not separately.',
       { hanzi: '小份', pinyin: 'xiǎo fèn', nl: 'kleine portie', en: 'small portion' },
-      undefined,
+      { kind: 'word', hanzi: '小份', morphemes: [
+        { span: '小', gloss: 'small' },
+        { span: '份', gloss: 'portion' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -60,7 +80,10 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'liángcài · koude gerechten (cold dishes). These are always listed as the first section on the menu.',
       { hanzi: '凉菜', pinyin: 'liángcài', nl: 'koude gerechten', en: 'cold dishes' },
-      undefined,
+      { kind: 'word', hanzi: '凉菜', morphemes: [
+        { span: '凉', gloss: 'cool' },
+        { span: '菜', gloss: 'dish, vegetable' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -69,7 +92,10 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'rècài · warme gerechten (hot dishes). Usually the section right after the cold dishes.',
       { hanzi: '热菜', pinyin: 'rècài', nl: 'warme gerechten', en: 'hot dishes' },
-      undefined,
+      { kind: 'word', hanzi: '热菜', morphemes: [
+        { span: '热', gloss: 'hot' },
+        { span: '菜', gloss: 'dish, vegetable' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -101,7 +127,10 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'yǐnliào · frisdrank (soft drinks). Different from 酒水, which means alcoholic drinks.',
       { hanzi: '饮料', pinyin: 'yǐnliào', nl: 'frisdrank', en: 'soft drinks' },
-      undefined,
+      { kind: 'word', hanzi: '饮料', morphemes: [
+        { span: '饮', gloss: 'to drink' },
+        { span: '料', gloss: 'material, ingredient' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -116,6 +145,10 @@ export const MENU_ORDER: CategoryContent = {
         en: 'pack up, takeaway',
         context: { after: '费+1元' },
       },
+      { kind: 'word', hanzi: '打包', morphemes: [
+        { span: '打', gloss: 'to hit, do' },
+        { span: '包', gloss: 'filled bun, to wrap' },
+      ] },
     ],
     [
       'On the menu. What does this mean?',
@@ -129,6 +162,29 @@ export const MENU_ORDER: CategoryContent = {
         en: 'shopping cart',
         context: { after: ' 2' },
       },
+      { kind: 'word', hanzi: '购物车', morphemes: [
+        { span: '购', gloss: 'to purchase' },
+        { span: '物', gloss: 'thing, object' },
+        { span: '车', gloss: 'vehicle, cart' },
+      ] },
+    ],
+    [
+      'On the menu. What does this mean?',
+      ['dish, vegetable', 'cold dishes', 'hot dishes'],
+      0,
+      'cài · gerecht, groente (dish, vegetable). Seen in 凉菜/热菜 (cold/hot dishes) on a menu section header. Picture 菜 as a hand (采) picking greens (艹) fresh for the table: cài.',
+      { hanzi: '菜', pinyin: 'cài', nl: 'gerecht, groente', en: 'dish, vegetable' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On the menu. What does this mean?',
+      ['material, ingredient', 'soft drinks', 'dish, vegetable'],
+      0,
+      'liào · materiaal, ingrediënt (material, ingredient). Seen in 饮料 (soft drinks) and 配料表 (ingredient list, on a package back panel). Picture 料 as a wooden dipper (斗) scooping out rice (米) - the raw ingredient before it\'s measured into anything: liào.',
+      { hanzi: '料', pinyin: 'liào', nl: 'materiaal, ingrediënt', en: 'material, ingredient' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
   ],
   high: [
@@ -165,7 +221,10 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'tèsè · specialiteit (house specialty). Easy to confuse with 特价 (special price) — look closely at the second character.',
       { hanzi: '特色', pinyin: 'tèsè', nl: 'specialiteit', en: 'house specialty' },
-      undefined,
+      { kind: 'word', hanzi: '特色', morphemes: [
+        { span: '特', gloss: 'special' },
+        { span: '色', gloss: 'colour, character' },
+      ] },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',

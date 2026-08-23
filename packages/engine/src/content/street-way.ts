@@ -36,6 +36,17 @@ import type { CategoryContent } from './row.js';
  * 局 have no semantic/phonetic split Make Me a Hanzi records cleanly enough
  * to ship as a verified `CharacterDecomposition`, so each carries a labelled
  * `glossProvenance: 'mnemonic-only'` story instead.
+ *
+ * Coverage push (Aug 2026, DESIGN.md §9.1): 直行/步行街/单行道/人行天桥 all get
+ * `WordDecomposition`s resolving fully via the existing 行 standalone
+ * (transit-ticket.ts); 城中村 resolves via the existing 城 (also transit-
+ * ticket.ts). 问讯处/电梯/无障碍 each get one backed by a new standalone (问,
+ * 电, 无 respectively). 胡同 and 此路不通 are marked `transparency: 'opaque'`:
+ * 胡同 is a historical loanword whose parts ("non-Han" + "together") do not
+ * predict "narrow lane", and 此路不通 reads more like a fixed public-signage
+ * sentence than a compound word - DESIGN.md §3.3.3(8) leaves this exact
+ * borderline case to judgement, and authoring four new standalone characters
+ * for a single frozen phrase is out of proportion either way.
  */
 export const STREET_WAY: CategoryContent = {
   low: [
@@ -45,7 +56,10 @@ export const STREET_WAY: CategoryContent = {
       0,
       'zhíxíng · rechtdoor (go straight ahead) — the same 直 as "straight, direct" elsewhere.',
       { hanzi: '直行', pinyin: 'zhíxíng', nl: 'rechtdoor', en: 'go straight ahead' },
-      undefined,
+      { kind: 'word', hanzi: '直行', morphemes: [
+        { span: '直', gloss: 'straight' },
+        { span: '行', gloss: 'to go' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -53,7 +67,7 @@ export const STREET_WAY: CategoryContent = {
       ['no through road, dead end', 'go straight ahead', 'lift, elevator'],
       0,
       'cǐ lù bù tōng · doodlopende weg (no through road) — literally "this road does not go through."',
-      { hanzi: '此路不通', pinyin: 'cǐ lù bù tōng', nl: 'doodlopende weg', en: 'no through road, dead end' },
+      { hanzi: '此路不通', pinyin: 'cǐ lù bù tōng', nl: 'doodlopende weg', en: 'no through road, dead end', transparency: 'opaque' },
       undefined,
       { tier: 1 },
     ],
@@ -65,7 +79,11 @@ export const STREET_WAY: CategoryContent = {
       0,
       'bùxíngjiē · voetgangersstraat (pedestrian street) — no vehicles, usually the shopping strip.',
       { hanzi: '步行街', pinyin: 'bùxíngjiē', nl: 'voetgangersstraat', en: 'pedestrian street' },
-      undefined,
+      { kind: 'word', hanzi: '步行街', morphemes: [
+        { span: '步', gloss: 'to step, walk' },
+        { span: '行', gloss: 'to go' },
+        { span: '街', gloss: 'street' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -74,7 +92,10 @@ export const STREET_WAY: CategoryContent = {
       0,
       'diàntī · lift (lift, elevator) — the same character covers escalators too; context or an icon tells you which.',
       { hanzi: '电梯', pinyin: 'diàntī', nl: 'lift', en: 'lift, elevator' },
-      undefined,
+      { kind: 'word', hanzi: '电梯', morphemes: [
+        { span: '电', gloss: 'electric' },
+        { span: '梯', gloss: 'ladder, stairs' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -88,6 +109,7 @@ export const STREET_WAY: CategoryContent = {
         nl: 'hutong, oude Pekinese steeg',
         en: 'hutong, old Beijing lane',
         context: { before: '史家', after: '博物馆' },
+        transparency: 'opaque',
       },
     ],
     [
@@ -102,6 +124,11 @@ export const STREET_WAY: CategoryContent = {
         en: 'urban village',
         context: { before: '白石洲', after: '改造项目' },
       },
+      { kind: 'word', hanzi: '城中村', morphemes: [
+        { span: '城', gloss: 'large complex, city' },
+        { span: '中', gloss: 'middle' },
+        { span: '村', gloss: 'village' },
+      ] },
     ],
   ],
   high: [
@@ -111,7 +138,11 @@ export const STREET_WAY: CategoryContent = {
       0,
       'wènxùnchù · informatiebalie (information desk) — 问 (ask) + 讯 (inquire) + 处 (place): a "place for asking."',
       { hanzi: '问讯处', pinyin: 'wènxùnchù', nl: 'informatiebalie', en: 'information desk' },
-      undefined,
+      { kind: 'word', hanzi: '问讯处', morphemes: [
+        { span: '问', gloss: 'to ask' },
+        { span: '讯', gloss: 'to inquire' },
+        { span: '处', gloss: 'place' },
+      ] },
       { tier: 2 },
     ],
     [
@@ -120,7 +151,11 @@ export const STREET_WAY: CategoryContent = {
       0,
       'dānxíngdào · eenrichtingsstraat (one-way street) — traffic moves one direction only; 单 (single) + 行 (go, here xíng) + 道 (road).',
       { hanzi: '单行道', pinyin: 'dānxíngdào', nl: 'eenrichtingsstraat', en: 'one-way street' },
-      undefined,
+      { kind: 'word', hanzi: '单行道', morphemes: [
+        { span: '单', gloss: 'single' },
+        { span: '行', gloss: 'to go' },
+        { span: '道', gloss: 'road' },
+      ] },
       { tier: 2 },
     ],
     [
@@ -135,6 +170,12 @@ export const STREET_WAY: CategoryContent = {
         en: 'pedestrian overpass',
         context: { after: ' 200米' },
       },
+      { kind: 'word', hanzi: '人行天桥', morphemes: [
+        { span: '人', gloss: 'person' },
+        { span: '行', gloss: 'to go' },
+        { span: '天', gloss: 'sky' },
+        { span: '桥', gloss: 'bridge' },
+      ] },
     ],
     [
       'On a street sign. What does this mean?',
@@ -148,6 +189,10 @@ export const STREET_WAY: CategoryContent = {
         en: 'accessible, barrier-free',
         context: { after: '通道入口' },
       },
+      { kind: 'word', hanzi: '无障碍', morphemes: [
+        { span: '无', gloss: 'without' },
+        { span: '障碍', gloss: 'obstacle' },
+      ] },
     ],
     [
       'On a street sign. What does this mean?',
@@ -234,6 +279,33 @@ export const STREET_WAY: CategoryContent = {
         semantic_radical: HEART_RADICAL.id,
       },
       { freqRank: 366 },
+    ],
+    [
+      'On a street sign. What does this mean?',
+      ['to ask', 'to go', 'road'],
+      0,
+      'wèn · vragen (to ask). Seen in 问讯处 (information desk, literally "ask-inquire place"). Picture 问 as a mouth (口) calling out through a doorway (门), asking after whoever\'s inside: wèn.',
+      { hanzi: '问', pinyin: 'wèn', nl: 'vragen', en: 'to ask' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On a street sign. What does this mean?',
+      ['electric', 'ladder, stairs', 'to ask'],
+      0,
+      'diàn · elektrisch (electric). Seen in 电梯 (lift, elevator). Picture 电 as a jagged bolt of lightning splitting straight down through the sky: diàn.',
+      { hanzi: '电', pinyin: 'diàn', nl: 'elektrisch', en: 'electric' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On a street sign. What does this mean?',
+      ['without', 'to ask', 'electric'],
+      0,
+      'wú · zonder (without). Seen in 无障碍 (accessible, barrier-free, literally "without obstacle"). Picture 无 as a person\'s silhouette with everything below it wiped clean away - nothing left: wú.',
+      { hanzi: '无', pinyin: 'wú', nl: 'zonder', en: 'without' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
     [
       'On a street sign. What does this mean?',

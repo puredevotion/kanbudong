@@ -34,6 +34,11 @@ import type { CategoryContent } from './row.js';
  * no phonetic component for this character at all). 点 reuses
  * `FIRE_DOTS_RADICAL` (灬, from menu-cooking.ts's 煮/煎); its phonetic half 占
  * (zhàn) is not a tone-or-syllable match for diǎn, so semantic-only.
+ *
+ * Coverage push (Aug 2026, DESIGN.md §9.1): 停业/暂停营业 get `WordDecomposition`s
+ * resolving fully via the existing 停 standalone (this same file's high tier).
+ * 全年无休 gets one resolving via the existing 无 (street-way.ts). No new
+ * standalones were needed for any of the three.
  */
 export const STREET_OPEN: CategoryContent = {
   low: [
@@ -43,7 +48,10 @@ export const STREET_OPEN: CategoryContent = {
       0,
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
       { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
-      undefined,
+      { kind: 'word', hanzi: '停业', morphemes: [
+        { span: '停', gloss: 'to stop' },
+        { span: '业', gloss: 'business' },
+      ] },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',
@@ -79,7 +87,10 @@ export const STREET_OPEN: CategoryContent = {
       0,
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
       { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
-      undefined,
+      { kind: 'word', hanzi: '停业', morphemes: [
+        { span: '停', gloss: 'to stop' },
+        { span: '业', gloss: 'business' },
+      ] },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',
@@ -119,6 +130,12 @@ export const STREET_OPEN: CategoryContent = {
         en: 'open year-round, no rest days',
         context: { after: '，节假日照常营业' },
       },
+      { kind: 'word', hanzi: '全年无休', morphemes: [
+        { span: '全', gloss: 'entire' },
+        { span: '年', gloss: 'year' },
+        { span: '无', gloss: 'without' },
+        { span: '休', gloss: 'to rest' },
+      ] },
     ],
     [
       'On a shop door. What does it mean?',
@@ -132,7 +149,12 @@ export const STREET_OPEN: CategoryContent = {
         en: 'temporarily closed',
         context: { after: '，装修中，敬请谅解' },
       },
-      undefined,
+      { kind: 'word', hanzi: '暂停营业', morphemes: [
+        { span: '暂', gloss: 'temporarily' },
+        { span: '停', gloss: 'to stop' },
+        { span: '营', gloss: 'to operate' },
+        { span: '业', gloss: 'business' },
+      ] },
       {
         confusion_type: 'shared-morpheme',
         confusable_with: ['street-open-low-1', 'street-open-mid-1', 'street-open-high-1'],
@@ -146,7 +168,10 @@ export const STREET_OPEN: CategoryContent = {
       0,
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
       { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
-      undefined,
+      { kind: 'word', hanzi: '停业', morphemes: [
+        { span: '停', gloss: 'to stop' },
+        { span: '业', gloss: 'business' },
+      ] },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',

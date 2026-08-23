@@ -31,6 +31,19 @@ import type { CategoryContent } from './row.js';
  * phonetic split clean enough to verify (个 and 半 are ideographic with no
  * reusable radical; 只's MMH radical 口 does not track its measure-word sense),
  * so each carries a labelled `glossProvenance: 'mnemonic-only'` story instead.
+ *
+ * Coverage push (Aug 2026, DESIGN.md §9.1): 生产日期/生产厂家/冷藏/冷冻/进口/
+ * 散装/称重/许可证 all get `WordDecomposition`s. 净含量 ("净" + "含" + "量") is
+ * marked `transparency: 'opaque'` instead, same GB 7718 back-panel-label
+ * treatment as 保质期 in this same file - a shopper reads the whole label
+ * field, not its three characters separately. New standalones: 生 (also
+ * unlocks 生产厂家), 冷 (also unlocks 冷冻), 口 (also unlocks transit-
+ * platform.ts's 出口/入口), 装, 重 (also unlocks menu-flavour.ts's 重辣) and
+ * 证 (also unlocks transit-ticket.ts's 身份证). 储存条件 resolves fully
+ * without any new standalone - both its second-half morphemes, 条 and 件,
+ * already exist above as measure-word items. 生产厂家 resolves via 生 alone;
+ * 厂/家 are not separately authored. All new standalones ship
+ * `glossProvenance: 'mnemonic-only'`.
  */
 export const MARKET_PANEL: CategoryContent = {
   low: [
@@ -51,7 +64,12 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'shēngchǎn rìqī · productiedatum (production date).',
       { hanzi: '生产日期', pinyin: 'shēngchǎn rìqī', nl: 'productiedatum', en: 'production date' },
-      undefined,
+      { kind: 'word', hanzi: '生产日期', morphemes: [
+        { span: '生', gloss: 'to produce, give birth' },
+        { span: '产', gloss: 'to produce' },
+        { span: '日', gloss: 'day' },
+        { span: '期', gloss: 'period' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -68,7 +86,7 @@ export const MARKET_PANEL: CategoryContent = {
       ['net content', 'buy one get one free', 'freeze, −18 °C'],
       0,
       'jìnghánliàng · netto-inhoud (net content). Here 量 is read liàng, not liáng.',
-      { hanzi: '净含量', pinyin: 'jìnghánliàng', nl: 'netto-inhoud', en: 'net content' },
+      { hanzi: '净含量', pinyin: 'jìnghánliàng', nl: 'netto-inhoud', en: 'net content', transparency: 'opaque' },
       undefined,
       { tier: 1 },
     ],
@@ -78,7 +96,10 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'lěngcáng · gekoeld bewaren (refrigerate, 0–4 °C). Shares its first character with 冷冻 (freeze) but means the opposite — worth telling apart.',
       { hanzi: '冷藏', pinyin: 'lěngcáng', nl: 'gekoeld bewaren', en: 'refrigerate, 0–4 °C' },
-      undefined,
+      { kind: 'word', hanzi: '冷藏', morphemes: [
+        { span: '冷', gloss: 'cold' },
+        { span: '藏', gloss: 'to store, hide' },
+      ] },
       {
         tier: 1,
         confusion_type: 'shared-morpheme',
@@ -91,7 +112,10 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'lěngdòng · diepvries (freeze, −18 °C). Easy to mix up with 冷藏 (refrigerate) — same first character, opposite instruction, and getting it wrong ruins the food.',
       { hanzi: '冷冻', pinyin: 'lěngdòng', nl: 'diepvries', en: 'freeze, −18 °C' },
-      undefined,
+      { kind: 'word', hanzi: '冷冻', morphemes: [
+        { span: '冷', gloss: 'cold' },
+        { span: '冻', gloss: 'to freeze' },
+      ] },
       {
         tier: 1,
         confusion_type: 'shared-morpheme',
@@ -104,7 +128,10 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'jìnkǒu · geïmporteerd (imported). On a metro sign the same two characters mean "entrance" instead.',
       { hanzi: '进口', pinyin: 'jìnkǒu', nl: 'geïmporteerd', en: 'imported' },
-      undefined,
+      { kind: 'word', hanzi: '进口', morphemes: [
+        { span: '进', gloss: 'to enter, advance' },
+        { span: '口', gloss: 'mouth, opening' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -199,6 +226,11 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'ingredient list',
         context: { after: '：水、小麦粉、白砂糖、食用盐、酵母' },
       },
+      { kind: 'word', hanzi: '配料表', morphemes: [
+        { span: '配', gloss: 'to mix, pair' },
+        { span: '料', gloss: 'material, ingredient' },
+        { span: '表', gloss: 'table, list' },
+      ] },
     ],
     [
       'On the back of the packet. What does it mean?',
@@ -212,6 +244,12 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'storage conditions',
         context: { after: '：阴凉干燥处保存，避免阳光直射' },
       },
+      { kind: 'word', hanzi: '储存条件', morphemes: [
+        { span: '储', gloss: 'to store' },
+        { span: '存', gloss: 'to exist, keep' },
+        { span: '条', gloss: 'item, clause' },
+        { span: '件', gloss: 'item' },
+      ] },
     ],
     [
       'On the back of the packet. What does it mean?',
@@ -225,6 +263,37 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'manufacturer',
         context: { after: '：广东金穗食品有限公司' },
       },
+      { kind: 'word', hanzi: '生产厂家', morphemes: [
+        { span: '生', gloss: 'to produce, give birth' },
+        { span: '产', gloss: 'to produce' },
+      ] },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['to produce, give birth', 'day of month (spoken); number', 'production date'],
+      0,
+      'shēng · produceren, geboren worden (to produce, give birth). Seen in 生产日期 (production date) and 生产厂家 (manufacturer). Picture 生 as a seedling (the top strokes) pushing straight up out of the ground (the bottom stroke): shēng.',
+      { hanzi: '生', pinyin: 'shēng', nl: 'produceren, geboren worden', en: 'to produce, give birth' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['cold', 'refrigerate, 0–4 °C', 'freeze, −18 °C'],
+      0,
+      'lěng · koud (cold). Seen in 冷藏 (refrigerate) and 冷冻 (freeze) - the shared first character both instructions differ from. Picture 冷 as ice (冫) so bracing it feels like a command (令) to shiver: lěng.',
+      { hanzi: '冷', pinyin: 'lěng', nl: 'koud', en: 'cold' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['mouth, opening', 'imported', 'day of month (spoken); number'],
+      0,
+      'kǒu · mond, opening (mouth, opening). Seen in 进口 (imported, literally "enter opening") and — on a metro sign instead of a packet — 出口/入口 (exit/entrance). Picture 口 as a simple open mouth, drawn as a small square: kǒu.',
+      { hanzi: '口', pinyin: 'kǒu', nl: 'mond, opening', en: 'mouth, opening' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
   ],
   high: [
@@ -234,7 +303,10 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'sǎnzhuāng · los, per gewicht (loose, sold by weight). Signals that the price is per weight (yuan per jin), not a fixed price.',
       { hanzi: '散装', pinyin: 'sǎnzhuāng', nl: 'los, per gewicht', en: 'loose, sold by weight' },
-      undefined,
+      { kind: 'word', hanzi: '散装', morphemes: [
+        { span: '散', gloss: 'to scatter, loose' },
+        { span: '装', gloss: 'to pack' },
+      ] },
       { tier: 2 },
     ],
     [
@@ -243,7 +315,10 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'chēngzhòng · hier afwegen (weigh here). Weigh loose produce and get a barcode sticker before you go to the till.',
       { hanzi: '称重', pinyin: 'chēngzhòng', nl: 'hier afwegen', en: 'weigh here' },
-      undefined,
+      { kind: 'word', hanzi: '称重', morphemes: [
+        { span: '称', gloss: 'to weigh' },
+        { span: '重', gloss: 'weight' },
+      ] },
       { tier: 2 },
     ],
     [
@@ -302,6 +377,38 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'license',
         context: { before: '生产', after: '编号：SC11410115012345' },
       },
+      { kind: 'word', hanzi: '许可证', morphemes: [
+        { span: '许', gloss: 'to permit' },
+        { span: '可', gloss: 'may' },
+        { span: '证', gloss: 'certificate' },
+      ] },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['to pack, install', 'loose, sold by weight', 'weigh here'],
+      0,
+      'zhuāng · inpakken, installeren (to pack, install). Seen in 散装 (loose, sold by weight, literally "scattered packing"). Picture 装 as a strong (壮) pair of hands folding clothing (衣) up and packing it away: zhuāng.',
+      { hanzi: '装', pinyin: 'zhuāng', nl: 'inpakken, installeren', en: 'to pack, install' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['weight, heavy', 'weigh here', 'mild spice'],
+      0,
+      'zhòng · gewicht, zwaar (weight, heavy). Seen in 称重 (weigh here) and 重辣 (very spicy, "heavy chilli"). Picture 重 as a person bent low under a heavy sack slung on their back: zhòng.',
+      { hanzi: '重', pinyin: 'zhòng', nl: 'gewicht, zwaar', en: 'weight, heavy' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['certificate', 'license', 'to permit'],
+      0,
+      'zhèng · certificaat, bewijs (certificate). Seen in 许可证 (license) and 身份证 (ID card). Picture 证 as spoken words (讠) confirmed correct (正) - an official proof: zhèng.',
+      { hanzi: '证', pinyin: 'zhèng', nl: 'certificaat, bewijs', en: 'certificate' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
   ],
 };

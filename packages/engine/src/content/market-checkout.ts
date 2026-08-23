@@ -27,6 +27,17 @@ import type { CategoryContent } from './row.js';
 // `METAL_RADICAL` from menu-animal.ts's 锅/transit-ticket.ts's 铺. 台 has no
 // MMH etymology entry at all, so it ships `glossProvenance: 'mnemonic-only'`
 // instead of a fabricated decomposition claim.
+//
+// Coverage push (Aug 2026, DESIGN.md §9.1): 超市 gets a `WordDecomposition`
+// (超 "exceed" + 市 "market, city"), backed by a new standalone 市 - neither
+// morpheme had a matching single-character item before, so the word would
+// otherwise resolve empty. 扫码/储值卡/发票 get `WordDecomposition`s too; 发票
+// resolves via the existing (if itself still-bare) 票 item, while 扫码/储值卡
+// each needed a new standalone (码/卡) for the same reason as 市. 便利店
+// resolves via the existing 店 (transit-ticket.ts) with no new standalone
+// required. 市/卡/码 all ship `glossProvenance: 'mnemonic-only'` - none was
+// checked against a reusable existing component, so an invented picture is
+// used instead of a fabricated verified claim.
 export const MARKET_CHECKOUT: CategoryContent = {
   low: [
     [
@@ -35,8 +46,20 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'chāoshì · supermarkt (supermarket).',
       { hanzi: '超市', pinyin: 'chāoshì', nl: 'supermarkt', en: 'supermarket' },
-      undefined,
+      { kind: 'word', hanzi: '超市', morphemes: [
+        { span: '超', gloss: 'to exceed, super-' },
+        { span: '市', gloss: 'market, city' },
+      ] },
       { tier: 1 },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['market, city', 'shop', 'venue, ground'],
+      0,
+      'shì · markt, stad (market, city). Seen in 超市 (supermarket) and 市场 (market). Picture 市 as an awning (亠) strung up over a stall\'s hanging cloth banner (巾) - a market stall set up for the day: shì.',
+      { hanzi: '市', pinyin: 'shì', nl: 'markt, stad', en: 'market, city' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
   ],
   mid: [
@@ -46,7 +69,10 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'chāoshì · supermarkt (supermarket).',
       { hanzi: '超市', pinyin: 'chāoshì', nl: 'supermarkt', en: 'supermarket' },
-      undefined,
+      { kind: 'word', hanzi: '超市', morphemes: [
+        { span: '超', gloss: 'to exceed, super-' },
+        { span: '市', gloss: 'market, city' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -55,7 +81,11 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'biànlìdiàn · buurtwinkel (convenience store). 便 is pronounced biàn here, but pián in 便宜 (cheap) — same character, different reading.',
       { hanzi: '便利店', pinyin: 'biànlìdiàn', nl: 'buurtwinkel', en: 'convenience store' },
-      undefined,
+      { kind: 'word', hanzi: '便利店', morphemes: [
+        { span: '便', gloss: 'convenient' },
+        { span: '利', gloss: 'benefit' },
+        { span: '店', gloss: 'shop' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -89,8 +119,20 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'sǎomǎ · scannen, QR-code scannen (scan the QR code). The standard way to say "scan to pay" in China.',
       { hanzi: '扫码', pinyin: 'sǎomǎ', nl: 'scannen, QR-code scannen', en: 'scan the QR code' },
-      undefined,
+      { kind: 'word', hanzi: '扫码', morphemes: [
+        { span: '扫', gloss: 'to sweep, scan' },
+        { span: '码', gloss: 'code, number' },
+      ] },
       { tier: 1 },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['code, number', 'scan the QR code', 'flat things — tickets, cards, tables'],
+      0,
+      'mǎ · code, nummer (code, number). Seen in 扫码 (scan the code) and 密码 (password). Picture 码 as a stone (石) marker carved with a horse\'s (马) number on it - a code chiselled in for good: mǎ.',
+      { hanzi: '码', pinyin: 'mǎ', nl: 'code, nummer', en: 'code, number' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the checkout screen. What does it mean?',
@@ -131,6 +173,20 @@ export const MARKET_CHECKOUT: CategoryContent = {
         en: 'stored-value card',
         context: { after: '余额查询' },
       },
+      { kind: 'word', hanzi: '储值卡', morphemes: [
+        { span: '储', gloss: 'to store' },
+        { span: '值', gloss: 'value' },
+        { span: '卡', gloss: 'card' },
+      ] },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['card', 'stored-value card', 'special price'],
+      0,
+      'kǎ · kaart (card). Seen in 储值卡 (stored-value card) and 银行卡 (bank card) - itself a phonetic borrowing of English "card". Picture 卡 as "up" (上) wedged stuck right on top of "down" (下) - a card jammed halfway between the two: kǎ.',
+      { hanzi: '卡', pinyin: 'kǎ', nl: 'kaart', en: 'card' },
+      undefined,
+      { glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the checkout screen. What does it mean?',
@@ -144,6 +200,10 @@ export const MARKET_CHECKOUT: CategoryContent = {
         en: 'official receipt, fapiao',
         context: { after: '请在结账前告知收银员' },
       },
+      { kind: 'word', hanzi: '发票', morphemes: [
+        { span: '发', gloss: 'to issue' },
+        { span: '票', gloss: 'ticket, note' },
+      ] },
     ],
     [
       'On the checkout screen. What does it mean?',

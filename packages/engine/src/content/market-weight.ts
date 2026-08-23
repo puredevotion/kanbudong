@@ -7,6 +7,10 @@ import type { CategoryContent } from './row.js';
  * corpus, 9,933 distinct characters, dated 2004-03-30) — a different corpus
  * from the one DESIGN.md's own prose cites, so numbers here do not match
  * DESIGN.md's inline ranks character-for-character.
+ *
+ * Coverage push (Aug 2026, DESIGN.md §9.1): 千克 gets a `WordDecomposition`
+ * (千 + 克); both morphemes already exist as standalone items in this same
+ * file, so it resolves fully with no new standalone needed.
  */
 export const MARKET_WEIGHT: CategoryContent = {
   low: [
@@ -63,7 +67,10 @@ export const MARKET_WEIGHT: CategoryContent = {
       0,
       'qiānkè · kilogram. Also written 公斤; you will see both forms used on the same shelf.',
       { hanzi: '千克', pinyin: 'qiānkè', nl: 'kilogram', en: 'kilogram = 2 斤' },
-      undefined,
+      { kind: 'word', hanzi: '千克', morphemes: [
+        { span: '千', gloss: 'thousand' },
+        { span: '克', gloss: 'gram' },
+      ] },
       { tier: 1 },
     ],
   ],
