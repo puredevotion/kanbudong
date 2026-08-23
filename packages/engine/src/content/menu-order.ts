@@ -1,3 +1,4 @@
+import { WATER_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -14,6 +15,13 @@ import type { CategoryContent } from './row.js';
  * 打包/购物车 (context-authoring phase, Aug 2026) are the real controls on a
  * QR ordering screen, not curriculum-table entries, so `tier`/`freqRank` are
  * left unset rather than guessed.
+ *
+ * 汤 carries the water radical `WATER_RADICAL` (decomposition-backfill pass,
+ * Aug 2026), verified against the gitignored Make Me a Hanzi scratch copy;
+ * see menu-cooking.ts's header for 涮, the other water-radical sibling. 特色
+ * is tagged `confusion_type: 'shared-morpheme'` against 特价
+ * (market-label.ts): both start with 特, and the explanation for 特色 already
+ * named 特价 as the thing worth telling apart before this field existed.
  */
 export const MENU_ORDER: CategoryContent = {
   low: [
@@ -69,8 +77,13 @@ export const MENU_ORDER: CategoryContent = {
       ['soup', 'swish in broth', 'tossed, dressed'],
       0,
       'tāng · soep (soup). Often stands alone as a menu section header.',
-      { hanzi: '汤', pinyin: 'tāng', nl: 'soep', en: 'soup' },
-      undefined,
+      { hanzi: '汤', pinyin: 'tāng', nl: 'soep', en: 'soup', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '汤',
+        components: [{ componentId: WATER_RADICAL.id, role: 'semantic' }],
+        semantic_radical: WATER_RADICAL.id,
+      },
       { tier: 1, freqRank: 1618 },
     ],
     [
@@ -153,7 +166,11 @@ export const MENU_ORDER: CategoryContent = {
       'tèsè · specialiteit (house specialty). Easy to confuse with 特价 (special price) — look closely at the second character.',
       { hanzi: '特色', pinyin: 'tèsè', nl: 'specialiteit', en: 'house specialty' },
       undefined,
-      { tier: 2 },
+      {
+        tier: 2,
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['market-label-low-1'],
+      },
     ],
     [
       'On the menu. What does this mean?',

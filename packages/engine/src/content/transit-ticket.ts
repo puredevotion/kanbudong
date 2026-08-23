@@ -1,4 +1,4 @@
-import { CHENG_PHONETIC, EARTH_SEMANTIC } from '../components.js';
+import { CHENG_PHONETIC, EARTH_SEMANTIC, METAL_RADICAL, FOOD_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -24,6 +24,19 @@ import type { CategoryContent } from './row.js';
  * products under different names, not one term with regional spelling
  * variance. 检票口 also new this phase. None of the three has a verified
  * `tier` or Jun Da rank, so both are left unset.
+ *
+ * A decomposition-backfill pass (Aug 2026) added two more, verified against
+ * the gitignored Make Me a Hanzi scratch copy: 铺 carries the metal radical
+ * `METAL_RADICAL` (钅, also on menu-animal.ts's 锅), semantic-only since its
+ * phonetic half 甫 (fǔ) is not a tone-or-syllable match for pù; 馆 carries the
+ * food radical `FOOD_RADICAL` (饣, also on menu-animal.ts's 饭/饺),
+ * semantic-only since its phonetic half 官 (guān) is a tone-only near miss
+ * for guǎn, not the exact match this bank requires.
+ *
+ * 高铁/火车 (word-decomposition backfill, Aug 2026) are genuinely transparent
+ * compounds - 高 "high" + 铁 "rail/iron" and 火 "fire" + 车 "vehicle" - each
+ * already spelled out in its own explanation before this field existed, same
+ * pattern as street-trade.ts's 快递.
  */
 export const TRANSIT_TICKET: CategoryContent = {
   low: [
@@ -52,8 +65,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['shop (older, smaller)', 'collect a printed ticket', 'large retail complex'],
       0,
       'pù · winkeltje, meaning a smaller, older-style shop. Read as pù here, not pū — 铺 has two readings depending on meaning.',
-      { hanzi: '铺', pinyin: 'pù', nl: 'winkeltje', en: 'shop (older, smaller)' },
-      undefined,
+      { hanzi: '铺', pinyin: 'pù', nl: 'winkeltje', en: 'shop (older, smaller)', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '铺',
+        components: [{ componentId: METAL_RADICAL.id, role: 'semantic' }],
+        semantic_radical: METAL_RADICAL.id,
+      },
       { tier: 1, freqRank: 1613 },
     ],
     [
@@ -70,8 +88,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['establishment, house of', 'transfer, change lines', 'entrance'],
       0,
       'guǎn · gelegenheid, an establishment or "house of ___". Can be food-related, like 面馆 (noodle shop) and 茶馆 (teahouse), or not, like 宾馆 (hotel) and 图书馆 (library) — the meaning depends on what comes before it.',
-      { hanzi: '馆', pinyin: 'guǎn', nl: 'gelegenheid', en: 'establishment, house of' },
-      undefined,
+      { hanzi: '馆', pinyin: 'guǎn', nl: 'gelegenheid', en: 'establishment, house of', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '馆',
+        components: [{ componentId: FOOD_RADICAL.id, role: 'semantic' }],
+        semantic_radical: FOOD_RADICAL.id,
+      },
       { tier: 1, freqRank: 1011 },
     ],
     [
@@ -152,7 +175,10 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'gāotiě · hogesnelheidstrein, "high-speed rail". Marked G on tickets and boards; D (动车) is a different, slightly slower train with different pricing and seat classes.',
       { hanzi: '高铁', pinyin: 'gāotiě', nl: 'hogesnelheidstrein', en: 'high-speed rail (G)' },
-      undefined,
+      { kind: 'word', hanzi: '高铁', morphemes: [
+        { span: '高', gloss: 'high' },
+        { span: '铁', gloss: 'rail, iron' },
+      ] },
       { tier: 2 },
     ],
     [
@@ -161,7 +187,10 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'huǒchē · trein, "train". Literally "fire vehicle" — one of the most common everyday words for train.',
       { hanzi: '火车', pinyin: 'huǒchē', nl: 'trein', en: 'train' },
-      undefined,
+      { kind: 'word', hanzi: '火车', morphemes: [
+        { span: '火', gloss: 'fire' },
+        { span: '车', gloss: 'vehicle' },
+      ] },
       { tier: 2 },
     ],
     [

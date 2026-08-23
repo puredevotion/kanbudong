@@ -15,6 +15,12 @@ import type { CategoryContent } from './row.js';
  * 全年无休/暂停营业 (context-authoring phase, Aug 2026) are real shop-door
  * notice phrases, not curriculum-table entries, so `tier`/`freqRank` are left
  * unset rather than guessed.
+ *
+ * 停业/暂停营业 are tagged `confusion_type: 'shared-morpheme'` against each
+ * other (confusable-pair backfill, Aug 2026): both share 停, and 暂停营业's own
+ * explanation already named 停业 as the thing it is distinguished from before
+ * this field existed. 停业 appears three times in this file (low/mid/high);
+ * all three carry the tag.
  */
 export const STREET_OPEN: CategoryContent = {
   low: [
@@ -25,7 +31,11 @@ export const STREET_OPEN: CategoryContent = {
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
       { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
       undefined,
-      { tier: 2 },
+      {
+        tier: 2,
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['street-open-mid-4'],
+      },
     ],
     [
       'On a shop door. What does it mean?',
@@ -51,7 +61,11 @@ export const STREET_OPEN: CategoryContent = {
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
       { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
       undefined,
-      { tier: 2 },
+      {
+        tier: 2,
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['street-open-mid-4'],
+      },
     ],
     [
       'On a shop door. What does it mean?',
@@ -93,6 +107,11 @@ export const STREET_OPEN: CategoryContent = {
         en: 'temporarily closed',
         context: { after: '，装修中，敬请谅解' },
       },
+      undefined,
+      {
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['street-open-low-1', 'street-open-mid-1', 'street-open-high-1'],
+      },
     ],
   ],
   high: [
@@ -103,7 +122,11 @@ export const STREET_OPEN: CategoryContent = {
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
       { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
       undefined,
-      { tier: 2 },
+      {
+        tier: 2,
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['street-open-mid-4'],
+      },
     ],
   ],
 };

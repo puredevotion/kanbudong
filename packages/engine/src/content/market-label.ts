@@ -1,3 +1,4 @@
+import { HAND_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -7,6 +8,15 @@ import type { CategoryContent } from './row.js';
  * 193,504,018-character corpus, 9,933 distinct characters, dated 2004-03-30)
  * — a different corpus from the one DESIGN.md's own prose cites, so numbers
  * here do not match DESIGN.md's inline ranks character-for-character.
+ *
+ * 折 carries the hand radical `HAND_RADICAL` (decomposition-backfill pass,
+ * Aug 2026), verified against the gitignored Make Me a Hanzi scratch copy;
+ * its phonetic half, 斤 (jīn), is not an exact-tone match for zhé, so this
+ * ships semantic-only, unlike menu-cooking.ts's 拌 (also `HAND_RADICAL`,
+ * which does get an exact-match phonetic). 特价 is tagged
+ * `confusion_type: 'shared-morpheme'` against 特色 (menu-order.ts) — its own
+ * explanation already named 特色 as the thing worth telling apart before
+ * this field existed.
  */
 export const MARKET_LABEL: CategoryContent = {
   low: [
@@ -17,15 +27,24 @@ export const MARKET_LABEL: CategoryContent = {
       'tèjià · aanbieding (special price). Don\'t confuse it with 特色 (specialty) or 特产 (local product) — similar-looking words with different meanings.',
       { hanzi: '特价', pinyin: 'tèjià', nl: 'aanbieding', en: 'special price' },
       undefined,
-      { tier: 0 },
+      {
+        tier: 0,
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['menu-order-high-4'],
+      },
     ],
     [
       'On a shelf-edge label. What does it mean?',
       ['discount as the fraction you pay', 'loose, sold by weight', 'weigh here'],
       0,
       'zhé · korting, uitgedrukt als het percentage dat je betaalt (discount as the fraction you pay). 打八折 means pay 80%, i.e. 20% off — reading "8折" as "80% off" has it backwards.',
-      { hanzi: '折', pinyin: 'zhé', nl: 'korting, uitgedrukt als wat je betaalt', en: 'discount as the fraction you pay' },
-      undefined,
+      { hanzi: '折', pinyin: 'zhé', nl: 'korting, uitgedrukt als wat je betaalt', en: 'discount as the fraction you pay', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '折',
+        components: [{ componentId: HAND_RADICAL.id, role: 'semantic' }],
+        semantic_radical: HAND_RADICAL.id,
+      },
       { tier: 0, freqRank: 1131 },
     ],
   ],

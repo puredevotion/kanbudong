@@ -11,6 +11,11 @@ import type { CategoryContent } from './row.js';
 // 储值卡/发票 (context-authoring phase, Aug 2026) are real checkout-counter
 // vocabulary, not curriculum-table entries, so `tier`/`freqRank` are left
 // unset rather than guessed.
+//
+// 收银台/结账 (word-decomposition backfill, Aug 2026) are genuinely
+// transparent compounds: 收银台 "collect" + "silver, money" + "counter" (the
+// explanation already notes the shortened 收银 form); 结账 "settle" +
+// "account".
 export const MARKET_CHECKOUT: CategoryContent = {
   low: [
     [
@@ -48,7 +53,11 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'shōuyíntái · kassa (checkout). Often shortened to just 收银 on overhead lane signs.',
       { hanzi: '收银台', pinyin: 'shōuyíntái', nl: 'kassa', en: 'checkout' },
-      undefined,
+      { kind: 'word', hanzi: '收银台', morphemes: [
+        { span: '收', gloss: 'to collect' },
+        { span: '银', gloss: 'silver, money' },
+        { span: '台', gloss: 'counter' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -57,7 +66,10 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'jiézhàng · afrekenen (settle up, pay).',
       { hanzi: '结账', pinyin: 'jiézhàng', nl: 'afrekenen', en: 'settle up, pay' },
-      undefined,
+      { kind: 'word', hanzi: '结账', morphemes: [
+        { span: '结', gloss: 'to settle, tie off' },
+        { span: '账', gloss: 'account' },
+      ] },
       { tier: 1 },
     ],
     [

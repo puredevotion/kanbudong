@@ -143,6 +143,144 @@ export const GRASS_RADICAL: Component = {
   role: 'semantic',
 };
 
+/**
+ * 炒/炖/烤/烧/焖/爆 = ⿰火X (fire + X), verified against the gitignored Make Me a
+ * Hanzi scratch copy - every one of the six is MMH's own `pictophonetic` type
+ * with `semantic: '火'`, not an ideographic reading imposed after the fact.
+ * The menu-cooking set's fourth left-right fire-radical character, 炸, is
+ * deliberately excluded: see the rejection note on `ZHA_PHONETIC`'s would-be
+ * pairing below (DESIGN.md §9.1's decomposition row/PLAN.md phonetic-rejection
+ * table).
+ */
+export const FIRE_RADICAL: Component = {
+  id: 'kangxi-86-fire',
+  displayGlyph: '火',
+  role: 'semantic',
+};
+
+/**
+ * 烤 kǎo and 考 kǎo share the same syllable including tone - verified against
+ * `pinyin-data`, same 'exact' bar as `GAN_PHONETIC`/`ZHAN_PHONETIC`/`CHENG_PHONETIC`.
+ */
+export const KAO_PHONETIC: Component = {
+  id: 'phonetic-kao',
+  displayGlyph: '考',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/** 焖 mèn and 闷 mèn share the same syllable including tone - verified against `pinyin-data`. */
+export const MEN_PHONETIC: Component = {
+  id: 'phonetic-men',
+  displayGlyph: '闷',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/** 爆 bào and 暴 bào share the same syllable including tone - verified against `pinyin-data`. */
+export const BAO_PHONETIC: Component = {
+  id: 'phonetic-bao',
+  displayGlyph: '暴',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/**
+ * 煮/煎 = ⿱X灬 (X + fire, the four-dot variant of the same Kangxi radical as
+ * `FIRE_RADICAL`) - kept as a distinct component id because the rendered
+ * shape differs, same "identity is the id, not the glyph" rule `MEAT_RADICAL`'s
+ * doc comment states. Both are MMH `pictophonetic` with `semantic: '灬'`;
+ * neither phonetic half (者/前) is an exact-tone match for 煮/煎, so no
+ * phonetic claim ships for either.
+ */
+export const FIRE_DOTS_RADICAL: Component = {
+  id: 'kangxi-86-fire-dots',
+  displayGlyph: '灬',
+  role: 'semantic',
+};
+
+/**
+ * 汤/涮 = ⿰氵X (water + X), both MMH `pictophonetic` with `semantic: '氵'`.
+ * Neither phonetic half (昜/刷) is an exact-tone match, so semantic-only.
+ */
+export const WATER_RADICAL: Component = {
+  id: 'kangxi-85-water',
+  displayGlyph: '氵',
+  role: 'semantic',
+};
+
+/**
+ * 猪 zhū = ⿰犭者 (animal + 者). MMH's own hint for 犭 here is 'animal', not
+ * 'dog' - a generic beast radical repurposed for "pig", not a claim that pigs
+ * are dogs. 者 (zhě) is not an exact-tone match for zhū, so semantic-only.
+ */
+export const ANIMAL_RADICAL: Component = {
+  id: 'kangxi-94-animal',
+  displayGlyph: '犭',
+  role: 'semantic',
+};
+
+/**
+ * 饭/饺/馆 = ⿰饣X (food + X), all three MMH `pictophonetic`/`ideographic`
+ * with a food-radical semantic half. None of the three phonetic halves
+ * (反/交/官) is an exact-tone match for 饭/饺/馆 - each is a near miss on tone
+ * only (fǎn/fàn, jiāo/jiǎo, guān/guǎn), logged as such rather than shipped.
+ */
+export const FOOD_RADICAL: Component = {
+  id: 'kangxi-184-food',
+  displayGlyph: '饣',
+  role: 'semantic',
+};
+
+/**
+ * 拌/折 = ⿰扌X (hand + X). 拌 bàn and 半 bàn share the same syllable including
+ * tone - verified against `pinyin-data`, the 'exact' case. 折's phonetic half,
+ * 斤 (jīn), is not a tone-or-syllable match for zhé, so 折 ships semantic-only.
+ */
+export const HAND_RADICAL: Component = {
+  id: 'kangxi-64-hand',
+  displayGlyph: '扌',
+  role: 'semantic',
+};
+
+/** 拌 bàn and 半 bàn share the same syllable including tone - verified against `pinyin-data`. */
+export const BAN_PHONETIC: Component = {
+  id: 'phonetic-ban',
+  displayGlyph: '半',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/**
+ * 锅/铺 = ⿰钅X (metal + X). 锅 guō and 呙 guō share the same syllable
+ * including tone - verified against `pinyin-data`. 铺's phonetic half, 甫
+ * (fǔ), is not a tone-or-syllable match for pù, so 铺 ships semantic-only.
+ */
+export const METAL_RADICAL: Component = {
+  id: 'kangxi-167-metal',
+  displayGlyph: '钅',
+  role: 'semantic',
+};
+
+/** 锅 guō and 呙 guō share the same syllable including tone - verified against `pinyin-data`. */
+export const GUO_PHONETIC: Component = {
+  id: 'phonetic-guo',
+  displayGlyph: '呙',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/**
+ * 粉 fěn = ⿰米分 (grain + 分). MMH's own hint for 米 is 'grain', not just
+ * "rice" - 分 (fēn) is a tone-only near miss for fěn, not an exact match, so
+ * semantic-only.
+ */
+export const GRAIN_RADICAL: Component = {
+  id: 'kangxi-119-grain',
+  displayGlyph: '米',
+  role: 'semantic',
+};
+
 export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [MEAT_RADICAL.id]: MEAT_RADICAL,
   [GAN_PHONETIC.id]: GAN_PHONETIC,
@@ -151,6 +289,19 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [EARTH_SEMANTIC.id]: EARTH_SEMANTIC,
   [CHENG_PHONETIC.id]: CHENG_PHONETIC,
   [GRASS_RADICAL.id]: GRASS_RADICAL,
+  [FIRE_RADICAL.id]: FIRE_RADICAL,
+  [KAO_PHONETIC.id]: KAO_PHONETIC,
+  [MEN_PHONETIC.id]: MEN_PHONETIC,
+  [BAO_PHONETIC.id]: BAO_PHONETIC,
+  [FIRE_DOTS_RADICAL.id]: FIRE_DOTS_RADICAL,
+  [WATER_RADICAL.id]: WATER_RADICAL,
+  [ANIMAL_RADICAL.id]: ANIMAL_RADICAL,
+  [FOOD_RADICAL.id]: FOOD_RADICAL,
+  [HAND_RADICAL.id]: HAND_RADICAL,
+  [BAN_PHONETIC.id]: BAN_PHONETIC,
+  [METAL_RADICAL.id]: METAL_RADICAL,
+  [GUO_PHONETIC.id]: GUO_PHONETIC,
+  [GRAIN_RADICAL.id]: GRAIN_RADICAL,
 };
 
 export function resolveComponent(id: ComponentId): Component | undefined {

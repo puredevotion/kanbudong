@@ -1,15 +1,28 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  ANIMAL_RADICAL,
+  BAN_PHONETIC,
+  BAO_PHONETIC,
   CHENG_PHONETIC,
   COMPONENTS,
   EARTH_SEMANTIC,
   expand,
+  FIRE_DOTS_RADICAL,
+  FIRE_RADICAL,
+  FOOD_RADICAL,
+  GRAIN_RADICAL,
   GRASS_RADICAL,
+  GUO_PHONETIC,
+  HAND_RADICAL,
+  KAO_PHONETIC,
   MEAT_RADICAL,
+  MEN_PHONETIC,
+  METAL_RADICAL,
   SEED_PACK,
   STAND_SEMANTIC,
   validatePack,
+  WATER_RADICAL,
   ZHAN_PHONETIC,
   type CategoryContent,
   type CharacterDecomposition,
@@ -213,6 +226,155 @@ describe('Phase 2 backfill: 站/城/茶/快递 decomposition claims (market/tran
     for (const hanzi of ['时价', '招牌', '保质期', '咖啡']) {
       expect(opaqueHanzi.has(hanzi), `${hanzi} should be marked transparency: 'opaque'`).toBe(true);
     }
+  });
+});
+
+describe('decomposition-backfill pass (Aug 2026): fire/water/animal/food/hand/metal/grain radicals', () => {
+  const findCharDecomps = (category: string, hanzi: string): CharacterDecomposition[] =>
+    SEED_PACK.questions
+      .filter((q) => q.category === category && q.decomposition?.kind === 'character' && q.decomposition.hanzi === hanzi)
+      .map((q) => q.decomposition as CharacterDecomposition);
+
+  it('tags the six left-right fire-radical cooking methods, with exact phonetics on 烤/焖/爆 only', () => {
+    const exactPhonetic: Record<string, string> = {
+      烤: KAO_PHONETIC.id,
+      焖: MEN_PHONETIC.id,
+      爆: BAO_PHONETIC.id,
+    };
+    for (const hanzi of ['炒', '炖', '烤', '烧', '焖', '爆']) {
+      const decomps = findCharDecomps('menu-cooking', hanzi);
+      expect(decomps.length, `${hanzi} should have a CharacterDecomposition`).toBeGreaterThan(0);
+      for (const d of decomps) {
+        expect(d.semantic_radical).toBe(FIRE_RADICAL.id);
+        const phoneticId = exactPhonetic[hanzi];
+        if (phoneticId !== undefined) {
+          expect(d.components).toContainEqual({ componentId: phoneticId, role: 'phonetic' });
+          expect(COMPONENTS[phoneticId]?.reliability).toBe('exact');
+        } else {
+          expect(d.components.some((c) => c.role === 'phonetic'), `${hanzi} should not claim a phonetic component`).toBe(false);
+        }
+      }
+    }
+  });
+
+  it('never claims 炸 has a verified phonetic component (zhá vs 乍 zhà/zuò is a tone-and-reading mismatch)', () => {
+    expect(findCharDecomps('menu-cooking', '炸')).toEqual([]);
+  });
+
+  it('never decomposes 蒸 or 卤 (ideographic / no MMH decomposition data)', () => {
+    expect(findCharDecomps('menu-cooking', '蒸')).toEqual([]);
+    expect(findCharDecomps('menu-cooking', '卤')).toEqual([]);
+  });
+
+  it('tags 煮/煎 with the four-dot fire radical, semantic-only', () => {
+    for (const hanzi of ['煮', '煎']) {
+      const decomps = findCharDecomps('menu-cooking', hanzi);
+      expect(decomps.length).toBeGreaterThan(0);
+      for (const d of decomps) {
+        expect(d.semantic_radical).toBe(FIRE_DOTS_RADICAL.id);
+        expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
+      }
+    }
+  });
+
+  it('tags 汤/涮 with the water radical, semantic-only', () => {
+    for (const [category, hanzi] of [['menu-order', '汤'], ['menu-cooking', '涮']] as const) {
+      const decomps = findCharDecomps(category, hanzi);
+      expect(decomps.length).toBeGreaterThan(0);
+      for (const d of decomps) {
+        expect(d.semantic_radical).toBe(WATER_RADICAL.id);
+        expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
+      }
+    }
+  });
+
+  it('tags 猪 with the animal radical, semantic-only', () => {
+    const decomps = findCharDecomps('menu-animal', '猪');
+    expect(decomps.length).toBeGreaterThan(0);
+    for (const d of decomps) {
+      expect(d.semantic_radical).toBe(ANIMAL_RADICAL.id);
+      expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
+    }
+  });
+
+  it('tags 饭/饺/馆 with the food radical, all semantic-only (near-miss tone on every phonetic half)', () => {
+    for (const [category, hanzi] of [
+      ['menu-animal', '饭'],
+      ['menu-animal', '饺'],
+      ['transit-ticket', '馆'],
+    ] as const) {
+      const decomps = findCharDecomps(category, hanzi);
+      expect(decomps.length).toBeGreaterThan(0);
+      for (const d of decomps) {
+        expect(d.semantic_radical).toBe(FOOD_RADICAL.id);
+        expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
+      }
+    }
+  });
+
+  it('never decomposes 面 (Make Me a Hanzi has no decomposition data for it)', () => {
+    expect(findCharDecomps('menu-animal', '面')).toEqual([]);
+  });
+
+  it('tags 拌 with the hand radical plus an exact-match phonetic (半), 折 semantic-only', () => {
+    const ban = findCharDecomps('menu-cooking', '拌');
+    expect(ban.length).toBeGreaterThan(0);
+    for (const d of ban) {
+      expect(d.semantic_radical).toBe(HAND_RADICAL.id);
+      expect(d.components).toContainEqual({ componentId: BAN_PHONETIC.id, role: 'phonetic' });
+    }
+    expect(COMPONENTS[BAN_PHONETIC.id]?.reliability).toBe('exact');
+
+    const zhe = findCharDecomps('market-label', '折');
+    expect(zhe.length).toBeGreaterThan(0);
+    for (const d of zhe) {
+      expect(d.semantic_radical).toBe(HAND_RADICAL.id);
+      expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
+    }
+  });
+
+  it('tags 锅 with the metal radical plus an exact-match phonetic (呙), 铺 semantic-only', () => {
+    const guo = findCharDecomps('menu-animal', '锅');
+    expect(guo.length).toBeGreaterThan(0);
+    for (const d of guo) {
+      expect(d.semantic_radical).toBe(METAL_RADICAL.id);
+      expect(d.components).toContainEqual({ componentId: GUO_PHONETIC.id, role: 'phonetic' });
+    }
+    expect(COMPONENTS[GUO_PHONETIC.id]?.reliability).toBe('exact');
+
+    const pu = findCharDecomps('transit-ticket', '铺');
+    expect(pu.length).toBeGreaterThan(0);
+    for (const d of pu) {
+      expect(d.semantic_radical).toBe(METAL_RADICAL.id);
+      expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
+    }
+  });
+
+  it('tags 粉 with the grain radical, semantic-only', () => {
+    const decomps = findCharDecomps('menu-animal', '粉');
+    expect(decomps.length).toBeGreaterThan(0);
+    for (const d of decomps) {
+      expect(d.semantic_radical).toBe(GRAIN_RADICAL.id);
+      expect(d.components.some((c) => c.role === 'phonetic')).toBe(false);
+    }
+  });
+
+  it('gives the new transparent compounds a word-level decomposition, not a character-level one', () => {
+    const findWordDecomp = (category: string, hanzi: string): WordDecomposition | undefined =>
+      SEED_PACK.questions
+        .filter((q) => q.category === category)
+        .map((q) => q.decomposition)
+        .find((d): d is WordDecomposition => d?.kind === 'word' && d.hanzi === hanzi);
+
+    expect(findWordDecomp('transit-ticket', '高铁')?.morphemes.map((m) => m.span)).toEqual(['高', '铁']);
+    expect(findWordDecomp('transit-ticket', '火车')?.morphemes.map((m) => m.span)).toEqual(['火', '车']);
+    expect(findWordDecomp('transit-platform', '地铁')?.morphemes.map((m) => m.span)).toEqual(['地', '铁']);
+    expect(findWordDecomp('street-trade', '洗手间')?.morphemes.map((m) => m.span)).toEqual(['洗', '手', '间']);
+    expect(findWordDecomp('street-trade', '药店')?.morphemes.map((m) => m.span)).toEqual(['药', '店']);
+    expect(findWordDecomp('street-trade', '邮局')?.morphemes.map((m) => m.span)).toEqual(['邮', '局']);
+    expect(findWordDecomp('street-trade', '停车场')?.morphemes.map((m) => m.span)).toEqual(['停', '车', '场']);
+    expect(findWordDecomp('market-checkout', '收银台')?.morphemes.map((m) => m.span)).toEqual(['收', '银', '台']);
+    expect(findWordDecomp('market-checkout', '结账')?.morphemes.map((m) => m.span)).toEqual(['结', '账']);
   });
 });
 

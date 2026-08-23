@@ -14,6 +14,11 @@ import type { CategoryContent } from './row.js';
  * GB 7718 back-panel fields as `context`, same pattern as 号 above. None of
  * the four has a verified `tier` placement in DESIGN.md's curriculum tables
  * or a verified Jun Da rank, so both are left unset rather than guessed.
+ *
+ * 冷藏/冷冻 are tagged `confusion_type: 'shared-morpheme'` against each other
+ * (confusable-pair backfill, Aug 2026): both share 冷, both differ in exactly
+ * the one character that matters, and their own explanations already flagged
+ * each other by name before this field existed.
  */
 export const MARKET_PANEL: CategoryContent = {
   low: [
@@ -62,7 +67,11 @@ export const MARKET_PANEL: CategoryContent = {
       'lěngcáng · gekoeld bewaren (refrigerate, 0–4 °C). Shares its first character with 冷冻 (freeze) but means the opposite — worth telling apart.',
       { hanzi: '冷藏', pinyin: 'lěngcáng', nl: 'gekoeld bewaren', en: 'refrigerate, 0–4 °C' },
       undefined,
-      { tier: 1 },
+      {
+        tier: 1,
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['market-panel-mid-5'],
+      },
     ],
     [
       'On the back of the packet. What does it mean?',
@@ -71,7 +80,11 @@ export const MARKET_PANEL: CategoryContent = {
       'lěngdòng · diepvries (freeze, −18 °C). Easy to mix up with 冷藏 (refrigerate) — same first character, opposite instruction, and getting it wrong ruins the food.',
       { hanzi: '冷冻', pinyin: 'lěngdòng', nl: 'diepvries', en: 'freeze, −18 °C' },
       undefined,
-      { tier: 1 },
+      {
+        tier: 1,
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['market-panel-mid-4'],
+      },
     ],
     [
       'On the back of the packet. What does it mean?',

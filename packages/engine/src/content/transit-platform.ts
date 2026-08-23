@@ -17,6 +17,10 @@ import type { CategoryContent } from './row.js';
  * 首末车/末班车 (context-authoring phase, Aug 2026) are the real posted
  * operating-hours vocabulary at every metro platform. Neither has a verified
  * `tier` or Jun Da rank, so both are left unset.
+ *
+ * 地铁 (word-decomposition backfill, Aug 2026) is a genuinely transparent
+ * compound - 地 "ground" + 铁 "rail/iron" - and this file's own explanation
+ * already calls out 铁's metal radical before this field existed.
  */
 export const TRANSIT_PLATFORM: CategoryContent = {
   low: [
@@ -88,7 +92,10 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'dìtiě · metro. 铁 (tiě, "metal/iron") carries the metal radical 钅, also seen in 银 (silver), 铺 (shop) and 锅 (pot).',
       { hanzi: '地铁', pinyin: 'dìtiě', nl: 'metro', en: 'metro' },
-      undefined,
+      { kind: 'word', hanzi: '地铁', morphemes: [
+        { span: '地', gloss: 'ground' },
+        { span: '铁', gloss: 'rail, iron' },
+      ] },
       { tier: 1 },
     ],
     [

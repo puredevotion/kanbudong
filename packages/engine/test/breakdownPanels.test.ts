@@ -72,6 +72,23 @@ describe('siblingsSharingComponent', () => {
   });
 });
 
+describe('fire-radical cooking-method sibling set (decomposition-backfill pass, Aug 2026)', () => {
+  it('surfaces at least SIBLING_CAP other fire-radical cooking methods for 炒', () => {
+    const chao = questionById(SEED_PACK, 'menu-cooking-mid-1'); // 炒
+    if (chao === undefined) throw new Error('fixture question missing from seed pack');
+    const siblings = siblingsSharingComponent(SEED_PACK, chao);
+    expect(siblings.length).toBe(SIBLING_CAP);
+    for (const sibling of siblings) {
+      expect(sibling.decomposition?.kind).toBe('character');
+      if (sibling.decomposition?.kind === 'character') {
+        expect(sibling.decomposition.semantic_radical).toBe(
+          chao.decomposition?.kind === 'character' ? chao.decomposition.semantic_radical : undefined,
+        );
+      }
+    }
+  });
+});
+
 describe('confusablesFor', () => {
   it('resolves confusable_with ids to real pack items', () => {
     const exit = questionById(SEED_PACK, 'transit-platform-low-2'); // 出口
@@ -102,6 +119,54 @@ describe('confusablesFor', () => {
       ],
     };
     expect(confusablesFor(fabricated, fabricated.questions[0] as Question)).toEqual([]);
+  });
+});
+
+describe('confusable-pair backfill (Aug 2026)', () => {
+  const hanziOf = (id: string): string | undefined => questionById(SEED_PACK, id)?.face?.hanzi;
+
+  it('tags 特价/特色 bidirectionally as shared-morpheme', () => {
+    const teJia = questionById(SEED_PACK, 'market-label-low-1'); // 特价
+    const teSe = questionById(SEED_PACK, 'menu-order-high-4'); // 特色
+    expect(teJia?.face?.hanzi).toBe('特价');
+    expect(teSe?.face?.hanzi).toBe('特色');
+    expect(teJia?.confusion_type).toBe('shared-morpheme');
+    expect(teSe?.confusion_type).toBe('shared-morpheme');
+    expect(confusablesFor(SEED_PACK, teJia as Question).map((q) => q.face?.hanzi)).toEqual(['特色']);
+    expect(confusablesFor(SEED_PACK, teSe as Question).map((q) => q.face?.hanzi)).toEqual(['特价']);
+  });
+
+  it('tags 冷藏/冷冻 bidirectionally as shared-morpheme', () => {
+    const cang = questionById(SEED_PACK, 'market-panel-mid-4'); // 冷藏
+    const dong = questionById(SEED_PACK, 'market-panel-mid-5'); // 冷冻
+    expect(cang?.face?.hanzi).toBe('冷藏');
+    expect(dong?.face?.hanzi).toBe('冷冻');
+    expect(confusablesFor(SEED_PACK, cang as Question).map((q) => q.face?.hanzi)).toEqual(['冷冻']);
+    expect(confusablesFor(SEED_PACK, dong as Question).map((q) => q.face?.hanzi)).toEqual(['冷藏']);
+  });
+
+  it('tags 厕所/洗手间 bidirectionally as meaning-visually-distinct', () => {
+    const ceSuo = questionById(SEED_PACK, 'street-trade-low-1'); // 厕所
+    const xiShouJian = questionById(SEED_PACK, 'street-trade-low-2'); // 洗手间
+    expect(ceSuo?.face?.hanzi).toBe('厕所');
+    expect(xiShouJian?.face?.hanzi).toBe('洗手间');
+    expect(ceSuo?.confusion_type).toBe('meaning-visually-distinct');
+    expect(xiShouJian?.confusion_type).toBe('meaning-visually-distinct');
+    expect(confusablesFor(SEED_PACK, ceSuo as Question).map((q) => q.face?.hanzi)).toEqual(['洗手间']);
+    expect(confusablesFor(SEED_PACK, xiShouJian as Question).map((q) => q.face?.hanzi)).toEqual(['厕所']);
+  });
+
+  it('tags every 停业 occurrence (low/mid/high) against 暂停营业, and back', () => {
+    for (const id of ['street-open-low-1', 'street-open-mid-1', 'street-open-high-1']) {
+      const q = questionById(SEED_PACK, id);
+      expect(q?.face?.hanzi).toBe('停业');
+      expect(q?.confusion_type).toBe('shared-morpheme');
+      expect(confusablesFor(SEED_PACK, q as Question).map((c) => c.face?.hanzi)).toEqual(['暂停营业']);
+    }
+    const zanting = questionById(SEED_PACK, 'street-open-mid-4');
+    expect(zanting?.face?.hanzi).toBe('暂停营业');
+    const back = confusablesFor(SEED_PACK, zanting as Question).map((c) => hanziOf(c.id));
+    expect(back).toEqual(['停业', '停业', '停业']);
   });
 });
 

@@ -15,6 +15,15 @@ import type { CategoryContent } from './row.js';
  * phonetic verification. 茶's semantic-only CharacterDecomposition is
  * verified against the gitignored Make Me a Hanzi scratch copy (see
  * `GRASS_RADICAL` in components.ts).
+ *
+ * A decomposition-backfill pass (Aug 2026) added three more transparent
+ * WordDecompositions, same bar as 快递: 洗手间 "wash" + "hand" + "room";
+ * 药店 "medicine" + "shop"; 邮局 "mail" + "office/bureau"; and 停车场
+ * "stop" + "vehicle" + "ground" (a car park). 厕所 and 洗手间 are tagged
+ * `confusion_type: 'meaning-visually-distinct'` against each other - both
+ * name the toilet, one blunt and one polite, but the two words share no
+ * characters and look nothing alike, so they can be shown together from day
+ * one rather than staged.
  */
 export const STREET_TRADE: CategoryContent = {
   low: [
@@ -25,7 +34,11 @@ export const STREET_TRADE: CategoryContent = {
       'cèsuǒ · wc (blunt word for toilet). 厕 shares its reading with 侧 and 测, but the part it\'s built from, 则, is actually read zé — so that part alone won\'t tell you the sound.',
       { hanzi: '厕所', pinyin: 'cèsuǒ', nl: 'wc', en: 'toilet (blunt)' },
       undefined,
-      { tier: 0 },
+      {
+        tier: 0,
+        confusion_type: 'meaning-visually-distinct',
+        confusable_with: ['street-trade-low-2'],
+      },
     ],
     [
       'On a shopfront. What is this place?',
@@ -33,8 +46,16 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'xǐshǒujiān · washroom (the polite word for toilet). 手 (hand) and 间 (room) are both very common, but 洗 (wash) is much rarer and worth learning on its own.',
       { hanzi: '洗手间', pinyin: 'xǐshǒujiān', nl: 'toilet', en: 'washroom (polite)' },
-      undefined,
-      { tier: 0 },
+      { kind: 'word', hanzi: '洗手间', morphemes: [
+        { span: '洗', gloss: 'to wash' },
+        { span: '手', gloss: 'hand' },
+        { span: '间', gloss: 'room' },
+      ] },
+      {
+        tier: 0,
+        confusion_type: 'meaning-visually-distinct',
+        confusable_with: ['street-trade-low-1'],
+      },
     ],
   ],
   mid: [
@@ -44,7 +65,10 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'yàodiàn · apotheek (pharmacy). Look for the green cross sign — it marks a pharmacy just like in many European countries.',
       { hanzi: '药店', pinyin: 'yàodiàn', nl: 'apotheek', en: 'pharmacy' },
-      undefined,
+      { kind: 'word', hanzi: '药店', morphemes: [
+        { span: '药', gloss: 'medicine' },
+        { span: '店', gloss: 'shop' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -71,7 +95,10 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'yóujú · postkantoor (post office). Usually marked with green signage.',
       { hanzi: '邮局', pinyin: 'yóujú', nl: 'postkantoor', en: 'post office' },
-      undefined,
+      { kind: 'word', hanzi: '邮局', morphemes: [
+        { span: '邮', gloss: 'mail, post' },
+        { span: '局', gloss: 'office, bureau' },
+      ] },
       { tier: 1 },
     ],
     [
@@ -110,7 +137,11 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'tíngchēchǎng · parkeerplaats (car park). Often just marked with a big letter P.',
       { hanzi: '停车场', pinyin: 'tíngchēchǎng', nl: 'parkeerplaats', en: 'car park' },
-      undefined,
+      { kind: 'word', hanzi: '停车场', morphemes: [
+        { span: '停', gloss: 'to stop' },
+        { span: '车', gloss: 'vehicle' },
+        { span: '场', gloss: 'ground, venue' },
+      ] },
       { tier: 1 },
     ],
   ],

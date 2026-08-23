@@ -1,4 +1,12 @@
-import { MEAT_RADICAL, GAN_PHONETIC } from '../components.js';
+import {
+  MEAT_RADICAL,
+  GAN_PHONETIC,
+  ANIMAL_RADICAL,
+  FOOD_RADICAL,
+  METAL_RADICAL,
+  GUO_PHONETIC,
+  GRAIN_RADICAL,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -9,6 +17,20 @@ import type { CategoryContent } from './row.js';
  * the flesh radical ⺼ U+2EBC, and 血/舌/皮 explicitly do NOT - both facts are
  * only ever expressed as a stored `semantic_radical`/`structure` field here,
  * never as a match against the rendered glyph.
+ *
+ * A decomposition-backfill pass (Aug 2026) added four more, all verified
+ * against the gitignored Make Me a Hanzi scratch copy: 猪 carries the animal
+ * radical `ANIMAL_RADICAL` (犭, MMH's own hint is 'animal', not 'dog' — a
+ * generic beast radical, not a claim that pigs are dogs); 饭/饺 carry the
+ * food radical `FOOD_RADICAL` (饣), both semantic-only — their phonetic
+ * halves (反/交) are tone-only near misses (fǎn/fàn, jiāo/jiǎo), not the
+ * exact match this bank requires; 锅's phonetic half, 呙 (guō), IS an exact
+ * tone-and-syllable match for guō, the same 'exact' bar as `GAN_PHONETIC`;
+ * 粉 carries the grain radical `GRAIN_RADICAL` (米, MMH's hint is 'grain'),
+ * semantic-only since its phonetic half 分 (fēn) is a tone-only near miss for
+ * fěn. 面 (noodles) is left undecomposed: Make Me a Hanzi has no
+ * decomposition data for it at all (it is itself a pictograph, "a person's
+ * face", with no component breakdown recorded).
  */
 export const MENU_ANIMAL: CategoryContent = {
   low: [
@@ -64,8 +86,13 @@ export const MENU_ANIMAL: CategoryContent = {
       ['pig', 'tongue', 'beef'],
       0,
       'zhū · varken (pig).',
-      { hanzi: '猪', pinyin: 'zhū', nl: 'varken', en: 'pig' },
-      undefined,
+      { hanzi: '猪', pinyin: 'zhū', nl: 'varken', en: 'pig', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '猪',
+        components: [{ componentId: ANIMAL_RADICAL.id, role: 'semantic' }],
+        semantic_radical: ANIMAL_RADICAL.id,
+      },
       { tier: 1, freqRank: 1633 },
     ],
     [
@@ -109,8 +136,13 @@ export const MENU_ANIMAL: CategoryContent = {
       ['cooked rice; also "meal"', 'stir-fry', 'tossed, dressed'],
       0,
       'fàn · rijst, maaltijd (cooked rice; also "meal") — as in 炒饭 (fried rice), 米饭 (steamed rice).',
-      { hanzi: '饭', pinyin: 'fàn', nl: 'rijst, maaltijd', en: 'cooked rice; also "meal"' },
-      undefined,
+      { hanzi: '饭', pinyin: 'fàn', nl: 'rijst, maaltijd', en: 'cooked rice; also "meal"', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '饭',
+        components: [{ componentId: FOOD_RADICAL.id, role: 'semantic' }],
+        semantic_radical: FOOD_RADICAL.id,
+      },
       { tier: 1 },
     ],
     [
@@ -127,8 +159,13 @@ export const MENU_ANIMAL: CategoryContent = {
       ['rice noodles; also "powder"', 'swish in broth', 'staples: rice, noodles, buns'],
       0,
       'fěn · rijstnoedels (rice noodles) — the same character can also mean "powder", but on a menu it means noodles.',
-      { hanzi: '粉', pinyin: 'fěn', nl: 'rijstnoedels', en: 'rice noodles; also "powder"' },
-      undefined,
+      { hanzi: '粉', pinyin: 'fěn', nl: 'rijstnoedels', en: 'rice noodles; also "powder"', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '粉',
+        components: [{ componentId: GRAIN_RADICAL.id, role: 'semantic' }],
+        semantic_radical: GRAIN_RADICAL.id,
+      },
       { tier: 1 },
     ],
     [
@@ -136,8 +173,13 @@ export const MENU_ANIMAL: CategoryContent = {
       ['dumpling', 'rice noodles; also "powder"', 'boil'],
       0,
       'jiǎo · dumpling.',
-      { hanzi: '饺', pinyin: 'jiǎo', nl: 'dumpling', en: 'dumpling' },
-      undefined,
+      { hanzi: '饺', pinyin: 'jiǎo', nl: 'dumpling', en: 'dumpling', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '饺',
+        components: [{ componentId: FOOD_RADICAL.id, role: 'semantic' }],
+        semantic_radical: FOOD_RADICAL.id,
+      },
       { tier: 1, freqRank: 3891 },
     ],
     [
@@ -153,9 +195,17 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['pot', 'large portion', 'small portion'],
       0,
-      'guō · pan, pot (pot) — as in 火锅 (hotpot), 砂锅 (clay pot), 干锅 (dry pot).',
-      { hanzi: '锅', pinyin: 'guō', nl: 'pan', en: 'pot' },
-      undefined,
+      'guō · pan, pot (pot) — as in 火锅 (hotpot), 砂锅 (clay pot), 干锅 (dry pot). Built from 钅 (metal) plus 呙, which happens to give the whole character its exact reading, guō.',
+      { hanzi: '锅', pinyin: 'guō', nl: 'pan', en: 'pot', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '锅',
+        components: [
+          { componentId: METAL_RADICAL.id, role: 'semantic' },
+          { componentId: GUO_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: METAL_RADICAL.id,
+      },
       { tier: 1, freqRank: 1520 },
     ],
   ],
