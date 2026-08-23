@@ -13,7 +13,9 @@ import {
 import { Button, Card, Typography } from '@heroui/react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { recordSoloAttempt } from '../lib/attemptLog.js';
 import { navigate } from '../lib/router.js';
+import { recordSessionStart } from '../lib/sessionLog.js';
 import { getItemMemory, loadAllMemory, putItemMemory } from '../lib/soloMemory.js';
 import { useApp } from '../lib/store.js';
 import { ActionBar, Screen } from '../ui/atoms.jsx';
@@ -37,6 +39,12 @@ export function Solo(): ReactNode {
   const [showBreakdown, setShowBreakdown] = useState(false);
 
   const playerId = identity?.id ?? null;
+
+  // DESIGN.md §12.2's falsification instrument - logged on every solo open,
+  // deduped to once per calendar day by sessionLog.ts itself.
+  useEffect(() => {
+    if (playerId !== null) recordSessionStart(playerId, 'solo');
+  }, [playerId]);
 
   // Session snapshot taken once: a session should not re-sort mid-way because
   // an earlier answer in the same session changed what's "due".
@@ -94,10 +102,20 @@ export function Solo(): ReactNode {
   const submit = (chosenIndex: number): void => {
     if (reveal !== null || presentedQuestion === null) return;
     const correct = chosenIndex === presentedQuestion.correctIndex;
-    const isFirstEncounter = getItemMemory(playerId, current.id) === null;
+    const priorMemory = getItemMemory(playerId, current.id);
+    const isFirstEncounter = priorMemory === null;
     const grade = gradeFromAnswer(correct, isFirstEncounter);
-    const updated = reviewItem(getItemMemory(playerId, current.id), grade, Date.now());
+    const updated = reviewItem(priorMemory, grade, Date.now());
     if (updated !== null) putItemMemory(playerId, current.id, updated);
+    // DESIGN.md §10.1: "log chosen_option, not just correct/incorrect" -
+    // recorded before the FSRS grade so a confusion-matrix read can still
+    // tell what was actually tapped, distractor text included.
+    recordSoloAttempt(playerId, {
+      questionId: current.id,
+      chosenText: presentedQuestion.options[chosenIndex] ?? null,
+      correct,
+      priorLastReview: priorMemory?.lastReview ?? null,
+    });
     setReveal({ chosenIndex, correct });
   };
 

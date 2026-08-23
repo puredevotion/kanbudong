@@ -28,5 +28,7 @@ export * from './groupSchedule.js';
 export * from './reducer.js';
 export * from './selectors.js';
 export * from './commands.js';
+export * from './attemptLog.js';
+export * from './sessionGaps.js';
 export { SEED_PACK, SEED_PACK_HASH } from './content/index.js';
 export * from './content/row.js';

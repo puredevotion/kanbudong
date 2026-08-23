@@ -147,6 +147,28 @@ export function presentQuestion(question: Question, nonce: string): PresentedQue
 }
 
 /**
+ * DESIGN.md §3.3.4/§4.11 gate 8: "never put U+2EBC in shipped copy" - the
+ * whole CJK Radicals Supplement block (U+2E80-U+2EFF) is a set of component
+ * shapes with no place in text a player reads, since every one of them is a
+ * homoglyph of an ordinary character in mainland type (⺼/月 being the worked
+ * example). A component identity belongs in `componentId`/`semantic_radical`,
+ * never inlined into `prompt`, `options`, `explanation` or `face`.
+ */
+const CJK_RADICALS_SUPPLEMENT = /[⺀-⻿]/u;
+
+function forbiddenCodepointStrings(q: Question): readonly [string, string][] {
+  return [
+    ['prompt', q.prompt],
+    ['options', q.options.join('')],
+    ['explanation', q.explanation],
+    ['face.hanzi', q.face?.hanzi ?? ''],
+    ['face.pinyin', q.face?.pinyin ?? ''],
+    ['face.nl', q.face?.nl ?? ''],
+    ['face.en', q.face?.en ?? ''],
+  ];
+}
+
+/**
  * Structural validation of a pack. Cheap, and it turns a content typo into a
  * failing test instead of a mid-game divergence.
  */
@@ -156,6 +178,11 @@ export function validatePack(pack: ContentPack): string[] {
   const categories = new Set(pack.categories.map((c) => c.id));
   const allIds = new Set(pack.questions.map((q) => q.id));
   for (const q of pack.questions) {
+    for (const [field, value] of forbiddenCodepointStrings(q)) {
+      if (CJK_RADICALS_SUPPLEMENT.test(value)) {
+        problems.push(`${q.id}: ${field} contains a CJK Radicals Supplement codepoint (e.g. U+2EBC) - shipped copy must use the ordinary character, never the bare radical shape`);
+      }
+    }
     if (seen.has(q.id)) problems.push(`duplicate question id: ${q.id}`);
     seen.add(q.id);
     if (!categories.has(q.category)) problems.push(`${q.id}: unknown category ${q.category}`);

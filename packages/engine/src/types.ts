@@ -247,6 +247,13 @@ export interface TurnRecord {
   readonly correct: boolean;
   readonly delta: number;
   readonly timedOut: boolean;
+  /**
+   * Wall-clock time of the resolving event, per DESIGN.md §10.1's attempt-log
+   * schema. Taken from the event itself rather than `Date.now()` at fold time,
+   * so replaying the same log on a different device reproduces the same
+   * timestamp instead of stamping "now."
+   */
+  readonly at: number;
 }
 
 /** The live question, between `turn/drawn` and its resolution. */

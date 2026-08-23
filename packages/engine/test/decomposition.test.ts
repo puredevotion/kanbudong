@@ -115,6 +115,43 @@ describe('menu-animal organ set: ⺼/月 reverse-error guard (DESIGN.md §7.1)',
   });
 });
 
+describe('validatePack forbidden codepoints', () => {
+  // DESIGN.md §4.11 gate 8/§3.3.4: U+2EBC (CJK RADICAL MEAT) and the rest of
+  // the CJK Radicals Supplement block are component shapes, never something a
+  // player reads - a naive font-subset extraction over item strings alone
+  // would never even notice ⺼ was missing, because it never legitimately
+  // appears in one.
+  const chunk: CategoryContent = {
+    low: [
+      [
+        'Prompt with a bare radical ⺼?',
+        ['right', 'w1', 'w2'],
+        0,
+        'because',
+        { hanzi: '肝', pinyin: 'gān', nl: 'lever' },
+      ],
+    ],
+    mid: [],
+    high: [],
+  };
+
+  it('fails the build on a literal U+2EBC in a player-facing string', () => {
+    const pack: ContentPack = {
+      id: 'test.radical-leak',
+      version: '0.0.0',
+      name: 'radical leak test',
+      categories: [{ id: 'menu-animal', name: 'Animal', glyph: '肉' }],
+      questions: expand('menu-animal', chunk),
+    };
+    const problems = validatePack(pack);
+    expect(problems.some((p) => p.includes('prompt') && p.includes('CJK Radicals Supplement'))).toBe(true);
+  });
+
+  it('does not flag the ordinary characters that make up SEED_PACK', () => {
+    expect(validatePack(SEED_PACK)).toEqual([]);
+  });
+});
+
 describe('validatePack component references', () => {
   it('fails the build on a dangling componentId', () => {
     const chunk: CategoryContent = {

@@ -24,6 +24,7 @@ import {
 import { Button, Card, Chip, ProgressBar } from '@heroui/react';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
+import { recordSessionStart } from '../lib/sessionLog.js';
 import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
 import { withGlyphs } from '../ui/glyphs.jsx';
@@ -48,6 +49,14 @@ export function Play(): ReactNode {
   const leave = useApp((s) => s.leave);
 
   const state = snapshot?.state ?? null;
+
+  // DESIGN.md §12.2's falsification instrument - logged once this device
+  // actually reaches a live game, deduped to once per calendar day by
+  // sessionLog.ts itself.
+  useEffect(() => {
+    if (state !== null && identity !== null) recordSessionStart(identity.id, 'group');
+  }, [state?.gameId, identity?.id]);
+
   if (state === null || identity === null || snapshot === null) return null;
 
   if (isBanned(state, identity.id)) {

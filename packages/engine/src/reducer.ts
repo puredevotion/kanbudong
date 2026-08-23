@@ -350,6 +350,7 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
         correct: body.chosenIndex === presented.correctIndex,
         difficulty: active.difficulty,
         timedOut: false,
+        at: event.at,
       });
     }
 
@@ -370,6 +371,7 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
         correct: false,
         difficulty,
         timedOut: true,
+        at: event.at,
       });
     }
 
@@ -419,6 +421,7 @@ interface Resolution {
   readonly correct: boolean;
   readonly difficulty: Difficulty;
   readonly timedOut: boolean;
+  readonly at: number;
 }
 
 /** Score it, record it, then either keep the turn or pass it on. */
@@ -444,6 +447,7 @@ function resolve(state: GameState, active: ActiveTurn, res: Resolution): GameSta
     correct: res.correct,
     delta,
     timedOut: res.timedOut,
+    at: res.at,
   };
 
   const streak = res.correct ? state.streak + 1 : 0;

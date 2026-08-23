@@ -192,7 +192,7 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['liver', 'cold dishes', 'lung'],
       0,
-      'gān · lever (liver) — as in 猪肝 (pork liver), 鹅肝 (foie gras). Built from 肉 (⺼, meat) plus 干, which happens to give the whole character its exact reading, gān.',
+      'gān · lever (liver) — as in 猪肝 (pork liver), 鹅肝 (foie gras). Built from 肉 (meat, bound as the shape 月 inside this character) plus 干, which happens to give the whole character its exact reading, gān.',
       { hanzi: '肝', pinyin: 'gān', nl: 'lever', en: 'liver', structure: 'left-right' },
       {
         kind: 'character',
@@ -279,7 +279,7 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['blood, as a set curd', 'swish in broth', 'liver'],
       0,
-      'xuè · bloed, als gestolde koek (blood, served as a set curd) — as in 鸭血 (duck blood), 毛血旺. Despite sitting beside seven ⺼ characters on this menu, 血 does not carry the meat radical at all - its own radical is 血.',
+      'xuè · bloed, als gestolde koek (blood, served as a set curd) — as in 鸭血 (duck blood), 毛血旺. Despite sitting beside seven meat-radical characters on this menu, 血 does not carry the meat radical at all - its own radical is 血.',
       { hanzi: '血', pinyin: 'xuè', nl: 'bloed, als gestolde koek', en: 'blood, as a set curd' },
       undefined,
       { tier: 2, freqRank: 631 },
