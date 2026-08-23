@@ -87,3 +87,93 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
+
+/*
+ * Motion (PLAN.md Phase 6). Three small transitions on top of an otherwise
+ * static game: a phase enters (category -> tier -> question), a reveal
+ * arrives, and a sign quietly desaturates in its final fifth instead of
+ * ticking. None of them move the target hanzi itself once it is on screen -
+ * DESIGN.md §4.10.1's stack of {countdown, opponent status, score change}
+ * concerns simultaneity of salience, not the arrival of a static screen, so
+ * a one-shot enter transition on a whole phase does not add to that stack.
+ */
+@keyframes anim-enter-kf {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes anim-reveal-kf {
+  from {
+    opacity: 0;
+    transform: perspective(800px) rotateX(-6deg) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) rotateX(0deg) scale(1);
+  }
+}
+
+@keyframes anim-sign-in-kf {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.anim-enter {
+  animation: anim-enter-kf 260ms ease-out both;
+}
+
+/* A fresh reveal card, and the phase-2/breakdown content that unfolds inside it. */
+.anim-reveal {
+  animation: anim-reveal-kf 320ms ease-out both;
+}
+
+.anim-fade-in {
+  animation: anim-enter-kf 220ms ease-out both;
+}
+
+.anim-sign-in {
+  animation: anim-sign-in-kf 220ms ease-out both;
+}
+
+/*
+ * DESIGN.md §4.10.3: "a silent, generous window with a subtle desaturation
+ * in its final fifth - no ticking digits, no shrinking bar." This is that
+ * effect on the sign itself; it never touches the existing numeric readout,
+ * which is a pre-existing timing-control question out of this phase's
+ * purely-visual scope.
+ */
+.sign-timing-warn {
+  transition:
+    filter 900ms ease-out,
+    opacity 900ms ease-out;
+  filter: saturate(1);
+}
+
+.sign-timing-warn[data-warn='true'] {
+  filter: saturate(0.35) brightness(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-enter,
+  .anim-reveal,
+  .anim-fade-in,
+  .anim-sign-in {
+    animation: none !important;
+  }
+
+  .sign-timing-warn {
+    transition: none !important;
+  }
+}

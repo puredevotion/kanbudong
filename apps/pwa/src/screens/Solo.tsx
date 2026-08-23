@@ -116,7 +116,7 @@ export function Solo(): ReactNode {
       subtitle={`${reviewed + 1} of up to ${SOLO_SESSION_TARGET_RETRIEVALS}`}
     >
       {presentedQuestion !== null && (
-        <Card>
+        <Card key={presentedQuestion.question.id} className="anim-enter">
           <Card.Header>
             <Card.Title className="text-xl">{presentedQuestion.question.prompt}</Card.Title>
           </Card.Header>
@@ -150,7 +150,7 @@ export function Solo(): ReactNode {
       )}
 
       {reveal !== null && (
-        <Card variant={reveal.correct ? 'secondary' : 'tertiary'}>
+        <Card className="anim-reveal" variant={reveal.correct ? 'secondary' : 'tertiary'}>
           <Card.Content className="flex flex-col gap-2 text-sm">
             {/* Stage 1: the target hanzi alone, then the correction - nothing else. */}
             {current.face !== undefined && (
@@ -181,7 +181,7 @@ export function Solo(): ReactNode {
             )}
 
             {!hanziAlone && stage2 && presentedQuestion !== null && (
-              <div className="flex flex-col gap-2">
+              <div className="anim-fade-in flex flex-col gap-2">
                 {current.options.map((option, i) => {
                   const isCorrect = i === current.answer;
                   const isChosenWrong =
@@ -215,11 +215,13 @@ export function Solo(): ReactNode {
                         See how it&apos;s made
                       </Button>
                     ) : (
-                      <DecompositionPanel
-                        decomposition={current.decomposition}
-                        transparency={current.face?.transparency}
-                        structure={current.face?.structure}
-                      />
+                      <div className="anim-fade-in">
+                        <DecompositionPanel
+                          decomposition={current.decomposition}
+                          transparency={current.face?.transparency}
+                          structure={current.face?.structure}
+                        />
+                      </div>
                     )}
                   </>
                 )}

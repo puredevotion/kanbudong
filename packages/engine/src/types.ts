@@ -21,11 +21,34 @@ export type QuestionId = string;
  */
 export type Difficulty = 'low' | 'mid' | 'high';
 
+/**
+ * Which physical-object template a scene renders as. Defaults to the scene's
+ * domain (the part of `id` before the first `-`) when a category omits this -
+ * most scenes in a domain are the same kind of object. Set explicitly only
+ * where DESIGN.md draws a real distinction the domain default would flatten:
+ * a back-of-package label reads nothing like a shelf-edge price tag, and a
+ * QR ordering screen (DESIGN.md §7's "sixth card template") reads nothing
+ * like a printed menu, though both are nominally "market" or "menu".
+ */
+export type TemplateId =
+  | 'transit'
+  | 'menu'
+  | 'menu-order'
+  | 'street'
+  | 'street-promo'
+  | 'street-way'
+  | 'market'
+  | 'market-panel'
+  | 'market-checkout'
+  | 'safety';
+
 export interface Category {
   readonly id: CategoryId;
   readonly name: string;
   /** Single glyph used as the category's face in the UI. */
   readonly glyph: string;
+  /** Overrides the domain-derived template. See {@link TemplateId}. */
+  readonly visualTemplate?: TemplateId;
 }
 
 /**

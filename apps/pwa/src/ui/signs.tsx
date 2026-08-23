@@ -1,20 +1,23 @@
-import type { CategoryId } from '@kanbudong/engine';
+import { categoryById, type CategoryId, type TemplateId } from '@kanbudong/engine';
 import type { ReactNode } from 'react';
 
 /**
- * The five sign templates.
+ * The sign templates.
  *
- * Each domain renders as the kind of physical object you actually meet the
+ * Each scene renders as the kind of physical object you actually meet the
  * characters on, not as one card recoloured by topic. Recognising the object is
  * half of reading the sign: you know a price label is a price label before you
  * can read a character of it, and that knowledge is what makes the characters
  * guessable (DESIGN.md §3.2).
  *
- * Two of them are hard to read on purpose — the fascia is loud and tightly
- * tracked, the price label buries the target under a large number. That is
- * FIDELITY to the real object, never a difficulty device: perceptual disfluency
- * does not aid learning (§1, "what we will not build on"), and the target glyph
- * clears WCAG AA contrast in every template regardless.
+ * Some of them are hard to read on purpose — the fascia is loud and tightly
+ * tracked, the price label buries the target under a large number, the QR
+ * ordering screen (DESIGN.md §7.1's "sixth card template") runs real 14–16px
+ * phone density. That is FIDELITY to the real object, never a difficulty
+ * device: perceptual disfluency does not aid learning (§1, "what we will not
+ * build on"), and the target glyph clears WCAG AA contrast in every template
+ * regardless - the ordering screen is exempt from the type-*size* floor, never
+ * from contrast (DESIGN.md §7.1).
  *
  * The invariant: characters are set the way the real object sets them. Never
  * restyled into app chrome, never white-on-violet, never glowing. A learner who
@@ -22,6 +25,17 @@ import type { ReactNode } from 'react';
  */
 
 export type SignDomain = 'menu' | 'market' | 'street' | 'safety' | 'transit';
+
+/**
+ * A category's `visualTemplate` when it needs its own object rather than its
+ * domain's default; otherwise the domain itself doubles as the template id
+ * (the {@link TemplateId} union covers both). Never guesses from `category`
+ * beyond that one field plus the domain fallback — the mapping lives in
+ * `categories.ts`, not here.
+ */
+export function templateFor(category: CategoryId): TemplateId {
+  return categoryById(category)?.visualTemplate ?? domainOf(category);
+}
 
 /**
  * GB 2894's four categories. The colour and the shape carry the illocutionary
@@ -45,7 +59,7 @@ export function domainOf(category: CategoryId): SignDomain {
 }
 
 interface SignProps {
-  readonly domain: SignDomain;
+  readonly template: TemplateId;
   /** Full scene id — the safety templates need it to pick their GB 2894 category. */
   readonly category: CategoryId;
   readonly hanzi: string;
@@ -62,19 +76,27 @@ function sizeFor(hanzi: string): string {
   return '2.7rem';
 }
 
-export function Sign({ domain, category, hanzi, pinyin }: SignProps): ReactNode {
+export function Sign({ template, category, hanzi, pinyin }: SignProps): ReactNode {
   const size = sizeFor(hanzi);
   const body = {
     transit: <TransitPlate hanzi={hanzi} size={size} />,
     menu: <MenuSection hanzi={hanzi} size={size} />,
+    'menu-order': <MenuOrderScreen hanzi={hanzi} size={size} />,
     street: <ShopFascia hanzi={hanzi} size={size} />,
+    'street-promo': <PromoBanner hanzi={hanzi} size={size} />,
+    'street-way': <WayfindingSign hanzi={hanzi} size={size} />,
     market: <PriceLabel hanzi={hanzi} size={size} />,
+    'market-panel': <PackageLabel hanzi={hanzi} size={size} />,
+    'market-checkout': <CheckoutScreen hanzi={hanzi} size={size} />,
     safety: <SafetyBoard hanzi={hanzi} size={size} kind={SAFETY_KIND[category] ?? 'warning'} />,
-  }[domain];
+  }[template];
 
   return (
     <div>
-      <div className="overflow-hidden rounded-[3px] shadow-[0_14px_30px_-10px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.06)]">
+      <div
+        key={hanzi}
+        className="anim-sign-in overflow-hidden rounded-[3px] shadow-[0_14px_30px_-10px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.06)]"
+      >
         {body}
       </div>
       {pinyin !== undefined && (
@@ -147,6 +169,50 @@ function MenuRow({ name, price, dim }: { name: string; price: string; dim?: bool
   );
 }
 
+/**
+ * The QR/mini-programme ordering screen — DESIGN.md §7.1's "sixth card
+ * template". Table service now mostly routes through 扫码点餐: a phone inside
+ * the phone, at the real 14–16px density of that UI, ignoring `size` entirely
+ * because small type *is* the difficulty here, not a defect elsewhere fixed.
+ * Still clears WCAG AA contrast (§7.1: the exemption is from the type-size
+ * floor, never from contrast).
+ */
+function MenuOrderScreen({ hanzi }: Face): ReactNode {
+  return (
+    <div className="bg-[#efefef]">
+      <div className="flex items-center justify-between bg-[#1a1a1a] px-3.5 py-2 text-white">
+        <span className="text-[13px] font-medium">扫码点餐</span>
+        <span className="text-[11px] opacity-70">桌号 A12</span>
+      </div>
+      <div className="flex flex-col gap-[1px] bg-[#dcdcdc] py-[1px]">
+        <MenuOrderRow name="宫保鸡丁" price="42" />
+        <div className="flex items-center justify-between gap-3 bg-[#fff8e8] px-3.5 py-2.5">
+          <span className="font-han text-[15px] font-medium leading-tight text-[#14140f]">{hanzi}</span>
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[oklch(0.52_0.20_28)] text-[13px] font-bold leading-none text-white">
+            +
+          </span>
+        </div>
+        <MenuOrderRow name="清蒸鱼" price="88" />
+      </div>
+      <div className="flex items-center justify-between gap-3 bg-white px-3.5 py-2.5">
+        <span className="text-[11px] text-[#8a8a8a]">备注：不要香菜</span>
+        <span className="whitespace-nowrap rounded-[3px] bg-[#8a8a8a] px-3 py-1.5 text-[11px] font-medium text-white">
+          去结算
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function MenuOrderRow({ name, price }: { name: string; price: string }): ReactNode {
+  return (
+    <div className="flex items-center justify-between gap-3 bg-white px-3.5 py-2.5 opacity-60">
+      <span className="font-han text-[15px] text-[#14140f]">{name}</span>
+      <span className="font-mono text-[12px] text-[#5a5a52]">¥{price}</span>
+    </div>
+  );
+}
+
 /** A fascia board: gold on red, display weight, inset rule. Loud, like the real thing. */
 function ShopFascia({ hanzi, size }: Face): ReactNode {
   return (
@@ -158,6 +224,61 @@ function ShopFascia({ hanzi, size }: Face): ReactNode {
         >
           {hanzi}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A clearance/sale poster taped or painted across a shopfront window — the
+ * loud red-and-yellow burst, not the shop's own name plate. Distinct from
+ * {@link ShopFascia}: a fascia identifies the shop, a promo poster is
+ * disposable and gets torn down and replaced every week.
+ */
+function PromoBanner({ hanzi, size }: Face): ReactNode {
+  return (
+    <div className="relative overflow-hidden bg-[oklch(0.58_0.22_28)] p-[10px]">
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-25"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        {Array.from({ length: 7 }, (_, i) => (
+          <line key={i} x1={-20 + i * 20} y1="120" x2={20 + i * 20} y2="-20" stroke="#fff" strokeWidth="6" />
+        ))}
+      </svg>
+      <div className="relative border-[3px] border-dashed border-[oklch(0.92_0.19_96)] px-4 py-6 text-center">
+        <div
+          className="font-han font-bold leading-none tracking-[0.06em] text-[oklch(0.96_0.05_96)] [text-shadow:0_2px_0_rgba(0,0,0,0.3)]"
+          style={{ fontSize: size }}
+        >
+          {hanzi}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Street-level wayfinding — a mall directory or pedestrian-street board, blue
+ * on white with a directional arrow, distinct from the transit plate's black
+ * enamel: this is the sign that points *between* buildings, not into a
+ * station.
+ */
+function WayfindingSign({ hanzi, size }: Face): ReactNode {
+  return (
+    <div className="bg-white">
+      <div className="flex items-center justify-center gap-4 border-b-4 border-[oklch(0.48_0.16_255)] px-4 py-8">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="oklch(0.48 0.16 255)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
+          <path d="M12 19V6" /><path d="M6 12l6-6 6 6" />
+        </svg>
+        <span
+          className="font-han font-medium leading-none tracking-[0.04em] text-[oklch(0.30_0.10_255)]"
+          style={{ fontSize: size }}
+        >
+          {hanzi}
+        </span>
       </div>
     </div>
   );
@@ -193,6 +314,82 @@ function PriceLabel({ hanzi, size }: Face): ReactNode {
           ))}
         </g>
       </svg>
+    </div>
+  );
+}
+
+/**
+ * The back-of-package label — GB 7718's mandatory production-date/shelf-life
+ * block, small print in a dense grid. Distinct from {@link PriceLabel}: a
+ * shelf tag is one big number you read across a shop floor, a back panel is
+ * several small fields you read holding the packet in your hand.
+ */
+function PackageLabel({ hanzi, size }: Face): ReactNode {
+  return (
+    <div className="bg-white">
+      <div className="border-b border-[#d8d8d0] px-3.5 py-1.5 text-center">
+        <span className="text-[0.6rem] font-semibold tracking-[0.2em] text-[#8a8a7e]">
+          食品标签 · LABEL
+        </span>
+      </div>
+      <div className="flex flex-col gap-1.5 px-4 py-3.5">
+        <LabelField label="净含量" value="500g" />
+        <div className="flex items-baseline gap-2.5 border-y border-[#e8e8e0] py-2">
+          <span className="font-han font-medium leading-tight text-[#14140f]" style={{ fontSize: size }}>
+            {hanzi}
+          </span>
+        </div>
+        <LabelField label="生产日期" value="2026.08.22" />
+        <LabelField label="保质期" value="12个月" />
+      </div>
+      <svg viewBox="0 0 300 20" preserveAspectRatio="none" className="block h-5 w-full px-4 pb-2.5" aria-hidden="true">
+        <g fill="#14140f">
+          {[0, 4, 7, 13, 16, 21, 25, 31, 36, 39, 45, 49, 54, 60, 64, 69, 73, 79].map((x, i) => (
+            <rect key={x} x={x} y="0" width={[2, 1, 3][i % 3]} height="20" />
+          ))}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function LabelField({ label, value }: { label: string; value: string }): ReactNode {
+  return (
+    <div className="flex items-baseline justify-between gap-3 text-[0.78rem]">
+      <span className="font-han text-[#5a5a52]">{label}</span>
+      <span className="font-mono text-[#14140f]">{value}</span>
+    </div>
+  );
+}
+
+/**
+ * The checkout counter — a till screen with the running total and the QR
+ * payment code, not a price tag. Distinct from {@link PriceLabel}: this is
+ * where the number gets paid, not where it's advertised.
+ */
+function CheckoutScreen({ hanzi, size }: Face): ReactNode {
+  return (
+    <div className="bg-[#0f1410]">
+      <div className="flex items-center justify-between px-3.5 py-2">
+        <span className="font-han text-[0.85rem] font-medium text-[#8fdba0]">收银台 3</span>
+        <span className="h-2.5 w-2.5 rounded-full bg-[#8fdba0]" />
+      </div>
+      <div className="flex flex-col items-center gap-2 px-4 py-6">
+        <span
+          className="font-han font-medium leading-none tracking-[0.04em] text-[#e4fbe9]"
+          style={{ fontSize: size }}
+        >
+          {hanzi}
+        </span>
+        <span className="font-mono text-[1.6rem] font-bold text-[#8fdba0]">¥ 32.80</span>
+      </div>
+      <div className="flex items-center justify-center gap-2 border-t border-[#1f2b22] px-4 py-2.5">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8fdba0" strokeWidth="2" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" />
+        </svg>
+        <span className="text-[0.7rem] font-medium tracking-[0.1em] text-[#8fdba0]">扫码支付</span>
+      </div>
     </div>
   );
 }

@@ -26,7 +26,7 @@ import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
 import { withGlyphs } from '../ui/glyphs.jsx';
 import { DecompositionPanel, useRevealDwell, useStage1HanziAlone } from '../ui/reveal.jsx';
-import { Sign, domainOf } from '../ui/signs.jsx';
+import { Sign, templateFor } from '../ui/signs.jsx';
 
 export function Play(): ReactNode {
   const snapshot = useApp((s) => s.snapshot);
@@ -378,7 +378,7 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
   const [showBreakdown, setShowBreakdown] = useState(false);
 
   return (
-    <Card variant={record.correct ? 'secondary' : 'tertiary'}>
+    <Card className="anim-reveal" variant={record.correct ? 'secondary' : 'tertiary'}>
       <Card.Header>
         <Card.Title className="flex items-center justify-between gap-3 text-base">
           <span>
@@ -401,7 +401,7 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                 {face.hanzi}
               </div>
               {!hanziAlone && (
-                <>
+                <div className="anim-fade-in">
                   <div className="mt-3 text-[1.05rem] font-medium text-[#5a5a52]">{face.pinyin}</div>
                   <div className="mt-2.5 border-t border-black/10 pt-2.5 text-[0.95rem] text-[#14140f]">
                     <strong className="font-semibold">{correctText}</strong>
@@ -414,7 +414,7 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                       <span className="text-danger-text"> — wrong</span>
                     </p>
                   )}
-                </>
+                </div>
               )}
             </div>
           )}
@@ -426,7 +426,7 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
           )}
 
           {!hanziAlone && stage2 && (
-            <div className="flex flex-col gap-2">
+            <div className="anim-fade-in flex flex-col gap-2">
               {question.options.map((option, i) => {
                 const isCorrect = i === question.answer;
                 const isChosenWrong = !isCorrect && option === record.chosenText;
@@ -454,11 +454,13 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                       See how it&apos;s made
                     </Button>
                   ) : (
-                    <DecompositionPanel
-                      decomposition={question.decomposition}
-                      transparency={face?.transparency}
-                      structure={face?.structure}
-                    />
+                    <div className="anim-fade-in">
+                      <DecompositionPanel
+                        decomposition={question.decomposition}
+                        transparency={face?.transparency}
+                        structure={face?.structure}
+                      />
+                    </div>
                   )}
                 </>
               )}
@@ -499,7 +501,7 @@ function ChooseCategory({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="anim-enter flex flex-col gap-4">
       <Card>
         <Card.Header>
           <Card.Title>Choose a category</Card.Title>
@@ -567,7 +569,7 @@ function ChooseTier({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="anim-enter flex flex-col gap-4">
       <Card>
         <Card.Header>
           <Card.Description>Your category is</Card.Description>
@@ -691,9 +693,15 @@ function LiveQuestion({
     if (pending) setPending(false);
   }
   const locked = pending || !canAnswerNow;
+  // DESIGN.md §4.10.3: a silent, generous window with a subtle desaturation
+  // in its final fifth, rather than a ticking digit or shrinking bar - this
+  // sits alongside the existing numeric readout below rather than replacing
+  // it (removing that display is a timing-control change, out of this
+  // phase's purely-visual scope; see PLAN.md Phase 6).
+  const timingWarn = remaining > 0 && remaining <= DIFFICULTY_TIERS[difficulty].timeoutMs * 0.2;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="anim-enter flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
         <TierBadge difficulty={difficulty} />
         <span
@@ -714,12 +722,14 @@ function LiveQuestion({
       </div>
 
       {face !== undefined && (
-        <Sign
-          domain={domainOf(categoryId)}
-          category={categoryId}
-          hanzi={face.hanzi}
-          pinyin={difficulty === 'low' ? face.pinyin : undefined}
-        />
+        <div className="sign-timing-warn" data-warn={timingWarn}>
+          <Sign
+            template={templateFor(categoryId)}
+            category={categoryId}
+            hanzi={face.hanzi}
+            pinyin={difficulty === 'low' ? face.pinyin : undefined}
+          />
+        </div>
       )}
 
       <p className="text-xl font-medium leading-snug tracking-[-0.01em]">{prompt}</p>
