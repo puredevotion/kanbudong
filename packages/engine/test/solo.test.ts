@@ -34,6 +34,37 @@ describe('buildSoloQueue', () => {
   });
 });
 
+describe('buildSoloQueue morning-after queue (§6.5)', () => {
+  it('puts an item seeded by a group session ahead of other due items the next day', () => {
+    const now = Date.now();
+    const [a, b] = SEED_PACK.questions;
+    if (a === undefined || b === undefined) throw new Error('pack too small for this test');
+
+    // Both are due; `b` is the more overdue one by construction.
+    const seededYesterday = reviewItem(null, 'hard', now - 2 * DAY)!;
+    const overdueForLonger = reviewItem(null, 'good', now - 100 * DAY)!;
+
+    const queue = buildSoloQueue(
+      SEED_PACK,
+      memoryMap({ [a.id]: seededYesterday, [b.id]: overdueForLonger }),
+      now,
+      new Set([a.id]),
+    );
+
+    expect(queue.due[0]?.id).toBe(a.id);
+  });
+
+  it('with an empty seeded set, falls back to due-ness ordering exactly as before', () => {
+    const now = Date.now();
+    const [a, b] = SEED_PACK.questions;
+    if (a === undefined || b === undefined) throw new Error('pack too small for this test');
+    const overdue = reviewItem(null, 'good', now - 100 * DAY)!;
+    const lessOverdue = reviewItem(null, 'good', now - 50 * DAY)!;
+    const queue = buildSoloQueue(SEED_PACK, memoryMap({ [a.id]: overdue, [b.id]: lessOverdue }), now);
+    expect(queue.due[0]?.id).toBe(a.id);
+  });
+});
+
 describe('nextSoloItem', () => {
   it('prefers due items over fresh ones', () => {
     const now = Date.now();

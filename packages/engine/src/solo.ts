@@ -28,11 +28,19 @@ export interface SoloQueue {
 /**
  * Builds the session's candidate order. Does not mutate or persist anything —
  * memory lookup is injected so this package still never touches a storage API.
+ *
+ * `seededToday` is DESIGN.md §6.5's "morning-after queue": items a group
+ * session introduced for this player, pushed to the front of the very next
+ * solo session ahead of everything else due - "the hinge the whole model
+ * turns on" for turning a massed party game into a spaced one. Writing that
+ * set is the caller's job (it crosses the shared-log/local-memory boundary
+ * §11.1 draws deliberately narrowly); this function only ever reads it.
  */
 export function buildSoloQueue(
   pack: ContentPack,
   memoryFor: (id: QuestionId) => ItemMemory | null,
   now: number,
+  seededToday: ReadonlySet<QuestionId> = new Set(),
 ): SoloQueue {
   const due: Array<{ question: Question; overdueBy: number }> = [];
   const fresh: Question[] = [];
@@ -50,7 +58,10 @@ export function buildSoloQueue(
 
   due.sort((a, b) => b.overdueBy - a.overdueBy);
 
-  return { due: due.map((d) => d.question), fresh };
+  const ordered = due.map((d) => d.question);
+  const seededFirst = [...ordered].sort((a, b) => Number(seededToday.has(b.id)) - Number(seededToday.has(a.id)));
+
+  return { due: seededFirst, fresh };
 }
 
 /** Next item for the session: due items first, then fresh ones, skipping anything already presented this session. */

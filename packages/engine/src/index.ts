@@ -23,6 +23,7 @@ export * from './eligibility.js';
 export * from './memory.js';
 export * from './itemDifficulty.js';
 export * from './solo.js';
+export * from './groupSchedule.js';
 export * from './reducer.js';
 export * from './selectors.js';
 export * from './commands.js';
