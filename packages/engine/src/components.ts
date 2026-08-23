@@ -226,6 +226,26 @@ export const KAO_PHONETIC: Component = {
   meaning: 'to test, to examine',
 };
 
+/**
+ * 炒 chǎo and 少 (shǎo, shào) share the rime (-ao) and 少's `shǎo` reading
+ * shares the tone too, but the initial differs (ch- vs sh-) - not the same
+ * syllable, so this fails the `'exact'` bar every other phonetic component in
+ * this table met. It is real and structurally correct (MMH: pictophonetic,
+ * semantic 火, phonetic 少) and was wrongly dropped entirely on a first pass
+ * that only checked for an exact match. `PhoneticReliability` has a
+ * `'rime-only'` tier for exactly this shape (shared final + tone, different
+ * initial) - DESIGN.md §1.4/§3.3.2c's own P24 finding expects most real
+ * phonetic components to land in the non-exact tiers, not to be exact or
+ * absent. Ships honestly as `'rime-only'`, not silently upgraded to `'exact'`.
+ */
+export const SHAO_PHONETIC: Component = {
+  id: 'phonetic-shao',
+  displayGlyph: '少',
+  role: 'phonetic',
+  reliability: 'rime-only',
+  meaning: 'few, little',
+};
+
 /** 焖 mèn and 闷 mèn share the same syllable including tone - verified against `pinyin-data`. */
 export const MEN_PHONETIC: Component = {
   id: 'phonetic-men',
@@ -590,6 +610,381 @@ export const HEART_RADICAL: Component = {
   meaning: 'heart, mind',
 };
 
+/**
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * every component below closes a gap the same class of bug left in some
+ * other `glossProvenance: 'mnemonic-only'` item - a mnemonic naming real
+ * structural pieces with no `decomposition` field to back it, or (for the
+ * phonetic additions) an exact-reading match a prior pass missed by only
+ * checking a candidate's primary reading, the same miss class `FAN_PHONETIC`/
+ * `FEN_SEMANTIC`/`YAO_PHONETIC` document. Every entry verified against the
+ * gitignored Make Me a Hanzi scratch copy and `pinyin-data`'s full reading
+ * lists, same process as every earlier phase in this file.
+ */
+
+/** 市 shì = ⿱亠巾 (亠, "lid/cover" shape + 巾, "cloth"). MMH gives no etymology prose, but the decomposition tree and radical agree cleanly on 巾. */
+export const CLOTH_RADICAL: Component = {
+  id: 'kangxi-50-cloth',
+  displayGlyph: '巾',
+  role: 'semantic',
+  meaning: 'cloth, turban',
+};
+
+/** 千 qiān = ⿱丿十 (丿 + 十, "ten"). MMH assigns no etymology prose, but the radical (十) matches the tree's own bottom component. */
+export const TEN_RADICAL: Component = {
+  id: 'kangxi-24-ten',
+  displayGlyph: '十',
+  role: 'semantic',
+  meaning: 'ten',
+};
+
+/** 码 mǎ = ⿰石马 (石, "stone" + 马). MMH's own pictophonetic classification: semantic 石, phonetic 马. */
+export const STONE_RADICAL: Component = {
+  id: 'kangxi-112-stone',
+  displayGlyph: '石',
+  role: 'semantic',
+  meaning: 'stone',
+};
+
+/** 码 mǎ and 马 mǎ share the same syllable including tone - verified against `pinyin-data`, the 'exact' bar every phonetic hint in this table is held to. */
+export const MA_PHONETIC: Component = {
+  id: 'phonetic-ma',
+  displayGlyph: '马',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'horse',
+};
+
+/** 碗 wǎn and 宛 (wǎn, yuān, yǔn, yù) share an attested reading including tone - `pinyin-data`'s full list for 宛, not just a single primary reading. MMH classifies 碗/宛 as pictophonetic (semantic 石, phonetic 宛). */
+export const WAN_PHONETIC: Component = {
+  id: 'phonetic-wan',
+  displayGlyph: '宛',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'as if; graceful',
+};
+
+/** 百 bǎi = ⿱一白 (一, "one" + 白). MMH's own pictophonetic classification: semantic 一, phonetic 白 - but 白's readings (bái, bó) don't match bǎi, so no phonetic claim ships. */
+export const ONE_RADICAL: Component = {
+  id: 'kangxi-1-one',
+  displayGlyph: '一',
+  role: 'semantic',
+  meaning: 'one',
+};
+
+/** 特 tè = ⿰牛寺 (牛, "ox" + 寺). MMH's own pictophonetic classification: semantic 牛, phonetic 寺 (sì, not a match for tè). */
+export const OX_RADICAL: Component = {
+  id: 'kangxi-93-ox',
+  displayGlyph: '牛',
+  role: 'semantic',
+  meaning: 'ox, cattle',
+};
+
+/** 杯 bēi = ⿰木不 (木, "wood" + 不). MMH's own pictophonetic classification: semantic 木, phonetic 不 (bù/fǒu/fōu/fū/bú, none a match for bēi). Reused for 检's ⿰木佥. */
+export const WOOD_RADICAL: Component = {
+  id: 'kangxi-75-wood',
+  displayGlyph: '木',
+  role: 'semantic',
+  meaning: 'wood, tree',
+};
+
+/** 瓶 píng = ⿰并瓦 (瓦, "pottery" + 并). MMH's own pictophonetic classification: semantic 瓦, phonetic 并 (bìng/bīng, neither a match for píng). */
+export const POTTERY_RADICAL: Component = {
+  id: 'kangxi-98-pottery',
+  displayGlyph: '瓦',
+  role: 'semantic',
+  meaning: 'pottery, tile',
+};
+
+/** 张 zhāng = ⿰弓长 (弓, "bow" + 长). MMH's own pictophonetic classification: semantic 弓, phonetic 长 (zhǎng/cháng, neither a match for zhāng). */
+export const BOW_RADICAL: Component = {
+  id: 'kangxi-57-bow',
+  displayGlyph: '弓',
+  role: 'semantic',
+  meaning: 'bow',
+};
+
+/** 冷 lěng = ⿰冫令 (冫, "ice" + 令). MMH's own pictophonetic classification: semantic 冫, phonetic 令 (lìng/líng/lǐng/lián, none a match for lěng). */
+export const ICE_RADICAL: Component = {
+  id: 'kangxi-15-ice',
+  displayGlyph: '冫',
+  role: 'semantic',
+  meaning: 'ice',
+};
+
+/** 装 zhuāng = ⿱壮衣 (衣, "clothes" + 壮). MMH's own pictophonetic classification: semantic 衣, phonetic 壮 (zhuàng, tone-only near miss for zhuāng). */
+export const CLOTHES_RADICAL: Component = {
+  id: 'kangxi-145-clothes',
+  displayGlyph: '衣',
+  role: 'semantic',
+  meaning: 'clothes',
+};
+
+/** 分 fēn = ⿱八刀 (八 + 刀, "knife"). MMH's own ideographic hint: "pieces being further subdivided with a knife". */
+export const KNIFE_RADICAL: Component = {
+  id: 'kangxi-18-knife',
+  displayGlyph: '刀',
+  role: 'semantic',
+  meaning: 'knife',
+};
+
+/**
+ * 重 zhòng = ⿻千里 (千, "thousand" + 里, "village; distance unit"). MMH's own
+ * ideographic hint: "a burden carried for a thousand 千 miles 里". 千 itself is
+ * not a Kangxi radical (it is 丿 over 十, the actual radical `TEN_RADICAL`
+ * already ships) - this component's id deliberately does not claim a
+ * "kangxi-" number, the same "whole compound character used as its own
+ * semantic component" pattern `FEN_SEMANTIC` uses for 分 inside 份.
+ */
+export const THOUSAND_RADICAL: Component = {
+  id: 'component-thousand',
+  displayGlyph: '千',
+  role: 'semantic',
+  meaning: 'thousand',
+};
+
+/** See `THOUSAND_RADICAL` - the other half of 重's ideographic pair, and MMH's own radical assignment for 重. */
+export const VILLAGE_RADICAL: Component = {
+  id: 'kangxi-166-village',
+  displayGlyph: '里',
+  role: 'semantic',
+  meaning: 'village; a unit of distance (~500 m)',
+};
+
+/**
+ * 证 zhèng = ⿰讠正 (讠, "speech" + 正). MMH's own ideographic hint names both
+ * roles in prose ("to speak 讠 the truth 正; 正 also provides the
+ * pronunciation"). Reused for 请's ⿰讠青.
+ */
+export const SPEECH_RADICAL: Component = {
+  id: 'kangxi-149-speech',
+  displayGlyph: '讠',
+  role: 'semantic',
+  meaning: 'speech, words',
+};
+
+/** 证 zhèng and 正 (zhèng, zhēng) share an attested reading including tone - `pinyin-data`'s full list for 正, not just a single primary reading. */
+export const ZHENG_PHONETIC: Component = {
+  id: 'phonetic-zheng',
+  displayGlyph: '正',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'correct, upright',
+};
+
+/** 请 qǐng's phonetic half, 青 (qīng/jīng), is not a tone-or-syllable match for qǐng, so 请 ships semantic-only via the reused `SPEECH_RADICAL`. */
+
+/** 警 jǐng = ⿱敬言 (言, the full "speech" radical, kept distinct from `SPEECH_RADICAL`'s reduced 讠 shape - same "identity is the id, not the glyph" rule `FIRE_DOTS_RADICAL` states). Phonetic half 敬 (jìng) is a tone-only near miss for jǐng, so semantic-only. */
+export const SPEECH_RADICAL_FULL: Component = {
+  id: 'kangxi-149-speech-full',
+  displayGlyph: '言',
+  role: 'semantic',
+  meaning: 'speech, words',
+};
+
+/** 惠 huì = ⿱叀心 (心, the full "heart" radical, kept distinct from `HEART_RADICAL`'s reduced 忄 shape). MMH's own pictophonetic classification: semantic 心, phonetic 叀. */
+export const HEART_RADICAL_FULL: Component = {
+  id: 'kangxi-61-heart-full',
+  displayGlyph: '心',
+  role: 'semantic',
+  meaning: 'heart, mind',
+};
+
+/** 惠 huì and 叀 (zhuān, huì) share an attested reading including tone - `pinyin-data`'s full list for 叀, not just its more common zhuān reading. */
+export const HUI_PHONETIC: Component = {
+  id: 'phonetic-hui',
+  displayGlyph: '叀',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'specialized, single-minded',
+};
+
+/**
+ * 院 yuàn = ⿰阝完 (阝 + 完). This 阝 sits on the LEFT of its character - the
+ * mound/hill radical (阜, Kangxi 170) - a different Kangxi radical from
+ * `CITY_RADICAL`'s RIGHT-side 阝 (邑, Kangxi 163) used in 邮, even though both
+ * render as the identical U+961D glyph. Kept as a distinct component id for
+ * exactly the reason `MEAT_RADICAL`'s doc comment gives for ⺼/月: identity is
+ * the id, never the glyph. Phonetic half 完 (wán/kuān) is not a match for
+ * yuàn, so semantic-only.
+ */
+export const MOUND_RADICAL: Component = {
+  id: 'kangxi-170-mound',
+  displayGlyph: '阝',
+  role: 'semantic',
+  meaning: 'mound, hill; place, institution',
+};
+
+/**
+ * 厅 tīng = ⿸厂丁. MMH's own etymology names the semantic role 广 ("spacious"),
+ * not the literal 厂 shown in the decomposition tree - the simplified glyph's
+ * shell shape coincides with 厂 without carrying 厂's own meaning, so the
+ * etymology's explicit `semantic` field is trusted over the bare tree.
+ * Reused for 店's ⿸广占. Phonetic half 丁 (dīng/zhēng) is not a match for
+ * tīng, so semantic-only.
+ */
+export const BUILDING_RADICAL: Component = {
+  id: 'kangxi-53-building',
+  displayGlyph: '广',
+  role: 'semantic',
+  meaning: 'building, shelter',
+};
+
+/** 所 suǒ = ⿰户斤 (户, "door" + 斤, "axe"). MMH's own ideographic hint: "an axe 斤 swung at a door 户" - both components are real, independent meanings, the same two-meaningful-parts pattern `FEN_SEMANTIC`'s doc comment documents for 份. */
+export const DOOR_RADICAL: Component = {
+  id: 'kangxi-63-door',
+  displayGlyph: '户',
+  role: 'semantic',
+  meaning: 'door',
+};
+
+/** See `DOOR_RADICAL` - the other half of 所's ideographic pair. */
+export const AXE_RADICAL: Component = {
+  id: 'kangxi-69-axe',
+  displayGlyph: '斤',
+  role: 'semantic',
+  meaning: 'axe',
+};
+
+/** 开 kāi = ⿱一廾 (廾, "two hands"). MMH's own ideographic hint: "hands 廾 lifting the latch of a door" - 一 here stands for the latch, not its literal meaning "one", so only 廾 is added. */
+export const TWO_HANDS_RADICAL: Component = {
+  id: 'kangxi-55-two-hands',
+  displayGlyph: '廾',
+  role: 'semantic',
+  meaning: 'two hands together',
+};
+
+/**
+ * 间 jiān = ⿵门日 (门, "gate/door" + 日, reused from `SUN_RADICAL`). MMH's own
+ * ideographic hint names both as real, independent meanings ("the sun 日
+ * shining through a doorway 门") - the same two-meaningful-parts pattern as
+ * `DOOR_RADICAL`/`AXE_RADICAL` for 所.
+ */
+export const GATE_RADICAL: Component = {
+  id: 'kangxi-169-gate',
+  displayGlyph: '门',
+  role: 'semantic',
+  meaning: 'gate, door',
+};
+
+/** 问 wèn's own 门 is claimed by MMH as the PHONETIC half (mén, not a match for wèn) rather than semantic - so 问 ships only the reused `MOUTH_RADICAL`, and this 门 usage stays confined to `GATE_RADICAL` for 间. */
+
+/** 起 qǐ = ⿺走己 (走, "walk/run" + 己). MMH's own pictophonetic classification: semantic 走, phonetic 己. */
+export const RUN_RADICAL: Component = {
+  id: 'kangxi-156-run',
+  displayGlyph: '走',
+  role: 'semantic',
+  meaning: 'to walk, to run',
+};
+
+/** 起 qǐ and 己 (jǐ, qǐ) share an attested reading including tone - `pinyin-data`'s full list for 己, not just its more common jǐ reading. */
+export const QI_PHONETIC: Component = {
+  id: 'phonetic-qi',
+  displayGlyph: '己',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'self',
+};
+
+/** 提 tí = ⿰扌是 (扌, reused from `HAND_RADICAL` + 是). MMH's own pictophonetic classification: semantic 扌, phonetic 是. */
+/** 提 tí and 是 (shì, tí) share an attested reading including tone - `pinyin-data`'s full list for 是, not just its far more common shì reading. */
+export const TI_PHONETIC: Component = {
+  id: 'phonetic-ti',
+  displayGlyph: '是',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'to be; right, correct',
+};
+
+/** 指 zhǐ = ⿰扌旨 (扌, reused from `HAND_RADICAL` + 旨). MMH's own ideographic hint: "to point 旨 by hand 扌; 旨 also provides the pronunciation" - and 旨 zhǐ shares zhǐ's exact syllable and tone. */
+export const ZHI_PHONETIC: Component = {
+  id: 'phonetic-zhi',
+  displayGlyph: '旨',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'purport, aim',
+};
+
+/** 禁 jìn = ⿱林示 (示, "altar" + 林). MMH's own pictophonetic classification: semantic 示, phonetic 林 (lín, not a match for jìn). */
+export const ALTAR_RADICAL: Component = {
+  id: 'kangxi-113-altar',
+  displayGlyph: '示',
+  role: 'semantic',
+  meaning: 'altar, spirit',
+};
+
+/** 辣 là = ⿰辛束 (辛, "bitter, hardship" + 束). MMH's own pictophonetic classification: semantic 辛, phonetic 束 (shù, not a match for là). */
+export const BITTER_RADICAL: Component = {
+  id: 'kangxi-160-bitter',
+  displayGlyph: '辛',
+  role: 'semantic',
+  meaning: 'bitter, spicy; hardship',
+};
+
+/** 酸 suān = ⿰酉夋 (酉, "wine vessel" + 夋). MMH's own ideographic hint: "wine 酉 aged too long; 夋 also provides the pronunciation" - but 夋 (qūn) is not a match for suān. */
+export const WINE_RADICAL: Component = {
+  id: 'kangxi-164-wine',
+  displayGlyph: '酉',
+  role: 'semantic',
+  meaning: 'wine vessel',
+};
+
+/** 甜 tián = ⿰舌甘 (甘, "sweet" + 舌, reused from menu-animal's 舌 item). MMH's own ideographic hint: "something tasty 甘 to the tongue 舌" - both components real, independent meanings. MMH's own radical assignment is 甘. */
+export const SWEET_RADICAL: Component = {
+  id: 'kangxi-99-sweet',
+  displayGlyph: '甘',
+  role: 'semantic',
+  meaning: 'sweet, tasty',
+};
+
+/** See `SWEET_RADICAL` - the other half of 甜's ideographic pair. */
+export const TONGUE_RADICAL: Component = {
+  id: 'kangxi-135-tongue',
+  displayGlyph: '舌',
+  role: 'semantic',
+  meaning: 'tongue',
+};
+
+/** 料 liào = ⿰米斗 (斗, "dipper, to measure" + 米). MMH's own radical assignment is 斗; its ideographic hint: "a hand measuring 斗 a cup of rice 米". */
+export const DIPPER_RADICAL: Component = {
+  id: 'kangxi-68-dipper',
+  displayGlyph: '斗',
+  role: 'semantic',
+  meaning: 'dipper; to measure',
+};
+
+/** 亿 yì = ⿰亻乙 (亻, reused from `PERSON_RADICAL` + 乙). MMH's own pictophonetic classification: semantic 亻, phonetic 乙. */
+/** 亿 yì and 乙 (yǐ, yì, jué) share an attested reading including tone - `pinyin-data`'s full list for 乙, not just its more common yǐ reading. */
+export const YI_PHONETIC: Component = {
+  id: 'phonetic-yi',
+  displayGlyph: '乙',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'second (of the ten heavenly stems)',
+};
+
+/** 例 lì = ⿰亻列 (亻, reused from `PERSON_RADICAL` + 列). MMH's own pictophonetic classification: semantic 亻, phonetic 列. */
+/** 例 lì and 列 (liè, lì) share an attested reading including tone - `pinyin-data`'s full list for 列, not just its more common liè reading. */
+export const LIE_PHONETIC: Component = {
+  id: 'phonetic-lie',
+  displayGlyph: '列',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'row, file; to arrange',
+};
+
+/** 位 wèi = ⿰亻立 (亻, reused from `PERSON_RADICAL` + 立, reused from `STAND_SEMANTIC`). MMH's own ideographic hint: "the place where a person 亻 stands 立" - both real, independent meanings. */
+
+/** 注 zhù = ⿰氵主 (氵, reused from `WATER_RADICAL` + 主). MMH's own pictophonetic classification: semantic 氵, phonetic 主. */
+/** 注 zhù and 主 (zhǔ, zhù) share an attested reading including tone - `pinyin-data`'s full list for 主, not just its more common zhǔ reading. */
+export const ZHU_PHONETIC: Component = {
+  id: 'phonetic-zhu',
+  displayGlyph: '主',
+  role: 'phonetic',
+  reliability: 'exact',
+  meaning: 'host, main, lord',
+};
+
 export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [MEAT_RADICAL.id]: MEAT_RADICAL,
   [GAN_PHONETIC.id]: GAN_PHONETIC,
@@ -602,6 +997,7 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [CAI_PHONETIC.id]: CAI_PHONETIC,
   [FIRE_RADICAL.id]: FIRE_RADICAL,
   [KAO_PHONETIC.id]: KAO_PHONETIC,
+  [SHAO_PHONETIC.id]: SHAO_PHONETIC,
   [MEN_PHONETIC.id]: MEN_PHONETIC,
   [BAO_PHONETIC.id]: BAO_PHONETIC,
   [FIRE_DOTS_RADICAL.id]: FIRE_DOTS_RADICAL,
@@ -633,6 +1029,45 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [BAMBOO_RADICAL.id]: BAMBOO_RADICAL,
   [SUN_RADICAL.id]: SUN_RADICAL,
   [WRAP_PHONETIC.id]: WRAP_PHONETIC,
+  [CLOTH_RADICAL.id]: CLOTH_RADICAL,
+  [TEN_RADICAL.id]: TEN_RADICAL,
+  [STONE_RADICAL.id]: STONE_RADICAL,
+  [MA_PHONETIC.id]: MA_PHONETIC,
+  [WAN_PHONETIC.id]: WAN_PHONETIC,
+  [ONE_RADICAL.id]: ONE_RADICAL,
+  [OX_RADICAL.id]: OX_RADICAL,
+  [WOOD_RADICAL.id]: WOOD_RADICAL,
+  [POTTERY_RADICAL.id]: POTTERY_RADICAL,
+  [BOW_RADICAL.id]: BOW_RADICAL,
+  [ICE_RADICAL.id]: ICE_RADICAL,
+  [CLOTHES_RADICAL.id]: CLOTHES_RADICAL,
+  [KNIFE_RADICAL.id]: KNIFE_RADICAL,
+  [THOUSAND_RADICAL.id]: THOUSAND_RADICAL,
+  [VILLAGE_RADICAL.id]: VILLAGE_RADICAL,
+  [SPEECH_RADICAL.id]: SPEECH_RADICAL,
+  [ZHENG_PHONETIC.id]: ZHENG_PHONETIC,
+  [SPEECH_RADICAL_FULL.id]: SPEECH_RADICAL_FULL,
+  [HEART_RADICAL_FULL.id]: HEART_RADICAL_FULL,
+  [HUI_PHONETIC.id]: HUI_PHONETIC,
+  [MOUND_RADICAL.id]: MOUND_RADICAL,
+  [BUILDING_RADICAL.id]: BUILDING_RADICAL,
+  [DOOR_RADICAL.id]: DOOR_RADICAL,
+  [AXE_RADICAL.id]: AXE_RADICAL,
+  [TWO_HANDS_RADICAL.id]: TWO_HANDS_RADICAL,
+  [GATE_RADICAL.id]: GATE_RADICAL,
+  [RUN_RADICAL.id]: RUN_RADICAL,
+  [QI_PHONETIC.id]: QI_PHONETIC,
+  [TI_PHONETIC.id]: TI_PHONETIC,
+  [ZHI_PHONETIC.id]: ZHI_PHONETIC,
+  [ALTAR_RADICAL.id]: ALTAR_RADICAL,
+  [BITTER_RADICAL.id]: BITTER_RADICAL,
+  [WINE_RADICAL.id]: WINE_RADICAL,
+  [SWEET_RADICAL.id]: SWEET_RADICAL,
+  [TONGUE_RADICAL.id]: TONGUE_RADICAL,
+  [DIPPER_RADICAL.id]: DIPPER_RADICAL,
+  [YI_PHONETIC.id]: YI_PHONETIC,
+  [LIE_PHONETIC.id]: LIE_PHONETIC,
+  [ZHU_PHONETIC.id]: ZHU_PHONETIC,
 };
 
 export function resolveComponent(id: ComponentId): Component | undefined {

@@ -7,6 +7,7 @@ import {
   WATER_RADICAL,
   HAND_RADICAL,
   BAN_PHONETIC,
+  SHAO_PHONETIC,
 } from '../components.js';
 import type { CategoryContent } from './row.js';
 
@@ -21,11 +22,13 @@ import type { CategoryContent } from './row.js';
  *
  * Six of these methods (炒/炖/烤/烧/焖/爆) carry the ⿰火X fire radical
  * (`FIRE_RADICAL`), verified against the gitignored Make Me a Hanzi scratch
- * copy - a decomposition-backfill pass (Aug 2026) worth flagging: 炸, the
- * seventh left-right fire-radical cooking method on this menu, is
- * deliberately NOT decomposed. Its actual menu reading is zhá, but its
- * phonetic half 乍 is zhà/zuò - a tone-and-reading mismatch, not the exact
- * match this bank requires (see the organ set's 肝/干, 站/占, 城/成). 煮/煎
+ * copy. 炸, the seventh left-right fire-radical cooking method on this menu,
+ * also reuses `FIRE_RADICAL` (mnemonic-only decomposition-gap audit, Aug
+ * 2026, the 价 bug's aftermath - a rejected phonetic claim is not a reason to
+ * withhold the real semantic half too). Its actual menu reading is zhá, but
+ * its phonetic half 乍 is zhà/zuò - a tone-and-reading mismatch, not the exact
+ * match this bank requires (see the organ set's 肝/干, 站/占, 城/成), so 炸
+ * ships semantic-only. 煮/煎
  * carry ⿱X灬, the four-dot variant of the same radical (`FIRE_DOTS_RADICAL`).
  * 蒸 (steam) and 卤 (master-stock braise) are left undecomposed: 蒸's own Make
  * Me a Hanzi entry calls it ideographic with no clean semantic/phonetic
@@ -33,7 +36,13 @@ import type { CategoryContent } from './row.js';
  * itself a radical). 汤/涮 carry the water radical `WATER_RADICAL`; neither
  * phonetic half (昜/刷) is an exact-tone match, so both ship semantic-only.
  * 拌's phonetic half 半 (bàn) is an exact tone-and-syllable match for 拌
- * (bàn), the same 'exact' bar as `GAN_PHONETIC`.
+ * (bàn), the same 'exact' bar as `GAN_PHONETIC`. 炒's phonetic half 少 was
+ * initially dropped the same way 乍/昜/刷 were (checked only against the
+ * 'exact' bar, chǎo vs shǎo/shào differ in initial) - corrected after a
+ * Dong Chinese cross-check flagged it: real phonetic components landing
+ * outside the 'exact' tier are the norm, not the exception (DESIGN.md
+ * §1.4/§3.3.2c's own P24 finding), so 炒 now ships `SHAO_PHONETIC` at
+ * `reliability: 'rime-only'` rather than being dropped to semantic-only.
  */
 export const MENU_COOKING: CategoryContent = {
   low: [
@@ -41,12 +50,15 @@ export const MENU_COOKING: CategoryContent = {
       'On the menu. What does this cooking method do to it?',
       ['stir-fry', 'pan-fry', 'beef'],
       0,
-      'chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus.',
+      'chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus. Built from 火 (fire) plus 少, which rhymes with the whole character\'s reading (shǎo/chǎo) without being an exact match.',
       { hanzi: '炒', pinyin: 'chǎo', nl: 'roerbakken', en: 'stir-fry', structure: 'left-right' },
       {
         kind: 'character',
         hanzi: '炒',
-        components: [{ componentId: FIRE_RADICAL.id, role: 'semantic' }],
+        components: [
+          { componentId: FIRE_RADICAL.id, role: 'semantic' },
+          { componentId: SHAO_PHONETIC.id, role: 'phonetic' },
+        ],
         semantic_radical: FIRE_RADICAL.id,
       },
       { tier: 1, freqRank: 2590 },
@@ -57,12 +69,15 @@ export const MENU_COOKING: CategoryContent = {
       'On the menu. What does this cooking method do to it?',
       ['stir-fry', 'cold dishes', 'market price'],
       0,
-      'chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus.',
+      'chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus. Built from 火 (fire) plus 少, which rhymes with the whole character\'s reading (shǎo/chǎo) without being an exact match.',
       { hanzi: '炒', pinyin: 'chǎo', nl: 'roerbakken', en: 'stir-fry', structure: 'left-right' },
       {
         kind: 'character',
         hanzi: '炒',
-        components: [{ componentId: FIRE_RADICAL.id, role: 'semantic' }],
+        components: [
+          { componentId: FIRE_RADICAL.id, role: 'semantic' },
+          { componentId: SHAO_PHONETIC.id, role: 'phonetic' },
+        ],
         semantic_radical: FIRE_RADICAL.id,
       },
       { tier: 1, freqRank: 2590 },
@@ -98,8 +113,13 @@ export const MENU_COOKING: CategoryContent = {
       ['deep-fry', 'cold dishes', 'hot dishes'],
       0,
       'zhá · frituren (deep-fried). The same character can also be read zhà, meaning "to explode" — on a menu it always means deep-fried. Picture 炸 as fire (火) that suddenly (乍) flares up the instant the food hits the hot oil: zhá.',
-      { hanzi: '炸', pinyin: 'zhá', nl: 'frituren', en: 'deep-fry' },
-      undefined,
+      { hanzi: '炸', pinyin: 'zhá', nl: 'frituren', en: 'deep-fry', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '炸',
+        components: [{ componentId: FIRE_RADICAL.id, role: 'semantic' }],
+        semantic_radical: FIRE_RADICAL.id,
+      },
       { tier: 1, freqRank: 976, glossProvenance: 'mnemonic-only' },
     ],
     [

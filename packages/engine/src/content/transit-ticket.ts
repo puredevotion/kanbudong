@@ -1,4 +1,4 @@
-import { CHENG_PHONETIC, EARTH_SEMANTIC, METAL_RADICAL, FOOD_RADICAL } from '../components.js';
+import { BUILDING_RADICAL, CHENG_PHONETIC, EARTH_SEMANTIC, METAL_RADICAL, FOOD_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -13,10 +13,15 @@ import type { CategoryContent } from './row.js';
  * ideographic compound of two mirrored strokes (⿰彳亍) with no clean
  * semantic/phonetic split for a learner and five listed readings, so it
  * ships `structure: 'atomic'` with no decomposition claim, same treatment as
- * 皮 in the organ set. 场 (⿰土勿) is left undecomposed: Make Me a Hanzi's own
- * etymology names 昜 as the historical phonetic, but the displayed component
- * is 勿, a different, non-phonetic-matching shape — too muddled to ship
- * honestly at the exact-match bar this bank holds phonetic hints to.
+ * 皮 in the organ set. 场 (⿰土勿) ships semantic-only (mnemonic-only
+ * decomposition-gap audit, Aug 2026, the 价 bug's aftermath): Make Me a
+ * Hanzi's own etymology names 昜 as the historical phonetic, but the
+ * displayed tree component is 勿, a different, non-phonetic-matching shape —
+ * too muddled to ship a phonetic claim at the exact-match bar this bank
+ * holds phonetic hints to. That muddle is about the phonetic half only; the
+ * semantic half, 土 (reused from `EARTH_SEMANTIC`, this file's own 城), is
+ * clean and unambiguous in both the radical field and the etymology, so it
+ * ships alongside 场's existing mnemonic-only prose.
  *
  * 一卡通/深圳通 (context-authoring phase, Aug 2026) are a genuine regional pair:
  * every major Chinese city issues its own branded transit card, and Beijing's
@@ -57,6 +62,15 @@ import type { CategoryContent } from './row.js';
  * is a place-name character specific to Shenzhen with no independent meaning
  * to decompose, making this a brand name (like Beijing's 一卡通) rather than
  * a compositional word.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 店 gets a verified CharacterDecomposition alongside its existing
+ * mnemonic-only prose, which already named its real semantic component (广,
+ * "roof") - `BUILDING_RADICAL`, reused from street-trade.ts's 厅. Its
+ * rejected phonetic candidate, 占 (zhàn/zhān/tiē), is not a match for diàn,
+ * so it ships semantic-only. 高/火/车 stay bare mnemonic-only: all three are
+ * self-radical pictographs (a tall building, flames, a two-wheeled cart)
+ * with no separable component.
  */
 export const TRANSIT_TICKET: CategoryContent = {
   low: [
@@ -65,8 +79,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['shop', 'market', 'metro'],
       0,
       'diàn · winkel. Shares the 占 part with 站 (station), so the two look similar but mean different things. Common ending in shop names: 药店 (pharmacy), 书店 (bookstore), 花店 (florist), 便利店 (convenience store), 眼镜店 (optician). Picture 店 as someone staking a claim (占) to a spot under a roof (广) and setting up shop there: diàn.',
-      { hanzi: '店', pinyin: 'diàn', nl: 'winkel', en: 'shop' },
-      undefined,
+      { hanzi: '店', pinyin: 'diàn', nl: 'winkel', en: 'shop', structure: 'enclosure' },
+      {
+        kind: 'character',
+        hanzi: '店',
+        components: [{ componentId: BUILDING_RADICAL.id, role: 'semantic' }],
+        semantic_radical: BUILDING_RADICAL.id,
+      },
       { tier: 1, glossProvenance: 'mnemonic-only' },
     ],
   ],
@@ -76,8 +95,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['shop', 'entrance', 'ID card'],
       0,
       'diàn · winkel. Shares the 占 part with 站 (station), so the two look similar but mean different things. Common ending in shop names: 药店 (pharmacy), 书店 (bookstore), 花店 (florist), 便利店 (convenience store), 眼镜店 (optician). Picture 店 as someone staking a claim (占) to a spot under a roof (广) and setting up shop there: diàn.',
-      { hanzi: '店', pinyin: 'diàn', nl: 'winkel', en: 'shop' },
-      undefined,
+      { hanzi: '店', pinyin: 'diàn', nl: 'winkel', en: 'shop', structure: 'enclosure' },
+      {
+        kind: 'character',
+        hanzi: '店',
+        components: [{ componentId: BUILDING_RADICAL.id, role: 'semantic' }],
+        semantic_radical: BUILDING_RADICAL.id,
+      },
       { tier: 1, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -139,8 +163,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['venue, ground', 'shop', 'high-speed rail (G)'],
       0,
       'chǎng · terrein, plein, a venue or open ground. Read chǎng here, as in 停车场 (parking lot), 广场 (square), 商场 (shopping mall). Picture 场 as flat earth (土) with a banner flapping over it (the strokes on the right) — open ground cleared and staked out for an event: chǎng.',
-      { hanzi: '场', pinyin: 'chǎng', nl: 'terrein, plein', en: 'venue, ground' },
-      undefined,
+      { hanzi: '场', pinyin: 'chǎng', nl: 'terrein, plein', en: 'venue, ground', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '场',
+        components: [{ componentId: EARTH_SEMANTIC.id, role: 'semantic' }],
+        semantic_radical: EARTH_SEMANTIC.id,
+      },
       { tier: 1, freqRank: 249, glossProvenance: 'mnemonic-only' },
     ],
     [

@@ -1,4 +1,4 @@
-import { HAND_RADICAL, PERSON_RADICAL } from '../components.js';
+import { HAND_RADICAL, OX_RADICAL, PERSON_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -47,8 +47,13 @@ export const MARKET_LABEL: CategoryContent = {
       ['special', 'discount as the fraction you pay', 'members\' price'],
       0,
       'tè · speciaal (special). Seen in 特价 (special price) and 特色 (house specialty). Picture 特 as an ox (牛) kept apart at the temple (寺) for something special: tè.',
-      { hanzi: '特', pinyin: 'tè', nl: 'speciaal', en: 'special' },
-      undefined,
+      { hanzi: '特', pinyin: 'tè', nl: 'speciaal', en: 'special', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '特',
+        components: [{ componentId: OX_RADICAL.id, role: 'semantic' }],
+        semantic_radical: OX_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [

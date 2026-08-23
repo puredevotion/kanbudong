@@ -1,4 +1,4 @@
-import { GRASS_RADICAL } from '../components.js';
+import { AXE_RADICAL, BUILDING_RADICAL, DOOR_RADICAL, GRASS_RADICAL, MOUND_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -33,6 +33,24 @@ import type { CategoryContent } from './row.js';
  * 餐厅 each get one new standalone of their own (院/厅). 洗衣 resolves via the
  * existing 洗 (street-way.ts). 小吃 resolves via a new standalone, 小, also
  * reused by safety-warning.ts's 小心.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 所/院/厅 all get a verified CharacterDecomposition alongside their existing
+ * mnemonic-only prose - every mnemonic already named the real components
+ * (所's 户/斤, 院's 阝, 厅's 广) before this pass added a matching
+ * decomposition field. 所 ships both halves of its ideographic pair (户
+ * door, 斤 axe) as semantic, the same "two real meaningful parts" pattern
+ * `FEN_SEMANTIC` uses for 份. 院's 阝 is the LEFT-side mound/hill radical
+ * (阜, Kangxi 170) - a different Kangxi radical from `CITY_RADICAL`'s
+ * RIGHT-side 阝 (邑, Kangxi 163, used for 邮), even though both render as the
+ * identical glyph; see `MOUND_RADICAL`'s doc comment in components.ts. 厅
+ * ships `BUILDING_RADICAL` (广) per MMH's own etymology, not the literal 厂
+ * shown in its bare decomposition tree - a simplified-glyph artifact, not a
+ * real second component. Neither 所's nor 院's nor 厅's phonetic candidate
+ * (斤/完/丁) is an exact tone-and-syllable match, so all three ship
+ * semantic-only. 发/小 stay bare mnemonic-only: 发's MMH decomposition
+ * contains an unresolved placeholder component; 小 is a self-radical
+ * pictograph with no separable component.
  */
 export const STREET_TRADE: CategoryContent = {
   low: [
@@ -320,8 +338,16 @@ export const STREET_TRADE: CategoryContent = {
       ['place', 'clinic', 'local police station'],
       0,
       'suǒ · plek (place). Seen in 厕所 (toilet), 派出所 (police station) and 诊所 (clinic) - a generic "place" suffix for institutions. Picture 所 as a door (户) guarded by an axe (斤) - only the place you\'re allowed to be: suǒ.',
-      { hanzi: '所', pinyin: 'suǒ', nl: 'plek', en: 'place' },
-      undefined,
+      { hanzi: '所', pinyin: 'suǒ', nl: 'plek', en: 'place', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '所',
+        components: [
+          { componentId: DOOR_RADICAL.id, role: 'semantic' },
+          { componentId: AXE_RADICAL.id, role: 'semantic' },
+        ],
+        semantic_radical: DOOR_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -329,8 +355,13 @@ export const STREET_TRADE: CategoryContent = {
       ['institution, courtyard', 'place', 'to diagnose'],
       0,
       'yuàn · instelling, binnenplaats (institution, courtyard). Seen in 医院 (hospital). Picture 院 as a walled mound (阝) enclosing a complete (完), tidy courtyard: yuàn.',
-      { hanzi: '院', pinyin: 'yuàn', nl: 'instelling, binnenplaats', en: 'institution, courtyard' },
-      undefined,
+      { hanzi: '院', pinyin: 'yuàn', nl: 'instelling, binnenplaats', en: 'institution, courtyard', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '院',
+        components: [{ componentId: MOUND_RADICAL.id, role: 'semantic' }],
+        semantic_radical: MOUND_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -347,8 +378,13 @@ export const STREET_TRADE: CategoryContent = {
       ['hall', 'restaurant', 'institution, courtyard'],
       0,
       'tīng · zaal (hall). Seen in 餐厅 (restaurant, literally "meal hall"). Picture 厅 as a single person (丁) standing under a wide-open shelter roof (广) - a hall roomy enough to gather in: tīng.',
-      { hanzi: '厅', pinyin: 'tīng', nl: 'zaal', en: 'hall' },
-      undefined,
+      { hanzi: '厅', pinyin: 'tīng', nl: 'zaal', en: 'hall', structure: 'enclosure' },
+      {
+        kind: 'character',
+        hanzi: '厅',
+        components: [{ componentId: BUILDING_RADICAL.id, role: 'semantic' }],
+        semantic_radical: BUILDING_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [

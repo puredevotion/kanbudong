@@ -1,3 +1,10 @@
+import {
+  BITTER_RADICAL,
+  MOUTH_RADICAL,
+  SWEET_RADICAL,
+  TONGUE_RADICAL,
+  WINE_RADICAL,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -16,6 +23,16 @@ import type { CategoryContent } from './row.js';
 // authored in market-panel.ts for 称重). 微辣's second morpheme resolves the
 // same way via 辣; its first, 微 ("slight"), has no standalone item and is
 // not separately authored - a single-use morpheme not worth a new item for.
+//
+// Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+// 辣/咸/酸/甜 all get a verified CharacterDecomposition alongside their
+// existing mnemonic-only prose - every one of these mnemonics already named
+// the real component (辣's 辛, 咸's 口, 酸's 酉, 甜's 舌 and 甘) before this
+// pass added a matching decomposition field. Neither rejected phonetic half
+// (辣's 束, 酸's 夋) is an exact tone-and-syllable match, so both ship
+// semantic-only. 麻 stays bare mnemonic-only: MMH assigns it its own Kangxi
+// radical (self-radical, like a pictograph), not either of the two glyphs
+// (广/林) its own hint names.
 export const MENU_FLAVOUR: CategoryContent = {
   low: [
     [
@@ -23,8 +40,13 @@ export const MENU_FLAVOUR: CategoryContent = {
       ['chilli-hot', 'cold dishes', 'sweet'],
       0,
       'là · pittig, heet (chilli-hot, spicy). The most important warning character to recognize. Picture 辣 as a bundle of chili peppers (束) tied right onto the sign for a sharp, pungent taste (辛): là.',
-      { hanzi: '辣', pinyin: 'là', nl: 'pittig, heet', en: 'chilli-hot' },
-      undefined,
+      { hanzi: '辣', pinyin: 'là', nl: 'pittig, heet', en: 'chilli-hot', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '辣',
+        components: [{ componentId: BITTER_RADICAL.id, role: 'semantic' }],
+        semantic_radical: BITTER_RADICAL.id,
+      },
       { tier: 0, freqRank: 2420, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -77,8 +99,13 @@ export const MENU_FLAVOUR: CategoryContent = {
       ['salty', 'vegetarian', 'soft drinks'],
       0,
       'xián · zout (salty). Dishes labelled this way tend to be saltier than "salty" usually implies in Dutch or English. Picture 咸 as a halberd (戌) held right up to a mouth (口) — a taste sharp enough to feel like a blade: xián.',
-      { hanzi: '咸', pinyin: 'xián', nl: 'zout', en: 'salty' },
-      undefined,
+      { hanzi: '咸', pinyin: 'xián', nl: 'zout', en: 'salty', structure: 'enclosure' },
+      {
+        kind: 'character',
+        hanzi: '咸',
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        semantic_radical: MOUTH_RADICAL.id,
+      },
       { tier: 1, freqRank: 2525, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -86,8 +113,13 @@ export const MENU_FLAVOUR: CategoryContent = {
       ['sour', 'tossed, dressed', 'cold dishes'],
       0,
       'suān · zuur (sour). Also marks pickled-vegetable dishes. Picture 酸 as someone doubling over (夋) right after taking a swig straight from the wine jar (酉) — a face-puckering sourness: suān.',
-      { hanzi: '酸', pinyin: 'suān', nl: 'zuur', en: 'sour' },
-      undefined,
+      { hanzi: '酸', pinyin: 'suān', nl: 'zuur', en: 'sour', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '酸',
+        components: [{ componentId: WINE_RADICAL.id, role: 'semantic' }],
+        semantic_radical: WINE_RADICAL.id,
+      },
       { tier: 1, freqRank: 1456, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -95,8 +127,16 @@ export const MENU_FLAVOUR: CategoryContent = {
       ['sweet', 'house specialty', 'egg'],
       0,
       'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added. Picture 甜 as a tongue (舌) resting happily inside a mouth already savoring something sweet (甘): tián.',
-      { hanzi: '甜', pinyin: 'tián', nl: 'zoet', en: 'sweet' },
-      undefined,
+      { hanzi: '甜', pinyin: 'tián', nl: 'zoet', en: 'sweet', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '甜',
+        components: [
+          { componentId: TONGUE_RADICAL.id, role: 'semantic' },
+          { componentId: SWEET_RADICAL.id, role: 'semantic' },
+        ],
+        semantic_radical: SWEET_RADICAL.id,
+      },
       { tier: 1, freqRank: 2020, glossProvenance: 'mnemonic-only' },
     ],
   ],
@@ -106,8 +146,16 @@ export const MENU_FLAVOUR: CategoryContent = {
       ['sweet', 'skin, crackling', 'lamb, mutton, goat'],
       0,
       'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added. Picture 甜 as a tongue (舌) resting happily inside a mouth already savoring something sweet (甘): tián.',
-      { hanzi: '甜', pinyin: 'tián', nl: 'zoet', en: 'sweet' },
-      undefined,
+      { hanzi: '甜', pinyin: 'tián', nl: 'zoet', en: 'sweet', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '甜',
+        components: [
+          { componentId: TONGUE_RADICAL.id, role: 'semantic' },
+          { componentId: SWEET_RADICAL.id, role: 'semantic' },
+        ],
+        semantic_radical: SWEET_RADICAL.id,
+      },
       { tier: 1, freqRank: 2020, glossProvenance: 'mnemonic-only' },
     ],
   ],

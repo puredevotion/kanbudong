@@ -1,4 +1,21 @@
-import { AGAIN_RADICAL, FEN_SEMANTIC, MOUTH_RADICAL, PERSON_RADICAL } from '../components.js';
+import {
+  AGAIN_RADICAL,
+  BOW_RADICAL,
+  CLOTHES_RADICAL,
+  FEN_SEMANTIC,
+  ICE_RADICAL,
+  MOUTH_RADICAL,
+  OX_RADICAL,
+  PERSON_RADICAL,
+  POTTERY_RADICAL,
+  SPEECH_RADICAL,
+  STONE_RADICAL,
+  THOUSAND_RADICAL,
+  VILLAGE_RADICAL,
+  WAN_PHONETIC,
+  WOOD_RADICAL,
+  ZHENG_PHONETIC,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -31,10 +48,27 @@ import type { CategoryContent } from './row.js';
  * an earlier pass assumed from checking only 分's primary reading. 双 is a
  * genuine ⿰又又 - the same "又 doubled" hint its
  * own explanation already gave before this field existed - so it carries
- * `AGAIN_RADICAL` twice with no phonetic claim. 个/半/只 have no MMH semantic/
- * phonetic split clean enough to verify (个 and 半 are ideographic with no
- * reusable radical; 只's MMH radical 口 does not track its measure-word sense),
- * so each carries a labelled `glossProvenance: 'mnemonic-only'` story instead.
+ * `AGAIN_RADICAL` twice with no phonetic claim. 个/半 have no MMH semantic/
+ * phonetic split clean enough to verify - both are ideographic, but MMH's own
+ * `radical` field lands on a bare stroke (个's 丨) or a component the hint
+ * never names (半's 十) rather than the etymologically meaningful piece each
+ * hint actually describes - so both stay `glossProvenance: 'mnemonic-only'`
+ * with no decomposition.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 杯/碗/瓶/张/冷/只/件/装/重/证 all get a verified `CharacterDecomposition`
+ * alongside their existing mnemonic-only prose, same combination 价's own fix
+ * established. 只's MMH radical (口) does track a real, independent meaning
+ * ("mouth") even though it doesn't explain the modern measure-word sense -
+ * the same low bar `MOUTH_RADICAL`'s own 号 entry above was already held to.
+ * 碗's phonetic half 宛 (wǎn) is an exact match found by checking its full
+ * `pinyin-data` reading list, not just its more common yuān reading - the
+ * same miss class `FAN_PHONETIC`/`YAO_PHONETIC` document elsewhere. 件 ships
+ * both halves of its ideographic pair (亻 person, 牛 ox) as semantic, the
+ * same "two real meaningful parts" pattern `FEN_SEMANTIC` uses for 份. 重
+ * ships both halves of its own ideographic pair (千 thousand, 里 village/
+ * distance) the same way - see `THOUSAND_RADICAL`'s doc comment in
+ * components.ts for why that component's id carries no "kangxi-" claim.
  *
  * Coverage push (Aug 2026, DESIGN.md §9.1): 生产日期/生产厂家/冷藏/冷冻/进口/
  * 散装/称重/许可证 all get `WordDecomposition`s. 净含量 ("净" + "含" + "量") is
@@ -190,8 +224,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['cup, glass', 'checkout', '1, capital form'],
       0,
       'bēi · kopje, glas (cup, glass). Used for drinks. Written with the wood radical 木 on the left. Picture 杯 as a wooden (木) cup that is somehow "not" (不) ever quite full enough — you always want a refill: bēi.',
-      { hanzi: '杯', pinyin: 'bēi', nl: 'kopje, glas', en: 'cup, glass' },
-      undefined,
+      { hanzi: '杯', pinyin: 'bēi', nl: 'kopje, glas', en: 'cup, glass', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '杯',
+        components: [{ componentId: WOOD_RADICAL.id, role: 'semantic' }],
+        semantic_radical: WOOD_RADICAL.id,
+      },
       { tier: 1, freqRank: 1396, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -199,8 +238,16 @@ export const MARKET_PANEL: CategoryContent = {
       ['bowl', 'pairs', 'loose, sold by weight'],
       0,
       'wǎn · kom (bowl). Used for noodles, rice, congee — a common word on menus even though the character itself is rare elsewhere. Picture 碗 as a stone (石) bowl curved into a perfectly round hollow for rice: wǎn.',
-      { hanzi: '碗', pinyin: 'wǎn', nl: 'kom', en: 'bowl' },
-      undefined,
+      { hanzi: '碗', pinyin: 'wǎn', nl: 'kom', en: 'bowl', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '碗',
+        components: [
+          { componentId: STONE_RADICAL.id, role: 'semantic' },
+          { componentId: WAN_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: STONE_RADICAL.id,
+      },
       { tier: 1, freqRank: 1939, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -208,8 +255,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['bottle', 'yuan (spoken)', 'long thin things — fish, streets, trousers'],
       0,
       'píng · fles (bottle). Used for water, beer, sauce — also appears on shelf labels as a unit. Picture 瓶 as two matching things standing side by side (并), both made of fired clay (瓦) — a pair of bottles from the same kiln: píng.',
-      { hanzi: '瓶', pinyin: 'píng', nl: 'fles', en: 'bottle' },
-      undefined,
+      { hanzi: '瓶', pinyin: 'píng', nl: 'fles', en: 'bottle', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '瓶',
+        components: [{ componentId: POTTERY_RADICAL.id, role: 'semantic' }],
+        semantic_radical: POTTERY_RADICAL.id,
+      },
       { tier: 1, freqRank: 1703, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -217,8 +269,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['flat things — tickets, cards, tables', 'garments, items, matters', 'gram'],
       0,
       'zhāng · platte dingen — kaartjes, tafels (flat things — tickets, cards, tables). E.g. 一张票 (one ticket) — the word you need at a ticket window. Picture 张 as a bow (弓) drawn out long (长) — the same stretching motion as unrolling one flat ticket or sheet: zhāng.',
-      { hanzi: '张', pinyin: 'zhāng', nl: 'platte dingen — kaartjes, tafels', en: 'flat things — tickets, cards, tables' },
-      undefined,
+      { hanzi: '张', pinyin: 'zhāng', nl: 'platte dingen — kaartjes, tafels', en: 'flat things — tickets, cards, tables', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '张',
+        components: [{ componentId: BOW_RADICAL.id, role: 'semantic' }],
+        semantic_radical: BOW_RADICAL.id,
+      },
       { tier: 1, freqRank: 318, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -289,8 +346,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['cold', 'refrigerate, 0–4 °C', 'freeze, −18 °C'],
       0,
       'lěng · koud (cold). Seen in 冷藏 (refrigerate) and 冷冻 (freeze) - the shared first character both instructions differ from. Picture 冷 as ice (冫) so bracing it feels like a command (令) to shiver: lěng.',
-      { hanzi: '冷', pinyin: 'lěng', nl: 'koud', en: 'cold' },
-      undefined,
+      { hanzi: '冷', pinyin: 'lěng', nl: 'koud', en: 'cold', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '冷',
+        components: [{ componentId: ICE_RADICAL.id, role: 'semantic' }],
+        semantic_radical: ICE_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -333,8 +395,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['animals, one of a pair, some containers', 'net content', 'members\' price'],
       0,
       'zhī · dieren, één van een paar (measure word for animals, one of a pair, some containers). As "only", the same character is read zhǐ instead. Picture 只 as a little bird (the top strokes) perched with its two legs (八) apart on a branch — one single bird, one single thing: zhī.',
-      { hanzi: '只', pinyin: 'zhī', nl: 'dieren, één van een paar', en: 'animals, one of a pair, some containers' },
-      undefined,
+      { hanzi: '只', pinyin: 'zhī', nl: 'dieren, één van een paar', en: 'animals, one of a pair, some containers', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '只',
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        semantic_radical: MOUTH_RADICAL.id,
+      },
       { tier: 2, freqRank: 97, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -342,8 +409,16 @@ export const MARKET_PANEL: CategoryContent = {
       ['garments, items, matters', '1, capital form', 'general measure word'],
       0,
       'jiàn · kledingstukken, artikelen (garments, items, matters). E.g. 第二件半价 — "second item half price," a phrase you\'ll see in shops. Picture 件 as a person (亻) leading an ox (牛) by a rope — one person, one item, one clear unit to count: jiàn.',
-      { hanzi: '件', pinyin: 'jiàn', nl: 'kledingstukken, artikelen', en: 'garments, items, matters' },
-      undefined,
+      { hanzi: '件', pinyin: 'jiàn', nl: 'kledingstukken, artikelen', en: 'garments, items, matters', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '件',
+        components: [
+          { componentId: PERSON_RADICAL.id, role: 'semantic' },
+          { componentId: OX_RADICAL.id, role: 'semantic' },
+        ],
+        semantic_radical: PERSON_RADICAL.id,
+      },
       { tier: 2, freqRank: 250, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -395,8 +470,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['to pack, install', 'loose, sold by weight', 'weigh here'],
       0,
       'zhuāng · inpakken, installeren (to pack, install). Seen in 散装 (loose, sold by weight, literally "scattered packing"). Picture 装 as a strong (壮) pair of hands folding clothing (衣) up and packing it away: zhuāng.',
-      { hanzi: '装', pinyin: 'zhuāng', nl: 'inpakken, installeren', en: 'to pack, install' },
-      undefined,
+      { hanzi: '装', pinyin: 'zhuāng', nl: 'inpakken, installeren', en: 'to pack, install', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '装',
+        components: [{ componentId: CLOTHES_RADICAL.id, role: 'semantic' }],
+        semantic_radical: CLOTHES_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -405,7 +485,15 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'zhòng · gewicht, zwaar (weight, heavy). Seen in 称重 (weigh here) and 重辣 (very spicy, "heavy chilli"). Picture 重 as a person bent low under a heavy sack slung on their back: zhòng.',
       { hanzi: '重', pinyin: 'zhòng', nl: 'gewicht, zwaar', en: 'weight, heavy' },
-      undefined,
+      {
+        kind: 'character',
+        hanzi: '重',
+        components: [
+          { componentId: THOUSAND_RADICAL.id, role: 'semantic' },
+          { componentId: VILLAGE_RADICAL.id, role: 'semantic' },
+        ],
+        semantic_radical: VILLAGE_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -413,8 +501,16 @@ export const MARKET_PANEL: CategoryContent = {
       ['certificate', 'license', 'to permit'],
       0,
       'zhèng · certificaat, bewijs (certificate). Seen in 许可证 (license) and 身份证 (ID card). Picture 证 as spoken words (讠) confirmed correct (正) - an official proof: zhèng.',
-      { hanzi: '证', pinyin: 'zhèng', nl: 'certificaat, bewijs', en: 'certificate' },
-      undefined,
+      { hanzi: '证', pinyin: 'zhèng', nl: 'certificaat, bewijs', en: 'certificate', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '证',
+        components: [
+          { componentId: SPEECH_RADICAL.id, role: 'semantic' },
+          { componentId: ZHENG_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: SPEECH_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
   ],

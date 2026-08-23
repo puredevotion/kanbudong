@@ -1,4 +1,17 @@
-import { METAL_RADICAL, SHELL_RADICAL, SILK_RADICAL, TAP_RADICAL } from '../components.js';
+import {
+  CLOTH_RADICAL,
+  MA_PHONETIC,
+  METAL_RADICAL,
+  MOUTH_RADICAL,
+  ONE_RADICAL,
+  PERSON_RADICAL,
+  SHELL_RADICAL,
+  SILK_RADICAL,
+  STONE_RADICAL,
+  TAP_RADICAL,
+  TEN_RADICAL,
+  YI_PHONETIC,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -57,8 +70,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['market, city', 'shop', 'venue, ground'],
       0,
       'shì · markt, stad (market, city). Seen in 超市 (supermarket) and 市场 (market). Picture 市 as an awning (亠) strung up over a stall\'s hanging cloth banner (巾) - a market stall set up for the day: shì.',
-      { hanzi: '市', pinyin: 'shì', nl: 'markt, stad', en: 'market, city' },
-      undefined,
+      { hanzi: '市', pinyin: 'shì', nl: 'markt, stad', en: 'market, city', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '市',
+        components: [{ componentId: CLOTH_RADICAL.id, role: 'semantic' }],
+        semantic_radical: CLOTH_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
   ],
@@ -130,8 +148,16 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['code, number', 'scan the QR code', 'flat things — tickets, cards, tables'],
       0,
       'mǎ · code, nummer (code, number). Seen in 扫码 (scan the code) and 密码 (password). Picture 码 as a stone (石) marker carved with a horse\'s (马) number on it - a code chiselled in for good: mǎ.',
-      { hanzi: '码', pinyin: 'mǎ', nl: 'code, nummer', en: 'code, number' },
-      undefined,
+      { hanzi: '码', pinyin: 'mǎ', nl: 'code, nummer', en: 'code, number', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '码',
+        components: [
+          { componentId: STONE_RADICAL.id, role: 'semantic' },
+          { componentId: MA_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: STONE_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -139,8 +165,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['hundred', 'hundred million', 'bottle'],
       0,
       'bǎi · honderd (hundred). Below 10,000, Chinese numbers work just like European ones. Picture 百 as the number 一 (one) capping a wide, wide mouth (白 shape) stretched open to shout out a big round number: bǎi.',
-      { hanzi: '百', pinyin: 'bǎi', nl: 'honderd', en: 'hundred' },
-      undefined,
+      { hanzi: '百', pinyin: 'bǎi', nl: 'honderd', en: 'hundred', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '百',
+        components: [{ componentId: ONE_RADICAL.id, role: 'semantic' }],
+        semantic_radical: ONE_RADICAL.id,
+      },
       { tier: 1, freqRank: 407, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -148,8 +179,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['thousand', 'settle up, pay', '2, capital form'],
       0,
       'qiān · duizend (thousand). The last unit before Chinese numbers start grouping by 10,000 instead of 1,000. Picture 千 as a single stroke driven straight down through 十 (ten) — pushing "ten" up a whole order of magnitude: qiān.',
-      { hanzi: '千', pinyin: 'qiān', nl: 'duizend', en: 'thousand' },
-      undefined,
+      { hanzi: '千', pinyin: 'qiān', nl: 'duizend', en: 'thousand', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '千',
+        components: [{ componentId: TEN_RADICAL.id, role: 'semantic' }],
+        semantic_radical: TEN_RADICAL.id,
+      },
       { tier: 1, freqRank: 599, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -238,8 +274,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['counter, platform, stand', 'silver, money', 'account, bill'],
       0,
       'tái · toonbank, platform (counter, platform, stand). Seen in 收银台 (checkout counter) and 站台 (train platform). Picture 台 as a little stool set above an open, mouth-shaped stage - a small platform to stand and speak from: tái.',
-      { hanzi: '台', pinyin: 'tái', nl: 'toonbank, platform', en: 'counter, platform, stand' },
-      undefined,
+      { hanzi: '台', pinyin: 'tái', nl: 'toonbank, platform', en: 'counter, platform, stand', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '台',
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        semantic_radical: MOUTH_RADICAL.id,
+      },
       { freqRank: 388, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -277,8 +318,16 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['hundred million', 'animals, one of a pair, some containers', '2, capital form'],
       0,
       'yì · honderd miljoen (hundred million, 10⁸). Seen on property prices, news tickers, and lottery boards — it\'s the next step up from 万 in China\'s 10,000-based number grouping. Picture 亿 as a person (亻) standing beside a tiny swallow-shaped squiggle (乙) that has multiplied into an enormous flock — one person surrounded by a hundred million birds: yì.',
-      { hanzi: '亿', pinyin: 'yì', nl: 'honderd miljoen', en: 'hundred million' },
-      undefined,
+      { hanzi: '亿', pinyin: 'yì', nl: 'honderd miljoen', en: 'hundred million', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '亿',
+        components: [
+          { componentId: PERSON_RADICAL.id, role: 'semantic' },
+          { componentId: YI_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: PERSON_RADICAL.id,
+      },
       { tier: 2, freqRank: 1057, glossProvenance: 'mnemonic-only' },
     ],
     [

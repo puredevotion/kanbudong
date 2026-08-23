@@ -1,4 +1,14 @@
-import { CAI_PHONETIC, GRASS_RADICAL, WATER_RADICAL } from '../components.js';
+import {
+  CAI_PHONETIC,
+  DIPPER_RADICAL,
+  GRASS_RADICAL,
+  LIE_PHONETIC,
+  PERSON_RADICAL,
+  QI_PHONETIC,
+  RUN_RADICAL,
+  STAND_SEMANTIC,
+  WATER_RADICAL,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -33,6 +43,20 @@ import type { CategoryContent } from './row.js';
  * standalone item and authoring one for this single word alone is out of
  * proportion for this pass - logged as a genuine, still-inert gap rather
  * than shipped with a `WordDecomposition` that would resolve empty.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 料/例/起/位 all get a verified CharacterDecomposition alongside their
+ * existing mnemonic-only prose - every mnemonic already named the real
+ * components (料's 斗/米, 例's 亻/列, 起's 己/走, 位's 亻/立) before this pass
+ * added a matching decomposition field. 料 ships MMH's own radical, 斗
+ * (dipper, to measure), not 米 - the mnemonic's other named piece - since 斗
+ * is what MMH's `radical` field actually assigns. 例/起 both turned up an
+ * exact-reading phonetic match (列 lì, 己 qǐ) that a prior pass would have
+ * missed by only checking each candidate's more common primary reading
+ * (liè, jǐ) - the same miss class `FAN_PHONETIC`/`FEN_SEMANTIC`/`YAO_PHONETIC`
+ * document. 位 ships both halves of its ideographic pair (亻 person, 立 to
+ * stand) as semantic, the same "two real meaningful parts" pattern
+ * `FEN_SEMANTIC` uses for 份.
  */
 export const MENU_ORDER: CategoryContent = {
   low: [
@@ -189,8 +213,13 @@ export const MENU_ORDER: CategoryContent = {
       ['material, ingredient', 'soft drinks', 'dish, vegetable'],
       0,
       'liào · materiaal, ingrediënt (material, ingredient). Seen in 饮料 (soft drinks) and 配料表 (ingredient list, on a package back panel). Picture 料 as a wooden dipper (斗) scooping out rice (米) - the raw ingredient before it\'s measured into anything: liào.',
-      { hanzi: '料', pinyin: 'liào', nl: 'materiaal, ingrediënt', en: 'material, ingredient' },
-      undefined,
+      { hanzi: '料', pinyin: 'liào', nl: 'materiaal, ingrediënt', en: 'material, ingredient', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '料',
+        components: [{ componentId: DIPPER_RADICAL.id, role: 'semantic' }],
+        semantic_radical: DIPPER_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
   ],
@@ -209,8 +238,16 @@ export const MENU_ORDER: CategoryContent = {
       ['standard portion', 'soft drinks', 'flash-fry'],
       0,
       'lì · standaardportie (standard portion). Usually means "example" elsewhere, so this menu sense is a special case worth remembering. Picture 例 as a person (亻) standing at their assigned place in a lined-up row (列) — everyone gets the same standard-issue portion: lì.',
-      { hanzi: '例', pinyin: 'lì', nl: 'standaardportie', en: 'standard portion' },
-      undefined,
+      { hanzi: '例', pinyin: 'lì', nl: 'standaardportie', en: 'standard portion', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '例',
+        components: [
+          { componentId: PERSON_RADICAL.id, role: 'semantic' },
+          { componentId: LIE_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: PERSON_RADICAL.id,
+      },
       { tier: 2, freqRank: 547, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -243,8 +280,16 @@ export const MENU_ORDER: CategoryContent = {
       ['"from" (a price)', 'per person', 'standard portion'],
       0,
       'qǐ · vanaf ("from," used with a price). E.g. 88元起 means prices start at 88 yuan, not that it costs exactly 88. Picture 起 as your own feet (己) starting to walk (走) — the price gets up on its own two feet and starts climbing from this number: qǐ.',
-      { hanzi: '起', pinyin: 'qǐ', nl: 'vanaf', en: '"from" (a price)' },
-      undefined,
+      { hanzi: '起', pinyin: 'qǐ', nl: 'vanaf', en: '"from" (a price)', structure: 'enclosure' },
+      {
+        kind: 'character',
+        hanzi: '起',
+        components: [
+          { componentId: RUN_RADICAL.id, role: 'semantic' },
+          { componentId: QI_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: RUN_RADICAL.id,
+      },
       { tier: 2, freqRank: 75, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -252,8 +297,16 @@ export const MENU_ORDER: CategoryContent = {
       ['per person', 'large portion', 'soup'],
       0,
       'wèi · per persoon (per person). Shows up in charges like 茶位费 and 餐位费 (tea/table cover charges). Picture 位 as a person (亻) standing (立) in their own assigned spot at the table — one standing spot, one person, one charge: wèi.',
-      { hanzi: '位', pinyin: 'wèi', nl: 'per persoon', en: 'per person' },
-      undefined,
+      { hanzi: '位', pinyin: 'wèi', nl: 'per persoon', en: 'per person', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '位',
+        components: [
+          { componentId: PERSON_RADICAL.id, role: 'semantic' },
+          { componentId: STAND_SEMANTIC.id, role: 'semantic' },
+        ],
+        semantic_radical: PERSON_RADICAL.id,
+      },
       { tier: 2, freqRank: 182, glossProvenance: 'mnemonic-only' },
     ],
   ],

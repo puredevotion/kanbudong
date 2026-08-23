@@ -1,3 +1,4 @@
+import { EARTH_SEMANTIC, KNIFE_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -11,6 +12,19 @@ import type { CategoryContent } from './row.js';
  * Coverage push (Aug 2026, DESIGN.md §9.1): 千克 gets a `WordDecomposition`
  * (千 + 克); both morphemes already exist as standalone items in this same
  * file, so it resolves fully with no new standalone needed.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 块 and 分 get a verified `CharacterDecomposition` alongside their existing
+ * mnemonic-only prose - both mnemonics already named the real components
+ * (块's 土 earth, 分's 刀 knife) before this pass gave them a matching
+ * `decomposition` field. 块 reuses `EARTH_SEMANTIC` (from 城, menu-cooking.ts);
+ * its phonetic half 夬 (guài/jué) is not a match for kuài. 分's phonetic half
+ * 八 is glossed "eight" in its literal reading, not the "pieces" sense MMH's
+ * own ideographic hint stretches it to, so only its real semantic half (刀)
+ * ships. 元/斤/两/克/角/毛 stay bare mnemonic-only: 元/斤/角/毛 are self-radical
+ * pictographs (MMH assigns each its own Kangxi radical, nothing separable);
+ * 两/克 have a Kangxi radical field that matches neither the ideographic
+ * hint's actual named component nor a clean top-level split.
  */
 export const MARKET_WEIGHT: CategoryContent = {
   low: [
@@ -28,8 +42,13 @@ export const MARKET_WEIGHT: CategoryContent = {
       ['yuan (spoken)', '0.1 yuan (spoken)', '2, capital form'],
       0,
       'kuài · yuan (spoken). This is what people say out loud, even though 元 is what gets printed. Picture 块 as 土 earth with a shovel-blade shape (夬) cutting into it — a shovel digging a solid chunk out of the ground: kuài, a "piece" or "chunk" of money.',
-      { hanzi: '块', pinyin: 'kuài', nl: 'yuan (spreektaal)', en: 'yuan (spoken)' },
-      undefined,
+      { hanzi: '块', pinyin: 'kuài', nl: 'yuan (spreektaal)', en: 'yuan (spoken)', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '块',
+        components: [{ componentId: EARTH_SEMANTIC.id, role: 'semantic' }],
+        semantic_radical: EARTH_SEMANTIC.id,
+      },
       { tier: 0, freqRank: 793, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -98,8 +117,13 @@ export const MARKET_WEIGHT: CategoryContent = {
       ['0.01 yuan', 'o\'clock (spoken)', 'day of month (spoken); number'],
       0,
       'fēn · cent. Rarely used as cash anymore, but still printed on itemized receipts. Note: this character is also read fèn in other words (like 部分, 分量), and fēn is likewise the word for "minute." Picture 分 as a knife (刀) cutting something into eight (八) equal slivers — slicing a yuan down to its smallest piece: fēn.',
-      { hanzi: '分', pinyin: 'fēn', nl: 'cent', en: '0.01 yuan' },
-      undefined,
+      { hanzi: '分', pinyin: 'fēn', nl: 'cent', en: '0.01 yuan', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '分',
+        components: [{ componentId: KNIFE_RADICAL.id, role: 'semantic' }],
+        semantic_radical: KNIFE_RADICAL.id,
+      },
       { tier: 2, freqRank: 79, glossProvenance: 'mnemonic-only' },
     ],
   ],

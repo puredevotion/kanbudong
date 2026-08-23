@@ -1,3 +1,4 @@
+import { HEART_RADICAL_FULL, HUI_PHONETIC } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -15,6 +16,22 @@ import type { CategoryContent } from './row.js';
  * auspicious four-character phrase ("grand opening, may fortune follow") for
  * a launch banner, not a compound whose parts predict "grand opening" the
  * way 打折/清仓 predict theirs.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 惠 gets a verified CharacterDecomposition alongside its existing
+ * mnemonic-only prose, which already named both real components (叀
+ * "spinning wheel", 心 "heart"). 叀 huì is an exact reading match for 惠's own
+ * huì, found by checking `pinyin-data`'s full reading list rather than 叀's
+ * more common zhuān reading - the same miss class `FAN_PHONETIC`/
+ * `FEN_SEMANTIC`/`YAO_PHONETIC` document. 卖/仓/大 stay bare mnemonic-only:
+ * 卖's own MMH etymology assigns the same component (买) to both the
+ * semantic and phonetic role, which this schema cannot represent, and its
+ * separately-assigned Kangxi radical (十) matches neither; 仓's MMH
+ * etymology describes the *traditional* 倉's structure (食 grain, 口
+ * storage), not the actual simplified 仓 decomposition shown (人+㔾), so the
+ * modern glyph's parts carry no real semantic content of their own; 大 is a
+ * self-radical pictograph (a person with arms outstretched) with no
+ * separable component.
  */
 export const STREET_PROMO: CategoryContent = {
   low: [
@@ -123,8 +140,16 @@ export const STREET_PROMO: CategoryContent = {
       ['favour, benefit', 'big', 'to sell'],
       0,
       'huì · gunst, voordeel (favour, benefit). Seen in 优惠 (special offer). Picture 惠 as a spinning wheel (叀) turned over and over by a caring heart (心) - a kindness given freely: huì.',
-      { hanzi: '惠', pinyin: 'huì', nl: 'gunst, voordeel', en: 'favour, benefit' },
-      undefined,
+      { hanzi: '惠', pinyin: 'huì', nl: 'gunst, voordeel', en: 'favour, benefit', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '惠',
+        components: [
+          { componentId: HUI_PHONETIC.id, role: 'phonetic' },
+          { componentId: HEART_RADICAL_FULL.id, role: 'semantic' },
+        ],
+        semantic_radical: HEART_RADICAL_FULL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
   ],

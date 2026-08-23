@@ -1,3 +1,4 @@
+import { HAND_RADICAL, ZHI_PHONETIC } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -8,6 +9,12 @@ import type { CategoryContent } from './row.js';
  * Coverage push (Aug 2026, DESIGN.md §9.1): 指令 ("to point" + "command" -
  * a genuinely transparent compound: pointing out an order) gets a
  * `WordDecomposition`, backed by a new standalone, 指.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 指 gets a verified CharacterDecomposition alongside its existing
+ * mnemonic-only prose, which already named both real components (扌 hand,
+ * 旨 "purpose/purport"). MMH's own ideographic hint states 旨 "also provides
+ * the pronunciation," and 旨 zhǐ is an exact reading match for 指's own zhǐ.
  */
 export const SAFETY_INSTRUCTION: CategoryContent = {
   low: [
@@ -56,8 +63,16 @@ export const SAFETY_INSTRUCTION: CategoryContent = {
       ['to point', 'command', 'mandatory — solid blue circle'],
       0,
       'zhǐ · wijzen (to point). Seen in 指令 (instruction, command). Picture 指 as a hand (扌) pointing straight at its purpose (旨): zhǐ.',
-      { hanzi: '指', pinyin: 'zhǐ', nl: 'wijzen', en: 'to point' },
-      undefined,
+      { hanzi: '指', pinyin: 'zhǐ', nl: 'wijzen', en: 'to point', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '指',
+        components: [
+          { componentId: HAND_RADICAL.id, role: 'semantic' },
+          { componentId: ZHI_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: HAND_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
   ],

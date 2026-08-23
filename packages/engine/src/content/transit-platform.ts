@@ -1,4 +1,4 @@
-import { EARTH_SEMANTIC, STAND_SEMANTIC, ZHAN_PHONETIC } from '../components.js';
+import { EARTH_SEMANTIC, STAND_SEMANTIC, TWO_HANDS_RADICAL, WOOD_RADICAL, ZHAN_PHONETIC } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -36,6 +36,18 @@ import type { CategoryContent } from './row.js';
  * resolves via a new standalone, 检, also reused by transit-ticket.ts's
  * 检票/检票口. 首末车/末班车/单程票/站台 all resolve fully via existing
  * standalones (车, 票, 台) with no new authoring needed.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 检/开 both get a verified CharacterDecomposition alongside their existing
+ * mnemonic-only prose - both mnemonics already named a real component (检's
+ * 木, "wooden gauge"; 开's 廾, "two hands"). Neither rejected phonetic
+ * candidate (检's 佥, 开's own 一 - glossed "latch" in the mnemonic, not its
+ * literal meaning "one") ships, so both stay semantic-only. 口/乘/向 stay
+ * bare mnemonic-only: this 口 (same character as market-panel.ts's own 口
+ * item) is itself an atomic pictograph; 乘's Kangxi radical (丿) sits nested
+ * inside the ideographic hint's actual named components (禾, 北), not a
+ * clean top-level split; 向's MMH decomposition contains an unresolved
+ * placeholder component.
  */
 export const TRANSIT_PLATFORM: CategoryContent = {
   low: [
@@ -268,8 +280,13 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       ['to inspect', 'to ride', 'safe'],
       0,
       'jiǎn · controleren (to inspect). Seen in 安检 (security check); the same character also appears in 检票/检票口 (ticket check/ticket gate) at the ticket hall. Picture 检 as a wooden gauge (木) checking that everyone (佥) matches the standard: jiǎn.',
-      { hanzi: '检', pinyin: 'jiǎn', nl: 'controleren', en: 'to inspect' },
-      undefined,
+      { hanzi: '检', pinyin: 'jiǎn', nl: 'controleren', en: 'to inspect', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '检',
+        components: [{ componentId: WOOD_RADICAL.id, role: 'semantic' }],
+        semantic_radical: WOOD_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -286,8 +303,13 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       ['to open, start', 'toward', 'to ride'],
       0,
       'kāi · openen, starten (to open, start). Seen in 开往 (bound for, literally "starts toward"). Picture 开 as a gate\'s crossbar (一) lifted straight up and off by two hands (廾), swinging it open: kāi.',
-      { hanzi: '开', pinyin: 'kāi', nl: 'openen, starten', en: 'to open, start' },
-      undefined,
+      { hanzi: '开', pinyin: 'kāi', nl: 'openen, starten', en: 'to open, start', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '开',
+        components: [{ componentId: TWO_HANDS_RADICAL.id, role: 'semantic' }],
+        semantic_radical: TWO_HANDS_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
   ],

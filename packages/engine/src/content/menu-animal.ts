@@ -13,6 +13,7 @@ import {
   WRAP_PHONETIC,
   BAMBOO_RADICAL,
   SILK_RADICAL_FULL,
+  GRASS_RADICAL,
 } from '../components.js';
 import type { CategoryContent } from './row.js';
 
@@ -102,8 +103,13 @@ export const MENU_ANIMAL: CategoryContent = {
       ['meat-containing', 'steam', 'standard portion'],
       0,
       'hūn · met vlees (meat-containing) — often used as the "meat" heading paired against 素 ("vegetarian"). Picture 荤 as a military camp (军) hidden under leafy cover (艹), roasting meat over a campfire while the vegetarian camp next door eats greens: hūn.',
-      { hanzi: '荤', pinyin: 'hūn', nl: 'met vlees', en: 'meat-containing' },
-      undefined,
+      { hanzi: '荤', pinyin: 'hūn', nl: 'met vlees', en: 'meat-containing', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '荤',
+        components: [{ componentId: GRASS_RADICAL.id, role: 'semantic' }],
+        semantic_radical: GRASS_RADICAL.id,
+      },
       { tier: 0, freqRank: 3302, glossProvenance: 'mnemonic-only' },
     ],
   ],

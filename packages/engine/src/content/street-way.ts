@@ -1,8 +1,11 @@
 import {
   CITY_RADICAL,
   DI_PHONETIC,
+  GATE_RADICAL,
   GRASS_RADICAL,
   HEART_RADICAL,
+  MOUTH_RADICAL,
+  SUN_RADICAL,
   WALK_RADICAL,
   WATER_RADICAL,
   YOU_PHONETIC,
@@ -32,10 +35,26 @@ import type { CategoryContent } from './row.js';
  * reuses `GRASS_RADICAL` (street-trade.ts's own 茶); 邮 and 递 each carry a
  * verified semantic radical plus an exact-tone phonetic match (由/弟); 快
  * carries a verified semantic radical (忄) with no phonetic claim, since its
- * MMH-listed phonetic half 夬 is not a tone-or-syllable match for kuài. 手/间/
+ * MMH-listed phonetic half 夬 is not a tone-or-syllable match for kuài. 手/
  * 局 have no semantic/phonetic split Make Me a Hanzi records cleanly enough
- * to ship as a verified `CharacterDecomposition`, so each carries a labelled
+ * to ship as a verified `CharacterDecomposition` - 手 is a self-radical
+ * pictograph, and 局's own Kangxi radical field (尸) does not match its own
+ * decomposition tree's top-level component (尺) - so both carry a labelled
  * `glossProvenance: 'mnemonic-only'` story instead.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 间/问 both get a verified CharacterDecomposition alongside their existing
+ * mnemonic-only prose. 间 ships both halves of its ideographic pair (门 gate,
+ * 日 sun/daylight - the "sliver of daylight" its own mnemonic already
+ * describes) as semantic, the same "two real meaningful parts" pattern
+ * `FEN_SEMANTIC` uses for 份. 问's own 门 is MMH's PHONETIC half (mén, not a
+ * match for wèn), not its semantic one - so 问 ships only the real semantic
+ * half, `MOUTH_RADICAL` (口), and this pass's `GATE_RADICAL` stays confined
+ * to 间. 电/无 stay bare mnemonic-only: 电's own MMH etymology says its
+ * decomposition is a simplified-form artifact (the traditional 電's
+ * "lightning from a storm cloud" describes 電, not what 电's actual displayed
+ * parts, 曰/乚, mean); 无 is a self-radical pictograph with no etymology at
+ * all.
  *
  * Coverage push (Aug 2026, DESIGN.md §9.1): 直行/步行街/单行道/人行天桥 all get
  * `WordDecomposition`s resolving fully via the existing 行 standalone
@@ -222,8 +241,16 @@ export const STREET_WAY: CategoryContent = {
       ['room; between', 'to wash', 'office, bureau'],
       0,
       'jiān · kamer; tussen (room; between). Seen in 洗手间 (washroom) and 房间 (room). Picture 间 as a gate with a sliver of daylight caught between its doors - the gap between two things, or a room of its own: jiān.',
-      { hanzi: '间', pinyin: 'jiān', nl: 'kamer; tussen', en: 'room; between' },
-      undefined,
+      { hanzi: '间', pinyin: 'jiān', nl: 'kamer; tussen', en: 'room; between', structure: 'enclosure' },
+      {
+        kind: 'character',
+        hanzi: '间',
+        components: [
+          { componentId: GATE_RADICAL.id, role: 'semantic' },
+          { componentId: SUN_RADICAL.id, role: 'semantic' },
+        ],
+        semantic_radical: GATE_RADICAL.id,
+      },
       { freqRank: 135, glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -285,8 +312,13 @@ export const STREET_WAY: CategoryContent = {
       ['to ask', 'to go', 'road'],
       0,
       'wèn · vragen (to ask). Seen in 问讯处 (information desk, literally "ask-inquire place"). Picture 问 as a mouth (口) calling out through a doorway (门), asking after whoever\'s inside: wèn.',
-      { hanzi: '问', pinyin: 'wèn', nl: 'vragen', en: 'to ask' },
-      undefined,
+      { hanzi: '问', pinyin: 'wèn', nl: 'vragen', en: 'to ask', structure: 'enclosure' },
+      {
+        kind: 'character',
+        hanzi: '问',
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        semantic_radical: MOUTH_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [

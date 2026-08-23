@@ -1,3 +1,4 @@
+import { ALTAR_RADICAL, SPEECH_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -12,6 +13,13 @@ import type { CategoryContent } from './row.js';
  * construction. 禁止 and 严禁 share a new standalone, 禁; 请勿 gets its own new
  * standalone, 请. 止/勿/严 are not separately authored - each word already
  * resolves via its other, newly-authored morpheme.
+ *
+ * Mnemonic-only decomposition-gap audit (Aug 2026, the 价 bug's aftermath):
+ * 禁/请 both get a verified CharacterDecomposition alongside their existing
+ * mnemonic-only prose - both mnemonics already named a real component (禁's
+ * 示, "shrine"; 请's 讠, "speech") before this pass added a matching
+ * decomposition field. Neither rejected phonetic half (禁's 林, 请's 青) is an
+ * exact tone-and-syllable match, so both ship semantic-only.
  */
 export const SAFETY_PROHIBITION: CategoryContent = {
   low: [
@@ -84,8 +92,13 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       ['to forbid', 'to stop', 'strictly forbidden'],
       0,
       'jìn · verbieden (to forbid). Seen in 禁止 (prohibition) and 严禁 (strictly forbidden). Picture 禁 as two trees (林) fenced off in front of a shrine (示) - forbidden ground: jìn.',
-      { hanzi: '禁', pinyin: 'jìn', nl: 'verbieden', en: 'to forbid' },
-      undefined,
+      { hanzi: '禁', pinyin: 'jìn', nl: 'verbieden', en: 'to forbid', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '禁',
+        components: [{ componentId: ALTAR_RADICAL.id, role: 'semantic' }],
+        semantic_radical: ALTAR_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
     [
@@ -93,8 +106,13 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       ['please', 'do not', 'to forbid'],
       0,
       'qǐng · alstublieft (please). Seen in 请勿 (please do not). Picture 请 as fresh, young (青) words (讠), spoken as politely as anyone can manage: qǐng.',
-      { hanzi: '请', pinyin: 'qǐng', nl: 'alstublieft', en: 'please' },
-      undefined,
+      { hanzi: '请', pinyin: 'qǐng', nl: 'alstublieft', en: 'please', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '请',
+        components: [{ componentId: SPEECH_RADICAL.id, role: 'semantic' }],
+        semantic_radical: SPEECH_RADICAL.id,
+      },
       { glossProvenance: 'mnemonic-only' },
     ],
   ],
