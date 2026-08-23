@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@500;700&display=swap">
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", "Noto Sans", sans-serif;
+      background:
+        radial-gradient(1400px 700px at 50% -12%, oklch(0.28 0.06 285) 0%, transparent 62%),
+        oklch(0.19 0.02 285);
+      color: oklch(0.9911 0 0);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: oklch(0.6204 0.195 253.83); }
+    a:hover { color: oklch(0.72 0.195 253.83); }
+    .han { font-family: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", sans-serif; }
+    .han-serif { font-family: "Noto Serif SC", "Songti SC", serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .sign { box-shadow: 0 14px 30px -10px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06); }
+    .cap-h { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+    .cap-b { margin: 6px 0 0; font-size: 12.5px; line-height: 18px; color: oklch(70.5% 0.015 286.067); text-wrap: pretty; }
+    .tag { display: inline-block; margin-bottom: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: oklch(0.62 0.015 286); }
+  </style>
+</helmet>
+
+<div style="padding: 44px 48px 52px">
+
+  <div style="max-width: 660px">
+    <h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 600; letter-spacing: -0.025em">Five signs, five objects</h1>
+    <p style="margin: 10px 0 0; font-size: 15px; line-height: 23px; color: oklch(70.5% 0.015 286.067); text-wrap: pretty">
+      The card is not a plate that changes colour by topic. Each category is rendered as the kind of
+      physical thing you actually meet it on, because recognising the object is half of reading the
+      sign — you know a price label is a price label before you can read a character of it, and that
+      knowledge is what makes the characters guessable.
+    </p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 52px 48px; margin-top: 44px">
+
+    <div>
+      <span class="tag">01 &middot; TRANSIT</span>
+      <div class="sign" style="border-radius: 4px; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: oklch(0.42 0.13 250); padding: 8px 14px">
+          <span class="han" style="font-size: 15px; line-height: 20px; font-weight: 500; color: #fff; letter-spacing: 0.08em">地铁</span>
+          <span style="font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0.14em; color: rgba(255,255,255,0.82)">METRO</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 18px; background: #f4f4f2; padding: 30px 18px">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #14140f; color: #f4f4f2; font-size: 23px; font-weight: 700">B</span>
+          <span class="han" style="font-size: 68px; line-height: 1; font-weight: 500; color: #14140f; letter-spacing: 0.04em">出口</span>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#14140f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </div>
+      </div>
+      <div style="margin-top: 14px">
+        <div class="cap-h">Wayfinding plate &middot; enamel, blue band, arrow</div>
+        <p class="cap-b">Highest-contrast of the five, because a station reads at distance and at speed. The exit letter is part of the sign, not decoration — it is what decides which street you come up on.</p>
+      </div>
+    </div>
+
+    <div>
+      <span class="tag">02 &middot; MENU</span>
+      <div class="sign" style="border-radius: 3px; overflow: hidden; background: #f6f1e7">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: oklch(0.42 0.16 28); padding: 8px 16px">
+          <span class="han-serif" style="font-size: 17px; line-height: 22px; font-weight: 700; color: #fff; letter-spacing: 0.1em">热菜</span>
+          <span style="font-size: 10px; line-height: 16px; font-weight: 600; letter-spacing: 0.16em; color: rgba(255,255,255,0.8)">HOT DISHES</span>
+        </div>
+        <div style="padding: 6px 0 10px">
+          <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 16px; opacity: 0.45">
+            <span class="han-serif" style="font-size: 20px; color: #1a1410">宫保鸡丁</span>
+            <span style="flex-grow: 1; border-bottom: 1px dotted rgba(0,0,0,0.3); transform: translateY(-4px)"></span>
+            <span class="mono" style="font-size: 15px; color: #1a1410">42</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 10px; padding: 12px 16px; background: rgba(180,40,30,0.09); border-left: 3px solid oklch(0.52 0.19 28)">
+            <span class="han-serif" style="font-size: 24px; font-weight: 700; color: #1a1410">水煮牛肉</span>
+            <span class="han" style="font-size: 18px; font-weight: 700; color: oklch(0.52 0.19 28)">辣辣</span>
+            <span style="flex-grow: 1; border-bottom: 1px dotted rgba(0,0,0,0.3); transform: translateY(-5px)"></span>
+            <span class="mono" style="font-size: 17px; font-weight: 600; color: #1a1410">68</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 16px; opacity: 0.45">
+            <span class="han-serif" style="font-size: 20px; color: #1a1410">清蒸鱼</span>
+            <span style="flex-grow: 1; border-bottom: 1px dotted rgba(0,0,0,0.3); transform: translateY(-4px)"></span>
+            <span class="mono" style="font-size: 15px; color: #1a1410">88</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 14px">
+        <div class="cap-h">Printed menu section &middot; serif, price column, leaders</div>
+        <p class="cap-b">The only card with siblings: a dish means nothing without the rows around it and the section header above it. Reading a menu is reading a layout first. Serif face, because printed menus are set in Song, not Hei.</p>
+      </div>
+    </div>
+
+    <div>
+      <span class="tag">03 &middot; SHOPFRONT</span>
+      <div class="sign" style="border-radius: 3px; overflow: hidden; background: oklch(0.40 0.15 28); padding: 7px">
+        <div style="border: 2px solid oklch(0.78 0.13 85); padding: 24px 18px; text-align: center">
+          <div class="han" style="font-size: 60px; line-height: 1; font-weight: 900; color: oklch(0.84 0.14 88); letter-spacing: 0.12em; text-shadow: 0 2px 0 rgba(0,0,0,0.25)">药店</div>
+          <div style="margin-top: 12px; font-size: 11px; letter-spacing: 0.28em; color: oklch(0.80 0.10 88); opacity: 0.85">24 &#23567;&#26102; &middot; TEL 8815 6620</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px">
+        <div class="cap-h">Fascia board &middot; gold on red, heavy weight, inset rule</div>
+        <p class="cap-b">Deliberately the least legible of the five, and that is the lesson: a real fascia is loud, tightly tracked and often set in a display weight. If you can only read shopfronts when they are set cleanly, you cannot read shopfronts.</p>
+      </div>
+    </div>
+
+    <div>
+      <span class="tag">04 &middot; SUPERMARKET</span>
+      <div class="sign" style="border-radius: 3px; overflow: hidden; background: #fdf7dd">
+        <div style="display: flex; align-items: center; justify-content: space-between; background: oklch(0.52 0.20 28); padding: 5px 14px">
+          <span class="han" style="font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0.14em">特价</span>
+          <span class="mono" style="font-size: 11px; color: rgba(255,255,255,0.85)">2026-08-22 &rarr; 08-29</span>
+        </div>
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; padding: 15px 16px 9px">
+          <div>
+            <div class="han" style="font-size: 25px; line-height: 1.2; font-weight: 500; color: #14140f">红富士苹果</div>
+            <div class="mono" style="margin-top: 6px; font-size: 13px; color: #6b6b5e">&#21407;&#20215; <span style="text-decoration: line-through">12.80</span></div>
+          </div>
+          <div style="text-align: right; white-space: nowrap">
+            <span class="mono" style="font-size: 19px; font-weight: 700; color: oklch(0.50 0.20 28)">&yen;</span><span class="mono" style="font-size: 42px; font-weight: 700; line-height: 1; color: oklch(0.50 0.20 28)">9.90</span><span class="han" style="font-size: 21px; font-weight: 700; color: oklch(0.50 0.20 28)">/斤</span>
+          </div>
+        </div>
+        <svg width="100%" height="24" viewBox="0 0 300 24" preserveAspectRatio="none" style="display: block; padding: 0 16px 12px; box-sizing: border-box" aria-hidden="true">
+          <g fill="#14140f">
+            <rect x="0" y="0" width="2" height="24"></rect><rect x="5" y="0" width="1" height="24"></rect><rect x="9" y="0" width="3" height="24"></rect><rect x="16" y="0" width="1" height="24"></rect><rect x="20" y="0" width="2" height="24"></rect><rect x="26" y="0" width="1" height="24"></rect><rect x="31" y="0" width="3" height="24"></rect><rect x="38" y="0" width="2" height="24"></rect><rect x="44" y="0" width="1" height="24"></rect><rect x="48" y="0" width="3" height="24"></rect><rect x="55" y="0" width="1" height="24"></rect><rect x="60" y="0" width="2" height="24"></rect><rect x="66" y="0" width="3" height="24"></rect><rect x="73" y="0" width="1" height="24"></rect><rect x="78" y="0" width="2" height="24"></rect><rect x="84" y="0" width="1" height="24"></rect><rect x="89" y="0" width="3" height="24"></rect><rect x="96" y="0" width="2" height="24"></rect>
+          </g>
+        </svg>
+      </div>
+      <div style="margin-top: 14px">
+        <div class="cap-h">Shelf-edge label &middot; the number dominates, not the words</div>
+        <p class="cap-b">The one card where the character you must read (斤) is the smallest thing on it and the price shouts over it. That hierarchy is the trap the card is teaching, so it is reproduced rather than corrected.</p>
+      </div>
+    </div>
+
+    <div>
+      <span class="tag">05 &middot; WARNING</span>
+      <div class="sign" style="border-radius: 3px; overflow: hidden; background: oklch(0.86 0.17 96); border: 5px solid #14140f">
+        <div style="display: flex; align-items: center; gap: 18px; padding: 24px 20px">
+          <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#14140f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true">
+            <path d="M10.3 3.2 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0z"></path>
+            <path d="M12 9v4"></path><path d="M12 17h.01"></path>
+          </svg>
+          <div>
+            <div class="han" style="font-size: 40px; line-height: 1.1; font-weight: 700; color: #14140f; letter-spacing: 0.04em">小心地滑</div>
+            <div style="margin-top: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #14140f; opacity: 0.7">CAUTION &middot; SLIPPERY</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 14px">
+        <div class="cap-h">Hazard board &middot; yellow warns, red forbids</div>
+        <p class="cap-b">Colour carries meaning here in a way it does not on the other four, and the game should teach that directly: yellow asks you to take care, red tells you not to. Getting the colour convention is worth as much as getting the characters.</p>
+      </div>
+    </div>
+
+    <div style="align-self: end; padding-bottom: 6px">
+      <span class="tag">THE RULE</span>
+      <div style="border-radius: 14px; border: 1px solid oklch(28% 0.006 286.033); background: oklch(0.2103 0.0059 285.89); padding: 20px 22px">
+        <p style="margin: 0; font-size: 14px; line-height: 22px; text-wrap: pretty">
+          Whatever the treatment, one thing never changes: <strong style="font-weight: 600">the characters are set the
+          way the real object sets them.</strong> Never white-on-violet, never glowing, never rounded to match the app.
+        </p>
+        <p style="margin: 12px 0 0; font-size: 14px; line-height: 22px; color: oklch(70.5% 0.015 286.067); text-wrap: pretty">
+          The dark chrome is the frame around the sign, not a skin applied to it. A learner who can only
+          recognise 出口 in the app&rsquo;s house style has learned the app, not the language.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

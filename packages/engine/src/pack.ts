@@ -1,0 +1,164 @@
+import { canonicalJson, sha256Hex } from './canonical.js';
+import { CATEGORY_IDS } from './categories.js';
+import { createRng } from './rng.js';
+import { DIFFICULTY_ORDER } from './rules.js';
+import type { CategoryId, ContentPack, Difficulty, Question, QuestionId } from './types.js';
+
+/**
+ * Content is a versioned, hash-identified pack rather than a hard-coded array,
+ * because content is the actual product (R-12) and it has to be able to grow
+ * and be replaced without an engine change.
+ */
+export function packHash(pack: ContentPack): string {
+  // Hash the semantics, not the file: reordering questions or editing the pack
+  // name must not invalidate a game already in progress, but changing a prompt,
+  // an option or an answer must.
+  const material = pack.questions
+    .map((q) =>
+      canonicalJson({
+        id: q.id,
+        category: q.category,
+        difficulty: q.difficulty,
+        prompt: q.prompt,
+        options: q.options,
+        answer: q.answer,
+      }),
+    )
+    .sort();
+  return sha256Hex(canonicalJson({ id: pack.id, questions: material }));
+}
+
+export interface PackStats {
+  readonly total: number;
+  /** Count per category per difficulty; the gaps are where authoring is owed. */
+  readonly byCategory: Readonly<Record<CategoryId, Readonly<Record<Difficulty, number>>>>;
+  readonly thinnest: { readonly category: CategoryId; readonly difficulty: Difficulty; readonly count: number };
+}
+
+export function packStats(pack: ContentPack): PackStats {
+  const byCategory: Record<string, Record<string, number>> = {};
+  for (const category of CATEGORY_IDS) {
+    byCategory[category] = {};
+    for (const difficulty of DIFFICULTY_ORDER) {
+      (byCategory[category] as Record<string, number>)[difficulty] = 0;
+    }
+  }
+  for (const q of pack.questions) {
+    const row = byCategory[q.category];
+    if (row === undefined) continue;
+    row[q.difficulty] = (row[q.difficulty] ?? 0) + 1;
+  }
+  let thinnest = { category: CATEGORY_IDS[0] as CategoryId, difficulty: 'low' as Difficulty, count: Number.POSITIVE_INFINITY };
+  for (const category of CATEGORY_IDS) {
+    for (const difficulty of DIFFICULTY_ORDER) {
+      const count = byCategory[category]?.[difficulty] ?? 0;
+      if (count < thinnest.count) thinnest = { category, difficulty, count };
+    }
+  }
+  return {
+    total: pack.questions.length,
+    byCategory: byCategory as PackStats['byCategory'],
+    thinnest,
+  };
+}
+
+export function questionById(pack: ContentPack, id: QuestionId): Question | undefined {
+  return pack.questions.find((q) => q.id === id);
+}
+
+export function questionsFor(pack: ContentPack, category: CategoryId, difficulty: Difficulty): Question[] {
+  return pack.questions.filter((q) => q.category === category && q.difficulty === difficulty);
+}
+
+export interface SelectQuestionInput {
+  readonly pack: ContentPack;
+  readonly category: CategoryId;
+  readonly difficulty: Difficulty;
+  /** The drawer's nonce. Without it the answering device could precompute (R-10). */
+  readonly nonce: string;
+  /** Question ids already used this game. */
+  readonly exclude: readonly QuestionId[];
+}
+
+export interface SelectQuestionResult {
+  readonly question: Question | null;
+  /** True when the pool was exhausted and a repeat had to be allowed. */
+  readonly repeat: boolean;
+}
+
+/**
+ * Prefer a question not yet asked; fall back to repeating one from the same
+ * candidate pool rather than returning nothing. Shared by both fallback
+ * tiers in the question-selection chain (exact cell, then same-tier-any-
+ * category) so there is exactly one place that implements "prefer fresh,
+ * repeat rather than stall."
+ */
+export function pickFromPool(
+  candidates: readonly Question[],
+  exclude: readonly QuestionId[],
+  rng: { pick: <T>(items: readonly T[]) => T },
+): SelectQuestionResult {
+  if (candidates.length === 0) return { question: null, repeat: false };
+  const used = new Set(exclude);
+  const fresh = candidates.filter((q) => !used.has(q.id));
+  const pool = fresh.length > 0 ? fresh : candidates;
+  return { question: rng.pick(pool), repeat: fresh.length === 0 };
+}
+
+/**
+ * Deterministic, unpredictable-to-the-answerer question choice.
+ *
+ * Deterministic because every peer must resolve the same event to the same
+ * question with no round trip; unpredictable because the nonce comes from an
+ * opponent.
+ */
+export function selectQuestion(input: SelectQuestionInput): SelectQuestionResult {
+  const candidates = questionsFor(input.pack, input.category, input.difficulty);
+  const rng = createRng(input.nonce, input.category, input.difficulty);
+  return pickFromPool(candidates, input.exclude, rng);
+}
+
+export interface PresentedQuestion {
+  readonly question: Question;
+  /** Options in the order they must be shown. */
+  readonly options: readonly string[];
+  /** Index into {@link options} of the correct answer. */
+  readonly correctIndex: number;
+}
+
+/**
+ * Option order is shuffled per turn so the correct answer is not always in the
+ * authored position, and shuffled *deterministically* so every device shows the
+ * same four buttons in the same order and an answer index means one thing.
+ */
+export function presentQuestion(question: Question, nonce: string): PresentedQuestion {
+  const rng = createRng(nonce, 'options', question.id);
+  const order = rng.shuffle([0, 1, 2, 3]);
+  return {
+    question,
+    options: order.map((i) => question.options[i] as string),
+    correctIndex: order.indexOf(question.answer),
+  };
+}
+
+/**
+ * Structural validation of a pack. Cheap, and it turns a content typo into a
+ * failing test instead of a mid-game divergence.
+ */
+export function validatePack(pack: ContentPack): string[] {
+  const problems: string[] = [];
+  const seen = new Set<string>();
+  const categories = new Set(pack.categories.map((c) => c.id));
+  for (const q of pack.questions) {
+    if (seen.has(q.id)) problems.push(`duplicate question id: ${q.id}`);
+    seen.add(q.id);
+    if (!categories.has(q.category)) problems.push(`${q.id}: unknown category ${q.category}`);
+    if (!DIFFICULTY_ORDER.includes(q.difficulty)) problems.push(`${q.id}: unknown difficulty ${q.difficulty}`);
+    if (q.options.length !== 4) problems.push(`${q.id}: needs exactly 4 options`);
+    if (new Set(q.options).size !== q.options.length) problems.push(`${q.id}: duplicate options`);
+    if (q.answer < 0 || q.answer > 3) problems.push(`${q.id}: answer out of range`);
+    if (q.explanation.trim().length === 0) problems.push(`${q.id}: missing explanation`);
+    if (q.prompt.trim().length === 0) problems.push(`${q.id}: missing prompt`);
+  }
+  return problems;
+}

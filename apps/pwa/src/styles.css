@@ -1,0 +1,47 @@
+/*
+ * HeroUI v3 ships its own Tailwind v4 entry point, which imports tailwindcss
+ * itself - so this file imports one thing, not two.
+ */
+@import '@heroui/react/styles';
+
+/*
+ * Explicit sources: the `@import "tailwindcss"` above resolves from inside
+ * node_modules, so automatic content detection would scan the wrong tree and
+ * silently emit no utilities.
+ */
+@source './**/*.{ts,tsx}';
+@source '../index.html';
+
+@theme {
+  /* One accent per difficulty tier, matching the app icon's three rings. */
+  --color-tier-low: oklch(0.72 0.14 250);
+  --color-tier-mid: oklch(0.68 0.19 296);
+  --color-tier-high: oklch(0.79 0.16 78);
+
+  /*
+   * HeroUI's bare --danger measures 4.14:1 against this app's background -
+   * under the 4.5:1 WCAG AA floor for normal text. Borders and the 10%-alpha
+   * background wash aren't text, so they keep the original hue; this is only
+   * for actual danger-colored copy (wrong-answer deltas, validation errors).
+   */
+  --color-danger-text: color-mix(in oklab, var(--danger) 78%, white 22%);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 50% -10%, oklch(0.28 0.06 285) 0%, transparent 60%),
+    oklch(0.19 0.02 285);
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* A phone held in a pub: no accidental text selection, no rubber-band scroll. */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}

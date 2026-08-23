@@ -1,0 +1,24 @@
+{
+  "name": "@kanbudong/net",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Peer-to-peer transport, signed event gossip and join tickets",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kanbudong/engine": "workspace:*",
+    "trystero": "^0.25.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

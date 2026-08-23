@@ -1,0 +1,31 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # The web subset only. `pnpm verify` also typechecks apps/native, which
+      # would drag the whole Expo tree into every run to gate a scaffold that
+      # takes no actions yet. Add it here when that shell does something.
+      - run: pnpm install:web --frozen-lockfile
+
+      - run: pnpm -r --filter @kanbudong/engine --filter @kanbudong/net --filter @kanbudong/pwa typecheck
+
+      - run: pnpm test
+
+      - run: pnpm build

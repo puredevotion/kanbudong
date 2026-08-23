@@ -1,0 +1,76 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Turn loop"
+    },
+    {
+      "id": "page-2",
+      "name": "Breakdown"
+    },
+    {
+      "id": "page-3",
+      "name": "Sign types"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "page": "page-1",
+      "title": "Turn loop",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Breakdown.dc.html",
+      "page": "page-2",
+      "title": "The breakdown, full height",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 1080
+    },
+    {
+      "file": "Signs.dc.html",
+      "page": "page-3",
+      "title": "Five signs, five objects",
+      "x": 0,
+      "y": 0,
+      "w": 900,
+      "h": 1320,
+      "expand": "fit"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "proto-note",
+      "page": "page-1",
+      "x": 470,
+      "y": 0,
+      "w": 430,
+      "text": "CLICKABLE — bet → sign → answer → breakdown. \"Next turn\" resets it.\n\nUse the DOMAIN chip above the frame to switch between the five sign types. Each is a different physical object with its own item, question, breakdown and confusable:\n\n  transit   出口       station exit plate\n  menu      牛肉       inside 水煮牛肉 on a menu\n  street    药店       shopfront fascia\n  market    斤         the 500g trap on a price label\n  safety    小心地滑   hazard board\n\nWHAT CHANGED: the breakdown is no longer a footnote on the outcome card. It is now the body of the reveal, and nothing advances it but a tap.\n\nThe evidence forced this. A path analysis of 252 international students learning Chinese found morphological awareness — knowing that words come apart into meaning-bearing pieces — is the largest single contributor to L2 Chinese reading, ahead of vocabulary size and well ahead of working memory. That makes this screen the one that actually teaches, so it gets the room."
+    },
+    {
+      "id": "breakdown-note",
+      "page": "page-2",
+      "x": 470,
+      "y": 0,
+      "w": 430,
+      "text": "The promoted surface at full height.\n\nTHE RULE THIS SCREEN OBEYS: expand the item you just read by exactly one level, then stop.\n\n1. The word, on the same light ground the sign used.\n\n2. IT COMES APART. 牛 ox + 肉 meat. Chinese has no separate word for beef; it names the animal and the substance and lets you do the arithmetic. And 牛 happens to be a real picture — an ox head seen head-on — so that gets one line.\n\n3. THE SAME MOVE AGAIN. Swap the head: 猪肉 pork, 羊肉 lamb, 鸡肉 chicken, 鸭肉 duck. Same construction, four instances, almost no new load.\n\n4. The confusable.\n\nWHAT WAS CUT, AND WHY. An earlier version added a panel walking through whether you can see the animal in 牛 羊 鱼 鸭 猪, and a second panel on 肉 hiding inside 肝 肠 肚 腰 脑 in its bound form ⺼ (U+2EBC — a homoglyph of 月 U+6708, not the same character). Both were true and both were interesting, and together they turned a breakdown of one word into a lecture on the category — five characters' internal structure on a card whose item was one word.\n\nThe honesty those panels carried is kept, compressed to a single line: some characters are pictures and most are not, and when you cannot see it, it is not there. That is the part that stops a learner inventing etymology; the tour was not.\n\nThe ⺼ unlock is not lost — it is taught on a card whose answer IS an organ, where it is the operative component rather than a bolt-on. Same for 鸟 on a poultry item and 鱼 on a seafood one. Each radical gets taught where it is the thing you just read."
+    },
+    {
+      "id": "signs-note",
+      "page": "page-3",
+      "x": 960,
+      "y": 0,
+      "w": 400,
+      "text": "The five treatments side by side.\n\nEach caption says what the object is and what makes it hard — the shopfront is deliberately the least legible, the price label deliberately buries the character under the price, because those are the real reading conditions.\n\nWhat this costs: five sign templates instead of one, and every new category needs a treatment designed for it rather than a colour picked for it.\n\nStill open, pending the research: whether tone colour survives the evidence, and whether the gloss should be Dutch or English (both shown for now)."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-2"
+  }
+}
