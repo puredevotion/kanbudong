@@ -9,6 +9,11 @@ import type { CategoryContent } from './row.js';
  * here do not match DESIGN.md's inline ranks character-for-character.
  * 保质期 is marked `transparency: 'opaque'` per DESIGN.md §3.3.3(8), which
  * names it as non-compositional ("no useful decomposition, learn this whole").
+ *
+ * 配料表/储存条件/生产厂家/许可证 (context-authoring phase, Aug 2026) carry real
+ * GB 7718 back-panel fields as `context`, same pattern as 号 above. None of
+ * the four has a verified `tier` placement in DESIGN.md's curriculum tables
+ * or a verified Jun Da rank, so both are left unset rather than guessed.
  */
 export const MARKET_PANEL: CategoryContent = {
   low: [
@@ -146,6 +151,45 @@ export const MARKET_PANEL: CategoryContent = {
       undefined,
       { tier: 1, freqRank: 318 },
     ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['ingredient list', 'shelf life, as a duration', 'net content'],
+      0,
+      'pèiliào biǎo · ingrediëntenlijst (ingredient list). Ingredients are listed in descending order by weight, so whatever comes first is the main one.',
+      {
+        hanzi: '配料表',
+        pinyin: 'pèiliào biǎo',
+        nl: 'ingrediëntenlijst',
+        en: 'ingredient list',
+        context: { after: '：水、小麦粉、白砂糖、食用盐、酵母' },
+      },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['storage conditions', 'refrigerate, 0–4 °C', 'net content'],
+      0,
+      'chǔcún tiáojiàn · bewaarcondities (storage conditions). Usually followed by something like 阴凉干燥处保存 (store in a cool, dry place) rather than an exact temperature.',
+      {
+        hanzi: '储存条件',
+        pinyin: 'chǔcún tiáojiàn',
+        nl: 'bewaarcondities',
+        en: 'storage conditions',
+        context: { after: '：阴凉干燥处保存，避免阳光直射' },
+      },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['manufacturer', 'production date', 'imported'],
+      0,
+      'shēngchǎn chǎngjiā · fabrikant (manufacturer). Required alongside the address on every packaged-food label, distinct from 生产日期 (production date), which is a date, not a name.',
+      {
+        hanzi: '生产厂家',
+        pinyin: 'shēngchǎn chǎngjiā',
+        nl: 'fabrikant',
+        en: 'manufacturer',
+        context: { after: '：广东金穗食品有限公司' },
+      },
+    ],
   ],
   high: [
     [
@@ -201,6 +245,19 @@ export const MARKET_PANEL: CategoryContent = {
       { hanzi: '条', pinyin: 'tiáo', nl: 'lange dunne dingen — vis, straten', en: 'long thin things — fish, streets, trousers' },
       undefined,
       { tier: 2, freqRank: 214 },
+    ],
+    [
+      'On the back of the packet. What does it mean?',
+      ['license', 'shelf life, as a duration', 'net content'],
+      0,
+      'xǔkězhèng · vergunning (license). On a food label this is the production licence, printed as 生产许可证编号 followed by an SC code (SC + 14 digits) — the mark that replaced the old QS logo in 2015.',
+      {
+        hanzi: '许可证',
+        pinyin: 'xǔkězhèng',
+        nl: 'vergunning',
+        en: 'license',
+        context: { before: '生产', after: '编号：SC11410115012345' },
+      },
     ],
   ],
 };

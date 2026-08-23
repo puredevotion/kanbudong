@@ -17,6 +17,13 @@ import type { CategoryContent } from './row.js';
  * etymology names 昜 as the historical phonetic, but the displayed component
  * is 勿, a different, non-phonetic-matching shape — too muddled to ship
  * honestly at the exact-match bar this bank holds phonetic hints to.
+ *
+ * 一卡通/深圳通 (context-authoring phase, Aug 2026) are a genuine regional pair:
+ * every major Chinese city issues its own branded transit card, and Beijing's
+ * (一卡通, "Yikatong") and Shenzhen's (深圳通, "Shenzhentong") are different
+ * products under different names, not one term with regional spelling
+ * variance. 检票口 also new this phase. None of the three has a verified
+ * `tier` or Jun Da rank, so both are left unset.
  */
 export const TRANSIT_TICKET: CategoryContent = {
   low: [
@@ -111,6 +118,32 @@ export const TRANSIT_TICKET: CategoryContent = {
       undefined,
       { tier: 1 },
     ],
+    [
+      'At the ticket hall. What does it mean?',
+      ["Beijing's transit card (Yikatong)", "Shenzhen's transit card (Shenzhen Tong)", 'single-journey ticket'],
+      0,
+      'yīkǎtōng · Beijing OV-kaart (Yikatong) — Beijing\'s own branded transit card, not a generic term; Shenzhen issues a different card under a different name, 深圳通.',
+      {
+        hanzi: '一卡通',
+        pinyin: 'yīkǎtōng',
+        nl: 'Beijing OV-kaart (Yikatong)',
+        en: "Beijing's transit card (Yikatong)",
+        context: { after: '充值、退卡' },
+      },
+    ],
+    [
+      'At the ticket hall. What does it mean?',
+      ["Shenzhen's transit card (Shenzhen Tong)", "Beijing's transit card (Yikatong)", 'security check'],
+      0,
+      'shēnzhèntōng · Shenzhen OV-kaart (Shenzhentong) — Shenzhen\'s own branded transit card; Beijing issues a different card under a different name, 一卡通.',
+      {
+        hanzi: '深圳通',
+        pinyin: 'shēnzhèntōng',
+        nl: 'Shenzhen OV-kaart (Shenzhentong)',
+        en: "Shenzhen's transit card (Shenzhen Tong)",
+        context: { after: '充值、退卡' },
+      },
+    ],
   ],
   high: [
     [
@@ -175,6 +208,19 @@ export const TRANSIT_TICKET: CategoryContent = {
       { hanzi: '取票', pinyin: 'qǔpiào', nl: 'ticket ophalen', en: 'collect a printed ticket' },
       undefined,
       { tier: 2 },
+    ],
+    [
+      'At the ticket hall. What does it mean?',
+      ['ticket gate', 'ticket check', 'platform'],
+      0,
+      'jiǎnpiàokǒu · poortje voor kaartcontrole (ticket gate). Departure boards show which numbered gate to use, e.g. 检票口5 — the number is what you actually need to find.',
+      {
+        hanzi: '检票口',
+        pinyin: 'jiǎnpiàokǒu',
+        nl: 'poortje voor kaartcontrole',
+        en: 'ticket gate',
+        context: { after: '5' },
+      },
     ],
   ],
 };

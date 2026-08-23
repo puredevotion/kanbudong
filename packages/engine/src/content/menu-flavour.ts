@@ -7,6 +7,9 @@ import type { CategoryContent } from './row.js';
  * — a different corpus from the one DESIGN.md's own prose cites, so these
  * numbers do not match DESIGN.md's inline ranks character-for-character.
  */
+// 微辣/重辣 (context-authoring phase, Aug 2026) are the real spice-level
+// gradations printed next to 辣, region-neutral, not curriculum-table
+// entries, so `tier`/`freqRank` are left unset rather than guessed.
 export const MENU_FLAVOUR: CategoryContent = {
   low: [
     [
@@ -26,6 +29,32 @@ export const MENU_FLAVOUR: CategoryContent = {
       { hanzi: '麻', pinyin: 'má', nl: 'verdovend, tintelend', en: 'numbing, lip-tingling' },
       undefined,
       { tier: 0, freqRank: 1108 },
+    ],
+    [
+      'Beside a dish. What is it warning you about?',
+      ['mild spice', 'sour', 'sweet'],
+      0,
+      'wēilà · licht pittig (mild spice) — the lowest rung on the spice-level scale printed next to a dish, below 中辣 and 重辣.',
+      {
+        hanzi: '微辣',
+        pinyin: 'wēilà',
+        nl: 'licht pittig',
+        en: 'mild spice',
+        context: { after: '  中辣  重辣' },
+      },
+    ],
+    [
+      'Beside a dish. What is it warning you about?',
+      ['very spicy', 'salty', 'numbing, lip-tingling'],
+      0,
+      'zhònglà · extra pittig (very spicy) — the top of the spice-level scale, above 微辣 and 中辣.',
+      {
+        hanzi: '重辣',
+        pinyin: 'zhònglà',
+        nl: 'extra pittig',
+        en: 'very spicy',
+        context: { before: '微辣  中辣  ' },
+      },
     ],
   ],
   mid: [

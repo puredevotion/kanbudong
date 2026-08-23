@@ -186,12 +186,38 @@ describe('seed pack', () => {
 
 describe('SignFace.context', () => {
   it('is optional and does not disturb validation for content that omits it', () => {
-    // Only the proof-of-concept items (号/时/点) author `context` so far - the
-    // schema addition has to be a no-op for every other item in the pack, not
-    // merely accepted by the type.
+    // The proof-of-concept items (号/时/点) plus a follow-on content-authoring
+    // phase author `context`; everything else in the pack still omits it, and
+    // the schema addition has to be a no-op for that majority, not merely
+    // accepted by the type.
     const withContext = SEED_PACK.questions.filter((q) => q.face?.context !== undefined);
-    expect(withContext.map((q) => q.face?.hanzi).sort()).toEqual(['号', '时', '点']);
+    const withoutContext = SEED_PACK.questions.filter(
+      (q) => q.face !== undefined && q.face.context === undefined,
+    );
+    expect(withContext.length).toBeGreaterThan(0);
+    expect(withoutContext.length).toBeGreaterThan(0);
     expect(validatePack(SEED_PACK)).toEqual([]);
+  });
+
+  it('gives every item that authors context genuine, non-empty surrounding text', () => {
+    // A no-op context (both sides empty/undefined) would pass the type but
+    // teach nothing - the whole point of this field is embedding the target
+    // in real surrounding text, not just attaching an empty object to it.
+    for (const q of SEED_PACK.questions) {
+      const context = q.face?.context;
+      if (context === undefined) continue;
+      const before = context.before ?? '';
+      const after = context.after ?? '';
+      expect(
+        before.length + after.length,
+        `${q.id} (${q.face?.hanzi}) authors context but both before/after are empty`,
+      ).toBeGreaterThan(0);
+    }
+  });
+
+  it('has no id collisions introduced by new context-authored content', () => {
+    const ids = SEED_PACK.questions.map((q) => q.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   it('round-trips through expand() and passes validation once authored', () => {

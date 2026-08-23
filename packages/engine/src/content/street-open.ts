@@ -11,6 +11,10 @@ import type { CategoryContent } from './row.js';
  * clock/business-hours character genuinely happens on a shop door's opening-
  * hours plaque, which is what this category already models, so they are
  * relocated rather than forced back into a mismatched template.
+ *
+ * 全年无休/暂停营业 (context-authoring phase, Aug 2026) are real shop-door
+ * notice phrases, not curriculum-table entries, so `tier`/`freqRank` are left
+ * unset rather than guessed.
  */
 export const STREET_OPEN: CategoryContent = {
   low: [
@@ -63,6 +67,32 @@ export const STREET_OPEN: CategoryContent = {
       },
       undefined,
       { tier: 1, freqRank: 128 },
+    ],
+    [
+      'On a shop door. What does it mean?',
+      ['open year-round, no rest days', 'closed down, ceased trading', "o'clock; time"],
+      0,
+      'quánnián wúxiū · het hele jaar geen rustdag (open year-round, no rest days). The opposite of 节假日休息 (closed on public holidays).',
+      {
+        hanzi: '全年无休',
+        pinyin: 'quánnián wúxiū',
+        nl: 'het hele jaar geen rustdag',
+        en: 'open year-round, no rest days',
+        context: { after: '，节假日照常营业' },
+      },
+    ],
+    [
+      'On a shop door. What does it mean?',
+      ['temporarily closed', 'closed down, ceased trading', 'open year-round, no rest days'],
+      0,
+      'zàntíng yíngyè · tijdelijk gesloten (temporarily closed). Distinguished from 停业 (permanently closed) by 暂 "temporarily" — worth checking back.',
+      {
+        hanzi: '暂停营业',
+        pinyin: 'zàntíng yíngyè',
+        nl: 'tijdelijk gesloten',
+        en: 'temporarily closed',
+        context: { after: '，装修中，敬请谅解' },
+      },
     ],
   ],
   high: [

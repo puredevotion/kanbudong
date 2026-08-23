@@ -13,6 +13,10 @@ import type { CategoryContent } from './row.js';
  * structurally an ideographic compound ("flames over an altar") rather than
  * a clean semantic/phonetic split, so it ships `structure: 'atomic'` with no
  * decomposition claim, same treatment as 皮 in the organ set.
+ *
+ * 首末车/末班车 (context-authoring phase, Aug 2026) are the real posted
+ * operating-hours vocabulary at every metro platform. Neither has a verified
+ * `tier` or Jun Da rank, so both are left unset.
  */
 export const TRANSIT_PLATFORM: CategoryContent = {
   low: [
@@ -106,6 +110,32 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       { hanzi: '票', pinyin: 'piào', nl: 'kaartje', en: 'ticket', structure: 'atomic' },
       undefined,
       { tier: 1, freqRank: 910 },
+    ],
+    [
+      'In the metro. What does it mean?',
+      ['first/last train', 'wait for the train', 'bound for'],
+      0,
+      'shǒumòchē · eerste/laatste trein (first/last train). 首末车时间 posted at every platform gives the day\'s operating hours.',
+      {
+        hanzi: '首末车',
+        pinyin: 'shǒumòchē',
+        nl: 'eerste/laatste trein',
+        en: 'first/last train',
+        context: { after: '时间：06:00–23:00' },
+      },
+    ],
+    [
+      'In the metro. What does it mean?',
+      ['last train', 'first/last train', 'transfer, change lines'],
+      0,
+      'mòbānchē · laatste trein (last train) — the specific departure you don\'t want to miss; 首班车 is its opposite, the first train of the day.',
+      {
+        hanzi: '末班车',
+        pinyin: 'mòbānchē',
+        nl: 'laatste trein',
+        en: 'last train',
+        context: { before: '本站', after: '22:30发车' },
+      },
     ],
   ],
   high: [

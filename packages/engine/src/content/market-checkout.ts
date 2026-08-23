@@ -8,6 +8,9 @@ import type { CategoryContent } from './row.js';
  * — a different corpus from the one DESIGN.md's own prose cites, so numbers
  * here do not match DESIGN.md's inline ranks character-for-character.
  */
+// 储值卡/发票 (context-authoring phase, Aug 2026) are real checkout-counter
+// vocabulary, not curriculum-table entries, so `tier`/`freqRank` are left
+// unset rather than guessed.
 export const MARKET_CHECKOUT: CategoryContent = {
   low: [
     [
@@ -92,6 +95,32 @@ export const MARKET_CHECKOUT: CategoryContent = {
       { hanzi: '万', pinyin: 'wàn', nl: 'tienduizend', en: 'ten thousand' },
       undefined,
       { tier: 1, freqRank: 322 },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['stored-value card', "members' price", 'settle up, pay'],
+      0,
+      'chǔzhíkǎ · tegoedkaart (stored-value card) — a prepaid card topped up in advance, distinct from a 会员卡 (membership card), which tracks discounts rather than a balance.',
+      {
+        hanzi: '储值卡',
+        pinyin: 'chǔzhíkǎ',
+        nl: 'oplaadkaart, tegoedkaart',
+        en: 'stored-value card',
+        context: { after: '余额查询' },
+      },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['official receipt, fapiao', 'settle up, pay', 'checkout'],
+      0,
+      'fāpiào · officiële kwitantie (fapiao) — the official tax receipt needed for expense claims; ask for it before paying, since most shops won\'t print one afterwards.',
+      {
+        hanzi: '发票',
+        pinyin: 'fāpiào',
+        nl: 'officiële kwitantie (fapiao)',
+        en: 'official receipt, fapiao',
+        context: { after: '请在结账前告知收银员' },
+      },
     ],
   ],
   high: [

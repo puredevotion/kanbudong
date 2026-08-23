@@ -10,6 +10,10 @@ import type { CategoryContent } from './row.js';
  * inline ranks character-for-character. 时价 and 招牌 are marked
  * `transparency: 'opaque'` per DESIGN.md §3.3.3(8), which names both as
  * non-compositional ("no useful decomposition, learn this whole").
+ *
+ * 打包/购物车 (context-authoring phase, Aug 2026) are the real controls on a
+ * QR ordering screen, not curriculum-table entries, so `tier`/`freqRank` are
+ * left unset rather than guessed.
  */
 export const MENU_ORDER: CategoryContent = {
   low: [
@@ -86,6 +90,32 @@ export const MENU_ORDER: CategoryContent = {
       { hanzi: '饮料', pinyin: 'yǐnliào', nl: 'frisdrank', en: 'soft drinks' },
       undefined,
       { tier: 1 },
+    ],
+    [
+      'On the menu. What does this mean?',
+      ['pack up, takeaway', 'large portion', 'staples: rice, noodles, buns'],
+      0,
+      'dǎbāo · inpakken (pack up, takeaway). Also what you ask for at the end of a meal to take leftovers home.',
+      {
+        hanzi: '打包',
+        pinyin: 'dǎbāo',
+        nl: 'inpakken, meenemen',
+        en: 'pack up, takeaway',
+        context: { after: '费+1元' },
+      },
+    ],
+    [
+      'On the menu. What does this mean?',
+      ['shopping cart', 'checkout', 'small portion'],
+      0,
+      'gòuwùchē · winkelwagentje (shopping cart) — the running order on a QR ordering screen, the same word used for an online shopping cart.',
+      {
+        hanzi: '购物车',
+        pinyin: 'gòuwùchē',
+        nl: 'winkelwagentje',
+        en: 'shopping cart',
+        context: { after: ' 2' },
+      },
     ],
   ],
   high: [
