@@ -86,7 +86,7 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['wheat noodles; also "flour"', 'pan-fry', 'meat-containing', 'shrimp, prawn'],
       0,
-      'miàn · tarwenoedels (wheat noodles; also "flour"). On older shopfronts you may see the traditional form 麵, as in 麵館.',
+      'miàn · tarwenoedels (wheat noodles; also "flour"). Shows up in compounds like 面馆 (noodle shop).',
       { hanzi: '面', pinyin: 'miàn', nl: 'tarwenoedels' },
     ],
     [

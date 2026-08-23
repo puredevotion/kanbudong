@@ -51,7 +51,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       'In the metro. What does it mean?',
       ['security check', 'line number', 'train', 'centre'],
       0,
-      'ānjiǎn · veiligheidscontrole (security check). Expect a screening line before boarding. The character 检 used here is the simplified form; the old traditional form is 檢.',
+      'ānjiǎn · veiligheidscontrole (security check). Expect a screening line before boarding.',
       { hanzi: '安检', pinyin: 'ānjiǎn', nl: 'veiligheidscontrole' },
     ],
     [

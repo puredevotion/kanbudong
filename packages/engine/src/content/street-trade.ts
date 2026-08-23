@@ -137,7 +137,7 @@ export const STREET_TRADE: CategoryContent = {
       'On a shopfront. What is this place?',
       ['noodle shop', 'barber, hairdresser', 'hotel (mid-range)', 'restaurant or hotel'],
       0,
-      'miànguǎn · noedelzaak (noodle shop). In Taiwan or Hong Kong you may see this written with traditional characters as 麵館 instead.',
+      'miànguǎn · noedelzaak (noodle shop).',
       { hanzi: '面馆', pinyin: 'miànguǎn', nl: 'noedelzaak' },
     ],
     [

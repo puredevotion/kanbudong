@@ -95,7 +95,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       'At the till. What does it mean?',
       ['3, capital form', 'half', '50 g, one tenth of a 斤', 'hundred'],
       0,
-      'sān · 3, de formele schrijfwijze voor documenten (capital form). It contains its own 三, the same way 贰 contains 二. This is the mainland simplified form; traditional documents use 叄 instead.',
+      'sān · 3, de formele schrijfwijze voor documenten (capital form). It contains its own 三, the same way 贰 contains 二.',
       { hanzi: '叁', pinyin: 'sān', nl: '3, schrijfwijze op documenten' },
     ],
   ],
