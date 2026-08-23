@@ -16,6 +16,7 @@ export * from './ids.js';
 export * from './wordlist.js';
 export * from './joincode.js';
 export * from './events.js';
+export * from './commitReveal.js';
 export * from './log.js';
 export * from './categories.js';
 export * from './pack.js';

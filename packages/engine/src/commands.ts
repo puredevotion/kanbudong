@@ -151,3 +151,25 @@ export const setRoomLocked = (log: EventLog, identity: Identity, locked: boolean
 /** Host-only; the reducer refuses this from anyone else, and refuses the host kicking themselves. */
 export const kickPlayer = (log: EventLog, identity: Identity, targetId: PlayerId): SignedEvent =>
   makeEvent(log, identity, { type: 'player/kicked', targetId });
+
+/**
+ * Publish a commitment for `subject` (caller-defined - see the `commit/made`
+ * doc comment in events.ts). `hash` is `commitHash(payload, salt)` from
+ * commitReveal.ts; this constructor does not compute it itself so the caller
+ * never has to hand the real `payload` to code that also touches the log.
+ */
+export const makeCommit = (
+  log: EventLog,
+  identity: Identity,
+  subject: string,
+  hash: string,
+): SignedEvent => makeEvent(log, identity, { type: 'commit/made', subject, commitHash: hash });
+
+/** Open a prior `makeCommit` for the same `subject`, from the same identity. */
+export const makeReveal = (
+  log: EventLog,
+  identity: Identity,
+  subject: string,
+  payload: unknown,
+  salt: string,
+): SignedEvent => makeEvent(log, identity, { type: 'commit/revealed', subject, payload, salt });

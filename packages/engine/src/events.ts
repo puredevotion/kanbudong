@@ -14,8 +14,19 @@ import type { CategoryId, Difficulty, GameId, PlayerId, TeamId } from './types.j
  * `apply()` would hit its exhaustiveness `default` case and silently treat
  * either as an unknown-event rejection rather than actually moderating the
  * room, so the mismatch has to be refused at the door instead.
+ *
+ * Bumped to 4 for `commit/made` and `commit/revealed`: the generic
+ * commit-reveal primitive (see commitReveal.ts and the two event variants
+ * below). Same reasoning as the v3 bump - an older peer's `apply()` would
+ * fall into the exhaustiveness `default` case and file either event type as
+ * an ordinary unknown-event rejection, which is silently *wrong* (it would
+ * accept the game continuing while quietly missing every commit/reveal it
+ * carries) rather than refusing the peer outright. `checkEvent`'s
+ * `v === PROTOCOL_VERSION` check (and the earlier `have`-message handshake in
+ * packages/net's session.ts) is what actually prevents that: a v3 peer never
+ * gets as far as `apply()` with one of these events at all.
  */
-export const PROTOCOL_VERSION = 3;
+export const PROTOCOL_VERSION = 4;
 
 export type GameEventBody =
   | {
@@ -75,7 +86,37 @@ export type GameEventBody =
    * undone - this stops future participation, it does not retroactively
    * erase what already happened, which every peer's log already agrees on.
    */
-  | { readonly type: 'player/kicked'; readonly targetId: PlayerId };
+  | { readonly type: 'player/kicked'; readonly targetId: PlayerId }
+  /**
+   * Publishes a commitment to a not-yet-revealed payload for `subject` - a
+   * caller-defined slot this primitive has no opinion about (Phase B will
+   * pass a turn's `turnIndex`, stringified, but nothing here knows what a
+   * turn is). `commitHash` must equal `commitHash(payload, salt)` (see
+   * commitReveal.ts) for whatever `payload`/`salt` the eventual
+   * `commit/revealed` supplies. At most one live commit per (subject,
+   * author): a second `commit/made` for the same pair is refused, as is one
+   * arriving after that pair has already revealed (see apply() in
+   * reducer.ts).
+   *
+   * Honesty-assuming secrecy, not cryptographic secrecy: nothing in this
+   * protocol stops a modified client from reading its own payload before
+   * ever calling `commitHash()` on it - there is no server to hide it from
+   * the client that authored it. What committing first buys is that every
+   * *other* peer can trust this payload was fixed before the reveal, same as
+   * R-10's nonce - the cost of cheating is raised from "read the wire" to
+   * "modify your own client", not eliminated.
+   */
+  | { readonly type: 'commit/made'; readonly subject: string; readonly commitHash: string }
+  /**
+   * Opens a prior `commit/made` from the same author for the same `subject`.
+   * Valid only when `commitHash(payload, salt)` equals that commit's
+   * `commitHash` - a mismatched or missing-commit reveal is dropped like any
+   * other authority failure, never applied (see apply() in reducer.ts).
+   *
+   * `payload` must be JSON-serialisable: it goes through `canonicalJson`
+   * both here and wherever a caller re-derives the commit hash.
+   */
+  | { readonly type: 'commit/revealed'; readonly subject: string; readonly payload: unknown; readonly salt: string };
 
 export type GameEventType = GameEventBody['type'];
 

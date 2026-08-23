@@ -1,6 +1,11 @@
 # Protocol
 
-Wire version: **1** (`PROTOCOL_VERSION`). A mismatch is refused at join time.
+Wire version: **4** (`PROTOCOL_VERSION`). A mismatch is refused at join time -
+both at the `have`-message handshake in `packages/net`'s `session.ts` (a
+newcomer never even joins the mesh across a mismatch) and, as a second line of
+defence for any event that somehow arrives anyway, in `checkEvent`'s
+`v === PROTOCOL_VERSION` check (`wrong-protocol`) before the reducer ever sees
+it.
 
 ## Event envelope
 
@@ -52,18 +57,64 @@ sorts identically, which is what lets the reducer be pure.
 | --- | --- | --- |
 | `game/created` | first event only; author becomes host | `name`, `joinCode`, `rules`, `packHash` |
 | `player/joined` | self-attested | `username` |
-| `team/created` | a known player, lobby phase | `teamId`, `name` |
-| `team/joined` | a known player, lobby phase | `teamId` |
+| `team/created` | a known player, lobby phase (or `allowLateJoin`) | `teamId`, `name` |
+| `team/joined` | a known player, lobby phase (or `allowLateJoin`) | `teamId` |
 | `team/left` | a known player, lobby phase | `teamId` |
 | `game/started` | the host | - |
 | `turn/drawn` | a known player **not** on the acting team | `turnIndex`, `nonce` |
+| `turn/category` | a known player **not** on the acting team | `turnIndex`, `categoryId` |
 | `turn/difficulty` | a member of the acting team | `turnIndex`, `difficulty` |
 | `turn/answered` | a member of the acting team | `turnIndex`, `chosenIndex` |
 | `turn/timeout` | any known player | `turnIndex` |
+| `room/locked` | the host | `locked` |
+| `player/kicked` | the host | `targetId` |
+| `commit/made` | a known player | `subject`, `commitHash` |
+| `commit/revealed` | a known player, matching a prior `commit/made` | `subject`, `payload`, `salt` |
 
 An event that fails its authority check lands in `state.rejected` with a reason
 and is not applied. Duplicates for a turn already resolved are refused by the
 `turnIndex` check, so a peer that fires late costs nothing.
+
+### Commit-reveal
+
+`commit/made` and `commit/revealed` are a generic primitive, not specific to
+turns or answers - they exist so a future feature (universal-answer, DESIGN.md
+§5.1's six-beat turn, not yet wired to this) can let more than one player
+answer privately in the same window without every peer seeing every answer
+the instant it is signed, which is otherwise unavoidable: every event gossips
+in clear to every peer immediately (see Sync below), and today's only reason
+an answer is "private" is that `turn/answered`'s authority check lets just one
+side submit at all.
+
+- `subject` is whatever the caller wants to key commitments by - a string, not
+  a `turnIndex`, so this file's reducer code carries no turn-shaped opinions.
+- `commitHash` (from `commitHash(payload, salt)` in `commitReveal.ts`) is
+  `sha256(canonicalJson({ payload, salt }))`, reusing the same canonical-JSON
+  and hashing helpers every other hash in this protocol goes through.
+- A `commit/revealed` is applied only if a `commit/made` from the **same
+  author**, for the **same subject**, is still pending (not yet revealed), and
+  recomputing `commitHash(payload, salt)` from the reveal's own fields matches
+  that commit's `commitHash` exactly. Anything else - no prior commit, a
+  different author's commit, a wrong `salt`, a tampered `payload` - is dropped
+  like any other authority failure, per the convention above.
+- At most one live commit per `(subject, author)`: a second `commit/made` for
+  a pair that already has a pending or already-revealed commit is refused.
+- **Honesty-assuming secrecy, not cryptographic secrecy.** There is no server
+  to keep a payload from the client that authored it - a modified client can
+  always inspect its own not-yet-revealed commitment before choosing what to
+  reveal, the same way a modified client could always grind against its own
+  copy of the content bank in R-10. Committing first does not make that
+  impossible; it raises the cost from "read the wire" (every other peer's
+  vantage point) to "modify your own client" (an attack on your own honesty,
+  not the protocol), and it lets every *other* peer verify after the fact that
+  a payload was fixed before it was revealed.
+- **Forfeiture is not this primitive's job.** A commit that is never revealed
+  just stays pending; nothing here expires it. `unrevealedCommits(state,
+  subject)` in `reducer.ts` exposes which authors still have a pending commit
+  for a subject, so a caller with turn-shaped context (a timeout firing, a
+  turn resolving) can decide what "too late" means and treat an unrevealed
+  commit as forfeited on its own terms. This file deliberately has no timeout
+  duration or turn-phase check baked into it.
 
 ### Why the acting team cannot draw its own question
 

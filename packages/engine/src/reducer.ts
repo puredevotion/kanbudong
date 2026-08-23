@@ -1,4 +1,5 @@
 import { CATEGORY_IDS } from './categories.js';
+import { commitHash, isWellFormedCommitHash } from './commitReveal.js';
 import type { GameEventBody, SignedEvent } from './events.js';
 import { pickFromPool, presentQuestion, questionById, selectQuestion } from './pack.js';
 import { createRng } from './rng.js';
@@ -71,7 +72,43 @@ export interface GameState {
   readonly bannedIds: readonly PlayerId[];
   /** Events the reducer refused, with a reason. Surfaced for debugging, not play. */
   readonly rejected: readonly { readonly id: string; readonly reason: string }[];
+  /**
+   * Generic commit-reveal primitive (Phase A of the universal-answer plan;
+   * unwired here - nothing in this reducer produces or keys off these yet).
+   * Keyed by a caller-defined `subject` (Phase B will use a stringified
+   * `turnIndex`) and then by author, so a `commit/made` lands here until a
+   * matching `commit/revealed` moves it into {@link reveals}. A narrower,
+   * turn-shaped structure (e.g. living on `ActiveTurn`) was considered and
+   * rejected: `ActiveTurn` is cleared to `null` the instant a turn resolves
+   * (see `resolve()`), which would erase a commit the very moment a caller
+   * might need to check whether it was ever revealed. Keeping this
+   * subject-keyed and outside `ActiveTurn` is a few extra lines now in
+   * exchange for not having to re-plumb the shape once Phase B exists.
+   */
+  readonly pendingCommits: Readonly<Record<string, Readonly<Record<PlayerId, PendingCommit>>>>;
+  /** Successfully opened commitments. See {@link pendingCommits}. */
+  readonly reveals: Readonly<Record<string, Readonly<Record<PlayerId, Revealed>>>>;
 }
+
+/** A `commit/made` not yet matched by a valid `commit/revealed`. */
+export interface PendingCommit {
+  readonly commitHash: string;
+  /** The committing event's `at`, for display only - see `SignedEvent.at`. */
+  readonly at: number;
+}
+
+/** A `commit/revealed` that matched its prior commitment. */
+export interface Revealed {
+  readonly payload: unknown;
+  readonly salt: string;
+  /** The revealing event's `at`, for display only - see `SignedEvent.at`. */
+  readonly at: number;
+}
+
+/** A `subject` longer than this is refused - see the `commit/made` case in `apply()`. */
+const MAX_COMMIT_SUBJECT_LENGTH = 200;
+/** Mirrors `turn/drawn`'s nonce-length floor: cheap defence against an all-zero salt. */
+const MIN_SALT_LENGTH = 8;
 
 export interface ReduceOptions {
   readonly pack: ContentPack;
@@ -147,6 +184,8 @@ function createState(event: SignedEvent, body: Extract<GameEventBody, { type: 'g
     locked: false,
     bannedIds: [],
     rejected: [],
+    pendingCommits: {},
+    reveals: {},
   };
 }
 
@@ -402,6 +441,66 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       };
     }
 
+    case 'commit/made': {
+      if (state.players[author] === undefined) return 'unknown player';
+      if (
+        typeof body.subject !== 'string' ||
+        body.subject.length === 0 ||
+        body.subject.length > MAX_COMMIT_SUBJECT_LENGTH
+      ) {
+        return 'malformed commit subject';
+      }
+      if (!isWellFormedCommitHash(body.commitHash)) return 'malformed commit hash';
+      if (state.pendingCommits[body.subject]?.[author] !== undefined) {
+        return 'already committed for this subject';
+      }
+      if (state.reveals[body.subject]?.[author] !== undefined) {
+        return 'already revealed for this subject';
+      }
+      return {
+        ...state,
+        pendingCommits: {
+          ...state.pendingCommits,
+          [body.subject]: {
+            ...state.pendingCommits[body.subject],
+            [author]: { commitHash: body.commitHash, at: event.at },
+          },
+        },
+      };
+    }
+
+    case 'commit/revealed': {
+      if (state.players[author] === undefined) return 'unknown player';
+      if (typeof body.subject !== 'string' || body.subject.length === 0) return 'malformed commit subject';
+      const pending = state.pendingCommits[body.subject]?.[author];
+      if (pending === undefined) return 'no matching commit for this subject';
+      if (typeof body.salt !== 'string' || body.salt.length < MIN_SALT_LENGTH) return 'salt too short';
+      // Honesty-assuming secrecy (see commitReveal.ts and the commit/made
+      // doc comment in events.ts): this only proves the payload+salt being
+      // broadcast now matches what this author committed to earlier. It
+      // cannot prove the commit itself was made without having looked ahead
+      // - there is no server to have hidden the payload from its own author.
+      // What every *other* peer gets is the same guarantee R-10's drawer
+      // nonce gives: cheating costs "modify your own client", not "read the
+      // wire".
+      if (commitHash(body.payload, body.salt) !== pending.commitHash) return 'commitment hash mismatch';
+
+      return {
+        ...state,
+        pendingCommits: {
+          ...state.pendingCommits,
+          [body.subject]: withoutKey(state.pendingCommits[body.subject] ?? {}, author),
+        },
+        reveals: {
+          ...state.reveals,
+          [body.subject]: {
+            ...state.reveals[body.subject],
+            [author]: { payload: body.payload, salt: body.salt, at: event.at },
+          },
+        },
+      };
+    }
+
     default: {
       // Deliberately reports only the type, not the full body: every field in
       // today's event union is public game data, but a rejection reason ends
@@ -587,6 +686,25 @@ function memberOf(state: GameState, teamId: TeamId, playerId: PlayerId): boolean
 
 function dedupe<T>(items: readonly T[]): T[] {
   return [...new Set(items)];
+}
+
+/** A shallow copy of `record` with `key` dropped, leaving everything else in place. */
+function withoutKey<V>(record: Readonly<Record<string, V>>, key: string): Record<string, V> {
+  return Object.fromEntries(Object.entries(record).filter(([k]) => k !== key));
+}
+
+/**
+ * Authors who committed for `subject` but have not (yet) revealed.
+ *
+ * This primitive has no concept of a deadline - "too late" is a call only a
+ * caller with turn-shaped context can make (a turn resolving, a timeout
+ * event, a wall-clock budget are all candidates and none of them belong in a
+ * generic reducer). This just exposes the raw fact so that rule can be built
+ * on top of it: Phase B's answered-or-forfeited logic reads this instead of
+ * this file growing an opinion about what a turn is.
+ */
+export function unrevealedCommits(state: GameState, subject: string): readonly PlayerId[] {
+  return Object.keys(state.pendingCommits[subject] ?? {});
 }
 
 /** Keeps only the most recent `limit` rejections - see `reduce`'s REJECTED_LIMIT. */
