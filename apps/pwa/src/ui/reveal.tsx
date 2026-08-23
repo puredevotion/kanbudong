@@ -209,12 +209,17 @@ function loadStrokeData(): Promise<Readonly<Record<string, CharacterJson>>> {
  * offline). Loops rather than plays once, since this sits inside an
  * already-tap-gated panel a player lingers on by choice.
  */
+/** Each glyph's loop starts this much later than the previous one, so a word's characters draw in sequence rather than all at once. */
+const STROKE_STAGGER_MS = 600;
+
 function StrokeOrderGlyph({
   character,
   data,
+  index,
 }: {
   character: string;
   data: CharacterJson;
+  index: number;
 }): ReactNode {
   const targetRef = useRef<HTMLDivElement | null>(null);
 
@@ -227,8 +232,9 @@ function StrokeOrderGlyph({
       showOutline: true,
       charDataLoader: (_char, onLoad) => onLoad(data),
     });
-    void writer.loopCharacterAnimation();
-  }, [character, data]);
+    const timer = setTimeout(() => void writer.loopCharacterAnimation(), index * STROKE_STAGGER_MS);
+    return () => clearTimeout(timer);
+  }, [character, data, index]);
 
   return <div ref={targetRef} className='rounded-xl border border-border bg-surface' />;
 }
@@ -279,9 +285,9 @@ export function StrokeOrderPanel({ hanzi }: { hanzi: string | undefined }): Reac
   }
 
   return (
-    <div className='anim-fade-in flex gap-2'>
-      {chars.map((c) => (
-        <StrokeOrderGlyph key={c} character={c} data={coverage[c] as CharacterJson} />
+    <div className='anim-fade-in flex flex-wrap justify-center gap-2'>
+      {chars.map((c, i) => (
+        <StrokeOrderGlyph key={c} character={c} data={coverage[c] as CharacterJson} index={i} />
       ))}
     </div>
   );
