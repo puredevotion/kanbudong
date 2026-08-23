@@ -44,6 +44,17 @@ export type Transparency = 'transparent' | 'semi' | 'opaque';
 export type CharacterStructure = 'left-right' | 'top-bottom' | 'enclosure' | 'atomic';
 
 /**
+ * DESIGN.md §7.7's authored spine: 0-2 are the fixed, hand-ordered sequence,
+ * 3 is "not a capability tier" - the unordered scheduler-driven remainder.
+ * Always hand-assigned per §6.3(1); never derived from `freqRank` or an HSK
+ * band, which discriminate nothing here (a frequency-ordered bank contains
+ * 期 保 质 量 含 and excludes 涮 炖 卤 荤 煸 胗 - precisely backwards for a
+ * menu). Absent means "not yet placed in the spine," not tier 3 - Phase 2
+ * only assigns this where DESIGN.md's curriculum tables give a ruling.
+ */
+export type Tier = 0 | 1 | 2 | 3;
+
+/**
  * What a sign template actually draws. Held apart from `prompt` because the
  * prompt is a sentence and this is an object on a surface: the renderer needs the
  * characters on their own to set them at display size in the app's own face.
@@ -103,6 +114,15 @@ export interface Question {
    * distinguishable.
    */
   readonly decomposition?: Decomposition;
+  /** DESIGN.md §6.3(1)/§7.7: static, hand-assigned; see {@link Tier}. */
+  readonly tier?: Tier;
+  /**
+   * DESIGN.md §9.2a: CTW-derived signage-frequency rank, stored as an
+   * authoring-order *input* and tie-breaker only. Never sorted or seeded on
+   * at runtime, and never shipped as its own column with a `CTW` source tag
+   * (gate 13) - it lives here purely as the diagnostic §6.3(1) calls for.
+   */
+  readonly freqRank?: number;
 }
 
 export interface ContentPack {

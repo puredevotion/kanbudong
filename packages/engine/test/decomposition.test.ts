@@ -4,6 +4,7 @@ import {
   COMPONENTS,
   expand,
   MEAT_RADICAL,
+  SEED_PACK,
   validatePack,
   type CategoryContent,
   type CharacterDecomposition,
@@ -77,6 +78,40 @@ describe('opaque compounds', () => {
     expect(problems).toEqual([]);
     expect(pack.questions[0]?.face?.transparency).toBe('opaque');
     expect(pack.questions[0]?.decomposition).toBeUndefined();
+  });
+});
+
+describe('menu-animal organ set: ⺼/月 reverse-error guard (DESIGN.md §7.1)', () => {
+  // Verified per DESIGN.md's decomposition source: these eight carry U+2EBC.
+  const CARRIES_MEAT_RADICAL = new Set(['肝', '肠', '肚', '腰', '脑', '肺', '肾', '胗']);
+  // Verified per the same source to NOT carry it, despite sharing the menu -
+  // this is the "reverse error" DESIGN.md flags: a naive highlighter that
+  // matches on 月 fires on none of the eight above and instead paints "meat"
+  // onto characters like these that merely sit nearby.
+  const CONFIRMED_NON_CARRIERS = new Set(['血', '舌', '皮', '筋']);
+
+  const organDecompositions = SEED_PACK.questions
+    .filter((q) => q.category === 'menu-animal')
+    .map((q) => q.decomposition)
+    .filter((d): d is CharacterDecomposition => d?.kind === 'character');
+
+  it('tags every authored decomposition\'s meat-radical claim correctly', () => {
+    for (const d of organDecompositions) {
+      const claimsMeat = d.semantic_radical === MEAT_RADICAL.id;
+      if (CARRIES_MEAT_RADICAL.has(d.hanzi)) {
+        expect(claimsMeat, `${d.hanzi} should carry the meat radical`).toBe(true);
+      }
+      if (CONFIRMED_NON_CARRIERS.has(d.hanzi)) {
+        expect(claimsMeat, `${d.hanzi} should NOT carry the meat radical`).toBe(false);
+      }
+    }
+  });
+
+  it('authors a CharacterDecomposition for every ⺼-bearing organ character shipped', () => {
+    const decomposed = new Set(organDecompositions.map((d) => d.hanzi));
+    for (const hanzi of CARRIES_MEAT_RADICAL) {
+      expect(decomposed.has(hanzi), `${hanzi} is missing its CharacterDecomposition`).toBe(true);
+    }
   });
 });
 

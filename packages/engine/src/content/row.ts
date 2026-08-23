@@ -1,6 +1,17 @@
 import type { Decomposition } from '../components.js';
 import { createRng } from '../rng.js';
-import type { CategoryId, Difficulty, Question, SignFace } from '../types.js';
+import type { CategoryId, Difficulty, Question, SignFace, Tier } from '../types.js';
+
+/**
+ * Fields authored rarely enough that giving each one its own positional tuple
+ * slot would push {@link Row} past the point Phase 1 flagged - "positional
+ * growth past ~6 fields is a signal to switch." Grouped here instead of
+ * added as slots 7 and 8.
+ */
+export interface RowMeta {
+  readonly tier?: Tier;
+  readonly freqRank?: number;
+}
 
 /**
  * Compact authoring format: `[prompt, options, answerIndex, explanation]`.
@@ -24,6 +35,7 @@ export type Row = readonly [
   face?: SignFace,
   /** Most rows have none; see DESIGN.md §3.3.3(5) on why this is not on `face`. */
   decomposition?: Decomposition,
+  meta?: RowMeta,
 ];
 
 export type CategoryContent = Readonly<Record<Difficulty, readonly Row[]>>;
@@ -42,7 +54,7 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
   for (const difficulty of ['low', 'mid', 'high'] as const) {
     const rows = chunks.flatMap((chunk) => chunk[difficulty]);
     rows.forEach((row, index) => {
-      const [prompt, options, answer, explanation, face, decomposition] = row;
+      const [prompt, options, answer, explanation, face, decomposition, meta] = row;
       const id = `${category}-${difficulty}-${index + 1}`;
       out.push({
         ...rotate(options, answer, id),
@@ -53,6 +65,8 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
         explanation,
         ...(face === undefined ? {} : { face }),
         ...(decomposition === undefined ? {} : { decomposition }),
+        ...(meta?.tier === undefined ? {} : { tier: meta.tier }),
+        ...(meta?.freqRank === undefined ? {} : { freqRank: meta.freqRank }),
       });
     });
   }

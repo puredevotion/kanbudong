@@ -16,7 +16,9 @@ import { SAFETY_INSTRUCTION } from './safety-instruction.js';
 import { SAFETY_PROHIBITION } from './safety-prohibition.js';
 import { SAFETY_WARNING } from './safety-warning.js';
 import { STREET_OPEN } from './street-open.js';
+import { STREET_PROMO } from './street-promo.js';
 import { STREET_TRADE } from './street-trade.js';
+import { STREET_WAY } from './street-way.js';
 import { TRANSIT_PLATFORM } from './transit-platform.js';
 import { TRANSIT_TICKET } from './transit-ticket.js';
 
@@ -33,9 +35,12 @@ import { TRANSIT_TICKET } from './transit-ticket.js';
  * Every item carries a `face` — the characters on their own, so a sign template
  * can set them at display size rather than parsing them back out of a sentence.
  *
- * BRIDGE CONTENT. The four-option shape is inherited, not chosen. DESIGN.md §6.1
- * defines the real item as a span with a `transparency` field and a component
- * table underneath it, and replacing this pack is the first content task here.
+ * BRIDGE CONTENT. The four-option shape is inherited, not chosen. All 18
+ * DESIGN.md §6.2 scenes are seeded as of Phase 2, and the menu-animal organ
+ * set carries real `CharacterDecomposition` records against §6.1's span
+ * model, but most of the bank still predates `tier`/`decomposition` and is
+ * far short of the ~2,700-item/1,500-character target in §11.0 - that is the
+ * long-tail authoring effort DESIGN.md itself scopes outside any one phase.
  */
 export const SEED_PACK: ContentPack = {
   id: 'kanbudong.seed',
@@ -56,7 +61,9 @@ export const SEED_PACK: ContentPack = {
     ...expand('safety-prohibition', SAFETY_PROHIBITION),
     ...expand('safety-warning', SAFETY_WARNING),
     ...expand('street-open', STREET_OPEN),
+    ...expand('street-promo', STREET_PROMO),
     ...expand('street-trade', STREET_TRADE),
+    ...expand('street-way', STREET_WAY),
     ...expand('transit-platform', TRANSIT_PLATFORM),
     ...expand('transit-ticket', TRANSIT_TICKET),
   ],

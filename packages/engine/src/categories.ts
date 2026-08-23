@@ -34,6 +34,8 @@ export const CATEGORIES: readonly Category[] = [
   { id: 'menu-order', name: 'The ordering screen', glyph: '单' },
   // Street - 20%
   { id: 'street-trade', name: 'Shopfront trade', glyph: '店' },
+  { id: 'street-promo', name: 'Discount and promotion', glyph: '折' },
+  { id: 'street-way', name: 'Fascia wayfinding', glyph: '向' },
   { id: 'street-open', name: 'Open or closed', glyph: '营' },
   // Safety - 15%
   { id: 'safety-prohibition', name: 'Prohibition', glyph: '禁' },
@@ -46,16 +48,10 @@ export const CATEGORIES: readonly Category[] = [
 ];
 
 /**
- * Four of the eighteen scenes DESIGN.md §6.2 specifies are absent here, because
- * the seed bank has no items for them yet and the bag must never deal a category
- * the pack cannot answer:
- *
- *   street-promo   Discount and promotion
- *   street-way     Fascia wayfinding
- *
- * Restore them as the bank grows; this list is a content gap, not a design
- * change. Note 出口 still sits under transit-platform rather than safety-exit,
- * which is where a player would look for it.
+ * All eighteen DESIGN.md §6.2 scenes are now seeded, including the two that
+ * were formerly a content gap (`street-promo`, `street-way`, added Phase 2).
+ * Note 出口 still sits under transit-platform rather than safety-exit, which
+ * is where a player would look for it.
  */
 export const CATEGORY_IDS: readonly CategoryId[] = CATEGORIES.map((c) => c.id);
 
