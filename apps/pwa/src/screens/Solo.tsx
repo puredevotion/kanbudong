@@ -205,6 +205,13 @@ export function Solo(): ReactNode {
                 {reveal.correct ? 'Correct' : 'Not quite'}
               </p>
             )}
+            {!hanziAlone && current.face !== undefined && (
+              <p className="text-muted">
+                {current.face.pinyin}
+                {current.face.nl !== undefined && ` · ${current.face.nl}`}
+                {current.face.en !== undefined && ` (${current.face.en})`}
+              </p>
+            )}
             {!reveal.correct && !hanziAlone && presentedQuestion !== null && (
               <p>
                 <span className="text-muted">You said: </span>
