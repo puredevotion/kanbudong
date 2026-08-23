@@ -160,10 +160,18 @@ export function siblingsSharingComponent(
  * `Question.confusion_type`).
  */
 export function confusablesFor(pack: ContentPack, question: Question): readonly Question[] {
-  return (question.confusable_with ?? []).flatMap((id) => {
+  const ownHanzi = question.face?.hanzi ?? question.id;
+  const seen = new Set<string>([ownHanzi]);
+  const out: Question[] = [];
+  for (const id of question.confusable_with ?? []) {
     const other = questionById(pack, id);
-    return other === undefined ? [] : [other];
-  });
+    if (other === undefined) continue;
+    const hanzi = other.face?.hanzi ?? other.id;
+    if (seen.has(hanzi)) continue;
+    seen.add(hanzi);
+    out.push(other);
+  }
+  return out;
 }
 
 export interface SelectQuestionInput {

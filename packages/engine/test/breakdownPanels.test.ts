@@ -159,6 +159,29 @@ describe('confusablesFor', () => {
     };
     expect(confusablesFor(fabricated, fabricated.questions[0] as Question)).toEqual([]);
   });
+
+  /**
+   * The same class of bug siblingsSharingComponent had (fixed in 6f75d66):
+   * a stale/duplicate `confusable_with` id resolving to a question sharing
+   * the querying question's own rendered hanzi (e.g. two difficulty-tier
+   * copies of the same word) must never surface as "confuse this with
+   * itself." A test-suite audit flagged this as a live, unguarded gap
+   * before any real content hit it.
+   */
+  it('never returns a question with the same rendered hanzi as the query', () => {
+    const ownHanzi = '会员价';
+    const copies = SEED_PACK.questions.filter((q) => q.face?.hanzi === ownHanzi);
+    expect(copies.length).toBeGreaterThan(1);
+    const fabricated: ContentPack = {
+      ...SEED_PACK,
+      questions: [
+        { ...(copies[0] as Question), id: 'fixture-self-1', confusable_with: [copies[1]?.id ?? ''] },
+        ...SEED_PACK.questions,
+      ],
+    };
+    const confusables = confusablesFor(fabricated, fabricated.questions[0] as Question);
+    expect(confusables.some((q) => q.face?.hanzi === ownHanzi)).toBe(false);
+  });
 });
 
 describe('confusable-pair backfill (Aug 2026)', () => {
@@ -201,7 +224,7 @@ describe('confusable-pair backfill (Aug 2026)', () => {
     ]);
   });
 
-  it('tags every 停业 occurrence (low/mid/high) against 暂停营业, and back', () => {
+  it('tags every 停业 occurrence (low/mid/high) against 暂停营业, and back deduped', () => {
     for (const id of ['street-open-low-1', 'street-open-mid-1', 'street-open-high-1']) {
       const q = questionById(SEED_PACK, id);
       expect(q?.face?.hanzi).toBe('停业');
@@ -210,10 +233,13 @@ describe('confusable-pair backfill (Aug 2026)', () => {
         '暂停营业',
       ]);
     }
+    // 暂停营业 is tagged confusable_with all three 停业 tier-copies, but they're
+    // the same rendered word - the panel should show it once, not three
+    // times back at the player (see confusablesFor's hanzi-dedup fix).
     const zanting = questionById(SEED_PACK, 'street-open-mid-4');
     expect(zanting?.face?.hanzi).toBe('暂停营业');
     const back = confusablesFor(SEED_PACK, zanting as Question).map((c) => hanziOf(c.id));
-    expect(back).toEqual(['停业', '停业', '停业']);
+    expect(back).toEqual(['停业']);
   });
 });
 
