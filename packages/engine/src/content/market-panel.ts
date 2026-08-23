@@ -81,7 +81,7 @@ export const MARKET_PANEL: CategoryContent = {
       '杯 — you see this on a sign. What does it mean?',
       ['cup, glass', 'checkout', 'ten thousand', '1, capital form'],
       0,
-      'bēi · kopje, glas. Drinks. ⿰木不.',
+      'bēi · kopje, glas. Drinks. 木 left, 不 right.',
     ],
     [
       '碗 — you see this on a sign. What does it mean?',
@@ -107,7 +107,7 @@ export const MARKET_PANEL: CategoryContent = {
       '散装 — you see this on a sign. What does it mean?',
       ['loose, sold by weight', 'shelf life, as a duration', 'animals, one of a pair, some containers', 'freeze, −18 °C'],
       0,
-      'sǎnzhuāng · los, per gewicht. Flags that 元/斤 applies. 散 carries ⺼ — a highlighter false positive',
+      'sǎnzhuāng · los, per gewicht. Flags that 元/斤 applies. 散 carries the flesh component — a highlighter false positive',
     ],
     [
       '称重 — you see this on a sign. What does it mean?',
@@ -131,7 +131,7 @@ export const MARKET_PANEL: CategoryContent = {
       '双 — you see this on a sign. What does it mean?',
       ['pairs', '0.01 yuan', 'general measure word', '2, capital form'],
       0,
-      'shuāng · paar. Shoes, chopsticks, socks. ⿰又又.',
+      'shuāng · paar. Shoes, chopsticks, socks. 又 left, 又 right.',
     ],
     [
       '条 — you see this on a sign. What does it mean?',

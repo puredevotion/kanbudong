@@ -33,7 +33,7 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       '注意 — you see this on a sign. What does it mean?',
       ['attention', 'danger', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading'],
       0,
-      'zhùyì · let op. Heads a hazard without naming its severity. 注 = ⿰氵主.',
+      'zhùyì · let op. Heads a hazard without naming its severity. 注 = 氵 left, 主 right.',
     ],
     [
       '当心 — you see this on a sign. What does it mean?',

@@ -13,7 +13,9 @@
     "install:web": "pnpm install --filter @kanbudong/pwa... --filter @kanbudong/engine... --filter @kanbudong/net...",
     "typecheck": "pnpm -r --filter @kanbudong/engine --filter @kanbudong/net --filter @kanbudong/pwa typecheck",
     "test": "pnpm --filter @kanbudong/engine --filter @kanbudong/net test",
-    "build": "pnpm --filter @kanbudong/pwa build",
+    "fonts": "node scripts/install-fonts.mjs",
+    "fonts:subset": "python3 scripts/build-fonts.py",
+    "build": "pnpm fonts && pnpm --filter @kanbudong/pwa build",
     "dev": "pnpm --filter @kanbudong/pwa dev",
     "lint": "oxlint .",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"

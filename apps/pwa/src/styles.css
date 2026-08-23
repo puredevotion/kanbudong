@@ -4,6 +4,8 @@
  */
 @import '@heroui/react/styles';
 
+
+
 /*
  * Explicit sources: the `@import "tailwindcss"` above resolves from inside
  * node_modules, so automatic content detection would scan the wrong tree and
@@ -12,7 +14,47 @@
 @source './**/*.{ts,tsx}';
 @source '../index.html';
 
+/*
+ * Full simplified-Chinese faces, copied in by scripts/install-fonts.mjs and
+ * precached by the service worker. Not subsetted: a subset needs rebuilding
+ * every time the bank gains a character, and the bank will gain characters
+ * constantly. All 7,946 codepoints are here, so anything we add just works.
+ *
+ * Self-hosted rather than linked, because the Google Fonts CSS API serves ~100
+ * unicode-range files that a service worker can only cache on demand — a
+ * character the player has not met yet would not render offline, which is the
+ * one situation this app exists for.
+ */
+@font-face {
+  font-family: 'Han Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/han-sans-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Han Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/han-sans-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Han Serif';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/han-serif-700.woff2') format('woff2');
+}
+
 @theme {
+  /* Hanzi are set in the app's own face, never a system fallback: a JP-locale
+   * device renders Japanese glyph forms for 直 骨 每 令 画, which is the wrong
+   * shape to be teaching. */
+  --font-han: 'Han Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-han-serif: 'Han Serif', 'Songti SC', 'SimSun', serif;
+
+
   /* One accent per difficulty tier, matching the app icon's three rings. */
   --color-tier-low: oklch(0.72 0.14 250);
   --color-tier-mid: oklch(0.68 0.19 296);

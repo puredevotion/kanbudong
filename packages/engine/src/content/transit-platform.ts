@@ -7,7 +7,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       '站 — you see this on a sign. What does it mean?',
       ['station, stop', 'high-speed rail (G)', 'exit', 'platform'],
       0,
-      'zhàn · station, halte. Rank 531. ⿰立占, 占 zhàn a transparent phonetic. Tail of 加油站, 火车站.',
+      'zhàn · station, halte. Rank 531. 立 left, 占 right, 占 zhàn a transparent phonetic. Tail of 加油站, 火车站.',
     ],
     [
       '出口 — you see this on a sign. What does it mean?',
@@ -31,7 +31,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       '换乘 — you see this on a sign. What does it mean?',
       ['transfer, change lines', 'train', 'ticket check', 'carriage, coach'],
       0,
-      'huànchéng · overstappen. Absent from all bands. 换 = ⿰扌奂, and 换 唤 焕 are uniformly huàn. But 乘 is band 5, rank 1,238 — a character card first.',
+      'huànchéng · overstappen. Absent from all bands. 换 = 扌 left, 奂 right, and 换 唤 焕 are uniformly huàn. But 乘 is band 5, rank 1,238 — a character card first.',
     ],
   ],
   mid: [
@@ -39,7 +39,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       '地铁 — you see this on a sign. What does it mean?',
       ['metro', 'ticket check', 'train', 'trade house'],
       0,
-      'dìtiě · metro. Band 2. 铁 = ⿰钅失; 钅 anchors 铁 银 铺 锅 across both sections.',
+      'dìtiě · metro. Band 2. 铁 = 钅 left, 失 right; 钅 anchors 铁 银 铺 锅 across both sections.',
     ],
     [
       '安检 — you see this on a sign. What does it mean?',
@@ -57,7 +57,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       '票 — you see this on a sign. What does it mean?',
       ['ticket', 'centre', 'bound for', 'carriage, coach'],
       0,
-      'piào · kaartje. Rank 948. ⿱覀示. Head of 单程票, 检票, 取票, 售票, 补票, 退票 — 6:1, the best ratio in the strand.',
+      'piào · kaartje. Rank 948. 覀 top, 示 bottom. Head of 单程票, 检票, 取票, 售票, 补票, 退票 — 6:1, the best ratio in the strand.',
     ],
   ],
   high: [
@@ -71,7 +71,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       '单程票 — you see this on a sign. What does it mean?',
       ['single-journey ticket', 'venue, ground', 'centre', 'high-speed rail (G)'],
       0,
-      'dānchéngpiào · enkeltje. 单 has three readings, dān here. 单程 ⿰禾呈 and 换乘 ⿻禾北 share chéng — pair deliberately.',
+      'dānchéngpiào · enkeltje. 单 has three readings, dān here. 单程 禾 left, 呈 right and 换乘 禾 and 北 overlapped share chéng — pair deliberately.',
     ],
     [
       '站台 — you see this on a sign. What does it mean?',

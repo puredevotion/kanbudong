@@ -21,7 +21,7 @@ import { TRANSIT_TICKET } from './transit-ticket.js';
 /**
  * The seed bank, generated from the curriculum tables in DESIGN.md §7 — pinyin
  * verified against a 44,437-line reference table, characters against a
- * decomposition set.
+ * decomposition set, and every codepoint against the produced font subset.
  *
  * BRIDGE CONTENT. It uses the inherited four-option question shape so the tree
  * builds and plays today. DESIGN.md §6.1 defines the real item as a *span* — a
