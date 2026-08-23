@@ -10,6 +10,34 @@ evidence — or challenged with it.
 | `corrections.json` | 160 corrections. Each names the original claim, what was wrong with it, the corrected version and the re-graded strength. |
 | `digests.json` | The four cluster digests the document was actually written from — settled claims, contested questions, myths, directives, and rulings on the five design decisions. |
 | `SOURCES.md` | Every source cited: 574 unique URLs with citation and access level. |
+| `passes/` | All 23 documents the writing agents produced — every draft, every adversarial review, every revision. |
+| `corpus/` | Reference data for verifying content, and a fetch script for what could not be committed. |
+
+## `passes/` — the drafts and the reviews
+
+The design document is the last of several passes, and the ones before it are
+often more useful than the last when you want to know *why* something reads the
+way it does.
+
+Files are named for their place in the pipeline. `draft-` is a first write,
+`REVIEW-of-` is an adversary attacking that draft's reasoning, `revised-` is the
+result. `VERIFIED-` marks the curriculum passes, which additionally had every
+Chinese string checked against the corpus data by script.
+
+**The reviews are the part worth reading.** They attack the step from finding to
+recommendation, not the evidence, and they land hits the document then absorbs
+silently — a recommendation that does not follow from its citation, a lab result
+applied to months of learning, a number presented as derived when nothing supports
+it, a ruling bent to rescue a decision that was already built. Where a review
+argues something the document does not reflect, the review is not necessarily
+wrong; it may just have been overruled without comment.
+
+Two known gaps, recorded rather than hidden. `01-sweeps--synthesis-superseded.md`
+is the first synthesis, kept only because it shows what the pipeline produced
+before the conclusions workflow replaced it.
+`03-sections-1-8--draft-section-8-truncated.md` is what survived when a writing
+agent split its output across turns and only the final message was captured —
+sections 5 to 7 were lost there and rewritten from scratch in `04-`.
 
 ## How much of this reached the document
 

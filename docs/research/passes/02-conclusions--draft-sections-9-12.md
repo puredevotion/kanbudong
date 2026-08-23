@@ -1,0 +1,258 @@
+as a *schoolexamen* (no centraal examen), with PTA tests structurally based on HSK and requiring active mastery of **400 characters**. Tag every item `vwo_400` and `hsk3_band`. Two integer columns buy a filtered deck for Dutch secondary students and a distribution wedge into a small, enumerable list of schools. *(slo.nl was egress-blocked; the 400-character figure and the schoolexamen-only structure are confirmed by multiple secondary sources, the start year is unresolved. One email to SLO settles it.)*
+
+---
+
+## 9. Content sourcing and licensing
+
+### 9.1 What can ship
+
+| Asset | Source | Licence | How it ships |
+|---|---|---|---|
+| Glosses (seed layer) | **CC-CEDICT** via MDBG | **CC BY-SA 4.0** (verified on two builds, 2023-09-03 and 2024-12-06; ancestor CEDICT © 1997–98 Paul Denisowski) | As a **separate build artefact** `/assets/gloss.cedict.json` with `LICENSE-CC-BY-SA-4.0.txt` beside it. **Never inlined into the JS bundle.** The derived file is published in the repo so ShareAlike is discharged once at build time. |
+| `strokeCount`, `kRSUnicode` (semantic radical, incl. 肉 = radical 130) | **Unihan / UCD** | **Unicode licence** (MIT-equivalent): use, copy, modify, distribute, sell; condition is the notice with copies or in documentation; you may not use "Unicode" in advertising | Bundled. Notice in `/licences`. **Do NOT use `kMandarin` for pinyin** (P30). Do not order the bank by `kFrequency` or `kGradeLevel` — legacy fields from small 1990s sources, on the deprecated track. |
+| Character tier, 多音字 table (597 entries), traditional-variant lists (1,489 S→T) | **通用规范汉字表** via `jaywcjlove/table-of-general-standard-chinese-characters` | **MIT** (transcriber's grant) | Bundled. Attribute the transcriber. Note the underlying GF 0023-2013 standard's contested status. |
+| HSK 3.0 band, as an internal ordering signal only | `elkmovie/hsk30` | **MIT** © 2021 Pleco Inc. (OCR + compilation labour) | Internal integer column. **Never the letters "HSK," the logo, or "HSK Level N" in the UI or store metadata.** |
+| Faces | **Noto Sans SC**, **Noto Serif SC** | **SIL OFL 1.1, no Reserved Font Name** | Self-hosted subset, family renamed, `OFL.txt` shipped. |
+| Scheduler | `ts-fsrs` | MIT | npm dependency. Note: npm latest 5.4.1 = **FSRS-6.0**, one generation behind the benchmark's FSRS-7 — quote FSRS-6 rows only. |
+| Everything else | **Authored by us** | ours | Item strings, all Dutch glosses, all `note` clauses, all discriminators, all decomposition glosses, all distractor sets with `whyPlausible`, all five CSS substrate templates, all `accepted_answers` synonym sets. |
+
+### 9.2 What cannot ship
+
+| Asset | Why not | What to do instead |
+|---|---|---|
+| **`makemeahanzi/dictionary.txt`** | **LGPL-3.0-or-later**, not MIT. LGPL on a JSON blob compiled into a Vite bundle is incoherent but not obviously discharged — the mechanism it protects is the right to relink a modified version | **Regenerate the equivalent decomposition and radical data from Unihan (permissive) + CC-CEDICT (BY-SA)**, which is where most of it came from. **CI-fail on any field traceable to it.** |
+| **`makemeahanzi` graphics / `hanzi-writer-data`** | **Arphic Public License** — genuinely copyleft on the stroke data, with a "designated place" distribution duty on modifications (§2(a) notice, §2(b) publish-as-a-whole). Subsetting or reformatting **is** a modification | **Ship no stroke graphics in v1.** Measured: mean 3,368 B/character over 9,574 files → a 1,200-character bundle is **1.21 MB brotli**, 40% of a 3 MB install budget, for a skill this user will never perform. If a "how is this written" affordance is wanted later, lazy-load one character's JSON from a separate APL-licensed static path and publish the reformatted subset as a public repo with `ARPHICPL.TXT` and a `CHANGES` file — that repo *is* the designated place and discharges §2(b) permanently. If only order is needed, ship the integer sequence (a GB standard, not an expressive work). |
+| **CTW annotations** | **CC BY-NC-SA 4.0.** The NC term is a real gate on a commercial product | Use CTW **internally only**, as a research input deciding which characters to author and which held-out signs to use. **Ship no artefact derived from the annotations** unless a commercial grant is obtained from the authors. The baseline code is MIT. |
+| **SUBTLEX-CH · Jun Da MTSU · BCC** | SUBTLEX-CH is safe only from the PLoS ONE Supporting Information copy (inheriting CC BY); the lab-site and GitHub mirrors carry **no licence text**. Jun Da is research/education-only with no commercial grant despite being bundled commercially everywhere. The circulating BCC file has no licence statement | **Do not bundle any of the three, and quote none of them in product copy.** They disagree by ~5–7 points at rank 1,000 and do not agree on their top three, which is itself the argument. |
+| **Tatoeba sentences** | Code is AGPL-3.0 (verified); the per-sentence corpus licence could not be verified. And the register is wrong — textbook-style full sentences, often translationese, with essentially no menu items, transit signage or product labels | Do not build the bank on it. Clozemaster is the standing proof that it is cheap to build and lands in the wrong register. |
+| **Photographs of real menus, fascias, packages, labels** | Menu layout and typography, dish photography, package artwork and shopfront logos are **protected expression carrying live trademarks**. A Dutch controller photographing on premises engages **GDPR** the instant a person is in frame; **PIPL** applies at collection; the PRC **Surveying and Mapping Law** restricts geographic data collection by foreign nationals | **Ship transcribed text set in our own licensed font. Never the source photograph.** Photographs are internal reference, kept out of the repo and the bundle. If capture ever ships: on-device only, no GPS, no peer sync of images, no server-side pooling — store only the extracted character list. **Drop the "we photographed 200 real menus in Chengdu" line** — it converts a private research practice into a public admission for no benefit that "built from real-world signage" does not also deliver. Route to counsel before a line of code if pooled capture survives. |
+| **Forvo audio · CSMSC-derived TTS checkpoints · MagicData** | Forvo's terms forbid redistribution and durable caching — structurally incompatible with an offline PWA. CSMSC / 标贝 is explicitly **non-commercial** and taints the large fraction of publicly released Chinese TTS checkpoints trained on it. MagicData is **CC BY-ND 4.0**, where ND arguably prohibits training on it | Ship no audio in v1. When added: build-time pre-render with a commercial TTS whose terms grant output rights (Azure, Google, ElevenLabs all do). "This TTS model is open source" almost always refers to the **code** licence, not the corpus. |
+| **Google Fonts `<link>`** | Needs network at render time, serves CJK as ~100 lazily-fetched unicode-range chunks that cannot be service-worker precached coherently, and its hosts are unreachable from mainland China | Self-host (§11.5). |
+| **"HSK Level 3" / a CEFR letter in the UI** | HSK is a **trademark** exposure (the copyright position on the word list is genuinely unsettled and enforcement is unheard of; the letters and logo are what bite). CEFR equivalence is contested and uncomputable | Express progress as counts against the official lists and as `signsActionable`. |
+
+### 9.3 Build-time gates that fail CI
+
+**[D]** Ten lines of script each, and the difference between a defensible product and an undocumented one.
+
+1. Any item-bank codepoint missing from the produced font subset.
+2. Any column in the emitted bank with no entry in the **provenance manifest** (column → dataset → licence).
+3. Any field traceable to `makemeahanzi/dictionary.txt`.
+4. Any stored `strokeCount` disagreeing with Unihan `kTotalStrokes`.
+5. Any item containing a heteronym without an explicit per-character reading.
+6. Any item containing 面/干/发/后/里/松/只/几/表/系/术 with a **scalar** `trad` field.
+7. Any hanzi element without `lang="zh-Hans"`, or any gloss without a `lang` attribute.
+8. The Latin face failing the `ā á ǎ à ē é ě è ī í ǐ ì ō ó ǒ ò ū ú ǔ ù ǖ ǘ ǚ ǜ` render assertion.
+9. Any item with `transparency: 'opaque'` that also carries a `word_decomposition`.
+10. Any item with `confusion_type: 'form'` and no `discriminator`.
+
+**[D]** An in-app `/licences` route naming: CC-CEDICT · MDBG · Denisowski 1997–98 · Unicode, Inc. · Pleco Inc. (MIT) · the TGH transcriber (MIT) · SIL OFL 1.1 · ts-fsrs.
+
+**[D] Distribution channel.** CC BY-SA 4.0 §2(a)(5)(B) forbids applying effective technological measures; Arphic PL §5 bars imposing further restrictions on recipients. **Stay a PWA**, or serve gloss and any future stroke assets as separately-fetched, non-DRM'd files. Do not wrap the same bundle behind FairPlay for the App Store while it contains BY-SA data.
+
+---
+
+## 10. Measurement
+
+### 10.1 The cheapest honest instrument is the attempt log
+
+**[D] Primary metric — one number, computed from data we already have to store:**
+
+> **Accuracy on items whose inter-exposure gap crossed ≥7 days and ≥1 sleep, on a substrate/typeface the item has not previously been seen in, aggregated per player over hundreds of attempts.**
+
+It is free, continuous, and orders of magnitude better powered than any check-in test. It satisfies the experimentation policy (§0.3) exactly: delayed, on transfer renderings, not self-reported.
+
+**[D] Secondary metric — `signsActionable` against a fixed held-out set.** ~120 real composite signs, each tagged with the character set it requires. Split into pre-test and post-test blocks matched on required-character count. Administer the pre-test during Tier-0 onboarding (where it doubles as the cold-start calibration a mixed-ability table needs) and the post-test on the day the player lands. **Report one number: sign completion rate before departure versus on arrival.** That is the only outcome measure in this product category that is not self-reported.
+
+*Source the held-out set from CTW, which makes it reproducible and publishable, and which removes the main cost objection to building it — subject to the NC constraint of §9.2 (internal use; the signs we ship are our own transcriptions set in our own font).*
+
+**[D] Three diagnostics, always on:**
+
+| Diagnostic | Computed as | Trips when |
+|---|---|---|
+| **Template learning** | naked-probe accuracy − in-object accuracy | gap > ~20 points → the app is teaching plates, not characters |
+| **Cross-association** | per-user confusion matrix on `(target_item, chosen_item)` | `confusion[入口][出口]` crosses a threshold → stop presenting them as co-options and re-teach the distinguishing component in isolation |
+| **Anxiety / harm** | within-player response latency on opponent-dealt vs self-dealt items | latency inflates on opponent-dealt → the early-warning signal, because **efficiency degrades before effectiveness does** (Attentional Control Theory, Eysenck et al. 2007) |
+
+**[D] The public-failure question, answered as a query rather than a data-collection project.** Store `turns_since_last_public_failure` as a field. Log per player: turns voluntarily initiated, next-turn response latency, abandonment, next-session return — each keyed to whether the **previous** turn was a public failure. A within-player pre/post comparison is a real experiment at n ≈ 200 players, and it answers a question the field has not answered.
+
+### 10.2 Two A/B tests stacked inside the same study
+
+**[D]** Both ride the pre/post held-out design at no extra cost:
+
+1. **Object template vs plain rendering**, measured on **naked-probe accuracy at ≥7 days**. This is the most expensive part of the design and its evidence is genuinely contested (§3.2). Instrument from v1.
+2. **The spacing coefficient**, measured on **landing-day retention**. Two conditions, neither of them `0.15 × horizon` (P3): pure strength-based intervals, versus strength-based with a trip-date-driven recall-threshold ramp.
+
+**[D] First A/B after those:** gain-framed vs neutral-framed score presentation, outcome = next-turn latency and next-session return. That "framing can tip the sign of competition" is **the product's central untested hypothesis, not a finding** — the opposing-processes model was fitted over correlational studies in which goal endorsement was measured, not manipulated. The design decisions it motivates (no red negative numbers, no live losing-order, gain-framed copy) are cheap and harmless either way, so ship them; just do not book the benefit.
+
+### 10.3 What is banned as a primary metric, and one instrument that is demoted
+
+**Banned:** self-reported difficulty · perceived helpfulness · in-session accuracy · session satisfaction · NPS · streak length · time in app · "players report they had fun."
+
+**Demoted: the 60-item yes/no vocabulary check-in.** It cannot function as a learning-outcome metric. At hit rate 0.75 and false-alarm rate 0.10, the SE of a single corrected score (hits/40 − false_alarms/20) is ≈0.096, so the difference between two sittings has SE ≈ 0.136 and a **minimum detectable change of ≈27 percentage points**. Even at a flattering 0.90/0.05 it is ≈19. Resolving a 10-point change needs ~284 real + 142 pseudowords (~10 minutes); 5 points needs ~1,700 items. **Running it every ten sessions produces a number that moves mostly at random, which is worse than no number because the team will read the noise.**
+
+**[D]** Keep it as a **placement instrument at onboarding** and a coarse band estimate. If a discrete hero number is ever wanted, run **one long test (400+ items) twice a season**, not a short one ten times.
+
+**[D]** And fix the format if it is kept: pseudo-**characters** are rejected on sight and collapse the false-alarm rate the correction divides by. Build pseudo-**words** by substituting one character of an attested two-character compound with a frequency-matched character sharing the semantic radical — morphologically well-formed but non-existent. Better still for a reading product: ask about **readability of a real string in context** ("can you read this sign?") over cropped real signage, with distractor strings drawn from a domain the player has not unlocked. That measures what the product promises and sidesteps the question of what counts as a word in a language with no word delimiters.
+
+### 10.4 The two-family reporting rule
+
+**[D]** Learning and engagement are reported as **separately-labelled metric families** and never conflated. Learning: ≥7-day delayed accuracy · transfer accuracy at d7 and d28 · retrievals-to-stable-recall per item (**measure it; do not assume 6–10**). Engagement: sessions/week · retrievals/session · self-initiated vs notification opens.
+
+The reason is concrete: the field's most-cited "smarter scheduling drives engagement" number came from a study that measured **next-day retention and never measured vocabulary gain at all**, and it has been read as a learning result for a decade.
+
+---
+
+## 11. Architecture
+
+The fork inherits a good spine: `packages/engine` is a pure deterministic reducer over an Ed25519-signed event log with seeded per-turn RNG; `packages/net` does anti-entropy sync with QR join tickets; `apps/pwa` is Vite + React 19, installable and offline-capable. Most of what follows is additive; four things must change.
+
+### 11.1 Storage — two stores, not one
+
+**[D]**
+
+| Store | Contents | Synced? | Backing |
+|---|---|---|---|
+| **Shared game log** | signed events, exactly as today | yes, P2P anti-entropy | as today |
+| **Local memory store** | FSRS state, review log, confusion matrix, component exposure counts, `component_first_seen_at` | **never synced to peers** | **IndexedDB** |
+
+FSRS needs full per-item history; that history is **private state, not game state**. Merging them breaks both the privacy claim and the deterministic reducer.
+
+**[D] Change from the parent:** `packages/net/src/storage.ts` currently defines a three-method `KeyValueStore` backed by `localStorage`. That is correct for identity and adequate for a single game log; it is wrong for the memory store. Add an IndexedDB-backed store for per-player memory. Keep the `KeyValueStore` interface for identity so the React Native shell is unaffected.
+
+**Sizing.** Per-(player, item, direction) FSRS state is `stability: f32, difficulty: f32, last_review: f64` = **16 bytes**. A 1,800-character + 1,200-word bank × 8 local players ≈ 24,000 rows ≈ 400 KB. The review log dominates and is bounded by session count.
+
+**Review-log schema — adopt the de-facto standard, because it costs nothing:**
+
+Required: `card_id` · `review_time` (**milliseconds**, UTC) · `review_rating ∈ {1 Again, 2 Hard, 3 Good, 4 Easy}`.
+Recommended: `review_state ∈ {0 New, 1 Learning, 2 Review, 3 Relearning}` · `review_duration` (ms).
+Per-user: `timezone` (IANA) · `day_start = 4` (04:00 local, so a late-night session counts as one day).
+Product columns: `player_id` · `mode (solo|group)` · `role (answerer|co_committed|observer|exposure)` · `format_tier` · `n_alternatives` · `bet_tier` · `chosen_option` (**not just correct/incorrect**) · `latency_ms` · `render_variant` · `substrate_id` · `distractor_set` · `scaffolding_rung` · `eligible_for` · `crossed_a_sleep_period` · `voluntarily_initiated` · `turns_since_last_public_failure` · `spoken_attempt`.
+
+`review_duration` is free to record now, impossible to reconstruct later, and is the only signal for "was this player actually looking at the screen."
+
+### 11.2 Offline behaviour and the iOS eviction trap
+
+**[F] strong.** iOS Safari evicts script-writable storage — IndexedDB, Cache API, service-worker caches — after roughly **seven days of non-use** for sites **not installed to the home screen**. That silently deletes exactly the returning-user history a fortnightly product depends on.
+
+**[D]**
+- Prompt **Add to Home Screen** on the first successful session, and say why.
+- Treat local storage as **cache, not the primary store**. Make an explicit user-initiated **JSON export/import** the durable path.
+- **This is in direct tension with "no server, no account," and the tension is resolved here rather than discovered in production:** the promise becomes *"no server we run, no account, and no game state anywhere except on the players' devices — and because of that, your history is a file you own and can move."* Offer export at the end of every fifth session and after any 14-day gap.
+- **Test the seven-day eviction case explicitly in QA.**
+- Full offline: service-worker precache of the app shell, the font subset, and the entire item bank. **No runtime fetch of any external host.**
+
+### 11.3 Sync and the deterministic reducer
+
+**[D]** The shared log stays exactly as today: append-only, signed, anti-entropy, per-turn nonce seeding option order. Two additions:
+
+1. **`pickItem` runs on the dealing device and its output is written into the `turn/drawn` event**, because the selection depends on private per-player memory state that no peer can see. Peers replay the event; they do not recompute the selection. This is the one place the reducer's purity is preserved by *recording* a decision rather than deriving it.
+2. **Distractor sets are precomputed at build time** and derived as a pure function of `(item, exposure_count, seed)`. Generating them at runtime is too slow and non-deterministic, and phones will diverge. Because `exposure_count` is per-player local state and the option set must be identical on every phone, the **dealt player's** exposure count is the one that selects the tier, and it rides in the event.
+
+### 11.4 Transport — the two external hosts that must go
+
+**[F] strong.** There is **no browser API for local peer discovery on iPhones**: Web Bluetooth is unimplemented in Safari on iOS and macOS at every current version; WebRTC data channels are universally supported but require out-of-band signalling.
+
+Current `packages/net/src/transport.ts` uses `trystero/nostr` for discovery, plus `stun.cloudflare.com` and two TURN providers (`free.expressturn.com`, `global.relay.metered.ca`). **Every one of these is an external host that must be reachable from inside China, and public Nostr relays are the least predictable of them.**
+
+**[D] For a co-located game you need no NAT traversal at all** — all phones are on the same LAN or hotspot:
+
+1. **Configure an EMPTY `iceServers` array explicitly** for the co-located path, never inheriting a library default. Host candidates only. *(The parent already learned the adjacent lesson the hard way: Trystero's `turnConfig` unconditionally prepends four default public STUN servers, and Firefox slows ICE gathering past five URLs — hence the existing `rtcConfig` override. Take that override to its conclusion.)*
+2. **Star topology**, one session host, join code by QR — as today.
+3. **Ship a same-device pass-and-play fallback** with a "Hand to ⟨name⟩ — tap when ready" interstitial. It is the only genuinely zero-dependency option, and it is the mode that works in a restaurant basement.
+4. **Make the game state machine transport-agnostic**: a pure reducer over `{playerId, itemId, choice, elapsedMs}` with same-device handoff, `BroadcastChannel` and WebRTC datachannel swappable underneath.
+5. Keep the current STUN/TURN path as a **separate, explicitly-labelled cross-network mode** for players who are not co-located, with an honest note that it touches third-party relays.
+6. **Take a Screen Wake Lock for the session.** Supported everywhere and never mentioned in the parent.
+7. **Test in aeroplane mode plus hotspot.** A four-player co-located game whose peers cannot discover each other in the country it was built for is a total product failure, not a degradation.
+8. **[D] Before ship: enumerate every external host the PWA touches at runtime and confirm each is reachable from a mainland vantage point.** Fonts and STUN are the two that were missed.
+
+### 11.5 CJK font subsetting — measured, not assumed
+
+**[F] strong, measured with fontTools/pyftsubset.** `@fontsource/noto-sans-sc@5.3.0`'s named `chinese-simplified` woff2 @400 is **1,142,552 B = 1.09 MB**, containing 7,946 codepoints / 7,333 CJK ideographs — **not 4–5 MB and not ~44k glyphs**. Its *default* `index.css` uses ~97 numbered unicode-range chunks (2.27 MB total at w400, mean 24 KB each). Full `NotoSansSC-Regular.otf` = 7.95 MB; VF = 15.05 MB.
+
+Subset sizes, near-linear at 109–137 bytes/glyph, with `--layout-features=` stripped, `--no-hinting`, `--desubroutinize`, plus 121 Latin/punctuation codepoints:
+
+| Bank size | woff2 |
+|---|---|
+| 300 hanzi | 44.7 KB |
+| 600 | 84.9 KB |
+| 900 | 123.5 KB |
+| **1,200** | **164.0 KB** |
+| 2,000 | 277.4 KB |
+| 3,000 | 418.6 KB |
+
+**Coverage verified:** the `chinese-simplified` subset contains all 3,000 HSK 3.0 characters **and** 焗 煲 涮 菌 藕 韭 笋 蒜 姜 葱 炝 烩 氽 煨 熘 腌 蕈 蚝 蛏 鲈 鳕 鳝. **Tofu risk from the typeface is zero.** The risk is created entirely by our own codepoint-extraction step.
+
+**[D] Decision, by final bank size.** Our spine target is ~1,500–1,800 characters (P29), which sits **below** the ~2,000–2,500 crossover. **Subset.** Three faces — Noto Sans SC 400, Noto Sans SC 500, Noto Serif SC 400 — over a 1,500-character inventory ≈ **600 KB total**, versus 3.3 MB unsubsetted. Generate the subset at build time **from the item bank's own character inventory**, so the font can never drift from the content, and precache it in the service worker.
+
+```
+pyftsubset NotoSansSC-Regular.otf \
+  --text-file=bank-chars.txt --flavor=woff2 \
+  --layout-features= --no-hinting --desubroutinize
+```
+
+**[D]** Because we subset, **CI gate 1 (§9.3) is mandatory and non-negotiable** — it is the only thing standing between us and tofu boxes on a customer's phone with no network to recover. Include the Latin Extended ranges for tone-marked vowels explicitly; naive subsetting drops them routinely and they are load-bearing here.
+
+**[D]** Give the subset a distinct internal family name (`Kanbudong Sans SC`) so no Reserved Font Name or trademark question can arise. Ship `OFL.txt`.
+
+### 11.6 City packs
+
+**[D]** Per-city station-name packs as separately downloadable bundles — `city/beijing.json` with ~400 station names, `city/shanghai.json`, etc., 20–40 KB each, cached locally, selected at onboarding ("where are you going?"). Transit items generate procedurally: `开往{terminus}方向` with three sibling termini from the same network as distractors — free content, and exactly the real discrimination task. Without the packs the transit strand teaches 开往 and then shows a station name the player will never see.
+
+### 11.7 Audio
+
+**[D] None in v1.** Store `pinyin_citation`, `pinyin_surface` and `audio_ref` on every item from day one. Store a per-user `audio_enabled` flag defaulting **off**, and guarantee that a player who never plays audio can reach every item and every score tier.
+
+When audio is added: **pre-render at build time** for the finite bank using a commercial TTS whose terms grant output rights; **Opus 24 kbps mono** (~1,200 items × 1.5 s ≈ 5 MB) in Cache Storage with per-item eviction; autoplay **at reveal only**, never simultaneous with the item; **render surface (post-sandhi) pinyin whenever audio plays**. **Never the Web Speech API** — the `zh-CN` voice is frequently absent on iOS Safari and synthesis requires a user gesture, so it fails exactly at a table with mixed phones.
+
+**Budget honestly, once.** The design must not buy both a photograph set and a multi-talker audio set and budget neither. As specified, v1 buys neither: CSS-only substrates and no audio. That is the decision, and it is what makes a full offline precache of the whole bank feasible.
+
+### 11.8 Modelling stack, in one line
+
+`ts-fsrs` (FSRS-6 pretrain-4) for the player side · a two-scalar Elo per item (`θ_i`, `n_i`, `K = 0.4/(1 + 0.05·n)` — **[D]** reasonable starting values, not published ones) for the item side, where FSRS has no mechanism · a six-feature logistic regression over counts as the general learner model. **No neural knowledge tracing. No BKT. No half-life regression. No hand-rolled SM-2.**
+
+---
+
+## 12. Open questions and the biggest risk
+
+### 12.1 Genuinely unresolved
+
+| # | Question | Why it is open | How it gets closed |
+|---|---|---|---|
+| 1 | **The group selection objective** | There is no prior art for group SRS. `U(i) = −Σ w_p (R_p − 0.85)²` is reasoned from first principles and is the least-evidenced component in the product | Read Upadhyay et al. (2021) and Tabibian et al. (2019) in full **before writing `pickItem`**. Log the counterfactual from day one so the objective can be A/B'd without touching storage |
+| 2 | **Shared-morpheme confusables** (出口/入口, 门口/窗口) | A fourth confusion category **no cited study covers**, and it is what most of the design's own flagship examples are | Instrument separately. Do not assume it behaves like the form-confusable case |
+| 3 | **Object templates vs plain rendering** | The most expensive part of the build, and the evidence is genuinely contested (encoding specificity for, environmental-print logo-reading against) | A/B from v1 on naked-probe accuracy at ≥7 days. The 20-point diagnostic is the tripwire |
+| 4 | **Dutch vs English glossing** | No study of Dutch–English bilinguals learning Mandarin exists. The L1 advantage is small (g ≈ 0.33) and measured on glosses met while reading text, which we do not have | Both fields authored from day one; A/B on delayed accuracy, not on preference |
+| 5 | **Does public failure suppress participation?** | No controlled study exists in a language-learning game, in either direction | `turns_since_last_public_failure` as a stored field; within-player pre/post at n ≈ 200 |
+| 6 | **Colour-marking the discriminating component in the reveal** | The prohibition rests on an RT main effect in one study nobody read in full, and runs against a meta-analytically supported signalling principle | A/B on **delayed discrimination accuracy**, never on RT. Cap simultaneous highlights at one |
+| 7 | **A finger-trace on the reveal** | Handwriting is the best-evidenced Chinese-specific encoding manipulation *and* loses on an opportunity-cost design at equal time. Neither literature tests the other's manipulation | Build it as an explicit experiment or not at all: differing component only, resolution screen only, form-confusable pairs only, never on the timed card, never required. Dependent measure = delayed discrimination accuracy. Ship behind a flag with `(mode, seconds, subsequent accuracy at d1/d7)` logging |
+| 8 | **CTW commercial grant** | The only open licensing item. NC gates any shipped artefact derived from its annotations | Ask the authors. Route (b) — internal research input only — is defensible and free in the meantime |
+| 9 | **Mainland reachability** | Google Fonts blocking, Nostr relay reachability, and STUN/TURN host reachability were **not verifiable from this environment** | Confirm from a mainland vantage before ship. The engineering fixes are correct regardless |
+| 10 | **Four papers nobody read, each load-bearing** | Cao et al. (2013, *J. Neurolinguistics* 26(4), 440–461) — the only three-month Chinese-specific follow-up and the true source of the chunking arithmetic · Brunmair & Richter (2019) — the composition and intervals of the "words" moderator cell · Higa (1963) — the **direction** of the antonym effect, which decides whether 入口/出口 is the worst case or the easy one · Li, Shi & Wang (2025) — the retention interval behind the paired-presentation and colour results | Read in full before the build spec freezes. Mark every claim `verified_at: abstract \| full-text` rather than a blanket disclaimer |
+| 11 | **GB standards not retrievable** | GB 2894 colour values, GB/T 30240's part list, GB 7718's 2025 revision status | Verify before any of it appears as taught content. Nothing about the 2025 allergen revision ships until someone reads the standard |
+| 12 | **无座 pricing on G/D services** | Asserted from record; all `.cn` hosts unreachable | Verify against China Railway 12306 fare rules before content lock |
+
+### 12.2 The single most likely way this design is wrong
+
+**The spacing hole. It is not a risk to a feature; it is a risk to the thesis.**
+
+Spacing across days is the best-evidenced manipulation in L2 vocabulary learning — g = 0.40 on delayed tests across 98 effect sizes and N = 3,411, and 1.6× on the closest single study (P2). Every other lever in this document is smaller. And **a co-located party game cannot deliver it**, because it is played when friends happen to meet, which is fortnightly at best.
+
+Trace the failure through the architecture. If the median inter-session gap is fourteen days: the two-bit consolidation state never advances past `acquired`, so the confusable panel never unlocks and competitive distractors never unlock and the component-contrast card type never fires; the FSRS scheduler runs on items that were seen once, weeks ago, so every retrieval is effectively a first retrieval; `signsActionable` barely moves; the `high_confidence_miss` queue is the only repetition anything ever gets. The item bank would be correct, the selection function correct, the reveal correct, the typography correct — **and the product would be a good party game that teaches almost nothing durable.** Six well-spaced retrievals per item collapse to two.
+
+Note what makes this specifically dangerous rather than merely uncertain: **every in-session signal would look fine.** Accuracy inside a session would be healthy, players would report having fun, and the metric that would catch it — delayed accuracy at ≥7 days on transfer renderings — is precisely the one the experimentation policy exists to protect and that a team under pressure drops first. Add the metacognitive-illusion finding and the enjoyment/anxiety-independence finding, and you have a product that can be simultaneously well-liked, well-rated, well-retained on engagement metrics, and ineffective.
+
+**The falsification test, decided in advance so it cannot be argued about later.**
+
+**[D]** Instrument `sessions_per_week` and `days_between_sessions`, **split by mode**, from the first cohort. Decision rule, written now:
+
+> **If the median multiplayer inter-session gap exceeds 7 days while the solo gap sits under 3, the architecture inverts: the solo daily surface becomes the primary product and the co-located game becomes the acquisition and retention channel for it.**
+
+That inversion is cheap *if it is anticipated* — the scheduler, the item bank, the reveal, the templates and the memory store are all shared, and `pickItem` degrades to the single-player case for free. It is expensive if it is discovered in year two, because by then the roadmap, the marketing and the team's sense of what the product is will all be organised around the party game.
+
+**[D] Therefore, from v1, and this is the one structural commitment this document asks for beyond the fork:** the solo daily surface ships in the first release, is reachable in one tap from the home screen, and is never described internally or externally as "practice mode." It is where the product's best-evidenced mechanism lives. The party game is what makes people install it, come back to it, and enjoy the thing they are learning — which is not nothing, and is genuinely well-evidenced for engagement (co-located play produces the highest enjoyment and perceived social presence of any play configuration) — but engagement is the claim it earns, and learning is the claim the scheduler earns.
+
+**A second-order risk, named because it is the next most expensive:** the object templates may be teaching plates rather than characters (Masonheimer, Drum & Ehri 1984). It is the most expensive part of the build, the evidence is contested rather than absent, and the diagnostic costs one probe type and one subtraction. If naked-probe accuracy trails in-object accuracy by more than ~20 points, we will have spent the design budget teaching enamel.
+
+---
+
+*Every number in this document marked **[D]** is ours. Every number marked **[F]** carries a source, a strength grade and a scope note. If a line has neither mark, it is prose and should not be cited.*
