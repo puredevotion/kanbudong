@@ -25,8 +25,20 @@ import type { CategoryId, Difficulty, GameId, PlayerId, TeamId } from './types.j
  * `v === PROTOCOL_VERSION` check (and the earlier `have`-message handshake in
  * packages/net's session.ts) is what actually prevents that: a v3 peer never
  * gets as far as `apply()` with one of these events at all.
+ *
+ * Bumped to 5 for universal-answer (Phase B, DESIGN.md §5.1 beat 4):
+ * `turn/answered` is removed outright rather than kept alongside the
+ * `commit/made`/`commit/revealed` pair it is replaced by - it was the acting
+ * team's authority check, not a distinct payload shape, that made an answer
+ * "private" before Phase A, and letting more than one player answer breaks
+ * that the moment it exists at all, so there is nothing left for it to do.
+ * Same v3/v4 reasoning applies to removing it, not just adding something:
+ * a v4 peer's `apply()` still emits `turn/answered`, which this version's
+ * exhaustiveness switch no longer has a case for - it would silently file as
+ * an unknown-event rejection (the answer never scores, never shows up in
+ * `history`) rather than the peer being refused outright at the door.
  */
-export const PROTOCOL_VERSION = 4;
+export const PROTOCOL_VERSION = 5;
 
 export type GameEventBody =
   | {
@@ -59,12 +71,6 @@ export type GameEventBody =
       readonly turnIndex: number;
       readonly difficulty: Difficulty;
     }
-  | {
-      readonly type: 'turn/answered';
-      readonly turnIndex: number;
-      /** Index into the presented (shuffled) option order. */
-      readonly chosenIndex: number;
-    }
   /** Proposable by any peer, so one locked phone cannot stall the game (R-3). */
   | { readonly type: 'turn/timeout'; readonly turnIndex: number }
   /**
@@ -89,9 +95,10 @@ export type GameEventBody =
   | { readonly type: 'player/kicked'; readonly targetId: PlayerId }
   /**
    * Publishes a commitment to a not-yet-revealed payload for `subject` - a
-   * caller-defined slot this primitive has no opinion about (Phase B will
-   * pass a turn's `turnIndex`, stringified, but nothing here knows what a
-   * turn is). `commitHash` must equal `commitHash(payload, salt)` (see
+   * caller-defined slot this primitive has no opinion about (Phase B keys a
+   * turn's answer as `` `answer:${turnIndex}` `` - see `answerSubject()` in
+   * reducer.ts - but nothing here knows what a turn is). `commitHash` must
+   * equal `commitHash(payload, salt)` (see
    * commitReveal.ts) for whatever `payload`/`salt` the eventual
    * `commit/revealed` supplies. At most one live commit per (subject,
    * author): a second `commit/made` for the same pair is refused, as is one

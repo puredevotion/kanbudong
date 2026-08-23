@@ -1,9 +1,9 @@
 import {
   activeQuestion,
-  answerTurn,
   callTimeout,
   chooseCategory,
   chooseDifficulty,
+  commitAnswer,
   createGame,
   createIdentity,
   drawTurn,
@@ -12,7 +12,9 @@ import {
   joinTeam,
   makeEvent,
   openTeam,
+  randomHex,
   reduce,
+  revealAnswer,
   SEED_PACK,
   SEED_PACK_HASH,
   startGame,
@@ -148,13 +150,40 @@ export class Table {
     );
   }
 
-  /** Answer the live question, deliberately right or wrong. */
+  /** Answer the live question, deliberately right or wrong, as the acting team's answerer. */
   answer(correct: boolean): void {
     const state = this.state();
     const presented = activeQuestion(state, SEED_PACK);
     if (presented === null) throw new Error('no live question to answer');
-    const chosen = correct ? presented.correctIndex : (presented.correctIndex + 1) % 3;
-    this.push(answerTurn(this.log, this.player(this.actorIndex()), state.turnIndex, chosen));
+    const chosen = (correct ? presented.correctIndex : (presented.correctIndex + 1) % 3) as 0 | 1 | 2;
+    this.answerAs(this.actorIndex(), chosen);
+  }
+
+  /**
+   * Any known player commits then immediately reveals `chosenIndex` for
+   * `turnIndex` (Phase B: DESIGN.md §5.1 beat 4 - every seated player may
+   * answer, not just the acting team). Defaults to the currently-live turn,
+   * but takes an explicit `turnIndex` so a test can have one player answer
+   * *after* another's reveal has already resolved that turn and moved
+   * `state.turnIndex` on - reading `this.state().turnIndex` at that point
+   * would silently target the wrong (not-yet-dealt) turn instead.
+   */
+  answerAs(playerIndex: number, chosenIndex: 0 | 1 | 2, turnIndex = this.state().turnIndex): void {
+    const player = this.player(playerIndex);
+    const salt = randomHex(8);
+    this.push(commitAnswer(this.log, player, turnIndex, chosenIndex, salt));
+    this.push(revealAnswer(this.log, player, turnIndex, chosenIndex, salt));
+  }
+
+  /** Commits without revealing - for tests exercising `unrevealedCommits` / a stuck answer. */
+  commitAnswerOnly(
+    playerIndex: number,
+    chosenIndex: 0 | 1 | 2,
+    salt = randomHex(8),
+    turnIndex = this.state().turnIndex,
+  ): string {
+    this.push(commitAnswer(this.log, this.player(playerIndex), turnIndex, chosenIndex, salt));
+    return salt;
   }
 
   timeout(byIndex = 0): void {

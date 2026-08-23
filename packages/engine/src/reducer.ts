@@ -12,6 +12,7 @@ import type {
   Difficulty,
   GameId,
   GamePhase,
+  OtherAnswer,
   Player,
   PlayerId,
   Question,
@@ -73,21 +74,34 @@ export interface GameState {
   /** Events the reducer refused, with a reason. Surfaced for debugging, not play. */
   readonly rejected: readonly { readonly id: string; readonly reason: string }[];
   /**
-   * Generic commit-reveal primitive (Phase A of the universal-answer plan;
-   * unwired here - nothing in this reducer produces or keys off these yet).
-   * Keyed by a caller-defined `subject` (Phase B will use a stringified
-   * `turnIndex`) and then by author, so a `commit/made` lands here until a
-   * matching `commit/revealed` moves it into {@link reveals}. A narrower,
-   * turn-shaped structure (e.g. living on `ActiveTurn`) was considered and
-   * rejected: `ActiveTurn` is cleared to `null` the instant a turn resolves
-   * (see `resolve()`), which would erase a commit the very moment a caller
-   * might need to check whether it was ever revealed. Keeping this
-   * subject-keyed and outside `ActiveTurn` is a few extra lines now in
-   * exchange for not having to re-plumb the shape once Phase B exists.
+   * Generic commit-reveal primitive (Phase A of the universal-answer plan).
+   * Keyed by a caller-defined `subject` - Phase B keys turn answers by
+   * {@link answerSubject} - and then by author, so a `commit/made` lands
+   * here until a matching `commit/revealed` moves it into {@link reveals}. A
+   * narrower, turn-shaped structure (e.g. living on `ActiveTurn`) was
+   * considered and rejected: `ActiveTurn` is cleared to `null` the instant a
+   * turn resolves (see `resolve()`), which would erase a commit the very
+   * moment a caller might need to check whether it was ever revealed (Phase
+   * B's late-reveal handling in the `commit/revealed` case in `apply()`
+   * depends on exactly this surviving past resolution).
    */
   readonly pendingCommits: Readonly<Record<string, Readonly<Record<PlayerId, PendingCommit>>>>;
   /** Successfully opened commitments. See {@link pendingCommits}. */
   readonly reveals: Readonly<Record<string, Readonly<Record<PlayerId, Revealed>>>>;
+  /**
+   * Phase B (universal-answer): `turnIndex` -> the `turn/drawn` nonce for
+   * that turn, captured the instant it is dealt and never removed. Grading a
+   * `commit/revealed` on the {@link answerSubject} for an already-resolved
+   * turn (routine once every seated player may answer - see the
+   * `commit/revealed` case in `apply()`) needs the same nonce
+   * `presentQuestion` used to shuffle that turn's options, but `ActiveTurn`
+   * (which also carries it) is gone the instant the turn resolves. Kept
+   * outside `ActiveTurn` for the same reason {@link pendingCommits} is:
+   * grading must still work after the thing that produced it is history.
+   */
+  readonly turnNonces: Readonly<Record<number, string>>;
+  /** `turnIndex` -> the question dealt for that turn, captured at `turn/difficulty`. See {@link turnNonces}. */
+  readonly turnQuestions: Readonly<Record<number, QuestionId>>;
 }
 
 /** A `commit/made` not yet matched by a valid `commit/revealed`. */
@@ -109,6 +123,30 @@ export interface Revealed {
 const MAX_COMMIT_SUBJECT_LENGTH = 200;
 /** Mirrors `turn/drawn`'s nonce-length floor: cheap defence against an all-zero salt. */
 const MIN_SALT_LENGTH = 8;
+
+/**
+ * Phase B's commit-reveal subject for a turn's answer. Prefixed rather than
+ * the bare turn index, so a later beat that also wants commit-reveal on the
+ * same `turnIndex` (the recall beat's `spoken_attempt`, the confer beat's
+ * isomorphic follow-up - both schema-only today, see `isomorph_group_id` in
+ * types.ts) gets its own subject namespace instead of colliding with the
+ * answer commitment for the same turn.
+ */
+const ANSWER_SUBJECT_PREFIX = 'answer:';
+const ANSWER_SUBJECT_RE = /^answer:(\d+)$/;
+
+/** The `commit/made`/`commit/revealed` subject for `turnIndex`'s answer (DESIGN.md §5.1 beat 4). */
+export function answerSubject(turnIndex: number): string {
+  return `${ANSWER_SUBJECT_PREFIX}${turnIndex}`;
+}
+
+/** Inverse of {@link answerSubject}; `null` for any subject that is not one (including a future beat's own subject). */
+export function parseAnswerSubject(subject: string): number | null {
+  const match = ANSWER_SUBJECT_RE.exec(subject);
+  if (match === null) return null;
+  const turnIndex = Number(match[1]);
+  return Number.isSafeInteger(turnIndex) ? turnIndex : null;
+}
 
 export interface ReduceOptions {
   readonly pack: ContentPack;
@@ -186,6 +224,8 @@ function createState(event: SignedEvent, body: Extract<GameEventBody, { type: 'g
     rejected: [],
     pendingCommits: {},
     reveals: {},
+    turnNonces: {},
+    turnQuestions: {},
   };
 }
 
@@ -322,6 +362,7 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
         bagCycle,
         active,
         teamTurns: { ...state.teamTurns, [teamId]: turns + 1 },
+        turnNonces: { ...state.turnNonces, [state.turnIndex]: body.nonce },
       };
     }
 
@@ -365,32 +406,8 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
           repeat: picked.repeat,
         },
         asked: dedupe([...state.asked, picked.question.id]),
+        turnQuestions: { ...state.turnQuestions, [active.turnIndex]: picked.question.id },
       };
-    }
-
-    case 'turn/answered': {
-      const active = state.active;
-      if (state.phase !== 'playing' || active === null) return 'no active turn';
-      if (body.turnIndex !== active.turnIndex) return 'stale turn index';
-      if (active.difficulty === null || active.questionId === null) return 'no question yet';
-      if (!memberOf(state, active.teamId, author)) return 'not on the acting team';
-      const question = questionById(pack, active.questionId);
-      if (question === undefined) return 'question missing from pack';
-      const presented = presentQuestion(question, active.nonce);
-      if (!Number.isInteger(body.chosenIndex) || body.chosenIndex < 0 || body.chosenIndex > 2) {
-        return 'option out of range';
-      }
-      // Just validated as an integer 0-2 above.
-      const chosenIndex = body.chosenIndex as 0 | 1 | 2;
-      return resolve(state, active, {
-        answererId: author,
-        chosenIndex,
-        chosenText: presented.options[chosenIndex] ?? null,
-        correct: body.chosenIndex === presented.correctIndex,
-        difficulty: active.difficulty,
-        timedOut: false,
-        at: event.at,
-      });
     }
 
     case 'turn/timeout': {
@@ -403,15 +420,20 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       // Timing out before choosing a level still costs something, at the
       // cheapest tier: doing nothing must not be free.
       const difficulty: Difficulty = active.difficulty ?? 'low';
-      return resolve(state, active, {
-        answererId: null,
-        chosenIndex: -1,
-        chosenText: null,
-        correct: false,
-        difficulty,
-        timedOut: true,
-        at: event.at,
-      });
+      return resolve(
+        state,
+        active,
+        {
+          answererId: null,
+          chosenIndex: -1,
+          chosenText: null,
+          correct: false,
+          difficulty,
+          timedOut: true,
+          at: event.at,
+        },
+        pack,
+      );
     }
 
     case 'room/locked': {
@@ -485,7 +507,7 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       // wire".
       if (commitHash(body.payload, body.salt) !== pending.commitHash) return 'commitment hash mismatch';
 
-      return {
+      const afterReveal: GameState = {
         ...state,
         pendingCommits: {
           ...state.pendingCommits,
@@ -498,6 +520,64 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
             [author]: { payload: body.payload, salt: body.salt, at: event.at },
           },
         },
+      };
+
+      // Below here is Phase B (universal-answer): `commit/made`/`commit/revealed`
+      // stay fully generic (see above and commitReveal.ts) - only a subject
+      // matching `answerSubject()`'s shape ever reaches this branch, so a
+      // future beat minting its own subject on the same primitive is
+      // unaffected. See DESIGN.md §5.1 beat 4.
+      const turnIndex = parseAnswerSubject(body.subject);
+      if (turnIndex === null) return afterReveal;
+
+      const graded = gradeAnswerPayload(pack, state, turnIndex, body.payload);
+      // Same posture the old `turn/answered` took on `chosenIndex` out of
+      // range: an answer-shaped commitment whose revealed payload does not
+      // actually grade (wrong shape, or a turn this table never dealt) is
+      // refused outright rather than accepted as an empty no-op - the hash
+      // matching only proves the payload was fixed before reveal, never that
+      // its contents mean anything.
+      if (graded === null) return 'malformed or unresolvable turn answer';
+
+      const active = state.active;
+      if (active !== null && active.turnIndex === turnIndex && memberOf(state, active.teamId, author)) {
+        // The acting team carries the wager (§5.1 beat 4): the *first*
+        // acting-team reveal to land resolves the turn, exactly as the old
+        // single-submitter `turn/answered` did. `active` is cleared the
+        // instant `resolve()` runs, so any further acting-team reveal for
+        // this same subject necessarily falls through to the branch below
+        // instead - no separate "already resolved" flag needed.
+        if (active.difficulty === null) return 'no question yet';
+        return resolve(
+          afterReveal,
+          active,
+          {
+            answererId: author,
+            chosenIndex: graded.chosenIndex,
+            chosenText: graded.chosenText,
+            correct: graded.correct,
+            difficulty: active.difficulty,
+            timedOut: false,
+            at: event.at,
+          },
+          pack,
+        );
+      }
+
+      // Not the resolving reveal: either a bystander answering while the
+      // turn is still open (their entry already sits in `afterReveal.reveals`
+      // and `resolve()` above folds it into `otherAnswers` once the acting
+      // team's own reveal lands), or this turn already resolved and this
+      // reveal arrived late - patch the existing `TurnRecord` in place so a
+      // late gossip order never loses an answer.
+      const otherAnswer: OtherAnswer = { playerId: author, ...graded };
+      return {
+        ...afterReveal,
+        history: afterReveal.history.map((record) =>
+          record.turnIndex === turnIndex
+            ? { ...record, otherAnswers: [...record.otherAnswers, otherAnswer] }
+            : record,
+        ),
       };
     }
 
@@ -523,8 +603,83 @@ interface Resolution {
   readonly at: number;
 }
 
+/**
+ * The shape a `commit/revealed` payload must have to grade as a turn answer -
+ * the same contract the old `turn/answered.chosenIndex` field carried,
+ * moved here now that the field lives inside an otherwise-opaque
+ * `commit/revealed.payload`.
+ */
+function parseAnswerPayload(payload: unknown): { chosenIndex: 0 | 1 | 2 } | null {
+  if (typeof payload !== 'object' || payload === null) return null;
+  const chosenIndex = (payload as { chosenIndex?: unknown }).chosenIndex;
+  if (!Number.isInteger(chosenIndex) || (chosenIndex as number) < 0 || (chosenIndex as number) > 2) {
+    return null;
+  }
+  return { chosenIndex: chosenIndex as 0 | 1 | 2 };
+}
+
+/**
+ * Grades a `commit/revealed` payload against `turnIndex`'s dealt question,
+ * using {@link GameState.turnNonces}/{@link GameState.turnQuestions} rather
+ * than `ActiveTurn` so this works identically whether the turn is still live
+ * or long since resolved (see the `commit/revealed` case in `apply()`).
+ * `null` covers both "not a well-formed answer payload" and "this table
+ * never dealt that turn" - a caller rejects either the same way an
+ * out-of-range `chosenIndex` was always rejected outright, not stored as a
+ * meaningless success.
+ */
+function gradeAnswerPayload(
+  pack: ContentPack,
+  state: GameState,
+  turnIndex: number,
+  payload: unknown,
+): Omit<OtherAnswer, 'playerId'> | null {
+  const parsed = parseAnswerPayload(payload);
+  if (parsed === null) return null;
+  const nonce = state.turnNonces[turnIndex];
+  const questionId = state.turnQuestions[turnIndex];
+  if (nonce === undefined || questionId === undefined) return null;
+  const question = questionById(pack, questionId);
+  if (question === undefined) return null;
+  const presented = presentQuestion(question, nonce);
+  const chosenIndex = parsed.chosenIndex;
+  return {
+    chosenIndex,
+    chosenText: presented.options[chosenIndex] ?? null,
+    correct: chosenIndex === presented.correctIndex,
+  };
+}
+
+/**
+ * Every seated player's graded answer for `turnIndex` other than
+ * `excludeAuthor` (the one whose reveal is resolving the turn, or `null` on
+ * a timeout where nobody's outcome is the scoring one). Reads
+ * {@link GameState.reveals} directly rather than re-deriving from events, so
+ * a bystander who revealed before the resolving answer landed (any order is
+ * possible - see the replay-determinism test) is picked up automatically.
+ */
+function gatherOtherAnswers(
+  state: GameState,
+  pack: ContentPack,
+  turnIndex: number,
+  excludeAuthor: PlayerId | null,
+): OtherAnswer[] {
+  const revealed = state.reveals[answerSubject(turnIndex)] ?? {};
+  const out: OtherAnswer[] = [];
+  for (const [playerId, entry] of Object.entries(revealed)) {
+    if (playerId === excludeAuthor) continue;
+    const graded = gradeAnswerPayload(pack, state, turnIndex, entry.payload);
+    // Already validated when this reveal was first accepted (see
+    // `commit/revealed` in `apply()`) - null here would mean the pack
+    // changed under a live game, which nothing in this codebase does.
+    if (graded === null) continue;
+    out.push({ playerId, ...graded });
+  }
+  return out;
+}
+
 /** Score it, record it, then either keep the turn or pass it on. */
-function resolve(state: GameState, active: ActiveTurn, res: Resolution): GameState {
+function resolve(state: GameState, active: ActiveTurn, res: Resolution, pack: ContentPack): GameState {
   const tier = DIFFICULTY_TIERS[res.difficulty];
   const delta = res.correct ? tier.award : tier.penalty;
   const previous = state.scores[active.teamId] ?? 0;
@@ -547,6 +702,7 @@ function resolve(state: GameState, active: ActiveTurn, res: Resolution): GameSta
     delta,
     timedOut: res.timedOut,
     at: res.at,
+    otherAnswers: gatherOtherAnswers(state, pack, active.turnIndex, res.answererId),
   };
 
   const streak = res.correct ? state.streak + 1 : 0;

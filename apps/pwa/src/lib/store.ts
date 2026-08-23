@@ -1,9 +1,9 @@
 import {
   announce,
-  answerTurn,
   callTimeout,
   chooseCategory,
   chooseDifficulty,
+  commitAnswer,
   createGame,
   createIdentity,
   drawTurn,
@@ -14,6 +14,8 @@ import {
   leaveTeam as leaveTeamEvent,
   newTeamId,
   openTeam,
+  randomHex,
+  revealAnswer,
   SEED_PACK,
   SEED_PACK_HASH,
   setRoomLocked as setRoomLockedEvent,
@@ -358,10 +360,33 @@ export const useApp = create<AppState>((set, get) => {
       commitActiveTurn((session, identity, turnIndex) =>
         chooseDifficulty(session.log, identity, turnIndex, difficulty),
       ),
-    answer: (chosenIndex) =>
-      commitActiveTurn((session, identity, turnIndex) =>
-        answerTurn(session.log, identity, turnIndex, chosenIndex),
-      ),
+    // Phase B (DESIGN.md §5.1 beat 4): answering is commit then reveal, not
+    // one event - two `session.commit` calls, not `commitActiveTurn`'s
+    // single-event shape, and the second must happen only once the first is
+    // actually in the log (see commitAnswer's own doc comment on why one
+    // combined builder call can't produce both). Phase B reveals immediately
+    // after committing rather than waiting for the rest of the table (see
+    // PROTOCOL.md's commit-reveal section) - a documented simplification;
+    // Phase C can hold the reveal back once there is a UI to hold it for.
+    answer: (chosenIndex) => {
+      const { session, identity } = get();
+      if (session === null || identity === null) return;
+      const turnIndex = session.state?.active?.turnIndex;
+      if (turnIndex === undefined) {
+        set({ error: "That didn't go through - the game hasn't caught up yet." });
+        return;
+      }
+      const salt = randomHex(8);
+      const committed = session.commit(commitAnswer(session.log, identity, turnIndex, chosenIndex, salt));
+      if (!committed.accepted) {
+        set({ error: explainRejection(committed.reason ?? 'unknown') });
+        return;
+      }
+      const revealed = session.commit(revealAnswer(session.log, identity, turnIndex, chosenIndex, salt));
+      if (!revealed.accepted) {
+        set({ error: explainRejection(revealed.reason ?? 'unknown') });
+      }
+    },
     callTime: () =>
       commitActiveTurn((session, identity, turnIndex) => callTimeout(session.log, identity, turnIndex)),
   };

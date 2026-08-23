@@ -3,9 +3,9 @@ import { usernamesConfusable } from './identity.js';
 import type { PresentedQuestion } from './pack.js';
 import { presentQuestion, questionById } from './pack.js';
 import type { GameState } from './reducer.js';
-import { currentTeamId } from './reducer.js';
+import { answerSubject, currentTeamId } from './reducer.js';
 import { DIFFICULTY_TIERS } from './rules.js';
-import type { Category, ContentPack, PlayerId, Team, TeamId, TurnRecord } from './types.js';
+import type { Category, ContentPack, OtherAnswer, PlayerId, Team, TeamId, TurnRecord } from './types.js';
 
 /**
  * Read-only views over {@link GameState}. Kept here rather than in a component
@@ -99,11 +99,51 @@ export function canChooseDifficulty(state: GameState, playerId: PlayerId): boole
   return isActingPlayer(state, playerId);
 }
 
+/**
+ * DESIGN.md §5.1 beat 4: every seated player answers privately in the same
+ * window, not just the acting team - this device may commit an answer as
+ * long as the item has rendered and it has not already committed or
+ * revealed one for this turn (Phase A's per-`(subject, author)` uniqueness,
+ * checked here rather than left to a failed commit round-trip).
+ */
 export function canAnswer(state: GameState, playerId: PlayerId): boolean {
   const active = state.active;
   if (state.phase !== 'playing' || active === null) return false;
   if (active.difficulty === null || active.questionId === null) return false;
-  return isActingPlayer(state, playerId);
+  if (state.players[playerId] === undefined) return false;
+  return !hasAnswered(state, playerId);
+}
+
+/** True once this device has committed or revealed an answer for the current turn. See {@link canAnswer}. */
+export function hasAnswered(state: GameState, playerId: PlayerId): boolean {
+  const active = state.active;
+  if (active === null) return false;
+  const subject = answerSubject(active.turnIndex);
+  return state.pendingCommits[subject]?.[playerId] !== undefined || state.reveals[subject]?.[playerId] !== undefined;
+}
+
+/**
+ * Every player who has committed or revealed an answer to the current turn,
+ * for DESIGN.md §5.3's presence dots ("that they committed, never what or
+ * how fast"): render one dot per id here, not the reveals' contents.
+ */
+export function answeredPlayerIds(state: GameState): readonly PlayerId[] {
+  const active = state.active;
+  if (active === null) return [];
+  const subject = answerSubject(active.turnIndex);
+  const committed = Object.keys(state.pendingCommits[subject] ?? {});
+  const revealed = Object.keys(state.reveals[subject] ?? {});
+  return [...new Set([...committed, ...revealed])];
+}
+
+/**
+ * Every non-active player's graded answer to `turnIndex`, once it has
+ * resolved - the reveal-screen content Phase C needs for "everyone else's
+ * answer," none of which touched score. `[]` before the turn resolves (its
+ * `TurnRecord` does not exist yet) and for any `turnIndex` with none logged.
+ */
+export function otherAnswersForTurn(state: GameState, turnIndex: number): readonly OtherAnswer[] {
+  return state.history.find((record) => record.turnIndex === turnIndex)?.otherAnswers ?? [];
 }
 
 export function activeCategory(state: GameState): Category | undefined {

@@ -1,8 +1,8 @@
 import {
-  answerTurn,
   activeQuestion,
   chooseCategory,
   chooseDifficulty,
+  commitAnswer,
   PROTOCOL_VERSION,
   createGame,
   createIdentity,
@@ -12,6 +12,8 @@ import {
   joinTeam,
   makeEvent,
   openTeam,
+  randomHex,
+  revealAnswer,
   SEED_PACK,
   SEED_PACK_HASH,
   startGame,
@@ -222,9 +224,11 @@ describe('playing across two devices', () => {
     expect(guestView?.question.id).toBe(presented?.question.id);
     expect(guestView?.options).toEqual(presented?.options);
 
-    f.hostSession.commit(
-      answerTurn(f.hostSession.log, f.host, turnIndex, presented?.correctIndex ?? 0),
-    );
+    const chosenIndex = presented?.correctIndex ?? 0;
+    const salt = randomHex(8);
+    f.hostSession.commit(commitAnswer(f.hostSession.log, f.host, turnIndex, chosenIndex, salt));
+    f.mesh.settle();
+    f.hostSession.commit(revealAnswer(f.hostSession.log, f.host, turnIndex, chosenIndex, salt));
     f.mesh.settle();
 
     expect(f.hostSession.state?.scores[analytical]).toBe(15);

@@ -99,10 +99,37 @@ export function roleForTurn(record: TurnRecord, playerId: PlayerId, myTeamId: Te
 }
 
 /**
+ * `playerId`'s own graded answer to `record`, wherever it actually lives -
+ * `record` itself when they were the resolving answerer, `record.otherAnswers`
+ * for anyone else who also revealed one (DESIGN.md §5.1 beat 4: every seated
+ * player answers, but only the resolving one's outcome is on `record` proper).
+ * `null` when this player has no personal answer to log for this turn: a
+ * timeout (nobody chose anything) if they were the answerer, or simply never
+ * having revealed one otherwise - a co_committed teammate or an opposing
+ * player is not guaranteed to have answered at all.
+ */
+function personalAnswer(
+  record: TurnRecord,
+  playerId: PlayerId,
+): { readonly chosenText: string | null; readonly correct: boolean } | null {
+  if (record.answererId === playerId) {
+    return record.timedOut ? null : { chosenText: record.chosenText, correct: record.correct };
+  }
+  const other = record.otherAnswers.find((answer) => answer.playerId === playerId);
+  return other === undefined ? null : { chosenText: other.chosenText, correct: other.correct };
+}
+
+/**
  * Derives group-mode attempt records straight from the already-synced game
  * log - every peer already folds the same `history`, so there is nothing new
- * to persist for this mode. A timeout is excluded: nobody chose anything, so
- * there is no `chosen_option` to log.
+ * to persist for this mode. Before Phase B this always credited every
+ * teammate/opponent with the acting team's own chosen answer, because only
+ * the acting team could answer at all; now that every seated player may
+ * answer privately (`record.otherAnswers`, DESIGN.md §5.1 beat 4), each
+ * player's row is graded from their *own* revealed answer via
+ * {@link personalAnswer}, and a player who never answered this turn - a
+ * timeout for the resolving answerer, or simply not having revealed one for
+ * anyone else - gets no row for it at all rather than a borrowed one.
  *
  * `crossedASleepPeriod` is left `null` for every record: the group scheduler
  * (`groupSchedule.ts`) is PLAN.md's own "simplified stand-in" and keeps no
@@ -118,7 +145,8 @@ export function attemptRecordsFromHistory(
   const byId = new Map(pack.questions.map((q) => [q.id, q] as const));
   const out: AttemptRecord[] = [];
   for (const record of history) {
-    if (record.timedOut) continue;
+    const personal = personalAnswer(record, playerId);
+    if (personal === null) continue;
     const question = byId.get(record.questionId);
     if (question === undefined) continue;
     out.push({
@@ -126,9 +154,9 @@ export function attemptRecordsFromHistory(
       mode: 'group',
       role: roleForTurn(record, playerId, myTeamId),
       targetItem: record.questionId,
-      chosenOption: record.chosenText,
-      chosenItem: resolveChosenItem(pack, question, record.chosenText),
-      correct: record.correct,
+      chosenOption: personal.chosenText,
+      chosenItem: resolveChosenItem(pack, question, personal.chosenText),
+      correct: personal.correct,
       timestamp: record.at,
       crossedASleepPeriod: null,
     });

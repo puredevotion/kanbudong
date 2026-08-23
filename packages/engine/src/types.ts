@@ -266,12 +266,31 @@ export interface Team {
   readonly memberIds: readonly PlayerId[];
 }
 
+/**
+ * DESIGN.md §5.1 beat 4: every seated player answers the same live question,
+ * but only the active player's outcome touches the bet and the team score.
+ * One entry per player whose `commit/revealed` graded successfully but did
+ * not resolve the turn - a teammate of the answerer who also revealed (only
+ * the first acting-team reveal scores; see `resolve()` in reducer.ts), or a
+ * member of any other team. Never mutated once appended; a reveal that
+ * arrives after this turn's `TurnRecord` already exists is appended here in
+ * place (see the `commit/revealed` case in reducer.ts's `apply()`) rather
+ * than dropped, since replay must not depend on arrival order.
+ */
+export interface OtherAnswer {
+  readonly playerId: PlayerId;
+  /** Index into the *presented* option order. */
+  readonly chosenIndex: 0 | 1 | 2;
+  readonly chosenText: string | null;
+  readonly correct: boolean;
+}
+
 /** One resolved question, kept for the recap screen and for auditing scores. */
 export interface TurnRecord {
   readonly turnIndex: number;
   readonly roundIndex: number;
   readonly teamId: TeamId;
-  /** Who actually submitted. Any member of the acting team may. */
+  /** Who actually submitted the scoring answer. Any member of the acting team may. */
   readonly answererId: PlayerId | null;
   readonly categoryId: CategoryId;
   readonly difficulty: Difficulty;
@@ -296,6 +315,11 @@ export interface TurnRecord {
    * timestamp instead of stamping "now."
    */
   readonly at: number;
+  /**
+   * Every other seated player's graded answer to this same question, none of
+   * which touched score or the bet (§5.1 beat 4). See {@link OtherAnswer}.
+   */
+  readonly otherAnswers: readonly OtherAnswer[];
 }
 
 /** The live question, between `turn/drawn` and its resolution. */

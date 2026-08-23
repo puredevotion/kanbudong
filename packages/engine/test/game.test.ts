@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   activeQuestion,
-  answerTurn,
   callTimeout,
   CATEGORY_IDS,
+  commitAnswer,
   createEvent,
   createIdentity,
   createRng,
@@ -12,7 +12,9 @@ import {
   EventLog,
   kickPlayer,
   makeEvent,
+  randomHex,
   reduce,
+  revealAnswer,
   scoreboard,
   SEED_PACK,
   setRoomLocked,
@@ -267,38 +269,49 @@ describe('timeouts (R-3)', () => {
 });
 
 describe('authority', () => {
-  it('refuses an answer from someone not on the acting team', () => {
+  it('accepts an answer from someone not on the acting team, but it never resolves the turn (§5.1 beat 4)', () => {
     const table = twoTeams();
     table.draw();
     table.pickCategory();
     table.choose('mid');
     const state = table.state();
     const presented = activeQuestion(state, SEED_PACK);
-    table.push(
-      answerTurn(table.log, table.player(2), state.turnIndex, presented?.correctIndex ?? 0),
-    );
+    // Player 2 is on the opposing (non-acting) team - Phase B lets any known
+    // player answer privately, but only the acting team's reveal scores.
+    table.answerAs(2, (presented?.correctIndex ?? 0) as 0 | 1 | 2);
     const after = table.state();
     expect(after.active).not.toBeNull();
-    expect(after.rejected.some((r) => r.reason.includes('not on the acting team'))).toBe(true);
+    expect(after.rejected).toEqual([]);
+    expect(after.history).toEqual([]);
   });
 
-  it('refuses an answer stamped with a stale turn index', () => {
+  it('refuses an answer reveal for a turn this table never dealt', () => {
     const table = twoTeams();
     table.draw();
     table.pickCategory();
     table.choose('mid');
-    table.push(answerTurn(table.log, table.player(0), 99, 0));
+    const salt = randomHex(8);
+    table.push(commitAnswer(table.log, table.player(0), 99, 0, salt));
+    table.push(revealAnswer(table.log, table.player(0), 99, 0, salt));
     expect(table.state().active).not.toBeNull();
-    expect(table.state().rejected.some((r) => r.reason === 'stale turn index')).toBe(true);
+    expect(
+      table.state().rejected.some((r) => r.reason === 'malformed or unresolvable turn answer'),
+    ).toBe(true);
   });
 
-  it('refuses an out-of-range option', () => {
+  it('refuses an out-of-range option on reveal', () => {
     const table = twoTeams();
     table.draw();
     table.pickCategory();
     table.choose('mid');
-    table.push(answerTurn(table.log, table.player(0), table.state().turnIndex, 7));
-    expect(table.state().rejected.some((r) => r.reason === 'option out of range')).toBe(true);
+    const actor = table.player(table.actorIndex());
+    const turnIndex = table.state().turnIndex;
+    const salt = randomHex(8);
+    table.push(commitAnswer(table.log, actor, turnIndex, 7, salt));
+    table.push(revealAnswer(table.log, actor, turnIndex, 7, salt));
+    expect(
+      table.state().rejected.some((r) => r.reason === 'malformed or unresolvable turn answer'),
+    ).toBe(true);
   });
 
   it('ignores a second difficulty choice for the same turn', () => {

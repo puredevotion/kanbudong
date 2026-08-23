@@ -1,6 +1,6 @@
 # Protocol
 
-Wire version: **4** (`PROTOCOL_VERSION`). A mismatch is refused at join time -
+Wire version: **5** (`PROTOCOL_VERSION`). A mismatch is refused at join time -
 both at the `have`-message handshake in `packages/net`'s `session.ts` (a
 newcomer never even joins the mesh across a mismatch) and, as a second line of
 defence for any event that somehow arrives anyway, in `checkEvent`'s
@@ -64,7 +64,6 @@ sorts identically, which is what lets the reducer be pure.
 | `turn/drawn` | a known player **not** on the acting team | `turnIndex`, `nonce` |
 | `turn/category` | a known player **not** on the acting team | `turnIndex`, `categoryId` |
 | `turn/difficulty` | a member of the acting team | `turnIndex`, `difficulty` |
-| `turn/answered` | a member of the acting team | `turnIndex`, `chosenIndex` |
 | `turn/timeout` | any known player | `turnIndex` |
 | `room/locked` | the host | `locked` |
 | `player/kicked` | the host | `targetId` |
@@ -75,19 +74,32 @@ An event that fails its authority check lands in `state.rejected` with a reason
 and is not applied. Duplicates for a turn already resolved are refused by the
 `turnIndex` check, so a peer that fires late costs nothing.
 
+There is no `turn/answered` event: it existed through wire version 4 and was
+removed for universal-answer (Phase B, DESIGN.md §5.1 beat 4) rather than kept
+alongside `commit/made`/`commit/revealed`. It was never a distinct payload
+shape that needed preserving - the acting-team-only authority check *was* the
+entire mechanism that made an answer "private," and once more than one player
+may answer, that stops being true regardless of the event's name. See
+Commit-reveal below for what replaced it.
+
 ### Commit-reveal
 
 `commit/made` and `commit/revealed` are a generic primitive, not specific to
-turns or answers - they exist so a future feature (universal-answer, DESIGN.md
-§5.1's six-beat turn, not yet wired to this) can let more than one player
-answer privately in the same window without every peer seeing every answer
-the instant it is signed, which is otherwise unavoidable: every event gossips
-in clear to every peer immediately (see Sync below), and today's only reason
-an answer is "private" is that `turn/answered`'s authority check lets just one
-side submit at all.
+turns or answers - `commitReveal.ts`/`reducer.ts`'s core handling of them
+carries no turn-shaped opinion about what `subject` means. Universal-answer
+(Phase B, DESIGN.md §5.1 beat 4) is the primitive's first caller, and it wires
+turn answers through this pair instead of a dedicated event so more than one
+player can answer privately in the same window without every peer seeing
+every answer the instant it is signed, which is otherwise unavoidable: every
+event gossips in clear to every peer immediately (see Sync below).
 
 - `subject` is whatever the caller wants to key commitments by - a string, not
   a `turnIndex`, so this file's reducer code carries no turn-shaped opinions.
+  Phase B keys a turn's answer as `` `answer:${turnIndex}` `` (see
+  `answerSubject()` in `reducer.ts`), prefixed rather than the bare index so a
+  later beat wanting commit-reveal on the same `turnIndex` (the recall beat's
+  `spoken_attempt`, the confer beat's isomorphic follow-up - both schema-only
+  today) gets its own subject namespace instead of colliding with it.
 - `commitHash` (from `commitHash(payload, salt)` in `commitReveal.ts`) is
   `sha256(canonicalJson({ payload, salt }))`, reusing the same canonical-JSON
   and hashing helpers every other hash in this protocol goes through.
@@ -115,6 +127,52 @@ side submit at all.
   turn resolving) can decide what "too late" means and treat an unrevealed
   commit as forfeited on its own terms. This file deliberately has no timeout
   duration or turn-phase check baked into it.
+
+### Universal-answer (Phase B)
+
+Any known player may commit an answer once a turn's item has rendered - not
+just the acting team - and a player may not commit or reveal a second answer
+for the same turn (Phase A's per-`(subject, author)` uniqueness already
+covers this). `payload` for an answer subject is `{ chosenIndex }`, the same
+field `turn/answered` used to carry directly.
+
+- **Grading uses `turnNonces`/`turnQuestions`, not `ActiveTurn`.** `GameState`
+  keeps `turnIndex -> nonce` (captured at `turn/drawn`) and
+  `turnIndex -> questionId` (captured at `turn/difficulty`) forever, because a
+  `commit/revealed` for an answer subject must still grade correctly after
+  the turn it names has already resolved and `ActiveTurn` is back to `null` -
+  routine once every seated player may answer, since reveals do not all land
+  before the acting team's own reveal does.
+- **Only the acting team's first reveal resolves the turn.** The same "one
+  submission scores" rule `turn/answered`'s authority check used to enforce
+  is now a data condition instead: the first `commit/revealed` on the current
+  turn's answer subject from a member of the acting team touches the bet and
+  the score and advances `turnIndex`; every other seated player's reveal -
+  an opponent's, or an acting-team member's after the first - is graded the
+  same way but recorded as a plain review row (`TurnRecord.otherAnswers`)
+  that never touches score. A reveal for a turn that has already resolved is
+  appended to that turn's existing record rather than dropped, so a late
+  gossip arrival never loses an answer.
+- **A malformed or unresolvable answer payload is refused outright.** Same
+  posture `turn/answered`'s `chosenIndex` range check always took: a
+  `commit/revealed` whose payload is not `{ chosenIndex: 0 | 1 | 2 }`, or
+  which names a turn this table never dealt, is rejected into
+  `state.rejected` and never stored - the hash matching only proves the
+  payload was fixed before reveal, never that it means anything.
+- **Reveal timing: immediately after commit, not batched.** A client reveals
+  as soon as it commits (see `apps/pwa/src/lib/store.ts`'s `answer` action) -
+  there is no separate "everyone has committed, or the turn timed out"
+  coordination event. This is a deliberate simplification, not the full
+  DESIGN.md §5.1 beat 4 intent (answers not visible until the same window
+  closes): once any player reveals, `payload` sits in clear in every peer's
+  `state.reveals`, so nothing stops a modified client's own UI from reading a
+  faster player's answer before its own player commits - the same
+  honesty-assuming-secrecy tradeoff as the primitive itself, just extended to
+  cover ordering rather than only content. `unrevealedCommits()` plus the
+  existing `turn/timeout` event already carry enough information for a later
+  UI-layer pass to hold a reveal back until every seated player has committed
+  or the turn times out, without any new wire event - that pass has not been
+  built yet.
 
 ### Why the acting team cannot draw its own question
 

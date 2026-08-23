@@ -1,9 +1,11 @@
+import { commitHash } from './commitReveal.js';
 import type { GameEventBody, SignedEvent } from './events.js';
 import { createEvent } from './events.js';
 import type { Identity } from './identity.js';
 import { newGameId, newTeamId, newTurnNonce } from './ids.js';
 import type { EventLog } from './log.js';
 import { randomJoinCode } from './joincode.js';
+import { answerSubject } from './reducer.js';
 import type { RulesConfig } from './rules.js';
 import { normalizeRules } from './rules.js';
 import type { CategoryId, Difficulty, GameId, PlayerId, TeamId } from './types.js';
@@ -134,12 +136,39 @@ export const chooseDifficulty = (
   difficulty: Difficulty,
 ): SignedEvent => makeEvent(log, identity, { type: 'turn/difficulty', turnIndex, difficulty });
 
-export const answerTurn = (
+/**
+ * Commits an answer for `turnIndex` (DESIGN.md §5.1 beat 4 - any seated
+ * player, not just the acting team). `salt` must be reused for the matching
+ * {@link revealAnswer} call: this constructor cannot mint one itself and
+ * insert both events back to back the way `createGame` does for
+ * `game/created`+`player/joined`, because a caller's own `log.insert` (or
+ * `GameSession.commit`) has to run between the two - `EventLog.nextSeq`/
+ * `nextLamport` only advance once an event is actually inserted (see
+ * log.ts), so building both from one still-empty lookahead would stamp them
+ * with the same seq and lamport.
+ */
+export const commitAnswer = (
   log: EventLog,
   identity: Identity,
   turnIndex: number,
   chosenIndex: number,
-): SignedEvent => makeEvent(log, identity, { type: 'turn/answered', turnIndex, chosenIndex });
+  salt: string,
+): SignedEvent =>
+  makeCommit(log, identity, answerSubject(turnIndex), commitHash({ chosenIndex }, salt));
+
+/**
+ * Opens a prior {@link commitAnswer} for the same `turnIndex`, `chosenIndex`
+ * and `salt`. Phase B reveals as soon as it commits (see PROTOCOL.md's
+ * commit-reveal section) - there is no separate "wait for everyone" event to
+ * call first.
+ */
+export const revealAnswer = (
+  log: EventLog,
+  identity: Identity,
+  turnIndex: number,
+  chosenIndex: number,
+  salt: string,
+): SignedEvent => makeReveal(log, identity, answerSubject(turnIndex), { chosenIndex }, salt);
 
 export const callTimeout = (log: EventLog, identity: Identity, turnIndex: number): SignedEvent =>
   makeEvent(log, identity, { type: 'turn/timeout', turnIndex });

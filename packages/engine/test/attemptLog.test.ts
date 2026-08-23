@@ -147,6 +147,7 @@ describe('group attempt records from history', () => {
     delta: -1,
     timedOut: false,
     at: 1_700_000_000_000,
+    otherAnswers: [],
   };
 
   it('assigns answerer to whoever submitted, resolves chosen_item, and carries the event timestamp', () => {
@@ -171,5 +172,30 @@ describe('group attempt records from history', () => {
   it('skips timeouts - nothing was chosen, so there is no chosen_option to log', () => {
     const timeout: TurnRecord = { ...baseRecord, answererId: null, chosenIndex: -1, chosenText: null, timedOut: true };
     expect(attemptRecordsFromHistory(PACK, [timeout], 'p1', 'team_a')).toEqual([]);
+  });
+
+  it('grades a non-answerer from their own revealed answer, not the acting team\'s', () => {
+    // p2 is on the acting team but did not resolve the turn (p1 did) - per
+    // DESIGN.md §5.1 beat 4 p2 still privately answered, correctly, even
+    // though the team's own outcome (baseRecord) was wrong.
+    const withBystander: TurnRecord = {
+      ...baseRecord,
+      otherAnswers: [{ playerId: 'p2', chosenIndex: 0, chosenText: 'exit', correct: true }],
+    };
+    const [record] = attemptRecordsFromHistory(PACK, [withBystander], 'p2', 'team_a');
+    expect(record).toMatchObject({
+      playerId: 'p2',
+      role: 'co_committed',
+      chosenOption: 'exit',
+      // 'exit' is one of EXIT's own confusable partner's (ENTRANCE) option
+      // texts, so resolveChosenItem resolves it there even though p2 got it
+      // right - that resolution rule is orthogonal to this test's point.
+      chosenItem: 'entrance',
+      correct: true,
+    });
+  });
+
+  it('produces no row for a player who never revealed an answer this turn', () => {
+    expect(attemptRecordsFromHistory(PACK, [baseRecord], 'p3', 'team_b')).toEqual([]);
   });
 });
