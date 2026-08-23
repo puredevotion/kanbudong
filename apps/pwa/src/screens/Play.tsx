@@ -39,10 +39,10 @@ import { recordMnemonicPromptUsed } from '../lib/mnemonicPromptLog.js';
 import { recordSessionStart } from '../lib/sessionLog.js';
 import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
-import { withGlyphs } from '../ui/glyphs.jsx';
 import {
   ConfusablePanel,
   DecompositionPanel,
+  ExplanationPanel,
   LociMnemonicPrompt,
   SelfExplanationPrompt,
   SiblingsPanel,
@@ -611,14 +611,10 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
           )}
 
           {!hanziAlone && (
-            <p className="text-muted">
-              {withGlyphs(question.explanation)}
-              {question.glossProvenance !== undefined && (
-                <span className="ml-1.5 text-[0.65rem] uppercase tracking-wide text-muted/70">
-                  ({question.glossProvenance === 'etymological' ? 'etymological' : 'mnemonic, not history'})
-                </span>
-              )}
-            </p>
+            <ExplanationPanel
+              explanation={question.explanation}
+              glossProvenance={question.glossProvenance}
+            />
           )}
 
           {!hanziAlone && record.otherAnswers.length > 0 && (

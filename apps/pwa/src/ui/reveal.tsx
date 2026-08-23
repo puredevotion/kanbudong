@@ -3,12 +3,14 @@ import {
   type CharacterStructure,
   type ConfusionType,
   type Decomposition,
+  type GlossProvenance,
   type LociTile,
   type Question,
   type SelfExplanationCue,
   type Transparency,
 } from '@kanbudong/engine';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { withGlyphs } from './glyphs.jsx';
 
 /**
  * DESIGN.md §5.5: "minimum reveal dwell (~2,000 ms) before Next enables" -
@@ -134,6 +136,42 @@ export function DecompositionPanel({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/**
+ * The reveal's factual gloss or (for `glossProvenance: 'mnemonic-only'`
+ * items) invented memory-aid story, promoted to its own bordered block at a
+ * clearly larger size than the surrounding prose - it was previously one
+ * `text-sm` paragraph indistinguishable from incidental copy. Mnemonic-only
+ * content gets a "Memory aid" heading and an accent border so a player learns
+ * to recognise "this one's invented, not a fact" at a glance, on top of the
+ * existing small provenance tag (kept verbatim, just no longer the only cue).
+ */
+export function ExplanationPanel({
+  explanation,
+  glossProvenance,
+}: {
+  explanation: string;
+  glossProvenance: GlossProvenance | undefined;
+}): ReactNode {
+  const isMnemonic = glossProvenance === 'mnemonic-only';
+  return (
+    <div
+      className={`rounded-xl border px-4 py-3.5 ${
+        isMnemonic ? 'border-tier-mid/40 bg-tier-mid/5' : 'border-border bg-surface'
+      }`}
+    >
+      {isMnemonic && (
+        <p className="mb-1.5 text-[0.65rem] uppercase tracking-wide text-tier-mid">Memory aid</p>
+      )}
+      <p className="text-lg leading-snug">{withGlyphs(explanation)}</p>
+      {glossProvenance !== undefined && (
+        <p className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted/70">
+          ({glossProvenance === 'etymological' ? 'etymological' : 'mnemonic, not history'})
+        </p>
+      )}
     </div>
   );
 }

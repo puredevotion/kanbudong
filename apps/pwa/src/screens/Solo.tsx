@@ -26,10 +26,10 @@ import { recordSessionStart } from '../lib/sessionLog.js';
 import { getItemMemory, loadAllMemory, putItemMemory } from '../lib/soloMemory.js';
 import { useApp } from '../lib/store.js';
 import { ActionBar, Screen } from '../ui/atoms.jsx';
-import { withGlyphs } from '../ui/glyphs.jsx';
 import {
   ConfusablePanel,
   DecompositionPanel,
+  ExplanationPanel,
   LociMnemonicPrompt,
   SelfExplanationPrompt,
   SiblingsPanel,
@@ -398,14 +398,10 @@ export function Solo(): ReactNode {
             )}
 
             {!hanziAlone && (
-              <p className="text-muted">
-                {withGlyphs(current.explanation)}
-                {current.glossProvenance !== undefined && (
-                  <span className="ml-1.5 text-[0.65rem] uppercase tracking-wide text-muted/70">
-                    ({current.glossProvenance === 'etymological' ? 'etymological' : 'mnemonic, not history'})
-                  </span>
-                )}
-              </p>
+              <ExplanationPanel
+                explanation={current.explanation}
+                glossProvenance={current.glossProvenance}
+              />
             )}
           </Card.Content>
         </Card>
