@@ -20,11 +20,28 @@ on trademark grounds. The band is an internal integer.
 
 | Data                              | Why not                                                                                                                                                                               | Get it with                             |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| **Make Me a Hanzi** decomposition | **LGPL-3.0-or-later.** `DESIGN.md` §9.2 keeps it out of the build environment entirely so the in-house decomposition work stays provably clean. Verification-only, on a scratch copy. | `fetch.sh`                              |
+| **Make Me a Hanzi** decomposition (`dictionary.txt`) | **LGPL-3.0-or-later.** `DESIGN.md` §9.2 keeps it out of the build environment entirely so the in-house decomposition work stays provably clean. Verification-only, on a scratch copy. | `fetch.sh`                              |
 | **pinyin-data**                   | MIT and safe, but 985 KB of reference table that would sit in `docs/` going stale.                                                                                                    | `fetch.sh`                              |
 | **Character frequency list**      | No licence header and no recorded provenance in the copy the agents fetched. Committing data whose licence nobody has established is the mistake this table exists to avoid.          | `fetch.sh`, with the caveat noted there |
 | **jieba dictionary**              | 5 MB, and a segmentation dictionary rather than research.                                                                                                                             | not needed                              |
 | Published paper PDFs              | Copyright. Cite the URL, do not redistribute.                                                                                                                                         | `SOURCES.md`                            |
+
+## The one exception: `graphics.txt` feeds the real build
+
+**`graphics.txt` (Make Me a Hanzi's stroke/median data, Arphic Public
+License) is NOT verification-only** — unlike everything else on this page,
+`pnpm strokes` (`scripts/build-strokes.mjs`) reads it directly to generate
+`apps/pwa`'s shipped stroke-order dataset. `docs/LICENSING.md` documents why:
+the user confirmed this app is private-use-only, which the Arphic license's
+"designated place" republish duty survives (the license text plus a
+`CHANGES.md` ship alongside the generated data, in `docs/licenses/` and
+copied into the build output) but the underlying LGPL-vs-in-house-authoring
+argument that keeps `dictionary.txt` out of the build entirely does not apply
+here — there is no "author 1,500 stroke orders in-house" equivalent. A fresh
+checkout needs `fetch.sh` run at least once before `pnpm build`/`pnpm
+strokes` will produce real stroke data; without it, the build still succeeds
+but the stroke-order panel renders as absent for every character (same
+graceful-fallback convention every other reveal panel uses).
 
 ## The verification these enable
 

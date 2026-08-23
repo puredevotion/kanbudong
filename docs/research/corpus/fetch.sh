@@ -15,6 +15,17 @@ echo "    Verification only. Do NOT import into the build; DESIGN.md §9.2 expla
 curl -fsSL -o "$OUT/dictionary.txt" \
   https://raw.githubusercontent.com/skishore/makemeahanzi/master/dictionary.txt
 
+echo "==> Make Me a Hanzi (Arphic Public License) — stroke/median graphics"
+echo "    Unlike dictionary.txt above, this ONE IS consumed by the real build:"
+echo "    'pnpm strokes' (scripts/build-strokes.mjs) reads it to emit the"
+echo "    stroke-order dataset apps/pwa ships. docs/LICENSING.md documents why"
+echo "    that's a deliberate, licensed exception for this private-use deploy -"
+echo "    not the same 'keep out of the build entirely' rule dictionary.txt"
+echo "    follows for decomposition data. Re-run this fetch, then 'pnpm strokes'"
+echo "    (or 'pnpm build', which runs it), whenever this file is missing."
+curl -fsSL -o "$OUT/graphics.txt" \
+  https://raw.githubusercontent.com/skishore/makemeahanzi/master/graphics.txt
+
 cat <<'NOTE'
 
 Not fetched: a character frequency list.
