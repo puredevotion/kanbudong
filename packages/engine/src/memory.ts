@@ -127,7 +127,8 @@ const defaultAlgorithm = buildAlgorithm(default_w);
 // module default or the one per-player `w` array a caller loaded once per
 // session, so the last-built algorithm is virtually always the right one
 // to reuse instead of re-parsing `generatorParameters` on every review.
-let cachedCustom: { readonly w: readonly number[]; readonly algorithm: FSRSAlgorithm } | null = null;
+let cachedCustom: { readonly w: readonly number[]; readonly algorithm: FSRSAlgorithm } | null =
+  null;
 
 function algorithmFor(w: readonly number[] = default_w): FSRSAlgorithm {
   if (w === default_w) return defaultAlgorithm;
@@ -138,7 +139,11 @@ function algorithmFor(w: readonly number[] = default_w): FSRSAlgorithm {
 }
 
 /** §6.3's `R(t, S)` — probability of recall `t` days after a review with stability `S`. */
-export function retrievability(elapsedDays: number, stabilityDays: number, w: readonly number[] = default_w): number {
+export function retrievability(
+  elapsedDays: number,
+  stabilityDays: number,
+  w: readonly number[] = default_w,
+): number {
   if (stabilityDays <= 0) return 0;
   const t = Math.max(0, elapsedDays);
   return algorithmFor(w).forgetting_curve(t, stabilityDays);
@@ -180,7 +185,8 @@ function fullUpdate(
   now: number,
   w: readonly number[] = default_w,
 ): ItemMemory {
-  const state: FSRSState | null = memory === null ? null : { stability: memory.stability, difficulty: memory.difficulty };
+  const state: FSRSState | null =
+    memory === null ? null : { stability: memory.stability, difficulty: memory.difficulty };
   const t = memory === null ? 0 : elapsedDaysSince(memory.lastReview, now);
   const next = algorithmFor(w).next_state(state, t, GRADE_TO_RATING[grade]);
   return { stability: next.stability, difficulty: next.difficulty, lastReview: now };

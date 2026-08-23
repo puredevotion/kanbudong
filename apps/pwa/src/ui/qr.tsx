@@ -41,7 +41,7 @@ export function QrImage({ value, size = 260 }: { value: string; size?: number })
 
   if (failed) {
     return (
-      <div className="flex items-center justify-center rounded-2xl border border-danger/40 bg-danger/10 p-6 text-center text-sm">
+      <div className='flex items-center justify-center rounded-2xl border border-danger/40 bg-danger/10 p-6 text-center text-sm'>
         Could not draw the QR code. Read the four words out instead.
       </div>
     );
@@ -49,13 +49,13 @@ export function QrImage({ value, size = 260 }: { value: string; size?: number })
 
   return (
     <div
-      className="mx-auto flex items-center justify-center rounded-2xl bg-white p-3 shadow-lg"
+      className='mx-auto flex items-center justify-center rounded-2xl bg-white p-3 shadow-lg'
       style={{ width: size, height: size }}
     >
       {dataUrl === null ? (
-        <span className="text-xs text-neutral-500">Drawing...</span>
+        <span className='text-xs text-neutral-500'>Drawing...</span>
       ) : (
-        <img src={dataUrl} alt="Scan to join this game" className="h-full w-full" />
+        <img src={dataUrl} alt='Scan to join this game' className='h-full w-full' />
       )}
     </div>
   );
@@ -136,27 +136,27 @@ export function QrCamera({ onScan }: { onScan: (text: string) => void }): ReactN
   }, [armed]);
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="relative overflow-hidden rounded-2xl border border-default-200/40 bg-black/60 aspect-square">
+    <div className='flex flex-col gap-3'>
+      <div className='relative overflow-hidden rounded-2xl border border-default-200/40 bg-black/60 aspect-square'>
         {/* A live camera feed has nothing for a screen reader to say; the
             surrounding copy and the "Turn on the camera" button already
             explain what this is and offer the typed-code alternative. */}
         <video
           ref={videoRef}
-          className="h-full w-full object-cover"
+          className='h-full w-full object-cover'
           muted
           playsInline
-          aria-hidden="true"
+          aria-hidden='true'
         />
         {state !== 'scanning' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
+          <div className='absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center'>
             {state === 'idle' && (
               <>
-                <p className="text-sm text-muted">
+                <p className='text-sm text-muted'>
                   Point your camera at the other phone&apos;s code.
                 </p>
                 <Button
-                  variant="primary"
+                  variant='primary'
                   onPress={() => {
                     setState('starting');
                     setArmed(true);
@@ -166,12 +166,10 @@ export function QrCamera({ onScan }: { onScan: (text: string) => void }): ReactN
                 </Button>
               </>
             )}
-            {state === 'starting' && <p className="text-sm text-muted">Starting camera...</p>}
+            {state === 'starting' && <p className='text-sm text-muted'>Starting camera...</p>}
             {(state === 'denied' || state === 'unsupported') && (
-              <p className="text-sm text-danger-text">
-                {state === 'denied'
-                  ? 'Camera permission was refused.'
-                  : 'Camera unavailable.'}{' '}
+              <p className='text-sm text-danger-text'>
+                {state === 'denied' ? 'Camera permission was refused.' : 'Camera unavailable.'}{' '}
                 {detail}
               </p>
             )}

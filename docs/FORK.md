@@ -56,25 +56,25 @@ when the Mandarin rules actually force it, and note it here when you do.
 
 Hashes are `git hash-object` at dohhh `3796780`.
 
-| File | Hash at fork |
-| --- | --- |
+| File                               | Hash at fork                               |
+| ---------------------------------- | ------------------------------------------ |
 | `packages/engine/src/canonical.ts` | `00ec177c16fc598fc97f42326686f107a30d2d6f` |
-| `packages/engine/src/ids.ts` | `2e733ece4750e0b34f44d01986488dd93c989528` |
-| `packages/engine/src/rng.ts` | `ad244b4f5ee16eb83e6009caa7d99c0ba093d265` |
-| `packages/engine/src/identity.ts` | `11e8087716dc314802da0f5a865549c52bdedf95` |
-| `packages/engine/src/joincode.ts` | `2e5ab42166fcb4788df2fa8cddce7e1d65f9cb8a` |
-| `packages/engine/src/wordlist.ts` | `45f17331589d6a9c5ac365e6a39a2d4c84a25feb` |
-| `packages/engine/src/log.ts` | `a1f7d39c3f8212d39b242dca800cd18702c88df8` |
-| `packages/net/src/transport.ts` | `7cbe7baca202923bd0fc31f00b05227bc1ba079f` |
+| `packages/engine/src/ids.ts`       | `2e733ece4750e0b34f44d01986488dd93c989528` |
+| `packages/engine/src/rng.ts`       | `ad244b4f5ee16eb83e6009caa7d99c0ba093d265` |
+| `packages/engine/src/identity.ts`  | `11e8087716dc314802da0f5a865549c52bdedf95` |
+| `packages/engine/src/joincode.ts`  | `2e5ab42166fcb4788df2fa8cddce7e1d65f9cb8a` |
+| `packages/engine/src/wordlist.ts`  | `45f17331589d6a9c5ac365e6a39a2d4c84a25feb` |
+| `packages/engine/src/log.ts`       | `a1f7d39c3f8212d39b242dca800cd18702c88df8` |
+| `packages/net/src/transport.ts`    | `7cbe7baca202923bd0fc31f00b05227bc1ba079f` |
 
-Three more are *almost* identical — they change by exactly one import line when
+Three more are _almost_ identical — they change by exactly one import line when
 the package scope is renamed, and by nothing else:
 
-| File | Hash at fork | Divergence |
-| --- | --- | --- |
+| File                           | Hash at fork                               | Divergence        |
+| ------------------------------ | ------------------------------------------ | ----------------- |
 | `packages/net/src/discover.ts` | `ebf9368ea7fa504e2e9fe1bdec164dece437c7e2` | import scope only |
-| `packages/net/src/storage.ts` | `433e03daeee83ce8d9e4e3933bef2b5700a67322` | import scope only |
-| `packages/net/src/ticket.ts` | `36a2ad5f51f2f41cc72d0cf48cc368bf36f92284` | import scope only |
+| `packages/net/src/storage.ts`  | `433e03daeee83ce8d9e4e3933bef2b5700a67322` | import scope only |
+| `packages/net/src/ticket.ts`   | `36a2ad5f51f2f41cc72d0cf48cc368bf36f92284` | import scope only |
 
 `packages/engine/src/events.ts` (`6eed849f…`) and `packages/net/src/session.ts`
 (`d7622c63…`) **will** diverge structurally: `events.ts` carries the trivia event
@@ -122,7 +122,7 @@ survival situations from the design document §6.
 ## Step 5 — what the design document changes, and what it does not
 
 **Do not port dohhh's architecture unexamined.** `docs/DESIGN.md` §6 inverts it:
-the scheduler is the product and a match is a *presentation* of it, so the match
+the scheduler is the product and a match is a _presentation_ of it, so the match
 engine draws from a due queue. dohhh's reducer treats the match as the thing that
 exists. That inversion is the first real piece of work in the new repo and it is
 specified, not open.

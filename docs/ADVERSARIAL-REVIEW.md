@@ -3,7 +3,7 @@
 **Method:** SVPG-style pre-build risk assault. Four risks, asked in Cagan's
 order because that is the order they kill products in:
 
-1. **Value** — will anyone *want* this?
+1. **Value** — will anyone _want_ this?
 2. **Usability** — can they figure it out, in a pub, half a pint in?
 3. **Feasibility** — can it actually be built the way it was specified?
 4. **Viability** — does shipping it hurt us?
@@ -24,7 +24,7 @@ brief describes mechanics, not a reason to choose them. State the actual
 hypothesis or you are building a toy.
 
 The strongest candidate hypothesis in the brief is the **risk ladder**: the
-scoring table (+1/−1, +5/−3, +15/−10) turns a knowledge quiz into a *betting*
+scoring table (+1/−1, +5/−3, +15/−10) turns a knowledge quiz into a _betting_
 game. You are not asked "do you know this", you are asked "how much do you
 think you know this". That is genuinely not what Trivial Pursuit does, and it is
 the only mechanic here that a board game cannot copy without a redesign.
@@ -41,7 +41,7 @@ derivative and add nothing.
 ### R-12 — Content is the product; the code is a content delivery mechanism 🟠 mitigated
 
 A trivia game is 90 % question bank. "Post-doc level" questions must be hard,
-*unambiguous*, and defensible to an annoyed professor at the table — that is
+_unambiguous_, and defensible to an annoyed professor at the table — that is
 expensive expert-authored content, not something scraped. Ship a couple of
 hundred questions and your retention curve dies within a few sessions: the
 repeats start almost immediately.
@@ -62,7 +62,7 @@ correct answers** to go 0 → 150. At `phd`, 30. A strong team with an actual
 expert at the table plausibly runs 10+ in a row. The failure mode is not
 "unbalanced" — it is that **the other teams never take a turn**, and a party
 game where three of four teams sit silent for twenty minutes is not a party
-game. This is worse than a scoring bug: it is a *game with no interaction*.
+game. This is worse than a scoring bug: it is a _game with no interaction_.
 
 > **RULING:** implemented spec-faithfully (`maxCorrectStreakPerTurn: null`)
 > because the reviewer does not get to redesign the game on a hunch — but the
@@ -75,7 +75,7 @@ game. This is worse than a scoring bug: it is a *game with no interaction*.
 Found by inspection after the first bank was written, and it is the most
 embarrassing finding in this document because it undoes the product's own
 premise. The brief asked for "hard, very hard, and incredibly hard". What got
-authored was closer to *general knowledge*, *hard*, and *specialist*: "how many
+authored was closer to _general knowledge_, _hard_, and _specialist_: "how many
 symphonies did Beethoven write" and "what does HTTP stand for" were sitting in
 the same tier that is supposed to represent a graduate degree in the field.
 
@@ -127,7 +127,7 @@ showing it makes the app feel like a bank.
 
 Unspecified in the brief. In a P2P game with no server there is no referee to
 skip a stalled player: if the acting team's phone locks, every other device
-waits indefinitely. This is a *liveness* bug, not a UX nicety.
+waits indefinitely. This is a _liveness_ bug, not a UX nicety.
 
 > **RULING:** answer timeouts are mandatory, not optional. 45 / 75 / 120 s by
 > tier. A timeout is a **wrong answer**: penalty applied, turn passes. Any peer
@@ -184,7 +184,7 @@ to be told no.
 > replay the log and watch — and are eligible for the next game. Honest and
 > deterministic.
 
-### R-18 — "Incredibly hard" questions get *disputed*, and disputes need somewhere to go 🟠 partially fixed
+### R-18 — "Incredibly hard" questions get _disputed_, and disputes need somewhere to go 🟠 partially fixed
 
 At post-doc level, a meaningful share of questions are arguably wrong or
 ambiguous, and the argument at the table is more expensive than the points.
@@ -235,14 +235,14 @@ networks. No TURN server exists here by definition — a relay is a server.
 > lobby with a real error path. Recorded as a hard limit of "no server", not a
 > bug to be fixed later.
 
-### R-10 — Every device has the question bank *and* the seed, so the answerer can precompute 🟠 fixed
+### R-10 — Every device has the question bank _and_ the seed, so the answerer can precompute 🟠 fixed
 
 With no server, the bank is on disk and any deterministic derivation from a
 public game seed can be run ahead of time by the team about to be asked. A
 modified client wins every `professor` bet.
 
 > **RULING:** the question is not derived from the game seed alone. The
-> **drawer** — the lowest-id online player *not* on the acting team — publishes a
+> **drawer** — the lowest-id online player _not_ on the acting team — publishes a
 > fresh random nonce at turn start, and the question is `f(nonce, difficulty)`.
 > The answering device cannot precompute what it will be asked. Full anti-cheat
 > against a modified client is impossible in this topology and we say so; this
@@ -284,7 +284,7 @@ Flagged here rather than decided, because a rename is a business call.
 > makes when a fifteen-point bet fails, which is the moment the whole design is
 > built around.
 >
-> The residual risk is not zero and should not be presented as such. *D'oh* is
+> The residual risk is not zero and should not be presented as such. _D'oh_ is
 > strongly associated with The Simpsons, and Twentieth Century Fox has asserted
 > trademark rights over it in merchandising classes. It is materially smaller
 > than what it replaces: the spelling is altered, the sector is unrelated, and
@@ -314,12 +314,12 @@ be playing.
 
 ## Scorecard
 
-| Risk | Verdict |
-| --- | --- |
-| Value | **Weakest link.** The risk ladder is a real insight; the rest of the brief is a clone. R-13 and R-1 are unproven and only a playtest settles them, and R-20 shows how easily the ladder can be flattened by careless authoring. |
-| Usability | Addressable, and mostly addressed. R-3 and R-5 were outright bugs in the brief. |
-| Feasibility | Buildable once R-7's contradiction is resolved honestly. "No server" and "no maximum players" both needed downgrading from marketing to engineering. |
-| Viability | R-14 resolved by the rename to Dohhh, with a smaller residual risk stated rather than hidden. Everything else is inside the in-person threat model. |
+| Risk        | Verdict                                                                                                                                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Value       | **Weakest link.** The risk ladder is a real insight; the rest of the brief is a clone. R-13 and R-1 are unproven and only a playtest settles them, and R-20 shows how easily the ladder can be flattened by careless authoring. |
+| Usability   | Addressable, and mostly addressed. R-3 and R-5 were outright bugs in the brief.                                                                                                                                                 |
+| Feasibility | Buildable once R-7's contradiction is resolved honestly. "No server" and "no maximum players" both needed downgrading from marketing to engineering.                                                                            |
+| Viability   | R-14 resolved by the rename to Dohhh, with a smaller residual risk stated rather than hidden. Everything else is inside the in-person threat model.                                                                             |
 
 **Recommendation:** build M1–M4 (they are cheap and they de-risk everything
 technical), then **stop and playtest before writing question 181**. The open

@@ -5,10 +5,6 @@
   "description": "看不懂 — a co-located multiplayer Mandarin reading game",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@10.33.0",
-  "engines": {
-    "node": ">=20"
-  },
   "scripts": {
     "install:web": "pnpm install --filter @kanbudong/pwa... --filter @kanbudong/engine... --filter @kanbudong/net...",
     "typecheck": "pnpm -r --filter @kanbudong/engine --filter @kanbudong/net --filter @kanbudong/pwa typecheck",
@@ -24,6 +20,10 @@
     "oxlint": "^1.79.0",
     "typescript": "^5.9.3"
   },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.33.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"

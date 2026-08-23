@@ -96,8 +96,8 @@ export function App(): ReactNode {
   }, [session === null]);
 
   const degradedBanner = storageDegraded && (
-    <div className="mx-auto w-full max-w-md px-5 pt-3">
-      <Notice tone="warn">
+    <div className='mx-auto w-full max-w-md px-5 pt-3'>
+      <Notice tone='warn'>
         Nothing is saving right now - private browsing or storage being blocked, most likely.
         Reloading this tab will lose your place in the game.
       </Notice>

@@ -35,25 +35,23 @@ export function Home(): ReactNode {
 
   return (
     <Screen>
-      <div className="flex flex-1 flex-col justify-center gap-6 py-8">
+      <div className='flex flex-1 flex-col justify-center gap-6 py-8'>
         <div>
-          <Typography.Paragraph className="text-sm text-muted">
-            Signed in as
-          </Typography.Paragraph>
+          <Typography.Paragraph className='text-sm text-muted'>Signed in as</Typography.Paragraph>
           {editingName ? (
-            <div className="flex items-center gap-2">
+            <div className='flex items-center gap-2'>
               <Input
                 value={draftName}
                 onChange={(event) => setDraftName(event.target.value)}
-                aria-label="Your name"
-                autoComplete="nickname"
+                aria-label='Your name'
+                autoComplete='nickname'
                 maxLength={24}
                 autoFocus
                 fullWidth
               />
               <Button
-                variant="primary"
-                size="sm"
+                variant='primary'
+                size='sm'
                 isDisabled={draftName.trim().length === 0}
                 onPress={() => {
                   rename(draftName);
@@ -65,33 +63,33 @@ export function Home(): ReactNode {
             </div>
           ) : (
             <button
-              type="button"
-              className="flex items-center gap-2 text-left"
+              type='button'
+              className='flex items-center gap-2 text-left'
               onClick={() => {
                 setDraftName(identity.username);
                 setEditingName(true);
               }}
             >
-              <Typography.Heading level={1} className="text-3xl font-semibold tracking-tight">
+              <Typography.Heading level={1} className='text-3xl font-semibold tracking-tight'>
                 {identity.username}
               </Typography.Heading>
-              <span className="text-xs text-muted underline">edit</span>
+              <span className='text-xs text-muted underline'>edit</span>
             </button>
           )}
           {editingDevice ? (
-            <div className="mt-1 flex items-center gap-2">
+            <div className='mt-1 flex items-center gap-2'>
               <Input
                 value={draftDevice}
                 onChange={(event) => setDraftDevice(event.target.value)}
-                placeholder="e.g. My phone"
-                aria-label="Device label"
+                placeholder='e.g. My phone'
+                aria-label='Device label'
                 maxLength={24}
                 autoFocus
                 fullWidth
               />
               <Button
-                variant="primary"
-                size="sm"
+                variant='primary'
+                size='sm'
                 onPress={() => {
                   renameDevice(draftDevice);
                   setEditingDevice(false);
@@ -102,34 +100,34 @@ export function Home(): ReactNode {
             </div>
           ) : (
             <button
-              type="button"
-              className="mt-1 flex items-center gap-2 text-left"
+              type='button'
+              className='mt-1 flex items-center gap-2 text-left'
               onClick={() => {
                 setDraftDevice(deviceLabel ?? '');
                 setEditingDevice(true);
               }}
             >
-              <p className="font-mono text-xs text-muted">
+              <p className='font-mono text-xs text-muted'>
                 device {deviceLabel ?? shortenId(identity.id, 8)}
               </p>
-              <span className="text-xs text-muted underline">rename</span>
+              <span className='text-xs text-muted underline'>rename</span>
             </button>
           )}
         </div>
 
-        <div className="flex flex-col gap-3">
-          <Button variant="primary" size="lg" fullWidth onPress={() => navigate('/solo')}>
+        <div className='flex flex-col gap-3'>
+          <Button variant='primary' size='lg' fullWidth onPress={() => navigate('/solo')}>
             Practice
           </Button>
-          <Button variant="secondary" size="lg" fullWidth onPress={() => navigate('/create')}>
+          <Button variant='secondary' size='lg' fullWidth onPress={() => navigate('/create')}>
             Host a game
           </Button>
-          <Button variant="secondary" size="lg" fullWidth onPress={() => navigate('/join')}>
+          <Button variant='secondary' size='lg' fullWidth onPress={() => navigate('/join')}>
             Join a game
           </Button>
           {resumable && (
             <Button
-              variant="ghost"
+              variant='ghost'
               fullWidth
               onPress={() => {
                 void resume().then((ok) => {
@@ -142,22 +140,22 @@ export function Home(): ReactNode {
           )}
         </div>
 
-        <Card variant="secondary">
+        <Card variant='secondary'>
           <Card.Header>
-            <Card.Title className="text-base">How the betting works</Card.Title>
+            <Card.Title className='text-base'>How the betting works</Card.Title>
             <Card.Description>
               The tiers are named after who should get them right, and the questions are written to
               that. None of them is general knowledge.
             </Card.Description>
           </Card.Header>
-          <Card.Content className="flex flex-col gap-3 text-sm text-default-foreground">
+          <Card.Content className='flex flex-col gap-3 text-sm text-default-foreground'>
             {DIFFICULTY_ORDER.map((difficulty) => (
               <Row key={difficulty} tier={difficulty} tierInfo={DIFFICULTY_TIERS[difficulty]} />
             ))}
-            <p className="mt-1 text-xs text-muted">
-              An opposing team deals you a choice of three categories; you choose how hard a question
-              to take on it. Right, and you keep the turn. Wrong, and it costs you and moves on. First
-              to {DEFAULT_RULES.targetScore} wins outright.
+            <p className='mt-1 text-xs text-muted'>
+              An opposing team deals you a choice of three categories; you choose how hard a
+              question to take on it. Right, and you keep the turn. Wrong, and it costs you and
+              moves on. First to {DEFAULT_RULES.targetScore} wins outright.
             </p>
           </Card.Content>
         </Card>
@@ -179,12 +177,12 @@ function Row({
     high: 'text-tier-high',
   }[tier];
   return (
-    <div className="flex items-baseline justify-between gap-3">
+    <div className='flex items-baseline justify-between gap-3'>
       <span className={colour}>{tierInfo.label}</span>
-      <span className="font-mono text-sm tabular-nums">
-        <span className="text-success">+{tierInfo.award}</span>
-        <span className="text-muted"> / </span>
-        <span className="text-danger-text">{tierInfo.penalty}</span>
+      <span className='font-mono text-sm tabular-nums'>
+        <span className='text-success'>+{tierInfo.award}</span>
+        <span className='text-muted'> / </span>
+        <span className='text-danger-text'>{tierInfo.penalty}</span>
       </span>
     </div>
   );

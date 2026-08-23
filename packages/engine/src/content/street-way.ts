@@ -75,10 +75,14 @@ export const STREET_WAY: CategoryContent = {
       0,
       'zhíxíng · rechtdoor (go straight ahead) — the same 直 as "straight, direct" elsewhere.',
       { hanzi: '直行', pinyin: 'zhíxíng', nl: 'rechtdoor', en: 'go straight ahead' },
-      { kind: 'word', hanzi: '直行', morphemes: [
-        { span: '直', gloss: 'straight' },
-        { span: '行', gloss: 'to go' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '直行',
+        morphemes: [
+          { span: '直', gloss: 'straight' },
+          { span: '行', gloss: 'to go' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -86,7 +90,13 @@ export const STREET_WAY: CategoryContent = {
       ['no through road, dead end', 'go straight ahead', 'lift, elevator'],
       0,
       'cǐ lù bù tōng · doodlopende weg (no through road) — literally "this road does not go through."',
-      { hanzi: '此路不通', pinyin: 'cǐ lù bù tōng', nl: 'doodlopende weg', en: 'no through road, dead end', transparency: 'opaque' },
+      {
+        hanzi: '此路不通',
+        pinyin: 'cǐ lù bù tōng',
+        nl: 'doodlopende weg',
+        en: 'no through road, dead end',
+        transparency: 'opaque',
+      },
       undefined,
       { tier: 1 },
     ],
@@ -98,11 +108,15 @@ export const STREET_WAY: CategoryContent = {
       0,
       'bùxíngjiē · voetgangersstraat (pedestrian street) — no vehicles, usually the shopping strip.',
       { hanzi: '步行街', pinyin: 'bùxíngjiē', nl: 'voetgangersstraat', en: 'pedestrian street' },
-      { kind: 'word', hanzi: '步行街', morphemes: [
-        { span: '步', gloss: 'to step, walk' },
-        { span: '行', gloss: 'to go' },
-        { span: '街', gloss: 'street' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '步行街',
+        morphemes: [
+          { span: '步', gloss: 'to step, walk' },
+          { span: '行', gloss: 'to go' },
+          { span: '街', gloss: 'street' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -111,10 +125,14 @@ export const STREET_WAY: CategoryContent = {
       0,
       'diàntī · lift (lift, elevator) — the same character covers escalators too; context or an icon tells you which.',
       { hanzi: '电梯', pinyin: 'diàntī', nl: 'lift', en: 'lift, elevator' },
-      { kind: 'word', hanzi: '电梯', morphemes: [
-        { span: '电', gloss: 'electric' },
-        { span: '梯', gloss: 'ladder, stairs' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '电梯',
+        morphemes: [
+          { span: '电', gloss: 'electric' },
+          { span: '梯', gloss: 'ladder, stairs' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -143,11 +161,15 @@ export const STREET_WAY: CategoryContent = {
         en: 'urban village',
         context: { before: '白石洲', after: '改造项目' },
       },
-      { kind: 'word', hanzi: '城中村', morphemes: [
-        { span: '城', gloss: 'large complex, city' },
-        { span: '中', gloss: 'middle' },
-        { span: '村', gloss: 'village' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '城中村',
+        morphemes: [
+          { span: '城', gloss: 'large complex, city' },
+          { span: '中', gloss: 'middle' },
+          { span: '村', gloss: 'village' },
+        ],
+      },
     ],
   ],
   high: [
@@ -157,11 +179,15 @@ export const STREET_WAY: CategoryContent = {
       0,
       'wènxùnchù · informatiebalie (information desk) — 问 (ask) + 讯 (inquire) + 处 (place): a "place for asking."',
       { hanzi: '问讯处', pinyin: 'wènxùnchù', nl: 'informatiebalie', en: 'information desk' },
-      { kind: 'word', hanzi: '问讯处', morphemes: [
-        { span: '问', gloss: 'to ask' },
-        { span: '讯', gloss: 'to inquire' },
-        { span: '处', gloss: 'place' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '问讯处',
+        morphemes: [
+          { span: '问', gloss: 'to ask' },
+          { span: '讯', gloss: 'to inquire' },
+          { span: '处', gloss: 'place' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -170,11 +196,15 @@ export const STREET_WAY: CategoryContent = {
       0,
       'dānxíngdào · eenrichtingsstraat (one-way street) — traffic moves one direction only; 单 (single) + 行 (go, here xíng) + 道 (road).',
       { hanzi: '单行道', pinyin: 'dānxíngdào', nl: 'eenrichtingsstraat', en: 'one-way street' },
-      { kind: 'word', hanzi: '单行道', morphemes: [
-        { span: '单', gloss: 'single' },
-        { span: '行', gloss: 'to go' },
-        { span: '道', gloss: 'road' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '单行道',
+        morphemes: [
+          { span: '单', gloss: 'single' },
+          { span: '行', gloss: 'to go' },
+          { span: '道', gloss: 'road' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -189,29 +219,37 @@ export const STREET_WAY: CategoryContent = {
         en: 'pedestrian overpass',
         context: { after: ' 200米' },
       },
-      { kind: 'word', hanzi: '人行天桥', morphemes: [
-        { span: '人', gloss: 'person' },
-        { span: '行', gloss: 'to go' },
-        { span: '天', gloss: 'sky' },
-        { span: '桥', gloss: 'bridge' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '人行天桥',
+        morphemes: [
+          { span: '人', gloss: 'person' },
+          { span: '行', gloss: 'to go' },
+          { span: '天', gloss: 'sky' },
+          { span: '桥', gloss: 'bridge' },
+        ],
+      },
     ],
     [
       'On a street sign. What does this mean?',
       ['accessible, barrier-free', 'no through road, dead end', 'one-way street'],
       0,
-      'wúzhàng\'ài · toegankelijk (accessible, barrier-free) — marks a ramp or wide gate for wheelchairs and pushchairs, as in 无障碍通道 (accessible passage).',
+      "wúzhàng'ài · toegankelijk (accessible, barrier-free) — marks a ramp or wide gate for wheelchairs and pushchairs, as in 无障碍通道 (accessible passage).",
       {
         hanzi: '无障碍',
-        pinyin: 'wúzhàng\'ài',
+        pinyin: "wúzhàng'ài",
         nl: 'toegankelijk, drempelvrij',
         en: 'accessible, barrier-free',
         context: { after: '通道入口' },
       },
-      { kind: 'word', hanzi: '无障碍', morphemes: [
-        { span: '无', gloss: 'without' },
-        { span: '障碍', gloss: 'obstacle' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '无障碍',
+        morphemes: [
+          { span: '无', gloss: 'without' },
+          { span: '障碍', gloss: 'obstacle' },
+        ],
+      },
     ],
     [
       'On a street sign. What does this mean?',
@@ -241,7 +279,13 @@ export const STREET_WAY: CategoryContent = {
       ['room; between', 'to wash', 'office, bureau'],
       0,
       'jiān · kamer; tussen (room; between). Seen in 洗手间 (washroom) and 房间 (room). Picture 间 as a gate with a sliver of daylight caught between its doors - the gap between two things, or a room of its own: jiān.',
-      { hanzi: '间', pinyin: 'jiān', nl: 'kamer; tussen', en: 'room; between', structure: 'enclosure' },
+      {
+        hanzi: '间',
+        pinyin: 'jiān',
+        nl: 'kamer; tussen',
+        en: 'room; between',
+        structure: 'enclosure',
+      },
       {
         kind: 'character',
         hanzi: '间',
@@ -343,8 +387,14 @@ export const STREET_WAY: CategoryContent = {
       'On a street sign. What does this mean?',
       ['to deliver, hand over', 'fast, quick', 'mail, post'],
       0,
-      'dì · afleveren, overhandigen (to deliver, hand over). Seen in 快递 (courier). 弟 (dì), the shape on the right, gives the exact sound - the same pairing street-trade.ts\'s own 快递 explanation already points out.',
-      { hanzi: '递', pinyin: 'dì', nl: 'afleveren, overhandigen', en: 'to deliver, hand over', structure: 'enclosure' },
+      "dì · afleveren, overhandigen (to deliver, hand over). Seen in 快递 (courier). 弟 (dì), the shape on the right, gives the exact sound - the same pairing street-trade.ts's own 快递 explanation already points out.",
+      {
+        hanzi: '递',
+        pinyin: 'dì',
+        nl: 'afleveren, overhandigen',
+        en: 'to deliver, hand over',
+        structure: 'enclosure',
+      },
       {
         kind: 'character',
         hanzi: '递',

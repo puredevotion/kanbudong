@@ -4,8 +4,6 @@
  */
 @import '@heroui/react/styles';
 
-
-
 /*
  * Explicit sources: the `@import "tailwindcss"` above resolves from inside
  * node_modules, so automatic content detection would scan the wrong tree and
@@ -53,7 +51,6 @@
    * shape to be teaching. */
   --font-han: 'Han Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-han-serif: 'Han Serif', 'Songti SC', 'SimSun', serif;
-
 
   /* One accent per difficulty tier, matching the app icon's three rings. */
   --color-tier-low: oklch(0.72 0.14 250);

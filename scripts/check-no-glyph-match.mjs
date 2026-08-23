@@ -23,7 +23,8 @@ const targets = [
     path: '../apps/pwa/src/ui/reveal.tsx',
     label: 'reveal.tsx',
     mustContain: 'componentId === decomposition.semantic_radical',
-    mustContainMessage: 'reveal.tsx no longer keys its highlight off the stored componentId field by exact equality',
+    mustContainMessage:
+      'reveal.tsx no longer keys its highlight off the stored componentId field by exact equality',
   },
   {
     // Span eligibility (docs/DESIGN.md §6.1): a multi-character span's
@@ -33,7 +34,8 @@ const targets = [
     path: '../packages/engine/src/eligibility.ts',
     label: 'eligibility.ts',
     mustContain: 'ids.every((id) => isIntroduced(id))',
-    mustContainMessage: 'eligibility.ts no longer keys span dependency off stored component_char_ids by exact equality',
+    mustContainMessage:
+      'eligibility.ts no longer keys span dependency off stored component_char_ids by exact equality',
   },
 ];
 
@@ -41,7 +43,9 @@ const problems = [];
 for (const { path, label, mustContain, mustContainMessage } of targets) {
   const source = readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8');
   if (stringMatchOnGlyph.test(source)) {
-    problems.push(`${label} matches a hanzi string with .includes()/.indexOf() to decide a highlight or dependency`);
+    problems.push(
+      `${label} matches a hanzi string with .includes()/.indexOf() to decide a highlight or dependency`,
+    );
   }
   if (regexOnGlyph.test(source)) {
     problems.push(`${label} runs a regex against a hanzi/decomposition string to find a component`);

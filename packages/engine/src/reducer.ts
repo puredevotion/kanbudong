@@ -226,7 +226,10 @@ export function reduce(events: readonly SignedEvent[], options: ReduceOptions): 
   return { ...state, rejected };
 }
 
-function createState(event: SignedEvent, body: Extract<GameEventBody, { type: 'game/created' }>): GameState {
+function createState(
+  event: SignedEvent,
+  body: Extract<GameEventBody, { type: 'game/created' }>,
+): GameState {
   return {
     gameId: event.gameId,
     name: body.name,
@@ -324,7 +327,9 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       if (state.players[author] === undefined) return 'unknown player';
       if (state.phase !== 'lobby') return 'cannot leave a team mid-game';
       const teams = state.teams.map((team) =>
-        team.id === body.teamId ? { ...team, memberIds: team.memberIds.filter((id) => id !== author) } : team,
+        team.id === body.teamId
+          ? { ...team, memberIds: team.memberIds.filter((id) => id !== author) }
+          : team,
       );
       return { ...state, teams, spectatorIds: dedupe([...state.spectatorIds, author]) };
     }
@@ -334,7 +339,8 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       if (state.phase !== 'lobby') return 'already started';
       const playing = state.teams.filter((t) => t.memberIds.length > 0);
       // Two players on one team is not a game (R-4).
-      if (playing.length < state.rules.minTeams) return `needs ${state.rules.minTeams} teams with members`;
+      if (playing.length < state.rules.minTeams)
+        return `needs ${state.rules.minTeams} teams with members`;
       const turnOrder = playing.map((t) => t.id);
       const scores: Record<TeamId, number> = {};
       const teamTurns: Record<TeamId, number> = {};
@@ -408,8 +414,10 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       if (active.categoryId !== null) return 'category already chosen';
       // Same restriction as turn/drawn (R-10): the side answering the question
       // does not get to pick which one it is.
-      if (memberOf(state, active.teamId, author)) return 'the acting team cannot choose its own category';
-      if (!active.categoryOptions.includes(body.categoryId)) return 'not one of the offered categories';
+      if (memberOf(state, active.teamId, author))
+        return 'the acting team cannot choose its own category';
+      if (!active.categoryOptions.includes(body.categoryId))
+        return 'not one of the offered categories';
 
       // Only the chosen category leaves the bag - the two offers nobody
       // picked are still owed a turn (R-6), so they stay in place rather
@@ -430,7 +438,13 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       if (!memberOf(state, active.teamId, author)) return 'not on the acting team';
       if (DIFFICULTY_TIERS[body.difficulty] === undefined) return 'unknown difficulty';
 
-      const picked = pickQuestion(pack, active.categoryId, body.difficulty, active.nonce, state.asked);
+      const picked = pickQuestion(
+        pack,
+        active.categoryId,
+        body.difficulty,
+        active.nonce,
+        state.asked,
+      );
       if (picked.question === null) return 'no question available';
       return {
         ...state,
@@ -528,10 +542,12 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
 
     case 'commit/revealed': {
       if (state.players[author] === undefined) return 'unknown player';
-      if (typeof body.subject !== 'string' || body.subject.length === 0) return 'malformed commit subject';
+      if (typeof body.subject !== 'string' || body.subject.length === 0)
+        return 'malformed commit subject';
       const pending = state.pendingCommits[body.subject]?.[author];
       if (pending === undefined) return 'no matching commit for this subject';
-      if (typeof body.salt !== 'string' || body.salt.length < MIN_SALT_LENGTH) return 'salt too short';
+      if (typeof body.salt !== 'string' || body.salt.length < MIN_SALT_LENGTH)
+        return 'salt too short';
       // Honesty-assuming secrecy (see commitReveal.ts and the commit/made
       // doc comment in events.ts): this only proves the payload+salt being
       // broadcast now matches what this author committed to earlier. It
@@ -540,7 +556,8 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       // What every *other* peer gets is the same guarantee R-10's drawer
       // nonce gives: cheating costs "modify your own client", not "read the
       // wire".
-      if (commitHash(body.payload, body.salt) !== pending.commitHash) return 'commitment hash mismatch';
+      if (commitHash(body.payload, body.salt) !== pending.commitHash)
+        return 'commitment hash mismatch';
 
       const afterReveal: GameState = {
         ...state,
@@ -564,14 +581,25 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       // bearing... but never scored" framing and `resolve()`'s isomorph setup.
       const isomorphTurnIndex = parseIsomorphSubject(body.subject);
       if (isomorphTurnIndex !== null) {
-        const gradedIsomorph = gradeIsomorphAnswerPayload(pack, state, isomorphTurnIndex, body.payload);
+        const gradedIsomorph = gradeIsomorphAnswerPayload(
+          pack,
+          state,
+          isomorphTurnIndex,
+          body.payload,
+        );
         if (gradedIsomorph === null) return 'malformed or unresolvable isomorph answer';
         const isomorphAnswer: OtherAnswer = { playerId: author, ...gradedIsomorph };
         return {
           ...afterReveal,
           history: afterReveal.history.map((record) =>
             record.turnIndex === isomorphTurnIndex && record.isomorph !== null
-              ? { ...record, isomorph: { ...record.isomorph, answers: [...record.isomorph.answers, isomorphAnswer] } }
+              ? {
+                  ...record,
+                  isomorph: {
+                    ...record.isomorph,
+                    answers: [...record.isomorph.answers, isomorphAnswer],
+                  },
+                }
               : record,
           ),
         };
@@ -595,7 +623,11 @@ function apply(state: GameState, event: SignedEvent, pack: ContentPack): GameSta
       if (graded === null) return 'malformed or unresolvable turn answer';
 
       const active = state.active;
-      if (active !== null && active.turnIndex === turnIndex && memberOf(state, active.teamId, author)) {
+      if (
+        active !== null &&
+        active.turnIndex === turnIndex &&
+        memberOf(state, active.teamId, author)
+      ) {
         // The acting team carries the wager (§5.1 beat 4): the *first*
         // acting-team reveal to land resolves the turn, exactly as the old
         // single-submitter `turn/answered` did. `active` is cleared the
@@ -667,7 +699,11 @@ interface Resolution {
 function parseAnswerPayload(payload: unknown): { chosenIndex: 0 | 1 | 2 } | null {
   if (typeof payload !== 'object' || payload === null) return null;
   const chosenIndex = (payload as { chosenIndex?: unknown }).chosenIndex;
-  if (!Number.isInteger(chosenIndex) || (chosenIndex as number) < 0 || (chosenIndex as number) > 2) {
+  if (
+    !Number.isInteger(chosenIndex) ||
+    (chosenIndex as number) < 0 ||
+    (chosenIndex as number) > 2
+  ) {
     return null;
   }
   return { chosenIndex: chosenIndex as 0 | 1 | 2 };
@@ -783,7 +819,12 @@ function gatherOtherAnswers(
 }
 
 /** Score it, record it, then either keep the turn or pass it on. */
-function resolve(state: GameState, active: ActiveTurn, res: Resolution, pack: ContentPack): GameState {
+function resolve(
+  state: GameState,
+  active: ActiveTurn,
+  res: Resolution,
+  pack: ContentPack,
+): GameState {
   const tier = DIFFICULTY_TIERS[res.difficulty];
   const delta = res.correct ? tier.award : tier.penalty;
   const previous = state.scores[active.teamId] ?? 0;
@@ -795,7 +836,8 @@ function resolve(state: GameState, active: ActiveTurn, res: Resolution, pack: Co
   // sharing its isomorph_group_id in the pack (see pickIsomorph). Computed
   // here rather than at draw time - the confer beat is a reaction to *this*
   // outcome, not a thing scheduled in advance.
-  const dealtQuestion = active.questionId === null ? undefined : questionById(pack, active.questionId);
+  const dealtQuestion =
+    active.questionId === null ? undefined : questionById(pack, active.questionId);
   const isomorphQuestion =
     state.rules.conferBeatEnabled && dealtQuestion !== undefined
       ? pickIsomorph(pack, dealtQuestion, active.nonce)

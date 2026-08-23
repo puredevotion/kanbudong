@@ -4,19 +4,19 @@
 condensed from, kept so that any ruling in the document can be traced back to the
 evidence — or challenged with it.
 
-| File | What it holds |
-| --- | --- |
-| `findings.json` | 322 findings from 11 literature sweeps, plus 104 the adversarial reviewers added themselves. Each carries its evidence grade, scope, sources and the design implication it licenses. |
-| `corrections.json` | 160 corrections. Each names the original claim, what was wrong with it, the corrected version and the re-graded strength. |
-| `digests.json` | The four cluster digests the document was actually written from — settled claims, contested questions, myths, directives, and rulings on the five design decisions. |
-| `SOURCES.md` | Every source cited: 574 unique URLs with citation and access level. |
-| `passes/` | All 23 documents the writing agents produced — every draft, every adversarial review, every revision. |
-| `corpus/` | Reference data for verifying content, and a fetch script for what could not be committed. |
+| File               | What it holds                                                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `findings.json`    | 322 findings from 11 literature sweeps, plus 104 the adversarial reviewers added themselves. Each carries its evidence grade, scope, sources and the design implication it licenses. |
+| `corrections.json` | 160 corrections. Each names the original claim, what was wrong with it, the corrected version and the re-graded strength.                                                            |
+| `digests.json`     | The four cluster digests the document was actually written from — settled claims, contested questions, myths, directives, and rulings on the five design decisions.                  |
+| `SOURCES.md`       | Every source cited: 574 unique URLs with citation and access level.                                                                                                                  |
+| `passes/`          | All 23 documents the writing agents produced — every draft, every adversarial review, every revision.                                                                                |
+| `corpus/`          | Reference data for verifying content, and a fetch script for what could not be committed.                                                                                            |
 
 ## `passes/` — the drafts and the reviews
 
 The design document is the last of several passes, and the ones before it are
-often more useful than the last when you want to know *why* something reads the
+often more useful than the last when you want to know _why_ something reads the
 way it does.
 
 Files are named for their place in the pipeline. `draft-` is a first write,
@@ -57,7 +57,7 @@ section reads thin, look here before assuming the research was thin.
 a consistent set. `weak` is one small study. `contested` means the literature
 genuinely disagrees and the document must say so. **`folklore` means widely
 repeated and not supported** — 67 claims ended there, and they are listed in
-`DESIGN.md` §1 under *what we will not build on*. Perceptual disfluency as a
+`DESIGN.md` §1 under _what we will not build on_. Perceptual disfluency as a
 learning aid is the one that most nearly shipped.
 
 Memory findings additionally carry `material_type`. **`lab-wordlist` means the

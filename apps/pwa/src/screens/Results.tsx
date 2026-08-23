@@ -23,7 +23,7 @@ export function Results(): ReactNode {
           : `${state.roundIndex} rounds, ${state.history.length} questions.`
       }
     >
-      <div className="flex flex-col gap-2">
+      <div className='flex flex-col gap-2'>
         {standings.map((row) => (
           <div
             key={row.team.id}
@@ -33,32 +33,32 @@ export function Results(): ReactNode {
                 : 'border-default-200/30'
             }`}
           >
-            <span className="flex min-w-0 items-baseline gap-2">
-              <span className="font-mono text-xs text-muted">{row.rank}</span>
-              <span className="truncate font-medium">{row.team.name}</span>
+            <span className='flex min-w-0 items-baseline gap-2'>
+              <span className='font-mono text-xs text-muted'>{row.rank}</span>
+              <span className='truncate font-medium'>{row.team.name}</span>
               {row.team.id === state.winnerTeamId && (
-                <Chip color="success" variant="soft" size="sm">
+                <Chip color='success' variant='soft' size='sm'>
                   winner
                 </Chip>
               )}
             </span>
-            <span className="font-mono tabular-nums">{row.score}</span>
+            <span className='font-mono tabular-nums'>{row.score}</span>
           </div>
         ))}
       </div>
 
       <StreakReport state={state} />
 
-      <Card variant="secondary">
+      <Card variant='secondary'>
         <Card.Header>
-          <Card.Title className="text-base">Every question</Card.Title>
+          <Card.Title className='text-base'>Every question</Card.Title>
         </Card.Header>
-        <Card.Content className="flex max-h-72 flex-col gap-1.5 overflow-y-auto text-sm">
+        <Card.Content className='flex max-h-72 flex-col gap-1.5 overflow-y-auto text-sm'>
           {state.history.map((record) => (
-            <div key={record.turnIndex} className="flex items-baseline justify-between gap-3">
-              <span className="min-w-0 truncate text-muted">
-                {state.teams.find((t) => t.id === record.teamId)?.name ?? 'team'} - {record.categoryId}{' '}
-                <span className="text-muted">({record.difficulty})</span>
+            <div key={record.turnIndex} className='flex items-baseline justify-between gap-3'>
+              <span className='min-w-0 truncate text-muted'>
+                {state.teams.find((t) => t.id === record.teamId)?.name ?? 'team'} -{' '}
+                {record.categoryId} <span className='text-muted'>({record.difficulty})</span>
               </span>
               <span
                 className={`font-mono tabular-nums ${
@@ -73,7 +73,7 @@ export function Results(): ReactNode {
       </Card>
 
       <ActionBar>
-        <Button variant="primary" size="lg" fullWidth onPress={leave}>
+        <Button variant='primary' size='lg' fullWidth onPress={leave}>
           Done
         </Button>
       </ActionBar>
@@ -100,24 +100,20 @@ function StreakReport({ state }: { state: GameState }): ReactNode {
   if (longest === 0) return null;
 
   return (
-    <Card variant="secondary">
+    <Card variant='secondary'>
       <Card.Header>
-        <Card.Title className="text-base">Streaks</Card.Title>
-        <Card.Description>
-          Longest unbroken run of correct answers: {longest}.
-        </Card.Description>
+        <Card.Title className='text-base'>Streaks</Card.Title>
+        <Card.Description>Longest unbroken run of correct answers: {longest}.</Card.Description>
       </Card.Header>
       <Card.Content>
         {longest >= 6 ? (
-          <Notice tone="warn">
-            One team held the turn for {longest} questions in a row. If that keeps happening, turn on
-            &quot;pass the turn after 3 in a row&quot; when hosting - otherwise the other teams spend
-            the game watching.
+          <Notice tone='warn'>
+            One team held the turn for {longest} questions in a row. If that keeps happening, turn
+            on &quot;pass the turn after 3 in a row&quot; when hosting - otherwise the other teams
+            spend the game watching.
           </Notice>
         ) : (
-          <p className="text-sm text-muted">
-            The turn moved around, which is what you want.
-          </p>
+          <p className='text-sm text-muted'>The turn moved around, which is what you want.</p>
         )}
       </Card.Content>
     </Card>

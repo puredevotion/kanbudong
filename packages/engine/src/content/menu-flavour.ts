@@ -70,10 +70,14 @@ export const MENU_FLAVOUR: CategoryContent = {
         en: 'mild spice',
         context: { after: '  中辣  重辣' },
       },
-      { kind: 'word', hanzi: '微辣', morphemes: [
-        { span: '微', gloss: 'slight' },
-        { span: '辣', gloss: 'chilli-hot' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '微辣',
+        morphemes: [
+          { span: '微', gloss: 'slight' },
+          { span: '辣', gloss: 'chilli-hot' },
+        ],
+      },
     ],
     [
       'Beside a dish. What is it warning you about?',
@@ -87,10 +91,14 @@ export const MENU_FLAVOUR: CategoryContent = {
         en: 'very spicy',
         context: { before: '微辣  中辣  ' },
       },
-      { kind: 'word', hanzi: '重辣', morphemes: [
-        { span: '重', gloss: 'heavy, intense' },
-        { span: '辣', gloss: 'chilli-hot' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '重辣',
+        morphemes: [
+          { span: '重', gloss: 'heavy, intense' },
+          { span: '辣', gloss: 'chilli-hot' },
+        ],
+      },
     ],
   ],
   mid: [

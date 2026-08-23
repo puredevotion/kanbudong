@@ -102,12 +102,16 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'shēngchǎn rìqī · productiedatum (production date).',
       { hanzi: '生产日期', pinyin: 'shēngchǎn rìqī', nl: 'productiedatum', en: 'production date' },
-      { kind: 'word', hanzi: '生产日期', morphemes: [
-        { span: '生', gloss: 'to produce, give birth' },
-        { span: '产', gloss: 'to produce' },
-        { span: '日', gloss: 'day' },
-        { span: '期', gloss: 'period' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '生产日期',
+        morphemes: [
+          { span: '生', gloss: 'to produce, give birth' },
+          { span: '产', gloss: 'to produce' },
+          { span: '日', gloss: 'day' },
+          { span: '期', gloss: 'period' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -115,7 +119,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['shelf life, as a duration', 'refrigerate, 0–4 °C', '3, capital form'],
       0,
       'bǎozhìqī · houdbaarheidsduur (shelf life). A number like 保质期12个月 tells you how long it lasts, not an actual date.',
-      { hanzi: '保质期', pinyin: 'bǎozhìqī', nl: 'houdbaarheidsduur', en: 'shelf life, as a duration', transparency: 'opaque' },
+      {
+        hanzi: '保质期',
+        pinyin: 'bǎozhìqī',
+        nl: 'houdbaarheidsduur',
+        en: 'shelf life, as a duration',
+        transparency: 'opaque',
+      },
       undefined,
       { tier: 1 },
     ],
@@ -124,20 +134,30 @@ export const MARKET_PANEL: CategoryContent = {
       ['net content', 'buy one get one free', 'freeze, −18 °C'],
       0,
       'jìnghánliàng · netto-inhoud (net content). Here 量 is read liàng, not liáng.',
-      { hanzi: '净含量', pinyin: 'jìnghánliàng', nl: 'netto-inhoud', en: 'net content', transparency: 'opaque' },
+      {
+        hanzi: '净含量',
+        pinyin: 'jìnghánliàng',
+        nl: 'netto-inhoud',
+        en: 'net content',
+        transparency: 'opaque',
+      },
       undefined,
       { tier: 1 },
     ],
     [
       'On the back of the packet. What does it mean?',
-      ['refrigerate, 0–4 °C', 'members\' price', 'special price'],
+      ['refrigerate, 0–4 °C', "members' price", 'special price'],
       0,
       'lěngcáng · gekoeld bewaren (refrigerate, 0–4 °C). Shares its first character with 冷冻 (freeze) but means the opposite — worth telling apart.',
       { hanzi: '冷藏', pinyin: 'lěngcáng', nl: 'gekoeld bewaren', en: 'refrigerate, 0–4 °C' },
-      { kind: 'word', hanzi: '冷藏', morphemes: [
-        { span: '冷', gloss: 'cold' },
-        { span: '藏', gloss: 'to store, hide' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '冷藏',
+        morphemes: [
+          { span: '冷', gloss: 'cold' },
+          { span: '藏', gloss: 'to store, hide' },
+        ],
+      },
       {
         tier: 1,
         confusion_type: 'shared-morpheme',
@@ -150,10 +170,14 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'lěngdòng · diepvries (freeze, −18 °C). Easy to mix up with 冷藏 (refrigerate) — same first character, opposite instruction, and getting it wrong ruins the food.',
       { hanzi: '冷冻', pinyin: 'lěngdòng', nl: 'diepvries', en: 'freeze, −18 °C' },
-      { kind: 'word', hanzi: '冷冻', morphemes: [
-        { span: '冷', gloss: 'cold' },
-        { span: '冻', gloss: 'to freeze' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '冷冻',
+        morphemes: [
+          { span: '冷', gloss: 'cold' },
+          { span: '冻', gloss: 'to freeze' },
+        ],
+      },
       {
         tier: 1,
         confusion_type: 'shared-morpheme',
@@ -166,10 +190,14 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'jìnkǒu · geïmporteerd (imported). On a metro sign the same two characters mean "entrance" instead.',
       { hanzi: '进口', pinyin: 'jìnkǒu', nl: 'geïmporteerd', en: 'imported' },
-      { kind: 'word', hanzi: '进口', morphemes: [
-        { span: '进', gloss: 'to enter, advance' },
-        { span: '口', gloss: 'mouth, opening' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '进口',
+        morphemes: [
+          { span: '进', gloss: 'to enter, advance' },
+          { span: '口', gloss: 'mouth, opening' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -269,7 +297,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['flat things — tickets, cards, tables', 'garments, items, matters', 'gram'],
       0,
       'zhāng · platte dingen — kaartjes, tafels (flat things — tickets, cards, tables). E.g. 一张票 (one ticket) — the word you need at a ticket window. Picture 张 as a bow (弓) drawn out long (长) — the same stretching motion as unrolling one flat ticket or sheet: zhāng.',
-      { hanzi: '张', pinyin: 'zhāng', nl: 'platte dingen — kaartjes, tafels', en: 'flat things — tickets, cards, tables', structure: 'left-right' },
+      {
+        hanzi: '张',
+        pinyin: 'zhāng',
+        nl: 'platte dingen — kaartjes, tafels',
+        en: 'flat things — tickets, cards, tables',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '张',
@@ -290,11 +324,15 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'ingredient list',
         context: { after: '：水、小麦粉、白砂糖、食用盐、酵母' },
       },
-      { kind: 'word', hanzi: '配料表', morphemes: [
-        { span: '配', gloss: 'to mix, pair' },
-        { span: '料', gloss: 'material, ingredient' },
-        { span: '表', gloss: 'table, list' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '配料表',
+        morphemes: [
+          { span: '配', gloss: 'to mix, pair' },
+          { span: '料', gloss: 'material, ingredient' },
+          { span: '表', gloss: 'table, list' },
+        ],
+      },
     ],
     [
       'On the back of the packet. What does it mean?',
@@ -308,12 +346,16 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'storage conditions',
         context: { after: '：阴凉干燥处保存，避免阳光直射' },
       },
-      { kind: 'word', hanzi: '储存条件', morphemes: [
-        { span: '储', gloss: 'to store' },
-        { span: '存', gloss: 'to exist, keep' },
-        { span: '条', gloss: 'item, clause' },
-        { span: '件', gloss: 'item' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '储存条件',
+        morphemes: [
+          { span: '储', gloss: 'to store' },
+          { span: '存', gloss: 'to exist, keep' },
+          { span: '条', gloss: 'item, clause' },
+          { span: '件', gloss: 'item' },
+        ],
+      },
     ],
     [
       'On the back of the packet. What does it mean?',
@@ -327,17 +369,26 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'manufacturer',
         context: { after: '：广东金穗食品有限公司' },
       },
-      { kind: 'word', hanzi: '生产厂家', morphemes: [
-        { span: '生', gloss: 'to produce, give birth' },
-        { span: '产', gloss: 'to produce' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '生产厂家',
+        morphemes: [
+          { span: '生', gloss: 'to produce, give birth' },
+          { span: '产', gloss: 'to produce' },
+        ],
+      },
     ],
     [
       'On the back of the packet. What does it mean?',
       ['to produce, give birth', 'day of month (spoken); number', 'production date'],
       0,
       'shēng · produceren, geboren worden (to produce, give birth). Seen in 生产日期 (production date) and 生产厂家 (manufacturer). Picture 生 as a seedling (the top strokes) pushing straight up out of the ground (the bottom stroke): shēng.',
-      { hanzi: '生', pinyin: 'shēng', nl: 'produceren, geboren worden', en: 'to produce, give birth' },
+      {
+        hanzi: '生',
+        pinyin: 'shēng',
+        nl: 'produceren, geboren worden',
+        en: 'to produce, give birth',
+      },
       undefined,
       { glossProvenance: 'mnemonic-only' },
     ],
@@ -372,10 +423,14 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'sǎnzhuāng · los, per gewicht (loose, sold by weight). Signals that the price is per weight (yuan per jin), not a fixed price.',
       { hanzi: '散装', pinyin: 'sǎnzhuāng', nl: 'los, per gewicht', en: 'loose, sold by weight' },
-      { kind: 'word', hanzi: '散装', morphemes: [
-        { span: '散', gloss: 'to scatter, loose' },
-        { span: '装', gloss: 'to pack' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '散装',
+        morphemes: [
+          { span: '散', gloss: 'to scatter, loose' },
+          { span: '装', gloss: 'to pack' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -384,18 +439,28 @@ export const MARKET_PANEL: CategoryContent = {
       0,
       'chēngzhòng · hier afwegen (weigh here). Weigh loose produce and get a barcode sticker before you go to the till.',
       { hanzi: '称重', pinyin: 'chēngzhòng', nl: 'hier afwegen', en: 'weigh here' },
-      { kind: 'word', hanzi: '称重', morphemes: [
-        { span: '称', gloss: 'to weigh' },
-        { span: '重', gloss: 'weight' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '称重',
+        morphemes: [
+          { span: '称', gloss: 'to weigh' },
+          { span: '重', gloss: 'weight' },
+        ],
+      },
       { tier: 2 },
     ],
     [
       'On the back of the packet. What does it mean?',
-      ['animals, one of a pair, some containers', 'net content', 'members\' price'],
+      ['animals, one of a pair, some containers', 'net content', "members' price"],
       0,
       'zhī · dieren, één van een paar (measure word for animals, one of a pair, some containers). As "only", the same character is read zhǐ instead. Picture 只 as a little bird (the top strokes) perched with its two legs (八) apart on a branch — one single bird, one single thing: zhī.',
-      { hanzi: '只', pinyin: 'zhī', nl: 'dieren, één van een paar', en: 'animals, one of a pair, some containers', structure: 'top-bottom' },
+      {
+        hanzi: '只',
+        pinyin: 'zhī',
+        nl: 'dieren, één van een paar',
+        en: 'animals, one of a pair, some containers',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '只',
@@ -409,7 +474,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['garments, items, matters', '1, capital form', 'general measure word'],
       0,
       'jiàn · kledingstukken, artikelen (garments, items, matters). E.g. 第二件半价 — "second item half price," a phrase you\'ll see in shops. Picture 件 as a person (亻) leading an ox (牛) by a rope — one person, one item, one clear unit to count: jiàn.',
-      { hanzi: '件', pinyin: 'jiàn', nl: 'kledingstukken, artikelen', en: 'garments, items, matters', structure: 'left-right' },
+      {
+        hanzi: '件',
+        pinyin: 'jiàn',
+        nl: 'kledingstukken, artikelen',
+        en: 'garments, items, matters',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '件',
@@ -443,7 +514,12 @@ export const MARKET_PANEL: CategoryContent = {
       ['long thin things — fish, streets, trousers', 'supermarket', 'special price'],
       0,
       'tiáo · lange dunne dingen — vis, straten, broeken (long thin things — fish, streets, trousers). E.g. 一条鱼 (one fish) on a market sign. Picture 条 as a branch (木) being whittled down by a hand with a stick (攵) into one long thin strip: tiáo.',
-      { hanzi: '条', pinyin: 'tiáo', nl: 'lange dunne dingen — vis, straten', en: 'long thin things — fish, streets, trousers' },
+      {
+        hanzi: '条',
+        pinyin: 'tiáo',
+        nl: 'lange dunne dingen — vis, straten',
+        en: 'long thin things — fish, streets, trousers',
+      },
       undefined,
       { tier: 2, freqRank: 214, glossProvenance: 'mnemonic-only' },
     ],
@@ -459,18 +535,28 @@ export const MARKET_PANEL: CategoryContent = {
         en: 'license',
         context: { before: '生产', after: '编号：SC11410115012345' },
       },
-      { kind: 'word', hanzi: '许可证', morphemes: [
-        { span: '许', gloss: 'to permit' },
-        { span: '可', gloss: 'may' },
-        { span: '证', gloss: 'certificate' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '许可证',
+        morphemes: [
+          { span: '许', gloss: 'to permit' },
+          { span: '可', gloss: 'may' },
+          { span: '证', gloss: 'certificate' },
+        ],
+      },
     ],
     [
       'On the back of the packet. What does it mean?',
       ['to pack, install', 'loose, sold by weight', 'weigh here'],
       0,
       'zhuāng · inpakken, installeren (to pack, install). Seen in 散装 (loose, sold by weight, literally "scattered packing"). Picture 装 as a strong (壮) pair of hands folding clothing (衣) up and packing it away: zhuāng.',
-      { hanzi: '装', pinyin: 'zhuāng', nl: 'inpakken, installeren', en: 'to pack, install', structure: 'top-bottom' },
+      {
+        hanzi: '装',
+        pinyin: 'zhuāng',
+        nl: 'inpakken, installeren',
+        en: 'to pack, install',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '装',
@@ -500,7 +586,13 @@ export const MARKET_PANEL: CategoryContent = {
       ['certificate', 'license', 'to permit'],
       0,
       'zhèng · certificaat, bewijs (certificate). Seen in 许可证 (license) and 身份证 (ID card). Picture 证 as spoken words (讠) confirmed correct (正) - an official proof: zhèng.',
-      { hanzi: '证', pinyin: 'zhèng', nl: 'certificaat, bewijs', en: 'certificate', structure: 'left-right' },
+      {
+        hanzi: '证',
+        pinyin: 'zhèng',
+        nl: 'certificaat, bewijs',
+        en: 'certificate',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '证',

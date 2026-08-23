@@ -16,11 +16,12 @@ at time of writing (2026-08-23) — re-check with a heading search
 old when you read it.
 
 **Citation conventions in this document:**
+
 - `[DESIGN §n.n]` — a DESIGN.md section. Precise, checked.
 - `[RC: "<short paraphrase>"]` — a claim from the research corpus
   (`docs/research/digests.json` / `findings.json`). **The corpus has no
   stable per-finding ID** (`findings.json` is an unindexed array of `{claim,
-  evidence_strength, detail, ...}` objects) — do not invent one. If a phase
+evidence_strength, detail, ...}` objects) — do not invent one. If a phase
   needs the exact citation, grep `findings.json` for a distinctive phrase
   from the paraphrase given here.
 - `[SIMPLIFICATION]` — flags a phase that ships a scoped-down version of a
@@ -67,17 +68,17 @@ something listed as out-of-scope, stop and say so rather than doing it.
 
 ## 1. Phase sequencing at a glance
 
-| Phase | Name | Depends on | Risk if skipped/reordered |
-| --- | --- | --- | --- |
-| 1 | Span & decomposition data model | — | Everything downstream (content authoring, UI reveal, scheduler item-state) needs this shape to exist first. |
-| 2 | Content migration to the span model + expanded category set | 1 | Can't author real menu/market/street content against a model that doesn't exist. |
-| 3 | Solo scheduler: FSRS-shaped stability/difficulty engine | 1 | Needs the per-(player,item,direction) state shape from Phase 1; independent of Phase 2's content growth. |
-| 4 | Word/sentence composition layer (span eligibility, transparency-gated decomposition) | 1, 2 | Needs both the schema (1) and real multi-character content (2) to be worth building against. |
-| 5 | Reveal UI: two-stage reveal, component breakdown, 3-option MC | 1, 2 | Needs real component data (1/2) to render; changes the answering-loop UI other phases touch. |
-| 6 | Card/category visual expansion + transitions/motion | 5 | Cosmetic layer; benefits from the reveal UI settling first so it isn't reworked twice. |
-| 7 | Group-session scheduler (`pickItem`, the four hard constraints, morning-after queue) | 3, 4 | The highest-risk, least-evidenced piece (`[DESIGN §6.5]` "no prior art") — sequenced last on purpose so it lands on a stable single-player foundation. |
-| 8 | Mnemonic/self-explanation layer (evidence-hedged, optional) | 5 | Purely additive; explicitly not load-bearing on the core loop, safe to defer or drop. |
-| 9 | Measurement/instrumentation + CI content gates | 1–5 (partial dependency; can start once Phase 1/2 land) | Without this, later phases silently regress the ⺼/月 rule, coverage-percentage ban, etc. with no build-time catch. |
+| Phase | Name                                                                                 | Depends on                                              | Risk if skipped/reordered                                                                                                                              |
+| ----- | ------------------------------------------------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1     | Span & decomposition data model                                                      | —                                                       | Everything downstream (content authoring, UI reveal, scheduler item-state) needs this shape to exist first.                                            |
+| 2     | Content migration to the span model + expanded category set                          | 1                                                       | Can't author real menu/market/street content against a model that doesn't exist.                                                                       |
+| 3     | Solo scheduler: FSRS-shaped stability/difficulty engine                              | 1                                                       | Needs the per-(player,item,direction) state shape from Phase 1; independent of Phase 2's content growth.                                               |
+| 4     | Word/sentence composition layer (span eligibility, transparency-gated decomposition) | 1, 2                                                    | Needs both the schema (1) and real multi-character content (2) to be worth building against.                                                           |
+| 5     | Reveal UI: two-stage reveal, component breakdown, 3-option MC                        | 1, 2                                                    | Needs real component data (1/2) to render; changes the answering-loop UI other phases touch.                                                           |
+| 6     | Card/category visual expansion + transitions/motion                                  | 5                                                       | Cosmetic layer; benefits from the reveal UI settling first so it isn't reworked twice.                                                                 |
+| 7     | Group-session scheduler (`pickItem`, the four hard constraints, morning-after queue) | 3, 4                                                    | The highest-risk, least-evidenced piece (`[DESIGN §6.5]` "no prior art") — sequenced last on purpose so it lands on a stable single-player foundation. |
+| 8     | Mnemonic/self-explanation layer (evidence-hedged, optional)                          | 5                                                       | Purely additive; explicitly not load-bearing on the core loop, safe to defer or drop.                                                                  |
+| 9     | Measurement/instrumentation + CI content gates                                       | 1–5 (partial dependency; can start once Phase 1/2 land) | Without this, later phases silently regress the ⺼/月 rule, coverage-percentage ban, etc. with no build-time catch.                                    |
 
 Phases 1–5 are the critical path for "the app teaches real characters with a
 real scheduler and a real reveal." Phases 6, 8, 9 can run in parallel with
@@ -96,7 +97,7 @@ scheduler or UI.
 already says this is "a step towards DESIGN.md §6.1's span model, not the
 whole of it — there is no `transparency` field and no component table yet."
 DESIGN.md §6.1 defines the item as a **span** (1–4 character string met as a
-unit on a surface), not the bare character; §3.3.3 requires two *separate*
+unit on a surface), not the bare character; §3.3.3 requires two _separate_
 schema objects for word-level (`牛肉 = 牛+肉`) vs character-level (`河 = 氵+可`)
 decomposition ("one boolean cannot express both"); §3.3.4 requires
 component identity to be a **stored field**, never a substring/glyph match,
@@ -112,10 +113,11 @@ targets and misfires on 期"]`.
 **Depends on:** nothing (first phase).
 
 **Changes — `packages/engine`:**
+
 - `src/types.ts`: extend or replace `SignFace` with a span-shaped type that
   carries at minimum: `hanzi`, `pinyin_citation`, `pinyin_surface` (separate
   fields per `[DESIGN §4.6.5]`/`[RC: "store pinyin_citation and
-  pinyin_surface as separate per-token fields"]` — post-sandhi vs citation
+pinyin_surface as separate per-token fields"]` — post-sandhi vs citation
   form are not interchangeable), `nl`/`en` gloss pair (`[DESIGN §7]`'s
   Dutch/English-from-day-one ruling — both languages, not just `nl`),
   `transparency: 'transparent' | 'semi' | 'opaque'` (`[DESIGN §3.3.3]`), and
@@ -128,14 +130,14 @@ targets and misfires on 期"]`.
   the 月-looking glyph, stored separately from any identity claim about
   which character it "is"), `role: 'semantic' | 'phonetic' | 'neither'`,
   and (for phonetic components only) a `reliability` field (`[DESIGN
-  §1.4]`/`[RC: "phonetic components predict pronunciation only ~17% exact
-  match in the top 1,000, gate on a computed reliability field"]`) — do not
+§1.4]`/`[RC: "phonetic components predict pronunciation only ~17% exact
+match in the top 1,000, gate on a computed reliability field"]`) — do not
   auto-compute reliability in this phase; the field exists and defaults to
   "unverified/no-cue" until Phase 2 hand-verifies each shipped hint.
 - New type: `CharacterDecomposition` (character → `components: {componentId,
-  role}[]`, `semantic_radical` field distinct from the general component
+role}[]`, `semantic_radical` field distinct from the general component
   list per `[DESIGN §3.3.4]`'s explicit instruction to key highlighting off
-  a *stored per-item component field*, never a substring/glyph match) —
+  a _stored per-item component field_, never a substring/glyph match) —
   separate from `WordDecomposition` (word → `morphemes: {span, gloss}[]`),
   per the "one boolean cannot express both" ruling.
 - `src/content/row.ts`: extend the `Row` authoring tuple (or replace it with
@@ -155,6 +157,7 @@ current naive `[...hanzi]` codepoint split (`Play.tsx`'s `Outcome`) until
 Phase 5; this phase only makes the data available, it does not wire it up.
 
 **Out of scope for this phase:**
+
 - Re-authoring any of the 16 existing content files to populate the new
   fields (Phase 2).
 - Any scheduler change (Phase 3).
@@ -163,12 +166,13 @@ Phase 5; this phase only makes the data available, it does not wire it up.
   dictionary — the field exists, its data does not yet.
 - Sourcing a real decomposition dataset (Make Me a Hanzi's `dictionary.txt`
   is LGPL and, per the research corpus, cannot ship — `[RC: "Make Me a
-  Hanzi's dictionary.txt is LGPL and cannot ship, regenerate from
-  Unihan+CC-CEDICT"]`); this phase defines the shape the data will live in,
+Hanzi's dictionary.txt is LGPL and cannot ship, regenerate from
+Unihan+CC-CEDICT"]`); this phase defines the shape the data will live in,
   not where the data comes from. Flag the sourcing question for Phase 2's
   planning, don't resolve it here.
 
 **Done/verification:**
+
 - `pnpm verify` green.
 - New unit tests in `packages/engine`: a `CharacterDecomposition` for one of
   the organ-set characters (e.g. 肝) round-trips through the schema with its
@@ -209,6 +213,7 @@ vocabulary"]`.
 **Depends on:** Phase 1 (schema must exist).
 
 **Changes — `packages/engine`:**
+
 - `src/categories.ts`: add `street-promo` and `street-way` category
   entries, matching `[DESIGN §6.2]`'s scene list; update the file's own
   comment (which currently documents the gap) once filled.
@@ -220,7 +225,7 @@ vocabulary"]`.
   exists — **explicitly do not invent a decomposition for opaque items**;
   mark them `transparency: 'opaque'` instead (`[DESIGN §3.3.3]`,
   `[RC: "rendering a bogus decomposition for an opaque word is worse than
-  showing none"]`). Prioritize the organ/texture set in `menu-animal.ts`
+showing none"]`). Prioritize the organ/texture set in `menu-animal.ts`
   (肝肠肚腰脑肺肾胗+血舌筋皮) as the flagship worked example for the ⺼/月
   ruling per `[DESIGN §7.1]`'s "the organ and texture set — where ⺼ earns
   its keep."
@@ -230,8 +235,8 @@ vocabulary"]`.
   fields only, stored but not used to sort or seed content
   (`[DESIGN §9.2a]`).
 - Add `freqRank` as a stored-but-inert diagnostic field per `[DESIGN
-  §9.2a]`'s ordering signal (1: CTW-derived signage frequency as an
-  authoring-order *input*, never shipped as a column per its CC BY-NC-SA
+§9.2a]`'s ordering signal (1: CTW-derived signage frequency as an
+  authoring-order _input_, never shipped as a column per its CC BY-NC-SA
   license; 2: HSK 3.0 band as tiebreaker; 3: 通用规范汉字表 tier as floor;
   4: final order is human judgement) — do not wire it into any runtime
   sort.
@@ -241,8 +246,9 @@ vocabulary"]`.
   that decision has to be made concrete, since it blocks authoring.
 
 **Out of scope for this phase:**
+
 - Hitting the full 2,700-item / 1,500-character bank size (`[DESIGN
-  §11.0]`) — that is a long-tail authoring effort explicitly described in
+§11.0]`) — that is a long-tail authoring effort explicitly described in
   DESIGN.md as "the due-queue long tail," not a single implementation
   phase. Target enough real content to exercise Tier 0 and a meaningful
   slice of Tier 1 (`[DESIGN §7.7]`'s ~24-item / ~110-item tiers) — get
@@ -256,13 +262,14 @@ vocabulary"]`.
   `[DESIGN §9.2]` — no Tatoeba-style sentences, ever, in this product).
 
 **Done/verification:**
+
 - `pnpm verify` green, including `validatePack`'s dangling-reference check
   from Phase 1.
 - A CI-style test (can live in `packages/engine`'s existing test suite)
   asserting: no item tagged with a flesh-component (`semantic_radical`
   pointing at the ⺼ component id) exists for a character that doesn't
   actually carry it in a real decomposition source (guards the "reverse
-  error" DESIGN.md flags — 能/育/背/散 *do* carry ⺼, 血/皮/舌 do *not*).
+  error" DESIGN.md flags — 能/育/背/散 _do_ carry ⺼, 血/皮/舌 do _not_).
 - Manual check: load the pack in the existing Solo/Play screens (even with
   the old naive UI) and confirm nothing crashes on the new fields being
   present-but-unused.
@@ -306,7 +313,7 @@ for the implementing agent to confirm against DESIGN.md's current text
 before assuming it's moot). Item-side difficulty is specified as a
 **separate two-scalar Elo** `(θ_i, n_i)`, `K = 0.4/(1+0.05·n_i)`
 (`[DESIGN §11.8]`, Klinkenberg et al. "Math Garden") — this is explicitly
-*not* the FSRS `difficulty` scalar the current code conflates it with.
+_not_ the FSRS `difficulty` scalar the current code conflates it with.
 Research corpus confirms the systems-cluster recommendation independently:
 "FSRS pretrain-4 for the player side, Elo for the item side"
 `[RC: "FSRS vs a zero-parameter moving average are within ~0.007 log loss;
@@ -327,6 +334,7 @@ the current file already does, rather than silently landing something
 partial and calling it "the FSRS engine."
 
 **Changes — `packages/engine`:**
+
 - Add `ts-fsrs` as a dependency — **this is a new-dependency approval
   checkpoint (CLAUDE.md #2)**; the implementing agent must confirm the
   package version pulls FSRS-6 behavior (not FSRS-7) and get a yes before
@@ -362,6 +370,7 @@ partial and calling it "the FSRS engine."
   explicitly out of scope below.
 
 **Changes — `apps/pwa`:**
+
 - `src/lib/soloMemory.ts`: bump the storage key version
   (`kanbudong.soloMemory.v1.*` → `.v2.*` or similar) since `ItemMemory`'s
   shape is widening — per this plan's clean-break migration stance (§11
@@ -370,6 +379,7 @@ partial and calling it "the FSRS engine."
   ignorable, or optionally cleared — implementer's call, not required).
 
 **Out of scope for this phase:**
+
 - The group-session scheduler / `pickItem` (Phase 7).
 - The `high_confidence_miss` requeue and component-contrast injection
   buckets in `solo.ts` (Phase 7 or a follow-up — DESIGN.md §11.9 names
@@ -379,10 +389,11 @@ partial and calling it "the FSRS engine."
   report flags this as a durability gap but it's orthogonal to the
   scheduling-algorithm fix this phase is about; do not bundle it in.
 - The minimum-24h-gap and maximum-gap-for-confusables spacing rules
-  (`[DESIGN §1.5]`) — those govern *item selection*, not the per-item
+  (`[DESIGN §1.5]`) — those govern _item selection_, not the per-item
   stability update; they belong with Phase 7's queue-building logic.
 
 **Done/verification:**
+
 - `pnpm verify` green.
 - Unit tests: `retrievability` matches the FSRS-6 formula at known
   reference points (e.g. `R(t=S) ≈ 0.9` exactly, per the constants above).
@@ -411,7 +422,7 @@ whenever a containing span resolves — "enough to move a character node, not
 enough to graduate it alone" — the worked example given is 期, met inside
 both 保质期 and 星期, crediting one node twice. Eligibility propagates
 bottom-up: "a multi-character span is eligible for a given player only once
-its component characters have been introduced *for that player*"
+its component characters have been introduced _for that player_"
 (`[DESIGN §6.1]`). The research corpus's coverage-arithmetic finding is the
 concrete justification for taking this seriously rather than treating it as
 a nice-to-have: 40% character coverage gives ~2.6% chance of reading a
@@ -427,16 +438,17 @@ build eligibility rules against — this is not worth building against
 placeholder data).
 
 **Changes — `packages/engine`:**
+
 - New module, e.g. `src/eligibility.ts`: given a player's per-character
   introduction state (which the widened `ItemMemory` from Phase 3 should be
   able to answer — "has this player seen character X at all," distinct
   from "is X due") and a span's `component_char_ids[]`, compute whether the
   span is eligible to be dealt/selected for that player. This is a pure
-  function over engine-native types; it does not itself decide *when* to
+  function over engine-native types; it does not itself decide _when_ to
   call it — that's the scheduler's job (Phase 3 for solo ordering, Phase 7
   for group dealing).
 - Extend the span type from Phase 1 with `component_char_ids: readonly
-  QuestionId[]` (or character ids, whatever the resolved identifier is —
+QuestionId[]` (or character ids, whatever the resolved identifier is —
   check what Phase 1 actually landed) so eligibility has something to
   check.
 - Discounted-credit mechanism: when a containing span resolves, each
@@ -448,12 +460,13 @@ placeholder data).
   `reviewItem`'s existing signature — a caller passing a discounted credit
   should not be indistinguishable from a caller reporting a real review.
 - Word-level vs. character-level decomposition consumption: this phase is
-  where `WordDecomposition` (from Phase 1) actually gets *read* for the
+  where `WordDecomposition` (from Phase 1) actually gets _read_ for the
   first time, to compute `component_char_ids[]` — Phase 1 only defined the
   shape, Phase 2 only populated some of it, this phase is the first
   consumer.
 
 **Out of scope for this phase:**
+
 - Any UI rendering of decomposition (Phase 5).
 - The group-session dealing logic that would call `eligibility.ts`
   per-player at deal time (Phase 7) — this phase builds the pure function,
@@ -464,6 +477,7 @@ placeholder data).
   no sentence layer to build.
 
 **Done/verification:**
+
 - `pnpm verify` green.
 - Unit test: a span whose component characters are all "seen" for a given
   player is eligible; a span with an un-introduced component character is
@@ -508,6 +522,7 @@ decomposition field, never a string match"]`).
 **Depends on:** Phase 1 (schema), Phase 2 (real content to render).
 
 **Changes — `packages/engine`:**
+
 - `src/types.ts`: `Question.options` narrows from a 4-tuple to a 3-tuple;
   `answer` narrows from `0|1|2|3` to `0|1|2`.
 - `src/content/row.ts`: `Row`'s `options`/`answer` fields follow the same
@@ -535,6 +550,7 @@ decomposition field, never a string match"]`).
   explicitly if deferring it.
 
 **Changes — `apps/pwa`:**
+
 - `src/screens/Play.tsx`: `Outcome` component rewritten to consume the
   Phase 1/4 component/decomposition data instead of `[...face.hanzi]`
   codepoint splitting — render each component with its real
@@ -563,6 +579,7 @@ decomposition field, never a string match"]`).
   it's more than a small addition — flag if deferring.
 
 **Out of scope for this phase:**
+
 - The full font/type-size/contrast build-out from `[DESIGN §4.2]`–`§4.5]`
   (stroke-count-based sizing, dark-mode contrast ratios, the diacritic-
   complete pinyin font) — pull in only what's needed to render the new
@@ -572,11 +589,12 @@ decomposition field, never a string match"]`).
   `signs.tsx` (Phase 6).
 - Animations/transitions (Phase 6) — this phase can use plain
   mount/unmount renders for the two reveal stages; motion is Phase 6's job.
-- Precomputing distractor sets for the *entire* bank at build time (see
+- Precomputing distractor sets for the _entire_ bank at build time (see
   note above — may be deferred as a fast-follow within this phase's own
   scope, but must be flagged, not silently skipped).
 
 **Done/verification:**
+
 - `pnpm verify` green.
 - A test asserting no code path renders a component highlight via
   string/regex matching on a hanzi string (grep-based CI check, or a unit
@@ -633,6 +651,7 @@ budget as load-bearing; a large motion library has a similar
 budget-conversation to have).
 
 **Changes — `packages/engine`:**
+
 - `src/categories.ts`: no further change needed if Phase 2 already added
   `street-promo`/`street-way`; if a visual-hint field per category is
   wanted (the codebase report suggests this so `signs.tsx` doesn't
@@ -640,6 +659,7 @@ budget-conversation to have).
   add it here — e.g. `Category.visualTemplate: TemplateId`.
 
 **Changes — `apps/pwa`:**
+
 - `src/ui/signs.tsx`: add template components for `street-promo` (discount/
   promotion fascia) and `street-way` (wayfinding), matching the existing
   pattern (`TransitPlate`, `MenuSection`, `ShopFascia`, `PriceLabel`,
@@ -664,7 +684,8 @@ budget-conversation to have).
   implied scope, flag if the implementing agent disagrees.
 
 **Out of scope for this phase:**
-- Any scheduler, content-model, or reveal-*logic* change — this phase is
+
+- Any scheduler, content-model, or reveal-_logic_ change — this phase is
   purely visual/motion on top of what Phase 5 built.
 - Photographic/real-image assets — banned outright by `[DESIGN §3.2]` for
   legal reasons (trademark/GDPR/PIPL), not just a stylistic choice; every
@@ -672,6 +693,7 @@ budget-conversation to have).
 - Sound/audio — `[DESIGN §11.7]` explicitly says "none in v1, fields only."
 
 **Done/verification:**
+
 - `pnpm verify` green.
 - Manual Playwright check with screenshots at a few animation keyframes
   (or before/after) for each new transition, confirming no layout shift
@@ -712,7 +734,7 @@ corpus's falsification trigger is directly relevant to sequencing this
 phase last: if median multiplayer inter-session gap exceeds 7 days across
 the first 100 players over 8 weeks, "the architecture inverts (solo becomes
 primary, party game becomes acquisition channel)" (`[DESIGN §12.2]`) — this
-is exactly why Phases 1–5 build a solid *solo* surface first, so that
+is exactly why Phases 1–5 build a solid _solo_ surface first, so that
 inversion (if it happens) doesn't strand the product.
 
 **Depends on:** Phase 3 (per-player FSRS state), Phase 4 (eligibility
@@ -727,11 +749,12 @@ they're DESIGN.md's own best guess pending instrumentation (Phase 9). Land
 it, instrument it, expect to revisit.
 
 **Changes — `packages/engine`:**
+
 - New module `src/groupSchedule.ts` (name at implementer's discretion):
   `pickItem(candidates, players[])` as a pure function per the shape
   above. Needs access to: each player's due queue (from Phase 3's
   scheduler), `eligibility.ts` from Phase 4 applied per-player, and a
-  rotating-priority-player pointer that's part of the *shared* game-state
+  rotating-priority-player pointer that's part of the _shared_ game-state
   reducer, not local scheduling state (check where turn rotation currently
   lives in `packages/engine` — the codebase report notes the deal/reducer
   logic "lives elsewhere in `engine`," not in the files already read; find
@@ -766,13 +789,14 @@ module not covered in the reports above) before planning the integration
 in detail. Flag if this turns out to be a bigger rewrite than expected —
 DESIGN.md's §2.4/§5.1 turn-structure rulings (blind simultaneous commit,
 turn passes on rotation not on error, six-beat sequence) are a separate,
-large rebuild of the *inherited* turn mechanic that this plan has not
+large rebuild of the _inherited_ turn mechanic that this plan has not
 sequenced as its own phase; if Phase 7's implementer finds the current
 turn reducer still assumes the old dohhh-era "correct keeps turn" logic,
 stop and treat that as a prerequisite sub-phase rather than folding an
 unscoped rewrite into this one.
 
 **Out of scope for this phase:**
+
 - The full six-beat turn sequence rebuild (deal/bet/item/answer/reveal/
   next) if it isn't already in place — see the flag immediately above.
   This plan does not currently have a dedicated phase for that rebuild;
@@ -783,6 +807,7 @@ unscoped rewrite into this one.
   invent a better one without evidence.
 
 **Done/verification:**
+
 - `pnpm verify` green.
 - Unit tests for each of the four hard constraints in isolation, each
   constructed to reproduce the specific failure mode it exists to prevent
@@ -819,7 +844,7 @@ route item selection. Item pool is random-access"** `[RC: "No memory-palace
 mode, no journey or chain through a set of signs... item pool is
 random-access"]`. This rules out most of what a naive reading of "mind-
 palace / mnemonic techniques" (the user's own phrase in the task brief)
-would suggest building. What *does* survive: self-explanation is called
+would suggest building. What _does_ survive: self-explanation is called
 "the cheapest well-evidenced intervention available" (g=0.55) but **only**
 when it requires generation-or-selection from domain propositions ("which
 part told you: [radical]/[phonetic]/[the character it is NOT]") — a
@@ -838,6 +863,7 @@ mode to avoid, not a feature to build casually.
 mechanic).
 
 **Changes — `packages/engine`:**
+
 - Extend the reveal-time schema (from Phase 1/5) with an optional
   self-explanation prompt: a forced-choice or short generation task of the
   form "which part told you [X]" drawing on the item's real component
@@ -847,11 +873,12 @@ mechanic).
 - `etymological` / `mnemonic-only` tagging on any gloss that carries an
   origin story, per `[DESIGN §3.3.3]`'s requirement to mark every such
   gloss against a scholarly reference — this phase should not invent new
-  mnemonic glosses; it should only be able to *display* ones that are
+  mnemonic glosses; it should only be able to _display_ ones that are
   already tagged, sourced content (a Phase 2/content-authoring concern if
   any get added).
 
 **Changes — `apps/pwa`:**
+
 - A reveal-panel addition (Stage 2, from Phase 5) offering the
   self-explanation prompt where a genuine discriminating cue exists —
   per `[DESIGN §2.5]`, elaboration beyond bare correction is
@@ -866,6 +893,7 @@ mechanic).
   don't assume a slot is free without checking).
 
 **Out of scope for this phase:**
+
 - Anything spatial: no map, no journey, no ordered route through items, no
   "place this character somewhere" interaction of any kind.
 - Any claim in UI copy or code comments that this is "using the method of
@@ -876,6 +904,7 @@ mechanic).
   content, it doesn't author it.
 
 **Done/verification:**
+
 - `pnpm verify` green.
 - Manual check: the self-explanation prompt only appears where the item
   actually has a discriminating cue in its schema (confirm it's absent on
@@ -898,7 +927,7 @@ not backlog" — 14+ specific build-time assertions per the design-doc
 report's own count, including: CI fails on any highlight expressed as
 substring/regex on a character; CI asserts no item containing 期 is tagged
 flesh-component; font subset codepoint set must be the union of every item
-string *and* every referenced component id (⺼ appears in no item string,
+string _and_ every referenced component id (⺼ appears in no item string,
 so naive extraction drops it). `[DESIGN §10]` specifies the primary metric
 as volume-at-criterion, a banned-metrics list, and a two-family reporting
 rule — none of this exists in code today per the design-doc report's
@@ -912,6 +941,7 @@ can start once Phase 1/2 land and grow incrementally alongside later
 phases rather than waiting for all of them.
 
 **Changes — `packages/engine`:**
+
 - Test/lint-level assertions (wherever this project's existing lint/test
   gating lives — check for an existing CI config before adding a new one):
   no highlighting/dependency/distractor logic expressed as a substring or
@@ -923,14 +953,15 @@ phases rather than waiting for all of them.
   correct/incorrect) on every attempt, maintain a per-user confusion
   matrix keyed on `(target_item, chosen_item)` per the research corpus's
   directive `[RC: "log chosen_option, not just correct/incorrect, maintain
-  a per-user confusion matrix — a plain accuracy curve looks healthy while
-  a pair is being cross-associated"]`.
+a per-user confusion matrix — a plain accuracy curve looks healthy while
+a pair is being cross-associated"]`.
 - `days_between_sessions` instrumentation per `[DESIGN §12.2]`'s
   falsification trigger — this is the single measurement that decides
   whether the whole multiplayer-first architecture is right; get it
   logging early even if nothing consumes it yet.
 
 **Changes — `apps/pwa`:**
+
 - Progress/completion UI: enforce the "signs you can act on" framing
   (`[DESIGN §7.7]`) rather than any percentage — audit whatever session-
   complete or progress screens exist (`Solo.tsx`'s "Session complete"
@@ -943,14 +974,16 @@ phases rather than waiting for all of them.
   building the right version from scratch if no mastery UI exists yet.
 
 **Out of scope for this phase:**
+
 - Building a full analytics backend or dashboard — this phase is about
-  what gets *logged* and what CI *gates*, not a reporting UI. `[DESIGN
-  §10.4]`'s two-family reporting rule can inform a later, separate
+  what gets _logged_ and what CI _gates_, not a reporting UI. `[DESIGN
+§10.4]`'s two-family reporting rule can inform a later, separate
   reporting phase if one is ever scoped.
 - Any new scheduling or content-model change — this phase should not
   modify behavior, only add checks and logs around existing behavior.
 
 **Done/verification:**
+
 - `pnpm verify` green, and the new CI-style checks actually fail when
   deliberately broken (write a temporary bad test fixture, confirm the
   gate catches it, then remove the fixture) — a gate that's never been
@@ -985,7 +1018,7 @@ reasons, applying consistently across every phase above:
    of what exists — per-(player, item, **direction**) 16-byte state, a
    `role: exposure` distinction, a two-scalar item-side Elo, none of which
    the current `ItemMemory` (3 plain scalars) can be mechanically
-   upgraded into. A migration script would need to *guess* values (e.g.
+   upgraded into. A migration script would need to _guess_ values (e.g.
    backfilling `role` for historical reviews that never recorded it) —
    guessing scheduler-relevant history is worse than starting clean, given
    how small the existing dataset is (a handful of solo sessions per
@@ -1033,7 +1066,7 @@ them properly needs a decision this plan isn't positioned to make:
 
 A cross-check of `docs/research/digests.json`/`findings.json` against this
 plan (irrespective of what `DESIGN.md` chose to rule on) found the
-DESIGN.md-to-plan pipeline solid overall — no dropped *strong* finding on the
+DESIGN.md-to-plan pipeline solid overall — no dropped _strong_ finding on the
 core retrieval mechanism, no folklore quietly readmitted. Three items
 DESIGN.md itself calls for were absent from both code and this plan entirely
 (not ruled against — just never transcribed):
@@ -1050,11 +1083,11 @@ DESIGN.md itself calls for were absent from both code and this plan entirely
   `confusable_with` pairs. The schema fields already existed
   (`confusion_type`, `confusable_with`, `interference_set` on `Question`) but
   are explicitly "schema-only" per their own doc comment — the scheduling
-  *behavior* (enforcing the gap) is still unbuilt. Not touched by this note;
+  _behavior_ (enforcing the gap) is still unbuilt. Not touched by this note;
   flagged here so it isn't lost.
 - **Public-failure instrumentation** `[DESIGN §10.2]` — `attemptLog.ts`
   implements the general §10.1 attempt schema well, but the specific
   tripwire fields (`turns_since_last_public_failure`, latency keyed to
-  whether the *previous* turn was a public failure, abandonment, next-session
+  whether the _previous_ turn was a public failure, abandonment, next-session
   return) don't exist yet. Not built by this note — genuine follow-up work,
   smallish and independent of the six-beat rebuild.

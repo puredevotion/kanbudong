@@ -86,7 +86,9 @@ describe('creditComponentExposure', () => {
 
   it('is deterministic: the same inputs produce the same credited state', () => {
     const now = Date.now();
-    expect(creditComponentExposure(null, 'good', now)).toEqual(creditComponentExposure(null, 'good', now));
+    expect(creditComponentExposure(null, 'good', now)).toEqual(
+      creditComponentExposure(null, 'good', now),
+    );
   });
 
   it('credits the same node twice via two different containing spans (期 via 保质期 and 星期), moving it each time', () => {
@@ -131,7 +133,9 @@ describe('w parameterization', () => {
   it('defaults every function to default_w when no w is given', () => {
     const now = Date.now();
     expect(retrievability(10, 10)).toBe(retrievability(10, 10, default_w));
-    expect(reviewItem(null, 'good', now)).toEqual(reviewItem(null, 'good', now, 'review', default_w));
+    expect(reviewItem(null, 'good', now)).toEqual(
+      reviewItem(null, 'good', now, 'review', default_w),
+    );
     expect(isDue(null, now)).toBe(isDue(null, now, TARGET_RETENTION, default_w));
   });
 

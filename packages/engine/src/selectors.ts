@@ -5,7 +5,16 @@ import { presentQuestion, questionById } from './pack.js';
 import type { GameState } from './reducer.js';
 import { answerSubject, currentTeamId, isomorphSubject } from './reducer.js';
 import { DIFFICULTY_TIERS } from './rules.js';
-import type { Category, ContentPack, IsomorphAnswer, OtherAnswer, PlayerId, Team, TeamId, TurnRecord } from './types.js';
+import type {
+  Category,
+  ContentPack,
+  IsomorphAnswer,
+  OtherAnswer,
+  PlayerId,
+  Team,
+  TeamId,
+  TurnRecord,
+} from './types.js';
 
 /**
  * Read-only views over {@link GameState}. Kept here rather than in a component
@@ -119,7 +128,10 @@ export function hasAnswered(state: GameState, playerId: PlayerId): boolean {
   const active = state.active;
   if (active === null) return false;
   const subject = answerSubject(active.turnIndex);
-  return state.pendingCommits[subject]?.[playerId] !== undefined || state.reveals[subject]?.[playerId] !== undefined;
+  return (
+    state.pendingCommits[subject]?.[playerId] !== undefined ||
+    state.reveals[subject]?.[playerId] !== undefined
+  );
 }
 
 /**
@@ -154,8 +166,13 @@ export function otherAnswersForTurn(state: GameState, turnIndex: number): readon
  * `active` may already be the next turn or `null` between turns - the
  * question this beat is about is never the live one.
  */
-export function isomorphForTurn(state: GameState, pack: ContentPack, turnIndex: number): PresentedQuestion | null {
-  const questionId = state.history.find((record) => record.turnIndex === turnIndex)?.isomorph?.questionId;
+export function isomorphForTurn(
+  state: GameState,
+  pack: ContentPack,
+  turnIndex: number,
+): PresentedQuestion | null {
+  const questionId = state.history.find((record) => record.turnIndex === turnIndex)?.isomorph
+    ?.questionId;
   if (questionId === undefined) return null;
   const nonce = state.turnNonces[turnIndex];
   if (nonce === undefined) return null;
@@ -165,9 +182,16 @@ export function isomorphForTurn(state: GameState, pack: ContentPack, turnIndex: 
 }
 
 /** True once `playerId` has committed or revealed an answer to `turnIndex`'s isomorph follow-up. */
-export function hasAnsweredIsomorph(state: GameState, playerId: PlayerId, turnIndex: number): boolean {
+export function hasAnsweredIsomorph(
+  state: GameState,
+  playerId: PlayerId,
+  turnIndex: number,
+): boolean {
   const subject = isomorphSubject(turnIndex);
-  return state.pendingCommits[subject]?.[playerId] !== undefined || state.reveals[subject]?.[playerId] !== undefined;
+  return (
+    state.pendingCommits[subject]?.[playerId] !== undefined ||
+    state.reveals[subject]?.[playerId] !== undefined
+  );
 }
 
 /**
@@ -175,15 +199,24 @@ export function hasAnsweredIsomorph(state: GameState, playerId: PlayerId, turnIn
  * the turn actually has one, and this player has not already committed or
  * revealed one.
  */
-export function canAnswerIsomorph(state: GameState, playerId: PlayerId, turnIndex: number): boolean {
-  const hasIsomorph = state.history.some((record) => record.turnIndex === turnIndex && record.isomorph !== null);
+export function canAnswerIsomorph(
+  state: GameState,
+  playerId: PlayerId,
+  turnIndex: number,
+): boolean {
+  const hasIsomorph = state.history.some(
+    (record) => record.turnIndex === turnIndex && record.isomorph !== null,
+  );
   if (!hasIsomorph) return false;
   if (state.players[playerId] === undefined) return false;
   return !hasAnsweredIsomorph(state, playerId, turnIndex);
 }
 
 /** Every player who has committed or revealed an isomorph-beat answer for `turnIndex` - presence only, mirroring {@link answeredPlayerIds}. */
-export function isomorphAnsweredPlayerIds(state: GameState, turnIndex: number): readonly PlayerId[] {
+export function isomorphAnsweredPlayerIds(
+  state: GameState,
+  turnIndex: number,
+): readonly PlayerId[] {
   const subject = isomorphSubject(turnIndex);
   const committed = Object.keys(state.pendingCommits[subject] ?? {});
   const revealed = Object.keys(state.reveals[subject] ?? {});
@@ -191,7 +224,10 @@ export function isomorphAnsweredPlayerIds(state: GameState, turnIndex: number): 
 }
 
 /** Every seated player's graded isomorph-beat answer for `turnIndex`, none of which touched score. */
-export function isomorphAnswersForTurn(state: GameState, turnIndex: number): readonly IsomorphAnswer[] {
+export function isomorphAnswersForTurn(
+  state: GameState,
+  turnIndex: number,
+): readonly IsomorphAnswer[] {
   return state.history.find((record) => record.turnIndex === turnIndex)?.isomorph?.answers ?? [];
 }
 
@@ -261,7 +297,8 @@ export interface StartCheck {
 /** Why the start button is disabled, in words a human can act on. */
 export function startCheck(state: GameState, playerId: PlayerId): StartCheck {
   if (state.phase !== 'lobby') return { ready: false, reason: 'The game has already started.' };
-  if (playerId !== state.hostId) return { ready: false, reason: 'Only the host can start the game.' };
+  if (playerId !== state.hostId)
+    return { ready: false, reason: 'Only the host can start the game.' };
   const staffed = state.teams.filter((team) => team.memberIds.length > 0);
   if (staffed.length < state.rules.minTeams) {
     return {

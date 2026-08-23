@@ -109,7 +109,11 @@ export function excludeScoredThisSession(
  * can carry a stability well under a day, so without this guard it re-enters
  * the same player's due queue again the same evening.
  */
-export function meetsMinimumInterval(question: Question, player: GroupPlayer, now: number): boolean {
+export function meetsMinimumInterval(
+  question: Question,
+  player: GroupPlayer,
+  now: number,
+): boolean {
   const memory = player.memoryFor(question.id);
   if (memory === null) return true;
   return elapsedDaysSince(memory.lastReview, now) >= MIN_INTERVAL_DAYS;
@@ -129,7 +133,11 @@ function retrievabilityFor(question: Question, player: GroupPlayer, now: number)
  * every player, which is the "catastrophic" group-wide reading DESIGN.md
  * names explicitly.
  */
-export function isCandidateForPlayer(question: Question, player: GroupPlayer, now: number): boolean {
+export function isCandidateForPlayer(
+  question: Question,
+  player: GroupPlayer,
+  now: number,
+): boolean {
   if (!isSpanEligible(question, player.isIntroduced)) return false;
   if (!isDue(player.memoryFor(question.id), now)) return false;
   return meetsMinimumInterval(question, player, now);
@@ -159,7 +167,11 @@ function playerLoss(rP: number): number {
 }
 
 /** `U(i) = -Σ_p w_p·[3·max(0, R*-R_p)² + max(0, R_p-R*)²]` (§11.8, replacing the earlier symmetric §6.5 draft). */
-export function objectiveScore(question: Question, players: readonly GroupPlayer[], now: number): number {
+export function objectiveScore(
+  question: Question,
+  players: readonly GroupPlayer[],
+  now: number,
+): number {
   let loss = 0;
   for (const player of players) {
     loss += player.weight * playerLoss(retrievabilityFor(question, player, now));
@@ -189,7 +201,10 @@ export function forceInjectionPool(
       if (sessionState.scoredThisSession.has(q.id)) return false;
       const memory = player.memoryFor(q.id);
       if (memory === null) return false;
-      return retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability) > FORCE_INJECT_RETRIEVABILITY_FLOOR;
+      return (
+        retrievability(elapsedDaysSince(memory.lastReview, now), memory.stability) >
+        FORCE_INJECT_RETRIEVABILITY_FLOOR
+      );
     });
     if (pool.length > 0) return { forPlayerId: player.playerId, pool };
   }
@@ -235,7 +250,10 @@ export function pickItem(
   return { question, forcedInject: false, forcedForPlayerId: null };
 }
 
-function softmaxSample(rng: Rng, scored: readonly { readonly question: Question; readonly u: number }[]): Question {
+function softmaxSample(
+  rng: Rng,
+  scored: readonly { readonly question: Question; readonly u: number }[],
+): Question {
   const first = scored[0];
   if (first === undefined) throw new RangeError('softmaxSample on an empty pool');
   const max = scored.reduce((m, s) => Math.max(m, s.u), first.u);
@@ -300,7 +318,11 @@ export interface GroupGradeResult {
  * cannot advance the item further - see the module doc's [SIMPLIFICATION]
  * on why this substitutes for an explicit LEARNING/SOLID state check.
  */
-export function gradeGroupEncounter(memory: ItemMemory | null, correct: boolean, now: number): GroupGradeResult {
+export function gradeGroupEncounter(
+  memory: ItemMemory | null,
+  correct: boolean,
+  now: number,
+): GroupGradeResult {
   if (memory !== null && isSameProductDay(memory.lastReview, now)) {
     return { grade: correct ? 'good' : 'again', role: 'exposure' };
   }

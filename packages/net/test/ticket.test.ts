@@ -1,4 +1,9 @@
-import { encodeJoinCode, PROTOCOL_VERSION, randomJoinCode, SEED_PACK_HASH } from '@kanbudong/engine';
+import {
+  encodeJoinCode,
+  PROTOCOL_VERSION,
+  randomJoinCode,
+  SEED_PACK_HASH,
+} from '@kanbudong/engine';
 import { describe, expect, it } from 'vitest';
 
 import {

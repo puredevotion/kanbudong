@@ -71,7 +71,11 @@ export function loadEvents(store: KeyValueStore, gameId: GameId): SignedEvent[] 
   }
 }
 
-export function saveEvents(store: KeyValueStore, gameId: GameId, events: readonly SignedEvent[]): void {
+export function saveEvents(
+  store: KeyValueStore,
+  gameId: GameId,
+  events: readonly SignedEvent[],
+): void {
   store.set(gameKey(gameId), JSON.stringify(events));
 }
 

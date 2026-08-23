@@ -44,14 +44,27 @@ export const STREET_OPEN: CategoryContent = {
   low: [
     [
       'On a shop door. What does it mean?',
-      ['closed down, ceased trading', 'warning — yellow triangle, black border', 'prohibition — red circle, diagonal bar'],
+      [
+        'closed down, ceased trading',
+        'warning — yellow triangle, black border',
+        'prohibition — red circle, diagonal bar',
+      ],
       0,
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
-      { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
-      { kind: 'word', hanzi: '停业', morphemes: [
-        { span: '停', gloss: 'to stop' },
-        { span: '业', gloss: 'business' },
-      ] },
+      {
+        hanzi: '停业',
+        pinyin: 'tíngyè',
+        nl: 'gesloten (permanent)',
+        en: 'closed down, ceased trading',
+      },
+      {
+        kind: 'word',
+        hanzi: '停业',
+        morphemes: [
+          { span: '停', gloss: 'to stop' },
+          { span: '业', gloss: 'business' },
+        ],
+      },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',
@@ -60,14 +73,14 @@ export const STREET_OPEN: CategoryContent = {
     ],
     [
       'On a shop door. What does it mean?',
-      ['o\'clock; time', 'members\' price', 'scan the QR code'],
+      ["o'clock; time", "members' price", 'scan the QR code'],
       0,
-      'shí · uur; tijd (o\'clock; time). Opening-hours plaques show 营业时间 09:00–22:00 in 24-hour numbers, so mostly you just need to read the digits. Carries the 日 (sun/day) radical.',
+      "shí · uur; tijd (o'clock; time). Opening-hours plaques show 营业时间 09:00–22:00 in 24-hour numbers, so mostly you just need to read the digits. Carries the 日 (sun/day) radical.",
       {
         hanzi: '时',
         pinyin: 'shí',
         nl: 'uur; tijd',
-        en: 'o\'clock; time',
+        en: "o'clock; time",
         context: { before: '营业', after: '间 09:00–22:00' },
         structure: 'left-right',
       },
@@ -86,11 +99,20 @@ export const STREET_OPEN: CategoryContent = {
       ['closed down, ceased trading', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
       0,
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
-      { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
-      { kind: 'word', hanzi: '停业', morphemes: [
-        { span: '停', gloss: 'to stop' },
-        { span: '业', gloss: 'business' },
-      ] },
+      {
+        hanzi: '停业',
+        pinyin: 'tíngyè',
+        nl: 'gesloten (permanent)',
+        en: 'closed down, ceased trading',
+      },
+      {
+        kind: 'word',
+        hanzi: '停业',
+        morphemes: [
+          { span: '停', gloss: 'to stop' },
+          { span: '业', gloss: 'business' },
+        ],
+      },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',
@@ -99,14 +121,14 @@ export const STREET_OPEN: CategoryContent = {
     ],
     [
       'On a shop door. What does it mean?',
-      ['o\'clock (spoken)', 'day of month (spoken); number', 'yuan (spoken)'],
+      ["o'clock (spoken)", 'day of month (spoken); number', 'yuan (spoken)'],
       0,
-      'diǎn · uur (spreektaal, o\'clock). E.g. 晚上十点打烊 = closes at 10pm — the characters don\'t say morning or afternoon on their own, so you get that from context. Often paired with 半. Carries the 灬 (fire) radical, the same one under 煮/煎 (boil/pan-fry) on a menu.',
+      "diǎn · uur (spreektaal, o'clock). E.g. 晚上十点打烊 = closes at 10pm — the characters don't say morning or afternoon on their own, so you get that from context. Often paired with 半. Carries the 灬 (fire) radical, the same one under 煮/煎 (boil/pan-fry) on a menu.",
       {
         hanzi: '点',
         pinyin: 'diǎn',
         nl: 'uur (spreektaal)',
-        en: 'o\'clock (spoken)',
+        en: "o'clock (spoken)",
         context: { before: '晚上十', after: '打烊' },
         structure: 'top-bottom',
       },
@@ -130,12 +152,16 @@ export const STREET_OPEN: CategoryContent = {
         en: 'open year-round, no rest days',
         context: { after: '，节假日照常营业' },
       },
-      { kind: 'word', hanzi: '全年无休', morphemes: [
-        { span: '全', gloss: 'entire' },
-        { span: '年', gloss: 'year' },
-        { span: '无', gloss: 'without' },
-        { span: '休', gloss: 'to rest' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '全年无休',
+        morphemes: [
+          { span: '全', gloss: 'entire' },
+          { span: '年', gloss: 'year' },
+          { span: '无', gloss: 'without' },
+          { span: '休', gloss: 'to rest' },
+        ],
+      },
     ],
     [
       'On a shop door. What does it mean?',
@@ -149,12 +175,16 @@ export const STREET_OPEN: CategoryContent = {
         en: 'temporarily closed',
         context: { after: '，装修中，敬请谅解' },
       },
-      { kind: 'word', hanzi: '暂停营业', morphemes: [
-        { span: '暂', gloss: 'temporarily' },
-        { span: '停', gloss: 'to stop' },
-        { span: '营', gloss: 'to operate' },
-        { span: '业', gloss: 'business' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '暂停营业',
+        morphemes: [
+          { span: '暂', gloss: 'temporarily' },
+          { span: '停', gloss: 'to stop' },
+          { span: '营', gloss: 'to operate' },
+          { span: '业', gloss: 'business' },
+        ],
+      },
       {
         confusion_type: 'shared-morpheme',
         confusable_with: ['street-open-low-1', 'street-open-mid-1', 'street-open-high-1'],
@@ -164,14 +194,27 @@ export const STREET_OPEN: CategoryContent = {
   high: [
     [
       'On a shop door. What does it mean?',
-      ['closed down, ceased trading', 'prohibition — red circle, diagonal bar', 'mandatory — solid blue circle'],
+      [
+        'closed down, ceased trading',
+        'prohibition — red circle, diagonal bar',
+        'mandatory — solid blue circle',
+      ],
       0,
       'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
-      { hanzi: '停业', pinyin: 'tíngyè', nl: 'gesloten (permanent)', en: 'closed down, ceased trading' },
-      { kind: 'word', hanzi: '停业', morphemes: [
-        { span: '停', gloss: 'to stop' },
-        { span: '业', gloss: 'business' },
-      ] },
+      {
+        hanzi: '停业',
+        pinyin: 'tíngyè',
+        nl: 'gesloten (permanent)',
+        en: 'closed down, ceased trading',
+      },
+      {
+        kind: 'word',
+        hanzi: '停业',
+        morphemes: [
+          { span: '停', gloss: 'to stop' },
+          { span: '业', gloss: 'business' },
+        ],
+      },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',

@@ -91,9 +91,7 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
         ...(meta?.interference_set === undefined
           ? {}
           : { interference_set: meta.interference_set }),
-        ...(meta?.glossProvenance === undefined
-          ? {}
-          : { glossProvenance: meta.glossProvenance }),
+        ...(meta?.glossProvenance === undefined ? {} : { glossProvenance: meta.glossProvenance }),
         ...(meta?.isomorph_group_id === undefined
           ? {}
           : { isomorph_group_id: meta.isomorph_group_id }),
@@ -132,5 +130,5 @@ function rotate(
     string,
     string,
   ];
-  return { options: rotated, answer: (((answer - by + 3) % 3) as 0 | 1 | 2) };
+  return { options: rotated, answer: ((answer - by + 3) % 3) as 0 | 1 | 2 };
 }

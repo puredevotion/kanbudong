@@ -32,8 +32,7 @@ export const DIFFICULTY_TIERS: Readonly<Record<Difficulty, DifficultyTier>> = {
   low: {
     id: 'low',
     label: 'Safe',
-    audience:
-      'The default stake. Take it when you are not sure and want the turn to keep moving.',
+    audience: 'The default stake. Take it when you are not sure and want the turn to keep moving.',
     blurb: 'A point either way',
     award: 1,
     penalty: -1,
@@ -42,8 +41,7 @@ export const DIFFICULTY_TIERS: Readonly<Record<Difficulty, DifficultyTier>> = {
   mid: {
     id: 'mid',
     label: 'Fair',
-    audience:
-      'You think you have this one. Costs three if you are wrong.',
+    audience: 'You think you have this one. Costs three if you are wrong.',
     blurb: 'Worth five, costs three',
     award: 5,
     penalty: -3,
@@ -52,8 +50,7 @@ export const DIFFICULTY_TIERS: Readonly<Record<Difficulty, DifficultyTier>> = {
   high: {
     id: 'high',
     label: '看不懂',
-    audience:
-      'You are certain. Named for what you say when you are not.',
+    audience: 'You are certain. Named for what you say when you are not.',
     blurb: 'Fifteen if you read it, ten if you do not',
     award: 15,
     penalty: -10,

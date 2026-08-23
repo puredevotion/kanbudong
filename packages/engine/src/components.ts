@@ -99,7 +99,10 @@ export interface Component {
 export interface CharacterDecomposition {
   readonly kind: 'character';
   readonly hanzi: string;
-  readonly components: readonly { readonly componentId: ComponentId; readonly role: ComponentRole }[];
+  readonly components: readonly {
+    readonly componentId: ComponentId;
+    readonly role: ComponentRole;
+  }[];
   /**
    * Which of `components` drives highlighting, per DESIGN.md §3.3.4's
    * instruction to key highlighting off a stored field, never a glyph match.

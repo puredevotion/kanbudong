@@ -66,7 +66,9 @@ describe('discriminatingCues / hasSelfExplanationPrompt', () => {
     });
     // 'moon-phonetic-unverified' does not resolve through the component table,
     // so its reliability cannot be confirmed - it must not be offered as a cue.
-    expect(discriminatingCues(q)).toEqual([{ kind: 'semantic_radical', componentId: MEAT_RADICAL.id }]);
+    expect(discriminatingCues(q)).toEqual([
+      { kind: 'semantic_radical', componentId: MEAT_RADICAL.id },
+    ]);
   });
 
   it('reads a contrast_character proposition from confusable_with', () => {

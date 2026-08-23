@@ -92,7 +92,11 @@ export function buildConfusionMatrix(
  * via `creditComponentExposure` (memory.ts), which never produces a
  * `TurnRecord` at all.
  */
-export function roleForTurn(record: TurnRecord, playerId: PlayerId, myTeamId: TeamId | null): AttemptRole {
+export function roleForTurn(
+  record: TurnRecord,
+  playerId: PlayerId,
+  myTeamId: TeamId | null,
+): AttemptRole {
   if (record.answererId === playerId) return 'answerer';
   if (myTeamId !== null && record.teamId === myTeamId) return 'co_committed';
   return 'observer';

@@ -45,7 +45,9 @@ function flatten(trainingSet: readonly FsrsTrainingItem[]): RefitRequest {
 
 function runInWorker(request: RefitRequest): Promise<RefitResponse> {
   return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL('./fsrsRefit.worker.ts', import.meta.url), { type: 'module' });
+    const worker = new Worker(new URL('./fsrsRefit.worker.ts', import.meta.url), {
+      type: 'module',
+    });
     worker.onmessage = (event: MessageEvent<RefitResponse>) => {
       resolve(event.data);
       worker.terminate();
@@ -72,7 +74,10 @@ export async function maybeRefitFsrsParameters(playerId: PlayerId): Promise<void
   const total = totalTrainingReviews(trainingSet);
   const lastFit = getFsrsFit(playerId);
 
-  if (!shouldAttemptRefit(total, lastFit === null ? null : { reviewCountAtFit: lastFit.reviewCount })) return;
+  if (
+    !shouldAttemptRefit(total, lastFit === null ? null : { reviewCountAtFit: lastFit.reviewCount })
+  )
+    return;
 
   try {
     const response = await runInWorker(flatten(trainingSet));

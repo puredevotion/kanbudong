@@ -16,16 +16,17 @@ Running it every ten sessions produces a number that moves mostly at random, whi
 **Ruling:** demote the yes/no test to a **placement instrument** at onboarding (which also supplies the cold-start calibration a mixed-ability table needs) and a coarse band estimate, which is what 60 items can support. Take the outcome signal from the attempt log and the transfer test. If a discrete test is wanted for a hero number, run **one long test (400+ items) twice a season**, not a short one ten times.
 
 Two Chinese-specific problems with the format, both flagged and neither solved:
+
 - **Pseudo-characters are useless** (rejected on sight, collapsing the false-alarm rate the correction divides by). The valid stimulus is a **pseudo-word** — real characters, morphologically well-formed, non-existent. The brief's own example 票冷 fails this: noun+adjective juxtaposition with no licit compound structure. Build them by substituting one character of an attested compound with a frequency-matched character sharing the semantic radical.
 - **Deeper: Chinese has no word delimiters, and "is this a word?" is a judgement on which native readers and competing segmentation standards disagree.** The yes/no format imports an assumption about wordhood that Chinese does not supply. **Safer instrument for a reading product: ask about readability of a real string in context** — "can you read this sign?" over cropped photographs, with distractor strings drawn from real signage in an unlocked domain. That measures what the product promises and sidesteps wordhood entirely.
 
 ## 8.4 Instrument learning and engagement as two separately-reported metrics
 
-| Family | Metric | Never conflate with |
-|---|---|---|
-| **Learning** | Transfer-test accuracy at d7/d28; ≥7-day delayed accuracy from the log; retrievals-to-stable-recall | anything below |
-| **Engagement** | sessions/week, retrievals/session, streak length, `selfInitiatedOpens` vs `notificationOpens` | anything above |
-| **Guardrail** | Post-session anxiety check-in (3 items, 5-point, ~8 s, sampled 1 match in 5) using items drawn from a **validated FNE instrument** (Leary 1983 Brief FNE), **not** a nonexistent FLCAS subscale | — |
+| Family         | Metric                                                                                                                                                                                          | Never conflate with |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| **Learning**   | Transfer-test accuracy at d7/d28; ≥7-day delayed accuracy from the log; retrievals-to-stable-recall                                                                                             | anything below      |
+| **Engagement** | sessions/week, retrievals/session, streak length, `selfInitiatedOpens` vs `notificationOpens`                                                                                                   | anything above      |
+| **Guardrail**  | Post-session anxiety check-in (3 items, 5-point, ~8 s, sampled 1 match in 5) using items drawn from a **validated FNE instrument** (Leary 1983 Brief FNE), **not** a nonexistent FLCAS subscale | —                   |
 
 **Never accept enjoyment or NPS as evidence that the adversarial mechanic is harmless.** Dewaele & MacIntyre (2014), n≈1,746: foreign language enjoyment and anxiety are distinguishable dimensions at r ≈ −0.36, not −1.0. A session can be simultaneously enjoyable and anxiety-provoking.
 
@@ -39,8 +40,9 @@ Do not ship mechanics on the strength of the published literature; it is bias-pr
 - **Measure at 8+ weeks** for anything motivational — Hanus & Fox's 16-week design is the reason.
 
 **Six A/Bs the evidence explicitly leaves open, in priority order:**
+
 1. Wager tier on/off, and the tier gate on/off → transfer accuracy.
-2. Image-on-reveal vs text-only-on-reveal → delayed recognition. *The literature predicts the image condition loses.*
+2. Image-on-reveal vs text-only-on-reveal → delayed recognition. _The literature predicts the image condition loses._
 3. Object-templated vs plain rendering → naked-probe accuracy at 7 days.
 4. Variable-typeface exposure vs single-face → transfer accuracy.
 5. Gloss language (nl vs en for Dutch users) → 7-day delayed accuracy.
@@ -56,20 +58,21 @@ Do not ship mechanics on the strength of the published literature; it is bias-pr
 
 **[MEASURED]** `@fontsource/noto-sans-sc@5.3.0`, inspected with fontTools:
 
-| Artefact | Size | Coverage |
-|---|---|---|
-| `chinese-simplified` named subset, weight 400 | **1,142,552 B = 1.09 MB** | 7,946 codepoints / 7,333 hanzi / 8,248 glyphs |
-| 97 numbered unicode-range chunks, weight 400 (the **default** `index.css` path) | 2.27 MB total, mean 24 KB | same |
-| pyftsubset, 300 hanzi + 121 Latin/punct, woff2 | **44.7 KB** | |
-| 600 hanzi | **84.9 KB** | |
-| 900 hanzi | **123.5 KB** | |
-| **1,200 hanzi** | **164.0 KB** | |
-| 2,000 hanzi | 277.4 KB | |
-| 3,000 hanzi | 418.6 KB | |
+| Artefact                                                                        | Size                      | Coverage                                      |
+| ------------------------------------------------------------------------------- | ------------------------- | --------------------------------------------- |
+| `chinese-simplified` named subset, weight 400                                   | **1,142,552 B = 1.09 MB** | 7,946 codepoints / 7,333 hanzi / 8,248 glyphs |
+| 97 numbered unicode-range chunks, weight 400 (the **default** `index.css` path) | 2.27 MB total, mean 24 KB | same                                          |
+| pyftsubset, 300 hanzi + 121 Latin/punct, woff2                                  | **44.7 KB**               |                                               |
+| 600 hanzi                                                                       | **84.9 KB**               |                                               |
+| 900 hanzi                                                                       | **123.5 KB**              |                                               |
+| **1,200 hanzi**                                                                 | **164.0 KB**              |                                               |
+| 2,000 hanzi                                                                     | 277.4 KB                  |                                               |
+| 3,000 hanzi                                                                     | 418.6 KB                  |                                               |
 
 Near-linear at 109–137 bytes/glyph. **Coverage verified: all 3,000 HSK 3.0 characters present; all of 焗 煲 涮 菌 藕 韭 笋 蒜 姜 葱 炝 烩 蕈 蚝 鲈 鳝 present. Tofu risk from the typeface is zero.**
 
 **Recommendation, decisive:**
+
 - **Self-host. Do not use the Google Fonts CSS API** — its ~100 unicode-range chunks require network at render time, and the hosts are blocked in mainland China. Both facts are individually disqualifying for an offline-first PWA sold for use in China.
 - **Ship the build-derived subset (~164 KB at 1,200 chars) with a hard build gate**: walk the item bank, emit the exact codepoint set, run `pyftsubset --text-file=bank-chars.txt --flavor=woff2 --layout-features= --no-hinting --desubroutinize`, and **fail CI if any bank codepoint is missing from the produced subset**. Regenerate the subset as part of the content build so the font can never drift from the content.
 - **If the bank grows past ~2,500 characters, ship the whole 1.09 MB `chinese-simplified` file instead** and delete the entire missing-glyph risk class. At that point the subset saves ~670 KB, and on an offline-first PWA where a missing glyph is unrecoverable at a restaurant table with no signal, that is cheap insurance.
@@ -95,6 +98,7 @@ Near-linear at 109–137 bytes/glyph. **Coverage verified: all 3,000 HSK 3.0 cha
 Compounding it: **the default STUN server in nearly every WebRTC tutorial and library is `stun.l.google.com:19302`, which is blocked in mainland China.** A co-located game whose peers cannot discover each other in the country it was built for is a total product failure, not a degradation.
 
 **Ruling — and for a co-located game this is fortunate, because you do not need NAT traversal at all:**
+
 1. **Configure an empty `iceServers` array explicitly.** Never inherit a library default. All phones are on the same LAN or hotspot; **host candidates only.**
 2. **Star topology.** One device is the session host, shares a join code by **QR**, peers connect on local-network candidates.
 3. **Ship a same-device pass-and-play fallback**, with a "Hand to <name> — tap when ready" interstitial that hides the item until tapped. This is also the only genuinely zero-dependency option.
@@ -109,25 +113,26 @@ Compounding it: **the default STUN server in nearly every WebRTC tutorial and li
 **Ship none in v1.** This is a reading product; audio is a multi-megabyte tax on a skill the product does not claim, and the open-corpus licensing is a minefield (§7.2). Common Voice is CC0 but is whole read sentences with no forced alignment — extracting a clean single-word pronunciation is a research project, not a build step.
 
 When audio is added:
+
 - **Pre-render at build time** for the finite item bank using a commercial TTS whose terms grant output rights (Azure, Google, ElevenLabs).
 - **Opus at 24 kbps mono**: ~900 items × 1.5 s ≈ **4 MB**, cached in Cache Storage with per-item eviction.
 - **Do not rely on the Web Speech API** — the zh-CN voice is frequently absent on iOS Safari and synthesis needs a user gesture, so it fails exactly at a table with mixed phones.
-- **Autoplay at reveal only, never during the item** (redundancy). Koh (2024) found learners of the *most* orthographically distant L2 benefit most from reading-while-listening, which is a good argument for adding it in v2, at the reveal.
+- **Autoplay at reveal only, never during the item** (redundancy). Koh (2024) found learners of the _most_ orthographically distant L2 benefit most from reading-while-listening, which is a good argument for adding it in v2, at the reveal.
 - If HVPT ever ships: **≥5 distinct talkers per item**, keyed `(item_id, talker_id)`, randomised per presentation, never the same clip twice in a session. That is a ~5× asset multiplier — plan it as a separate, lazily-fetched bundle, not part of the install payload.
 
 ## 9.5 Accessibility is a legal constraint, not a preference
 
 The **European Accessibility Act** (Directive (EU) 2019/882) has applied since **28 June 2025** to consumer digital services, via **EN 301 549** incorporating **WCAG 2.1 Level AA**. For a Dutch-published consumer app this converts several §3 recommendations into requirements and settles the colour question on legal rather than evidentiary grounds:
 
-| Criterion | Requirement | Where it bites |
-|---|---|---|
-| **1.4.1 Use of Colour** (A) | Colour never the sole carrier | Kills tone colour-coding independently of Godfroid |
-| **1.4.3 / 1.4.6 Contrast** | 4.5:1 AA / 7:1 AAA | Target hanzi at AAA |
-| **1.4.4 Resize Text** | Functional at 200% | `rem` sizing; test the answer-row layout at 200% |
-| **1.4.12 Text Spacing** | Tolerate user overrides | Card layout must not clip |
-| **2.2.1 Timing Adjustable** | User can turn off, adjust or extend a time limit | **The commit window and the 2 s minimum dwell both engage this.** Ship a "no timers" setting. |
-| **2.5.8 Target Size (Min)** (AA) | 24 × 24 CSS px | Floor for chrome; answer rows at 64 px clear AAA too |
-| **Lang attributes** | — | `lang="zh-Hans"` on every hanzi, `lang="nl"`/`lang="en"` on every gloss — **get this wrong and the app is unusable with a screen reader and non-conformant** |
+| Criterion                        | Requirement                                      | Where it bites                                                                                                                                               |
+| -------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **1.4.1 Use of Colour** (A)      | Colour never the sole carrier                    | Kills tone colour-coding independently of Godfroid                                                                                                           |
+| **1.4.3 / 1.4.6 Contrast**       | 4.5:1 AA / 7:1 AAA                               | Target hanzi at AAA                                                                                                                                          |
+| **1.4.4 Resize Text**            | Functional at 200%                               | `rem` sizing; test the answer-row layout at 200%                                                                                                             |
+| **1.4.12 Text Spacing**          | Tolerate user overrides                          | Card layout must not clip                                                                                                                                    |
+| **2.2.1 Timing Adjustable**      | User can turn off, adjust or extend a time limit | **The commit window and the 2 s minimum dwell both engage this.** Ship a "no timers" setting.                                                                |
+| **2.5.8 Target Size (Min)** (AA) | 24 × 24 CSS px                                   | Floor for chrome; answer rows at 64 px clear AAA too                                                                                                         |
+| **Lang attributes**              | —                                                | `lang="zh-Hans"` on every hanzi, `lang="nl"`/`lang="en"` on every gloss — **get this wrong and the app is unusable with a screen reader and non-conformant** |
 
 The `miniapp` tap-target template (§5, Tier 2) renders at 14–16 px deliberately, which violates any target-size guidance. That is defensible because **small targets are the difficulty being taught** — but it must be a documented, deliberate exception with a non-timed accessible alternative, not an accident.
 
@@ -159,7 +164,8 @@ CI fails if any of these trip:
 Spacing is the largest effect available to this product, and it operates on a **days** timescale. It requires that a player practise on Monday, Thursday and the following Tuesday. A co-located party game is played **when people happen to meet** — a dinner, a weekend, a game night. Fortnightly.
 
 If that is what happens:
-- The scheduler never runs. FSRS state is dominated by first exposures. **Default-parameter FSRS in a low-history regime is benchmarked *worse* than a zero-parameter moving average** (0.3629 vs 0.3369 Log Loss) — so the architectural complexity buys a benefit that cannot materialise.
+
+- The scheduler never runs. FSRS state is dominated by first exposures. **Default-parameter FSRS in a low-history regime is benchmarked _worse_ than a zero-parameter moving average** (0.3629 vs 0.3369 Log Loss) — so the architectural complexity buys a benefit that cannot materialise.
 - ~6 well-spaced retrievals per item at a 4-week horizon (§1.9f) becomes ~2.
 - The trip-date regime selector has nothing to schedule.
 - The item bank, the transfer test, the group-selection objective — all correct, all starved.
@@ -172,13 +178,14 @@ And then the solo daily surface is **not "a degenerate case of multiplayer"**, a
 
 ## 10.2 The four next-most-likely ways it is wrong
 
-**a) The register premise may be shrinking under the product.** In urban China the paper menu has been substantially replaced by a QR code and a WeChat mini-program. The core scenario — standing in front of a printed menu decoding characters — is materially less common in exactly the tier-1 cities a Dutch or English visitor will be in. Transit is already bilingual by standard and practice. That leaves labels and shopfronts carrying most of the weight, and the mini-program register (Tier 2, Scene G) may deserve promotion to Tier 1. **The flip side is a better product than the one scoped:** a scan-to-order menu is *digital text*, which means the app could accept pasted or shared text and gloss it live — a different core loop, and one that needs a decision rather than silence. Validate by photographing the actual environments before authoring 400 items against an assumption.
+**a) The register premise may be shrinking under the product.** In urban China the paper menu has been substantially replaced by a QR code and a WeChat mini-program. The core scenario — standing in front of a printed menu decoding characters — is materially less common in exactly the tier-1 cities a Dutch or English visitor will be in. Transit is already bilingual by standard and practice. That leaves labels and shopfronts carrying most of the weight, and the mini-program register (Tier 2, Scene G) may deserve promotion to Tier 1. **The flip side is a better product than the one scoped:** a scan-to-order menu is _digital text_, which means the app could accept pasted or shared text and gloss it live — a different core loop, and one that needs a decision rather than silence. Validate by photographing the actual environments before authoring 400 items against an assumption.
 
 **b) OCR is the real competitor, and nobody named it.** Pleco's live camera OCR reads a menu today, offline, for free — and Baidu, Youdao and WeChat's built-in scan-translate all work natively in China. The honest positioning is not "we compete with Pleco" but "we sell the ability to not need it". That reorders the domains **in the product's favour**: OCR is strongest on a static printed menu and a shelf label, and weakest on a night-time calligraphic fascia, on a scrollable in-app mini-program you cannot point a second camera at, and in time-pressured social moments where taking out a second phone is not viable. **Reframe the promise around speed without lookup** — "order without stopping", not "read the menu".
 
 **c) The transfer gap may be large enough to invalidate the learning claim.** Every in-app number is measured in the training context. If naked-probe accuracy trails in-object accuracy by more than ~20 points, or transfer-test accuracy trails delayed in-app accuracy by a similar margin, the app is teaching plates. §8.1 exists to catch this; the gap must be reported internally from the first cohort, not discovered at launch.
 
 **d) The whole evidence base is unread.** Two independent agents failed to open a single full text. Eight of the effect sizes quoted here were caught wrong by review; several more are graded on recall alone. The specific verification priorities, in order:
+
 1. **Brunmair & Richter (2019)** — is the "words" category L2 vocabulary pairs or L1 free-recall lists? The entire round architecture rests on it, and the semantic-clustering literature cuts against it.
 2. **Ingendahl, Halamish & Undorf (2025)** — a 2025 paper graded "strong" without reading, carrying the g = −0.09 that rules on the wager.
 3. **Cepeda et al. (2008)** — the actual gap/RI table at short retention intervals.
@@ -192,32 +199,32 @@ Half a day with a library login. Nothing here costing more than a day of enginee
 
 ## 10.3 Genuinely unresolved — no answer exists in the literature
 
-1. **Group item selection with N simultaneous learners on one shared stimulus.** No library, no benchmark, no directly-on-point paper. The nearest published work is *single-learner session-level* selection (Tabibian et al. 2019, PNAS; Upadhyay et al. 2021, npj Science of Learning — the latter a randomised field trial with released data). Read both; treat the group extension as the open part, which it is. Keep `pickItem` pure and stateless so the objective can be swapped and the counterfactual logged.
+1. **Group item selection with N simultaneous learners on one shared stimulus.** No library, no benchmark, no directly-on-point paper. The nearest published work is _single-learner session-level_ selection (Tabibian et al. 2019, PNAS; Upadhyay et al. 2021, npj Science of Learning — the latter a randomised field trial with released data). Read both; treat the group extension as the open part, which it is. Keep `pickItem` pure and stateless so the objective can be swapped and the counterfactual logged.
 2. **Does public failure suppress subsequent participation in an L2 game?** Nobody has tested it. The inference chain (FLCA → willingness to communicate → Kahoot self-report) is adjacent literatures, not a controlled test. **You can answer this in-product at n≈200** with the logging in §8.5, and it would be a genuine contribution.
 3. **Is the gloss cost better public or private?** The brief's signature mechanic — "make the gloss cost points, in public" — directly contradicts its own finding that public punishment ends a game night, and the predictable failure is that a beginner stops requesting glosses and starts guessing, converting a retrieval attempt into a coin flip while the score still moves. **Ruling for v1: cost yes, visibility no.** Ship the public variant behind a flag, default OFF for any table containing a first-time player, and A/B it first.
 4. **Dutch L1 specifically.** No study of Dutch–English bilinguals learning Mandarin exists. No Dutch-specific character-acquisition research exists. The only Dutch-specific work located is on tone perception. The gloss-language rule (§6.3) is the weakest-evidenced decision in this document and the one your own A/B can settle fastest.
 5. **Optimal round length for a co-located learning game.** The 30-round / ~10-minute figure is assembled from microlearning (weak), spacing (about between-session gaps, not within-session length) and time-pressure evidence. It is a synthesis, not a measured optimum.
 6. **Whether object-realistic card templates help or induce logo-style recognition** (Masonheimer, Drum & Ehri 1984). This is the most expensive part of the visual design and the evidence is genuinely contested. Instrument the naked probe from v1 rather than adding it later.
 7. **CJK legibility on modern high-DPI phones.** Every source is 15–25 years old and predates retina displays. The §3.1 type scale is engineering judgement corrected for the units error; **validate it with a physical test using the actual subset font on the oldest supported phone, in a dim room, before locking it into the design system.**
-8. **Phonetic-series predictiveness.** **[MEASURED]** In the top 1,000 characters a phonetic component predicts the full reading (segments + tone) only ~**17%** of the time and gives no cue at all ~**35%** of the time — reliability roughly doubles by the full dictionary (~34% exact), because the head of the frequency distribution is where the phonetics have eroded most. So the "order the bank by phonetic series" recommendation is a **design bet, not a finding**, and it is worth *more* at intermediate level than at beginner level — the opposite of where it would be surfaced. **Run the three-way test (exact / segmental-only / no cue) over your own 1,200 characters before committing content-authoring weeks. If exact + segmental is below ~50%, the effort belongs in the semantic-component column instead.** Related and equally decision-relevant: only ~53% of the top 1,000 are phono-semantic compounds at all (vs ~80% script-wide), only ~45% are left-right, and only ~31% are both — so a two-slot meaning/sound card is a **conditional layout selected off a stored structure enum, never the default.**
+8. **Phonetic-series predictiveness.** **[MEASURED]** In the top 1,000 characters a phonetic component predicts the full reading (segments + tone) only ~**17%** of the time and gives no cue at all ~**35%** of the time — reliability roughly doubles by the full dictionary (~34% exact), because the head of the frequency distribution is where the phonetics have eroded most. So the "order the bank by phonetic series" recommendation is a **design bet, not a finding**, and it is worth _more_ at intermediate level than at beginner level — the opposite of where it would be surfaced. **Run the three-way test (exact / segmental-only / no cue) over your own 1,200 characters before committing content-authoring weeks. If exact + segmental is below ~50%, the effort belongs in the semantic-component column instead.** Related and equally decision-relevant: only ~53% of the top 1,000 are phono-semantic compounds at all (vs ~80% script-wide), only ~45% are left-right, and only ~31% are both — so a two-slot meaning/sound card is a **conditional layout selected off a stored structure enum, never the default.**
 
 ---
 
 ## Appendix — the twelve decisions that gate everything else
 
-| # | Decision | Ruling | Reversible? |
-|---|---|---|---|
-| 1 | Content spine | **Own signage/menu/label corpus, ordered by domain frequency.** HSK band and 通用规范汉字表 tier as blended secondary signals, never as the primary key. | Expensive |
-| 2 | Item schema | Two decomposition fields; `reading` per (char, word); `trad` as a **list**; `interference_set` ≠ `confusion_set`; non-nullable `explanation`. | **Cheap now, very expensive later** |
-| 3 | Script | **Simplified only in v1.** Store traditional as a list. Segment the bank: transit may assume Hei; shopfronts may not. | Expensive |
-| 4 | Scheduler | ts-fsrs FSRS-6, **pretrain-4**, per (player, item, direction). No optimiser. **No neural knowledge tracing — decision written down with citations attached.** | Cheap |
-| 5 | The bet | Keep as a **difficulty commitment**. Replace pinyin scaffold with component/context. Gate tier on exposure. Discount grade by tier. Timers 12/15/20 s. | Cheap |
-| 6 | Answering | **3 options.** Private, simultaneous, blind commit. Everyone answers every item. No streak-keeps-turn. | Moderate |
-| 7 | Resolution | Task-level public, self-level private. Hanzi alone 800 ms → gloss → photo. 2 s minimum dwell. Score delta ≤14 px, uncoloured. | Cheap |
-| 8 | Colour | **Never on linguistic content.** Chrome only. Light default, `prefers-color-scheme` honoured, AAA on target hanzi. | Cheap |
-| 9 | Units | **160 CSS px/inch.** 28 px hanzi floor, 44 px options, 72 px prompt, 64 px answer rows. | Cheap |
-| 10 | Fonts | Self-hosted Noto Sans SC subset (~164 KB @1,200 chars) with a CI gate. Never Google Fonts. Renamed family. | Cheap |
-| 11 | Transport | Host candidates only, empty `iceServers`, QR join, star topology, pass-and-play fallback. Transport-agnostic reducer. | **Expensive if wrong** |
-| 12 | Measurement | Held-out transfer test on unseen real signage at d7/d28, reported beside the in-app number. Experiment harness in week one. | Cheap now |
+| #   | Decision      | Ruling                                                                                                                                                        | Reversible?                         |
+| --- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| 1   | Content spine | **Own signage/menu/label corpus, ordered by domain frequency.** HSK band and 通用规范汉字表 tier as blended secondary signals, never as the primary key.      | Expensive                           |
+| 2   | Item schema   | Two decomposition fields; `reading` per (char, word); `trad` as a **list**; `interference_set` ≠ `confusion_set`; non-nullable `explanation`.                 | **Cheap now, very expensive later** |
+| 3   | Script        | **Simplified only in v1.** Store traditional as a list. Segment the bank: transit may assume Hei; shopfronts may not.                                         | Expensive                           |
+| 4   | Scheduler     | ts-fsrs FSRS-6, **pretrain-4**, per (player, item, direction). No optimiser. **No neural knowledge tracing — decision written down with citations attached.** | Cheap                               |
+| 5   | The bet       | Keep as a **difficulty commitment**. Replace pinyin scaffold with component/context. Gate tier on exposure. Discount grade by tier. Timers 12/15/20 s.        | Cheap                               |
+| 6   | Answering     | **3 options.** Private, simultaneous, blind commit. Everyone answers every item. No streak-keeps-turn.                                                        | Moderate                            |
+| 7   | Resolution    | Task-level public, self-level private. Hanzi alone 800 ms → gloss → photo. 2 s minimum dwell. Score delta ≤14 px, uncoloured.                                 | Cheap                               |
+| 8   | Colour        | **Never on linguistic content.** Chrome only. Light default, `prefers-color-scheme` honoured, AAA on target hanzi.                                            | Cheap                               |
+| 9   | Units         | **160 CSS px/inch.** 28 px hanzi floor, 44 px options, 72 px prompt, 64 px answer rows.                                                                       | Cheap                               |
+| 10  | Fonts         | Self-hosted Noto Sans SC subset (~164 KB @1,200 chars) with a CI gate. Never Google Fonts. Renamed family.                                                    | Cheap                               |
+| 11  | Transport     | Host candidates only, empty `iceServers`, QR join, star topology, pass-and-play fallback. Transport-agnostic reducer.                                         | **Expensive if wrong**              |
+| 12  | Measurement   | Held-out transfer test on unseen real signage at d7/d28, reported beside the in-app number. Experiment harness in week one.                                   | Cheap now                           |
 
 **Ship no audio, no handwriting, no stroke graphics, no tone, no leaderboard, no CEFR claim, no coverage percentage, and no efficiency claim in v1.** Each of those is either unevidenced, legally encumbered, multi-megabyte, or all three — and every one of them is a decision you can defend with a citation from this document.

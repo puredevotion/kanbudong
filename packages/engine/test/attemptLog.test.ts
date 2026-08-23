@@ -171,11 +171,17 @@ describe('group attempt records from history', () => {
   });
 
   it('skips timeouts - nothing was chosen, so there is no chosen_option to log', () => {
-    const timeout: TurnRecord = { ...baseRecord, answererId: null, chosenIndex: -1, chosenText: null, timedOut: true };
+    const timeout: TurnRecord = {
+      ...baseRecord,
+      answererId: null,
+      chosenIndex: -1,
+      chosenText: null,
+      timedOut: true,
+    };
     expect(attemptRecordsFromHistory(PACK, [timeout], 'p1', 'team_a')).toEqual([]);
   });
 
-  it('grades a non-answerer from their own revealed answer, not the acting team\'s', () => {
+  it("grades a non-answerer from their own revealed answer, not the acting team's", () => {
     // p2 is on the acting team but did not resolve the turn (p1 did) - per
     // DESIGN.md §5.1 beat 4 p2 still privately answered, correctly, even
     // though the team's own outcome (baseRecord) was wrong.

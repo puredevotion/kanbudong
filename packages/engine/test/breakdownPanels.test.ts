@@ -27,7 +27,10 @@ describe('siblingsSharingComponent', () => {
 
   it('returns only real pack items that share the same stored semantic_radical', () => {
     const question = organCharacter();
-    const radical = question.decomposition?.kind === 'character' ? question.decomposition.semantic_radical : undefined;
+    const radical =
+      question.decomposition?.kind === 'character'
+        ? question.decomposition.semantic_radical
+        : undefined;
     expect(radical).toBeDefined();
     const siblings = siblingsSharingComponent(SEED_PACK, question);
     expect(siblings.length).toBeGreaterThan(0);
@@ -67,7 +70,8 @@ describe('siblingsSharingComponent', () => {
 
   it('returns nothing for a question without a decomposition', () => {
     const noDecomp = SEED_PACK.questions.find((q) => q.decomposition === undefined);
-    if (noDecomp === undefined) throw new Error('fixture missing: expected a question with no decomposition');
+    if (noDecomp === undefined)
+      throw new Error('fixture missing: expected a question with no decomposition');
     expect(siblingsSharingComponent(SEED_PACK, noDecomp)).toEqual([]);
   });
 
@@ -110,7 +114,9 @@ describe('fire-radical cooking-method sibling set (decomposition-backfill pass, 
       expect(sibling.decomposition?.kind).toBe('character');
       if (sibling.decomposition?.kind === 'character') {
         expect(sibling.decomposition.semantic_radical).toBe(
-          chao.decomposition?.kind === 'character' ? chao.decomposition.semantic_radical : undefined,
+          chao.decomposition?.kind === 'character'
+            ? chao.decomposition.semantic_radical
+            : undefined,
         );
       }
     }
@@ -135,7 +141,8 @@ describe('confusablesFor', () => {
 
   it('returns nothing for a question with no confusable_with', () => {
     const plain = SEED_PACK.questions.find((q) => q.confusable_with === undefined);
-    if (plain === undefined) throw new Error('fixture missing: expected a question with no confusable_with');
+    if (plain === undefined)
+      throw new Error('fixture missing: expected a question with no confusable_with');
     expect(confusablesFor(SEED_PACK, plain)).toEqual([]);
   });
 
@@ -143,7 +150,11 @@ describe('confusablesFor', () => {
     const fabricated: ContentPack = {
       ...SEED_PACK,
       questions: [
-        { ...(SEED_PACK.questions[0] as Question), id: 'fixture-1', confusable_with: ['does-not-exist'] },
+        {
+          ...(SEED_PACK.questions[0] as Question),
+          id: 'fixture-1',
+          confusable_with: ['does-not-exist'],
+        },
       ],
     };
     expect(confusablesFor(fabricated, fabricated.questions[0] as Question)).toEqual([]);
@@ -160,7 +171,9 @@ describe('confusable-pair backfill (Aug 2026)', () => {
     expect(teSe?.face?.hanzi).toBe('特色');
     expect(teJia?.confusion_type).toBe('shared-morpheme');
     expect(teSe?.confusion_type).toBe('shared-morpheme');
-    expect(confusablesFor(SEED_PACK, teJia as Question).map((q) => q.face?.hanzi)).toEqual(['特色']);
+    expect(confusablesFor(SEED_PACK, teJia as Question).map((q) => q.face?.hanzi)).toEqual([
+      '特色',
+    ]);
     expect(confusablesFor(SEED_PACK, teSe as Question).map((q) => q.face?.hanzi)).toEqual(['特价']);
   });
 
@@ -180,8 +193,12 @@ describe('confusable-pair backfill (Aug 2026)', () => {
     expect(xiShouJian?.face?.hanzi).toBe('洗手间');
     expect(ceSuo?.confusion_type).toBe('meaning-visually-distinct');
     expect(xiShouJian?.confusion_type).toBe('meaning-visually-distinct');
-    expect(confusablesFor(SEED_PACK, ceSuo as Question).map((q) => q.face?.hanzi)).toEqual(['洗手间']);
-    expect(confusablesFor(SEED_PACK, xiShouJian as Question).map((q) => q.face?.hanzi)).toEqual(['厕所']);
+    expect(confusablesFor(SEED_PACK, ceSuo as Question).map((q) => q.face?.hanzi)).toEqual([
+      '洗手间',
+    ]);
+    expect(confusablesFor(SEED_PACK, xiShouJian as Question).map((q) => q.face?.hanzi)).toEqual([
+      '厕所',
+    ]);
   });
 
   it('tags every 停业 occurrence (low/mid/high) against 暂停营业, and back', () => {
@@ -189,7 +206,9 @@ describe('confusable-pair backfill (Aug 2026)', () => {
       const q = questionById(SEED_PACK, id);
       expect(q?.face?.hanzi).toBe('停业');
       expect(q?.confusion_type).toBe('shared-morpheme');
-      expect(confusablesFor(SEED_PACK, q as Question).map((c) => c.face?.hanzi)).toEqual(['暂停营业']);
+      expect(confusablesFor(SEED_PACK, q as Question).map((c) => c.face?.hanzi)).toEqual([
+        '暂停营业',
+      ]);
     }
     const zanting = questionById(SEED_PACK, 'street-open-mid-4');
     expect(zanting?.face?.hanzi).toBe('暂停营业');
@@ -203,7 +222,11 @@ describe('validatePack: confusable_with referential integrity', () => {
     const fabricated: ContentPack = {
       ...SEED_PACK,
       questions: [
-        { ...(SEED_PACK.questions[0] as Question), id: 'fixture-1', confusable_with: ['does-not-exist'] },
+        {
+          ...(SEED_PACK.questions[0] as Question),
+          id: 'fixture-1',
+          confusable_with: ['does-not-exist'],
+        },
       ],
     };
     const problems = validatePack(fabricated);

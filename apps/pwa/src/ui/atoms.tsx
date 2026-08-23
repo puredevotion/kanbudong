@@ -16,17 +16,17 @@ export function Screen({
   aside?: ReactNode;
 }): ReactNode {
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-5 pb-44 pt-[max(1.25rem,env(safe-area-inset-top))]">
+    <main className='mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-5 pb-44 pt-[max(1.25rem,env(safe-area-inset-top))]'>
       {(title !== undefined || aside !== undefined) && (
-        <header className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
+        <header className='flex items-start justify-between gap-3'>
+          <div className='min-w-0'>
             {title !== undefined && (
-              <Typography.Heading level={1} className="text-2xl font-semibold tracking-tight">
+              <Typography.Heading level={1} className='text-2xl font-semibold tracking-tight'>
                 {title}
               </Typography.Heading>
             )}
             {subtitle !== undefined && (
-              <Typography.Paragraph className="mt-1 text-sm text-muted">
+              <Typography.Paragraph className='mt-1 text-sm text-muted'>
                 {subtitle}
               </Typography.Paragraph>
             )}
@@ -42,8 +42,8 @@ export function Screen({
 /** Sticky bottom bar, because the primary action must be reachable by a thumb. */
 export function ActionBar({ children }: { children: ReactNode }): ReactNode {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-10 border-t border-default-200/40 bg-default-50/80 px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-2">{children}</div>
+    <div className='fixed inset-x-0 bottom-0 z-10 border-t border-default-200/40 bg-default-50/80 px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur'>
+      <div className='mx-auto flex w-full max-w-md flex-col gap-2'>{children}</div>
     </div>
   );
 }
@@ -60,7 +60,7 @@ export function ConnectionPill({
 }): ReactNode {
   const { colour, label } = describe(status, peerCount, everConnected);
   return (
-    <Chip color={colour} variant="soft" size="sm" className="shrink-0">
+    <Chip color={colour} variant='soft' size='sm' className='shrink-0'>
       {label}
     </Chip>
   );
@@ -105,7 +105,7 @@ export function TierBadge({ difficulty }: { difficulty: Difficulty }): ReactNode
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${TIER_CLASS[difficulty]}`}
     >
       {tier.label}
-      <span className="tabular-nums opacity-80">
+      <span className='tabular-nums opacity-80'>
         +{tier.award} / {tier.penalty}
       </span>
     </span>
@@ -115,9 +115,9 @@ export function TierBadge({ difficulty }: { difficulty: Difficulty }): ReactNode
 /** A player id, shortened. Present but never prominent (R-17). */
 export function PlayerTag({ id, username }: { id: string; username: string }): ReactNode {
   return (
-    <span className="inline-flex items-baseline gap-1.5">
-      <span className="truncate font-medium">{username}</span>
-      <span className="font-mono text-[0.65rem] text-muted">{shortenId(id)}</span>
+    <span className='inline-flex items-baseline gap-1.5'>
+      <span className='truncate font-medium'>{username}</span>
+      <span className='font-mono text-[0.65rem] text-muted'>{shortenId(id)}</span>
     </span>
   );
 }
@@ -170,7 +170,7 @@ export function StalledWarning({
 
   if (status === 'failed') {
     return (
-      <Notice tone="danger">
+      <Notice tone='danger'>
         Could not reach any peer-discovery relay. Check this device is online. 看不懂 needs one
         brief handshake through public infrastructure before it can talk device-to-device.
       </Notice>
@@ -179,16 +179,16 @@ export function StalledWarning({
   if (!stalled) return null;
   if (everConnected) {
     return (
-      <Notice tone="warn">
+      <Notice tone='warn'>
         Lost the connection to the other device. Still trying to reconnect automatically - if this
         does not clear up, check you are both still online and on the same network.
       </Notice>
     );
   }
   return (
-    <Notice tone="warn">
-      Still nobody else here. The usual causes: the others have not opened the game yet, they typed a
-      different code, or you are on networks that will not let devices talk directly - mobile data
+    <Notice tone='warn'>
+      Still nobody else here. The usual causes: the others have not opened the game yet, they typed
+      a different code, or you are on networks that will not let devices talk directly - mobile data
       especially. Getting everyone onto the same Wi-Fi fixes it.
     </Notice>
   );

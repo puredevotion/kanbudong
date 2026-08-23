@@ -42,7 +42,13 @@ export const MARKET_WEIGHT: CategoryContent = {
       ['yuan (spoken)', '0.1 yuan (spoken)', '2, capital form'],
       0,
       'kuài · yuan (spoken). This is what people say out loud, even though 元 is what gets printed. Picture 块 as 土 earth with a shovel-blade shape (夬) cutting into it — a shovel digging a solid chunk out of the ground: kuài, a "piece" or "chunk" of money.',
-      { hanzi: '块', pinyin: 'kuài', nl: 'yuan (spreektaal)', en: 'yuan (spoken)', structure: 'left-right' },
+      {
+        hanzi: '块',
+        pinyin: 'kuài',
+        nl: 'yuan (spreektaal)',
+        en: 'yuan (spoken)',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '块',
@@ -86,10 +92,14 @@ export const MARKET_WEIGHT: CategoryContent = {
       0,
       'qiānkè · kilogram. Also written 公斤; you will see both forms used on the same shelf.',
       { hanzi: '千克', pinyin: 'qiānkè', nl: 'kilogram', en: 'kilogram = 2 斤' },
-      { kind: 'word', hanzi: '千克', morphemes: [
-        { span: '千', gloss: 'thousand' },
-        { span: '克', gloss: 'gram' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '千克',
+        morphemes: [
+          { span: '千', gloss: 'thousand' },
+          { span: '克', gloss: 'gram' },
+        ],
+      },
       { tier: 1 },
     ],
   ],
@@ -105,7 +115,7 @@ export const MARKET_WEIGHT: CategoryContent = {
     ],
     [
       'On a price label. What does it mean?',
-      ['0.1 yuan (spoken)', 'discount as the fraction you pay', 'members\' price'],
+      ['0.1 yuan (spoken)', 'discount as the fraction you pay', "members' price"],
       0,
       'máo · 10 cent (spoken). This is the spoken partner to 角, just like 块 is the spoken partner to 元. Picture 毛 as a few wispy hairs — loose change so small it is worth about as much as a stray hair: máo.',
       { hanzi: '毛', pinyin: 'máo', nl: '10 cent (spreektaal)', en: '0.1 yuan (spoken)' },
@@ -114,7 +124,7 @@ export const MARKET_WEIGHT: CategoryContent = {
     ],
     [
       'On a price label. What does it mean?',
-      ['0.01 yuan', 'o\'clock (spoken)', 'day of month (spoken); number'],
+      ['0.01 yuan', "o'clock (spoken)", 'day of month (spoken); number'],
       0,
       'fēn · cent. Rarely used as cash anymore, but still printed on itemized receipts. Note: this character is also read fèn in other words (like 部分, 分量), and fēn is likewise the word for "minute." Picture 分 as a knife (刀) cutting something into eight (八) equal slivers — slicing a yuan down to its smallest piece: fēn.',
       { hanzi: '分', pinyin: 'fēn', nl: 'cent', en: '0.01 yuan', structure: 'top-bottom' },

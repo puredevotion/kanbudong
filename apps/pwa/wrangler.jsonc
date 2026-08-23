@@ -9,5 +9,5 @@
   // environment.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "kanbudong",
-  "pages_build_output_dir": "dist"
+  "pages_build_output_dir": "dist",
 }

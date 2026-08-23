@@ -41,10 +41,14 @@ export const STREET_PROMO: CategoryContent = {
       0,
       'dǎzhé · korting (discount) — literally "hit a percentage": the fraction is what you pay, not what you save.',
       { hanzi: '打折', pinyin: 'dǎzhé', nl: 'korting', en: 'on sale, discounted' },
-      { kind: 'word', hanzi: '打折', morphemes: [
-        { span: '打', gloss: 'to hit, do' },
-        { span: '折', gloss: 'discount as a fraction' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '打折',
+        morphemes: [
+          { span: '打', gloss: 'to hit, do' },
+          { span: '折', gloss: 'discount as a fraction' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -53,10 +57,14 @@ export const STREET_PROMO: CategoryContent = {
       0,
       'shuǎimài · uitverkoop (clearance sale) — everything must go, usually before a shop closes or moves.',
       { hanzi: '甩卖', pinyin: 'shuǎimài', nl: 'uitverkoop', en: 'clearance sale' },
-      { kind: 'word', hanzi: '甩卖', morphemes: [
-        { span: '甩', gloss: 'to fling off' },
-        { span: '卖', gloss: 'to sell' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '甩卖',
+        morphemes: [
+          { span: '甩', gloss: 'to fling off' },
+          { span: '卖', gloss: 'to sell' },
+        ],
+      },
       { tier: 1 },
     ],
   ],
@@ -66,11 +74,20 @@ export const STREET_PROMO: CategoryContent = {
       ['stock clearance, everything must go', 'on sale, discounted', 'grand opening'],
       0,
       'qīngcāng · alles moet weg (stock clearance) — a step past 打折: the whole inventory is being sold off, not just discounted.',
-      { hanzi: '清仓', pinyin: 'qīngcāng', nl: 'alles moet weg', en: 'stock clearance, everything must go' },
-      { kind: 'word', hanzi: '清仓', morphemes: [
-        { span: '清', gloss: 'to clear' },
-        { span: '仓', gloss: 'warehouse' },
-      ] },
+      {
+        hanzi: '清仓',
+        pinyin: 'qīngcāng',
+        nl: 'alles moet weg',
+        en: 'stock clearance, everything must go',
+      },
+      {
+        kind: 'word',
+        hanzi: '清仓',
+        morphemes: [
+          { span: '清', gloss: 'to clear' },
+          { span: '仓', gloss: 'warehouse' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -78,11 +95,20 @@ export const STREET_PROMO: CategoryContent = {
       ['big promotion, big sale', 'clearance sale', 'reserved'],
       0,
       'dàcùxiāo · grote aanbieding (big promotion) — a general "big sale" banner, without saying by how much.',
-      { hanzi: '大促销', pinyin: 'dàcùxiāo', nl: 'grote aanbieding', en: 'big promotion, big sale' },
-      { kind: 'word', hanzi: '大促销', morphemes: [
-        { span: '大', gloss: 'big' },
-        { span: '促销', gloss: 'promotion' },
-      ] },
+      {
+        hanzi: '大促销',
+        pinyin: 'dàcùxiāo',
+        nl: 'grote aanbieding',
+        en: 'big promotion, big sale',
+      },
+      {
+        kind: 'word',
+        hanzi: '大促销',
+        morphemes: [
+          { span: '大', gloss: 'big' },
+          { span: '促销', gloss: 'promotion' },
+        ],
+      },
       { tier: 2 },
     ],
   ],
@@ -93,10 +119,14 @@ export const STREET_PROMO: CategoryContent = {
       0,
       'yōuhuì · aanbieding, korting (special offer) — a softer, more general word than 打折; it does not commit to a specific mechanism.',
       { hanzi: '优惠', pinyin: 'yōuhuì', nl: 'aanbieding, korting', en: 'special offer, discount' },
-      { kind: 'word', hanzi: '优惠', morphemes: [
-        { span: '优', gloss: 'excellent' },
-        { span: '惠', gloss: 'favour, benefit' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '优惠',
+        morphemes: [
+          { span: '优', gloss: 'excellent' },
+          { span: '惠', gloss: 'favour, benefit' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -104,7 +134,13 @@ export const STREET_PROMO: CategoryContent = {
       ['grand opening', 'special offer, discount', 'reserved'],
       0,
       'kāizhāng dàjí · grote opening (grand opening) — a launch banner, not a discount at all; a common source of confusion with the sale posters around it.',
-      { hanzi: '开张大吉', pinyin: 'kāizhāng dàjí', nl: 'grote opening', en: 'grand opening', transparency: 'opaque' },
+      {
+        hanzi: '开张大吉',
+        pinyin: 'kāizhāng dàjí',
+        nl: 'grote opening',
+        en: 'grand opening',
+        transparency: 'opaque',
+      },
       undefined,
       { tier: 2 },
     ],
@@ -112,7 +148,7 @@ export const STREET_PROMO: CategoryContent = {
       'On a shopfront window. What does this sign mean?',
       ['to sell', 'clearance sale', 'to hit, do'],
       0,
-      'mài · verkopen (to sell). Seen in 甩卖 (clearance sale). Don\'t confuse it with the near-mirror-image 买 (to buy) — one extra stroke on top makes all the difference. Picture 卖 as a stall owner standing tall (士) over goods (买-shaped basket below) held out for anyone to take: mài.',
+      "mài · verkopen (to sell). Seen in 甩卖 (clearance sale). Don't confuse it with the near-mirror-image 买 (to buy) — one extra stroke on top makes all the difference. Picture 卖 as a stall owner standing tall (士) over goods (买-shaped basket below) held out for anyone to take: mài.",
       { hanzi: '卖', pinyin: 'mài', nl: 'verkopen', en: 'to sell' },
       undefined,
       { glossProvenance: 'mnemonic-only' },
@@ -140,7 +176,13 @@ export const STREET_PROMO: CategoryContent = {
       ['favour, benefit', 'big', 'to sell'],
       0,
       'huì · gunst, voordeel (favour, benefit). Seen in 优惠 (special offer). Picture 惠 as a spinning wheel (叀) turned over and over by a caring heart (心) - a kindness given freely: huì.',
-      { hanzi: '惠', pinyin: 'huì', nl: 'gunst, voordeel', en: 'favour, benefit', structure: 'top-bottom' },
+      {
+        hanzi: '惠',
+        pinyin: 'huì',
+        nl: 'gunst, voordeel',
+        en: 'favour, benefit',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '惠',

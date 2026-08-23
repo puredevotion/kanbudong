@@ -99,7 +99,14 @@ class IsoTable {
     if (created === undefined) throw new Error('createGame did not build a log');
     this.log = created;
     for (const identity of this.identities.slice(1)) {
-      this.push(makeEvent(this.log, identity, { type: 'player/joined', username: identity.username }, this.tick()));
+      this.push(
+        makeEvent(
+          this.log,
+          identity,
+          { type: 'player/joined', username: identity.username },
+          this.tick(),
+        ),
+      );
     }
   }
 
@@ -130,7 +137,8 @@ class IsoTable {
     const owner = this.player(playerIndexes[0] ?? 0);
     const created = this.push(openTeam(this.log, owner, name));
     if (created.body.type !== 'team/created') throw new Error('expected team/created');
-    for (const index of playerIndexes) this.push(joinTeam(this.log, this.player(index), created.body.teamId));
+    for (const index of playerIndexes)
+      this.push(joinTeam(this.log, this.player(index), created.body.teamId));
   }
 
   start(): void {
@@ -142,7 +150,8 @@ class IsoTable {
     for (let i = 0; i < this.identities.length; i += 1) {
       const id = this.player(i).id;
       const acting = state.turnOrder[state.cursor];
-      const onActingTeam = state.teams.find((t) => t.id === acting)?.memberIds.includes(id) ?? false;
+      const onActingTeam =
+        state.teams.find((t) => t.id === acting)?.memberIds.includes(id) ?? false;
       if (state.players[id] !== undefined && !onActingTeam) return i;
     }
     throw new Error('nobody may draw');
@@ -152,7 +161,8 @@ class IsoTable {
     const state = this.state();
     const acting = state.turnOrder[state.cursor];
     for (let i = 0; i < this.identities.length; i += 1) {
-      if (state.teams.find((t) => t.id === acting)?.memberIds.includes(this.player(i).id) ?? false) return i;
+      if (state.teams.find((t) => t.id === acting)?.memberIds.includes(this.player(i).id) ?? false)
+        return i;
     }
     throw new Error('no acting player');
   }
@@ -167,7 +177,13 @@ class IsoTable {
   /** Same as {@link dealAt}, but with a caller-chosen nonce - lets a test pin down exactly which pack item gets dealt. */
   dealWithNonce(nonce: string, difficulty: 'low' | 'mid' | 'high'): void {
     const turnIndex = this.state().turnIndex;
-    this.push(makeEvent(this.log, this.player(this.drawerIndex()), { type: 'turn/drawn', turnIndex, nonce }));
+    this.push(
+      makeEvent(this.log, this.player(this.drawerIndex()), {
+        type: 'turn/drawn',
+        turnIndex,
+        nonce,
+      }),
+    );
     this.finishDeal(turnIndex, difficulty);
   }
 
@@ -220,7 +236,9 @@ function findNonceFor(gameId: string, targetId: string): string {
   const usesExactCell = firstOfferedCategory(gameId) === 'menu-animal';
   for (let i = 0; i < 2000; i += 1) {
     const nonce = `iso-nonce-${i}`;
-    const rng = usesExactCell ? createRng(nonce, 'menu-animal', 'high') : createRng(nonce, 'fallback', 'high');
+    const rng = usesExactCell
+      ? createRng(nonce, 'menu-animal', 'high')
+      : createRng(nonce, 'fallback', 'high');
     const { question: picked } = pickFromPool(PACK.questions, [], rng);
     if (picked?.id === targetId) return nonce;
   }
@@ -287,7 +305,7 @@ describe('confer beat isomorph follow-up (Phase D)', () => {
     expect(canAnswerIsomorph(resolved, table.player(0).id, turnIndex)).toBe(true);
     for (let i = 0; i < 4; i += 1) {
       const correctIndex = presented?.correctIndex as 0 | 1 | 2;
-      const chosen = (i % 2 === 0 ? correctIndex : ((correctIndex + 1) % 3)) as 0 | 1 | 2;
+      const chosen = (i % 2 === 0 ? correctIndex : (correctIndex + 1) % 3) as 0 | 1 | 2;
       table.answerIsomorphAs(i, chosen, turnIndex);
     }
 
@@ -342,9 +360,11 @@ describe('confer beat isomorph follow-up (Phase D)', () => {
     table.push(revealEvent); // structurally well-formed, so the log itself accepts it
 
     const rejected = table.state().rejected;
-    expect(rejected.some((r) => r.id === revealEvent.id && r.reason === 'malformed or unresolvable isomorph answer')).toBe(
-      true,
-    );
+    expect(
+      rejected.some(
+        (r) => r.id === revealEvent.id && r.reason === 'malformed or unresolvable isomorph answer',
+      ),
+    ).toBe(true);
     expect(isomorphAnswersForTurn(table.state(), turnIndex)).toEqual([]);
   });
 
@@ -365,7 +385,12 @@ describe('confer beat isomorph follow-up (Phase D)', () => {
     table.answerIsomorphAs(teammate, presented.correctIndex as 0 | 1 | 2, turnIndex);
 
     const finalState = table.state();
-    const records = attemptRecordsFromHistory(PACK, finalState.history, table.player(teammate).id, null);
+    const records = attemptRecordsFromHistory(
+      PACK,
+      finalState.history,
+      table.player(teammate).id,
+      null,
+    );
     const isomorphRecord = records.find((r) => r.targetItem === isomorphQuestionId);
     expect(isomorphRecord).toMatchObject({
       role: 'answerer',

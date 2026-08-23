@@ -50,7 +50,10 @@ function expectedCorrect(theta: number): number {
  * easily than predicted — the standard Elo update, `K`-scaled by `n` so an
  * item's rating settles as more responses accumulate.
  */
-export function updateItemDifficulty(item: ItemDifficulty | null, correct: boolean): ItemDifficulty {
+export function updateItemDifficulty(
+  item: ItemDifficulty | null,
+  correct: boolean,
+): ItemDifficulty {
   const theta = item?.theta ?? NEW_ITEM_THETA;
   const n = item?.n ?? 0;
   const outcome = correct ? 1 : 0;

@@ -38,7 +38,14 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { recordMnemonicPromptUsed } from '../lib/mnemonicPromptLog.js';
 import { recordSessionStart } from '../lib/sessionLog.js';
 import { useApp } from '../lib/store.js';
-import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
+import {
+  ConnectionPill,
+  Notice,
+  Screen,
+  StalledWarning,
+  TierBadge,
+  useElapsed,
+} from '../ui/atoms.jsx';
 import {
   ConfusablePanel,
   DecompositionPanel,
@@ -78,11 +85,11 @@ export function Play(): ReactNode {
   if (isBanned(state, identity.id)) {
     return (
       <Screen title={state.name}>
-        <Notice tone="danger">
+        <Notice tone='danger'>
           The host removed you from this game. Whatever was in progress for your team continues
           without you; you can start or join a different one.
         </Notice>
-        <Button variant="ghost" fullWidth onPress={leave}>
+        <Button variant='ghost' fullWidth onPress={leave}>
           Leave
         </Button>
       </Screen>
@@ -118,10 +125,10 @@ export function Play(): ReactNode {
       }
     >
       {error !== null && (
-        <Notice tone="danger">
-          <div className="flex items-center justify-between gap-3">
+        <Notice tone='danger'>
+          <div className='flex items-center justify-between gap-3'>
             <span>{error}</span>
-            <Button variant="ghost" size="sm" onPress={dismissError}>
+            <Button variant='ghost' size='sm' onPress={dismissError}>
               Dismiss
             </Button>
           </div>
@@ -217,7 +224,7 @@ function UnexpectedPeerWarning({
   const deviceCount = peerCount + 1;
   if (!settled || deviceCount <= knownPlayers) return null;
   return (
-    <Notice tone="warn">
+    <Notice tone='warn'>
       {deviceCount} devices connected but only {knownPlayers} known player
       {knownPlayers === 1 ? '' : 's'}. Someone may be watching who never joined - the join code is
       the only lock this game has.
@@ -260,7 +267,11 @@ function TurnAnnouncer({
     if (turnChanged && lastTurn !== null) {
       lastAnnouncedTurn.current = lastTurn.turnIndex;
       const team = state.teams.find((t) => t.id === lastTurn.teamId)?.name ?? 'They';
-      const outcome = lastTurn.timedOut ? 'ran out of time' : lastTurn.correct ? 'were right' : 'were wrong';
+      const outcome = lastTurn.timedOut
+        ? 'ran out of time'
+        : lastTurn.correct
+          ? 'were right'
+          : 'were wrong';
       const delta = lastTurn.delta > 0 ? `+${lastTurn.delta}` : `${lastTurn.delta}`;
       parts.push(`${team} ${outcome}, ${delta} points.`);
     }
@@ -272,7 +283,7 @@ function TurnAnnouncer({
   }, [lastTurn, actingTeamName, state.teams]);
 
   return (
-    <div aria-live="polite" role="status" className="sr-only">
+    <div aria-live='polite' role='status' className='sr-only'>
       {message}
     </div>
   );
@@ -282,7 +293,7 @@ function Scores({ state, me }: { state: GameState; me: string }): ReactNode {
   const rows = scoreboard(state);
   const myTeamId = teamOf(state, me)?.id;
   return (
-    <div className="flex flex-col gap-2">
+    <div className='flex flex-col gap-2'>
       {rows.map((row) => (
         <div
           key={row.team.id}
@@ -290,28 +301,28 @@ function Scores({ state, me }: { state: GameState; me: string }): ReactNode {
             row.isActing ? 'border-primary/60 bg-primary/5' : 'border-default-200/30'
           }`}
         >
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="flex min-w-0 items-center gap-2">
-              <span className="truncate text-sm font-medium">{row.team.name}</span>
+          <div className='flex items-baseline justify-between gap-3'>
+            <span className='flex min-w-0 items-center gap-2'>
+              <span className='truncate text-sm font-medium'>{row.team.name}</span>
               {row.team.id === myTeamId && (
-                <Chip color="success" variant="soft" size="sm">
+                <Chip color='success' variant='soft' size='sm'>
                   you
                 </Chip>
               )}
               {row.isActing && (
-                <Chip color="accent" variant="soft" size="sm">
+                <Chip color='accent' variant='soft' size='sm'>
                   playing
                 </Chip>
               )}
             </span>
-            <span className="font-mono text-sm tabular-nums">{row.score}</span>
+            <span className='font-mono text-sm tabular-nums'>{row.score}</span>
           </div>
           <ProgressBar
             value={Math.round(row.progress * 100)}
             aria-label={`${row.team.name} progress toward ${state.rules.targetScore}`}
-            size="sm"
+            size='sm'
             color={row.isLeader ? 'success' : 'default'}
-            className="mt-2"
+            className='mt-2'
           >
             <ProgressBar.Track>
               <ProgressBar.Fill style={{ width: `${Math.round(row.progress * 100)}%` }} />
@@ -320,7 +331,7 @@ function Scores({ state, me }: { state: GameState; me: string }): ReactNode {
         </div>
       ))}
       {state.streak > 1 && (
-        <p className="text-center text-xs text-muted">
+        <p className='text-center text-xs text-muted'>
           {state.streak} correct in a row - the turn has not moved.
         </p>
       )}
@@ -357,7 +368,7 @@ function BetweenTurns({
   const dwellElapsed = useRevealDwell(lastTurn?.turnIndex ?? -1);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className='flex flex-col gap-4'>
       {lastTurn !== null && <Outcome key={lastTurn.turnIndex} record={lastTurn} state={state} />}
 
       {lastTurn !== null && lastTurn.isomorph !== null && (
@@ -382,8 +393,8 @@ function BetweenTurns({
         {canDealNow && (
           <Card.Footer>
             <Button
-              variant="primary"
-              size="lg"
+              variant='primary'
+              size='lg'
               fullWidth
               isDisabled={lastTurn !== null && !dwellElapsed}
               onPress={onDeal}
@@ -395,7 +406,7 @@ function BetweenTurns({
       </Card>
 
       {!canDealNow && isActingPlayer(state, me) && (
-        <p className="text-center text-sm text-muted">Waiting for your opponents to deal.</p>
+        <p className='text-center text-sm text-muted'>Waiting for your opponents to deal.</p>
       )}
     </div>
   );
@@ -453,9 +464,9 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
   }, []);
 
   return (
-    <Card className="anim-reveal" variant={record.correct ? 'secondary' : 'tertiary'}>
+    <Card className='anim-reveal' variant={record.correct ? 'secondary' : 'tertiary'}>
       <Card.Header>
-        <Card.Title className="flex items-center justify-between gap-3 text-base">
+        <Card.Title className='flex items-center justify-between gap-3 text-base'>
           <span>
             {team?.name ?? 'They'}{' '}
             {record.timedOut ? 'ran out of time' : record.correct ? 'were right' : 'were wrong'}
@@ -469,24 +480,26 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
       </Card.Header>
 
       {question !== undefined && (
-        <Card.Content className="flex flex-col gap-4 text-sm">
+        <Card.Content className='flex flex-col gap-4 text-sm'>
           {face !== undefined && (
-            <div className="rounded-[3px] bg-[#f4f4f2] px-5 py-5 text-center">
-              <div className="font-han text-[3.4rem] font-medium leading-none tracking-[0.05em] text-[#14140f]">
+            <div className='rounded-[3px] bg-[#f4f4f2] px-5 py-5 text-center'>
+              <div className='font-han text-[3.4rem] font-medium leading-none tracking-[0.05em] text-[#14140f]'>
                 {face.hanzi}
               </div>
               {!hanziAlone && (
-                <div className="anim-fade-in">
-                  <div className="mt-3 text-[1.05rem] font-medium text-[#5a5a52]">{face.pinyin}</div>
-                  <div className="mt-2.5 border-t border-black/10 pt-2.5 text-[0.95rem] text-[#14140f]">
-                    <strong className="font-semibold">{correctText}</strong>
-                    <span className="text-[#5a5a52]"> &middot; {face.nl}</span>
+                <div className='anim-fade-in'>
+                  <div className='mt-3 text-[1.05rem] font-medium text-[#5a5a52]'>
+                    {face.pinyin}
+                  </div>
+                  <div className='mt-2.5 border-t border-black/10 pt-2.5 text-[0.95rem] text-[#14140f]'>
+                    <strong className='font-semibold'>{correctText}</strong>
+                    <span className='text-[#5a5a52]'> &middot; {face.nl}</span>
                   </div>
                   {record.chosenText !== null && !record.correct && (
-                    <p className="mt-2 text-[0.9rem]">
-                      <span className="text-[#5a5a52]">They said: </span>
-                      <span className="font-medium text-danger-text">{record.chosenText}</span>
-                      <span className="text-danger-text"> — wrong</span>
+                    <p className='mt-2 text-[0.9rem]'>
+                      <span className='text-[#5a5a52]'>They said: </span>
+                      <span className='font-medium text-danger-text'>{record.chosenText}</span>
+                      <span className='text-danger-text'> — wrong</span>
                     </p>
                   )}
                 </div>
@@ -496,8 +509,8 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
 
           {!hanziAlone && !revealed && (
             <Button
-              variant="ghost"
-              size="sm"
+              variant='ghost'
+              size='sm'
               fullWidth
               onPress={() => {
                 breakdownOpenedRef.current = true;
@@ -509,9 +522,9 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
           )}
 
           {!hanziAlone && revealed && (
-            <div className="anim-fade-in flex flex-col gap-2">
+            <div className='anim-fade-in flex flex-col gap-2'>
               {(question.decomposition !== undefined || face?.transparency === 'opaque') && (
-                <div className="anim-fade-in flex flex-col gap-2">
+                <div className='anim-fade-in flex flex-col gap-2'>
                   <DecompositionPanel
                     decomposition={question.decomposition}
                     transparency={face?.transparency}
@@ -519,16 +532,18 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                   />
 
                   {showSelfExplain && showLoci && (
-                    <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
+                    <div className='flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted'>
                       <button
-                        type="button"
+                        type='button'
                         onClick={() => setMnemonicMode('self_explanation')}
-                        className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
+                        className={
+                          mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''
+                        }
                       >
                         which part means it
                       </button>
                       <button
-                        type="button"
+                        type='button'
                         onClick={() => setMnemonicMode('loci')}
                         className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
                       >
@@ -554,16 +569,24 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                   )}
 
                   {confusables.length > 0 && (
-                    <ConfusablePanel confusables={confusables} confusionType={question.confusion_type} />
+                    <ConfusablePanel
+                      confusables={confusables}
+                      confusionType={question.confusion_type}
+                    />
                   )}
 
                   {siblings.length > 0 &&
                     (!showSiblings ? (
-                      <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
+                      <Button
+                        variant='ghost'
+                        size='sm'
+                        fullWidth
+                        onPress={() => setShowSiblings(true)}
+                      >
                         See the same move again
                       </Button>
                     ) : (
-                      <div className="anim-fade-in">
+                      <div className='anim-fade-in'>
                         <SiblingsPanel siblings={siblings} />
                       </div>
                     ))}
@@ -598,16 +621,20 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
  */
 function OtherAnswers({ record, state }: { record: TurnRecord; state: GameState }): ReactNode {
   return (
-    <div className="flex flex-col gap-1.5 border-t border-black/10 pt-2.5">
-      <p className="text-[0.65rem] uppercase tracking-wide text-muted/70">
+    <div className='flex flex-col gap-1.5 border-t border-black/10 pt-2.5'>
+      <p className='text-[0.65rem] uppercase tracking-wide text-muted/70'>
         Everyone else&apos;s answer - review only, none of this touched the score
       </p>
       {record.otherAnswers.map((other) => {
         const name = state.players[other.playerId]?.username ?? 'Someone';
         return (
-          <p key={other.playerId} className="text-[0.85rem]">
-            <span className="text-[#5a5a52]">{name}: </span>
-            <span className={other.correct ? 'font-medium text-success' : 'font-medium text-danger-text'}>
+          <p key={other.playerId} className='text-[0.85rem]'>
+            <span className='text-[#5a5a52]'>{name}: </span>
+            <span
+              className={
+                other.correct ? 'font-medium text-success' : 'font-medium text-danger-text'
+              }
+            >
               {other.chosenText ?? 'no answer'}
             </span>
           </p>
@@ -673,7 +700,7 @@ function ConferBeat({
   const canAnswerNow = canAnswerIsomorph(state, me, turnIndex);
   const iHaveAnswered = hasAnsweredIsomorph(state, me, turnIndex);
   const answererId = state.history.find((r) => r.turnIndex === turnIndex)?.answererId ?? null;
-  const answererName = answererId == null ? null : state.players[answererId]?.username ?? null;
+  const answererName = answererId == null ? null : (state.players[answererId]?.username ?? null);
 
   const picked = useRef<number | null>(null);
   const [pending, setPending] = useState(false);
@@ -685,23 +712,23 @@ function ConferBeat({
   if (presented === null) return null;
 
   return (
-    <Card className="anim-enter" variant="tertiary">
+    <Card className='anim-enter' variant='tertiary'>
       <Card.Header>
         <Card.Title>One more, no talking</Card.Title>
         <Card.Description>
           {conferring
             ? `${answererName ?? 'Whoever answered'}: out loud, why isn't it the other option? Then everyone answers this one alone - it never touches the score.`
-            : "Everyone answers alone, no discussion. This one never touches the score."}
+            : 'Everyone answers alone, no discussion. This one never touches the score.'}
         </Card.Description>
       </Card.Header>
 
       {!conferring && (
-        <Card.Content className="flex flex-col gap-2.5">
-          <p className="text-base font-medium">{presented.question.prompt}</p>
+        <Card.Content className='flex flex-col gap-2.5'>
+          <p className='text-base font-medium'>{presented.question.prompt}</p>
           {presented.options.map((option, index) => (
             <button
               key={option}
-              type="button"
+              type='button'
               disabled={pending || !canAnswerNow}
               onClick={() => {
                 if (picked.current === turnIndex) return;
@@ -720,34 +747,38 @@ function ConferBeat({
           ))}
 
           {iHaveAnswered && (
-            <p className="text-center text-sm text-muted">Your answer is locked in.</p>
+            <p className='text-center text-sm text-muted'>Your answer is locked in.</p>
           )}
 
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center justify-center gap-1.5">
+          <div className='flex flex-col items-center gap-1'>
+            <div className='flex items-center justify-center gap-1.5'>
               {playerIds.map((id) => (
                 <span
                   key={id}
-                  aria-hidden="true"
+                  aria-hidden='true'
                   className={`h-2 w-2 rounded-full ${
                     answeredIds.has(id) ? 'bg-primary' : 'border border-default-200/50'
                   }`}
                 />
               ))}
             </div>
-            <span className="sr-only" role="status" aria-live="polite">
+            <span className='sr-only' role='status' aria-live='polite'>
               {answeredIds.size} of {playerIds.length} players have answered.
             </span>
           </div>
 
           {answers.length > 0 && (
-            <div className="flex flex-col gap-1 border-t border-black/10 pt-2.5">
+            <div className='flex flex-col gap-1 border-t border-black/10 pt-2.5'>
               {answers.map((a) => {
                 const name = state.players[a.playerId]?.username ?? 'Someone';
                 return (
-                  <p key={a.playerId} className="text-[0.85rem]">
-                    <span className="text-[#5a5a52]">{name}: </span>
-                    <span className={a.correct ? 'font-medium text-success' : 'font-medium text-danger-text'}>
+                  <p key={a.playerId} className='text-[0.85rem]'>
+                    <span className='text-[#5a5a52]'>{name}: </span>
+                    <span
+                      className={
+                        a.correct ? 'font-medium text-success' : 'font-medium text-danger-text'
+                      }
+                    >
                       {a.chosenText ?? 'no answer'}
                     </span>
                   </p>
@@ -788,7 +819,7 @@ function ChooseCategory({
   }
 
   return (
-    <div className="anim-enter flex flex-col gap-4">
+    <div className='anim-enter flex flex-col gap-4'>
       <Card>
         <Card.Header>
           <Card.Title>Choose a category</Card.Title>
@@ -808,13 +839,13 @@ function ChooseCategory({
       />
 
       {canChoose && (
-        <div className="flex flex-col gap-3">
+        <div className='flex flex-col gap-3'>
           {options.map((categoryId) => {
             const category = categoryById(categoryId);
             return (
               <button
                 key={categoryId}
-                type="button"
+                type='button'
                 disabled={pending}
                 onClick={() => {
                   if (picked.current === turnIndex) return;
@@ -822,9 +853,9 @@ function ChooseCategory({
                   setPending(true);
                   onPick(categoryId);
                 }}
-                className="rounded-2xl border border-default-200/40 px-4 py-4 text-left transition hover:border-primary/60 hover:bg-primary/5 disabled:cursor-default disabled:opacity-60"
+                className='rounded-2xl border border-default-200/40 px-4 py-4 text-left transition hover:border-primary/60 hover:bg-primary/5 disabled:cursor-default disabled:opacity-60'
               >
-                <span className="font-medium">{category?.name ?? categoryId}</span>
+                <span className='font-medium'>{category?.name ?? categoryId}</span>
               </button>
             );
           })}
@@ -856,14 +887,14 @@ function ChooseTier({
   }
 
   return (
-    <div className="anim-enter flex flex-col gap-4">
+    <div className='anim-enter flex flex-col gap-4'>
       <Card>
         <Card.Header>
           <Card.Description>Your category is</Card.Description>
-          <Card.Title className="text-2xl">{categoryName}</Card.Title>
+          <Card.Title className='text-2xl'>{categoryName}</Card.Title>
         </Card.Header>
         <Card.Content>
-          <p className="text-sm text-muted">
+          <p className='text-sm text-muted'>
             {canChoose
               ? 'How hard do you want it? You are betting before you see the question.'
               : `Waiting for ${
@@ -881,13 +912,13 @@ function ChooseTier({
       />
 
       {canChoose && (
-        <div className="flex flex-col gap-3">
+        <div className='flex flex-col gap-3'>
           {DIFFICULTY_ORDER.map((difficulty) => {
             const tier = DIFFICULTY_TIERS[difficulty];
             return (
               <button
                 key={difficulty}
-                type="button"
+                type='button'
                 disabled={pending}
                 onClick={() => {
                   if (picked.current === turnIndex) return;
@@ -903,17 +934,15 @@ function ChooseTier({
                   }[difficulty]
                 }`}
               >
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="font-medium">{tier.label}</span>
-                  <span className="font-mono text-sm tabular-nums">
-                    <span className="text-success">+{tier.award}</span>
-                    <span className="text-muted"> / </span>
-                    <span className="text-danger-text">{tier.penalty}</span>
+                <div className='flex items-baseline justify-between gap-3'>
+                  <span className='font-medium'>{tier.label}</span>
+                  <span className='font-mono text-sm tabular-nums'>
+                    <span className='text-success'>+{tier.award}</span>
+                    <span className='text-muted'> / </span>
+                    <span className='text-danger-text'>{tier.penalty}</span>
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-muted">
-                  {tier.timeoutMs / 1000} seconds to answer
-                </p>
+                <p className='mt-1 text-xs text-muted'>{tier.timeoutMs / 1000} seconds to answer</p>
               </button>
             );
           })}
@@ -964,7 +993,7 @@ function LiveQuestion({
   const remaining = useCountdown(turnKey, DIFFICULTY_TIERS[difficulty].timeoutMs);
   const lowTimeMessage = useLowTimeAnnouncement(remaining, turnKey);
   const nominated = state.active?.nominatedId;
-  const nominatedName = nominated == null ? null : state.players[nominated]?.username ?? null;
+  const nominatedName = nominated == null ? null : (state.players[nominated]?.username ?? null);
 
   // Opponents call time, not the team on the clock, and they stagger by a
   // deterministic offset so five devices do not all fire the same event at once.
@@ -1008,28 +1037,28 @@ function LiveQuestion({
   }
 
   return (
-    <div className="anim-enter flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-3">
+    <div className='anim-enter flex flex-col gap-4'>
+      <div className='flex items-center justify-between gap-3'>
         <TierBadge difficulty={difficulty} />
         <span
           className={`font-mono text-sm tabular-nums ${remaining <= 10_000 ? 'text-danger-text' : 'text-muted'}`}
         >
           {Math.max(0, Math.ceil(remaining / 1000))}s
         </span>
-        <span aria-live="assertive" role="status" className="sr-only">
+        <span aria-live='assertive' role='status' className='sr-only'>
           {lowTimeMessage}
         </span>
       </div>
 
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-sm text-muted">
+      <div className='flex items-center justify-between gap-3'>
+        <span className='text-sm text-muted'>
           {categoryName}
           {repeat && ' - seen before, the pack ran dry'}
         </span>
       </div>
 
       {face !== undefined && (
-        <div className="sign-timing-warn" data-warn={timingWarn}>
+        <div className='sign-timing-warn' data-warn={timingWarn}>
           <Sign
             template={templateFor(categoryId)}
             category={categoryId}
@@ -1040,14 +1069,14 @@ function LiveQuestion({
         </div>
       )}
 
-      <p className="text-xl font-medium leading-snug tracking-[-0.01em]">{prompt}</p>
+      <p className='text-xl font-medium leading-snug tracking-[-0.01em]'>{prompt}</p>
 
       <Card>
-        <Card.Content className="flex flex-col gap-2.5 pt-4">
+        <Card.Content className='flex flex-col gap-2.5 pt-4'>
           {options.map((option, index) => (
             <button
               key={option}
-              type="button"
+              type='button'
               disabled={locked}
               onClick={() => {
                 if (answered.current === turnIndex) return;
@@ -1061,7 +1090,7 @@ function LiveQuestion({
                   : 'cursor-default border-default-200/20 text-muted'
               }`}
             >
-              <span className="mr-2 font-mono text-xs text-muted">
+              <span className='mr-2 font-mono text-xs text-muted'>
                 {String.fromCharCode(65 + index)}
               </span>
               {option}
@@ -1071,15 +1100,15 @@ function LiveQuestion({
       </Card>
 
       {iHaveAnswered ? (
-        <p className="text-center text-sm text-muted">Your answer is locked in.</p>
+        <p className='text-center text-sm text-muted'>Your answer is locked in.</p>
       ) : iAmActing && nominatedName !== null ? (
-        <p className="text-center text-xs text-muted">
+        <p className='text-center text-xs text-muted'>
           {nominatedName}&apos;s turn to answer for the team - though anyone on it can tap.
         </p>
       ) : (
-        <p className="text-center text-sm text-muted">
-          Everyone answers this one. Only {activeTeamName}&apos;s pick affects the score, but
-          yours still counts toward your own review queue.
+        <p className='text-center text-sm text-muted'>
+          Everyone answers this one. Only {activeTeamName}&apos;s pick affects the score, but yours
+          still counts toward your own review queue.
         </p>
       )}
 
@@ -1101,19 +1130,19 @@ function PresenceDots({ state }: { state: GameState }): ReactNode {
   const ids = Object.keys(state.players);
   const answered = new Set(answeredPlayerIds(state));
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="flex items-center justify-center gap-1.5">
+    <div className='flex flex-col items-center gap-1'>
+      <div className='flex items-center justify-center gap-1.5'>
         {ids.map((id) => (
           <span
             key={id}
-            aria-hidden="true"
+            aria-hidden='true'
             className={`h-2 w-2 rounded-full ${
               answered.has(id) ? 'bg-primary' : 'border border-default-200/50'
             }`}
           />
         ))}
       </div>
-      <span className="sr-only" role="status" aria-live="polite">
+      <span className='sr-only' role='status' aria-live='polite'>
         {answered.size} of {ids.length} players have answered.
       </span>
     </div>
@@ -1151,9 +1180,14 @@ function useRecallBeat(turnIndex: number, enabled: boolean): boolean {
 /** The recall beat's own screen: the sign alone, nothing to tap, no timer readout - just the prompt to say it. */
 function RecallBeat({ face, categoryId }: { face: SignFace; categoryId: CategoryId }): ReactNode {
   return (
-    <div className="anim-enter flex flex-col items-center gap-4 py-6">
-      <Sign template={templateFor(categoryId)} category={categoryId} hanzi={face.hanzi} context={face.context} />
-      <p className="text-sm text-muted">Say it out loud.</p>
+    <div className='anim-enter flex flex-col items-center gap-4 py-6'>
+      <Sign
+        template={templateFor(categoryId)}
+        category={categoryId}
+        hanzi={face.hanzi}
+        context={face.context}
+      />
+      <p className='text-sm text-muted'>Say it out loud.</p>
     </div>
   );
 }
@@ -1161,7 +1195,7 @@ function RecallBeat({ face, categoryId }: { face: SignFace; categoryId: Category
 /** Any peer may call time (R-3) - a stuck turn should never need to wait out a stagger nobody's device is running. */
 function CallTimeButton({ onPress }: { onPress: () => void }): ReactNode {
   return (
-    <Button variant="ghost" size="sm" fullWidth onPress={onPress}>
+    <Button variant='ghost' size='sm' fullWidth onPress={onPress}>
       Something stuck? Call time
     </Button>
   );
@@ -1194,16 +1228,16 @@ function PhaseTimer({
   useAutoTimeout({ enabled: amOpponent, remaining, state, onTimeout });
 
   return (
-    <div className="flex items-center justify-between gap-3">
+    <div className='flex items-center justify-between gap-3'>
       <span
         className={`font-mono text-sm tabular-nums ${remaining <= 10_000 ? 'text-danger-text' : 'text-muted'}`}
       >
         {Math.max(0, Math.ceil(remaining / 1000))}s to decide
       </span>
-      <span aria-live="assertive" role="status" className="sr-only">
+      <span aria-live='assertive' role='status' className='sr-only'>
         {lowTimeMessage}
       </span>
-      <Button variant="ghost" size="sm" onPress={onTimeout}>
+      <Button variant='ghost' size='sm' onPress={onTimeout}>
         Call time
       </Button>
     </div>
@@ -1243,7 +1277,8 @@ const TURN_START_KEY = 'kanbudong.turnStart.v1';
 function readOrStampTurnStart(key: string): number {
   try {
     const raw = globalThis.localStorage?.getItem(TURN_START_KEY);
-    const parsed = raw === null || raw === undefined ? null : (JSON.parse(raw) as { key?: string; at?: number });
+    const parsed =
+      raw === null || raw === undefined ? null : (JSON.parse(raw) as { key?: string; at?: number });
     if (parsed?.key === key && typeof parsed.at === 'number') return parsed.at;
   } catch {
     /* corrupted or unavailable - fall through to a fresh stamp */

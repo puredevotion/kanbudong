@@ -41,7 +41,9 @@ describe('buildFsrsTrainingSet', () => {
 
   it('grades an incorrect answer as a lapse regardless of encounter history', () => {
     const now = Date.now();
-    const set = buildFsrsTrainingSet([{ itemId: 'q1', correct: false, timestamp: now, priorLastReview: now - DAY }]);
+    const set = buildFsrsTrainingSet([
+      { itemId: 'q1', correct: false, timestamp: now, priorLastReview: now - DAY },
+    ]);
     expect(set[0]!.reviews[0]!.rating).toBe(ratingForGrade('again'));
   });
 
@@ -89,8 +91,12 @@ describe('shouldAttemptRefit', () => {
 
   it('does not refit again until enough new reviews accumulate since the last fit', () => {
     const lastFit = { reviewCountAtFit: FSRS_REFIT_MIN_REVIEWS };
-    expect(shouldAttemptRefit(FSRS_REFIT_MIN_REVIEWS + FSRS_REFIT_MIN_NEW_REVIEWS - 1, lastFit)).toBe(false);
-    expect(shouldAttemptRefit(FSRS_REFIT_MIN_REVIEWS + FSRS_REFIT_MIN_NEW_REVIEWS, lastFit)).toBe(true);
+    expect(
+      shouldAttemptRefit(FSRS_REFIT_MIN_REVIEWS + FSRS_REFIT_MIN_NEW_REVIEWS - 1, lastFit),
+    ).toBe(false);
+    expect(shouldAttemptRefit(FSRS_REFIT_MIN_REVIEWS + FSRS_REFIT_MIN_NEW_REVIEWS, lastFit)).toBe(
+      true,
+    );
   });
 });
 

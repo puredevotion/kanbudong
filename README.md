@@ -1,6 +1,6 @@
 # 看不懂
 
-*kànbudǒng* — "I look at it and I don't get it." The noise you make in front of a
+_kànbudǒng_ — "I look at it and I don't get it." The noise you make in front of a
 Chinese sign, which is the problem this is for.
 
 A co-located multiplayer **reading** game. Five people round a table, five phones,
@@ -25,7 +25,7 @@ which is backwards from every phrasebook. The reason is one line: **the metro is
 already in English; the noodle shop is not.**
 
 Bilingual signage in tier-1 metros and airports is procurement practice — GB/T
-30240 is 推荐性, *recommended*. GB 7718, which requires Chinese on packaged-food
+30240 is 推荐性, _recommended_. GB 7718, which requires Chinese on packaged-food
 labels and forbids foreign text set larger than the corresponding Chinese, is
 mandatory. The supermarket back panel is where no English is coming.
 
@@ -35,7 +35,7 @@ mandatory. The supermarket back panel is where no English is coming.
 with the price shouting over the character you actually need. A shopfront renders
 as a fascia — loud, tightly tracked, gold on red. Two of the five templates are
 hard to read because the real ones are, and the design document is explicit that
-this is *fidelity*, never a difficulty device: perceptual disfluency does not aid
+this is _fidelity_, never a difficulty device: perceptual disfluency does not aid
 learning, and the target glyph clears WCAG AA in every treatment.
 
 **An item is a span, not a character.** 出口, 保质期, 换乘, 会员价 — one to four
@@ -50,14 +50,14 @@ that screen is the body of the reveal and nothing advances it but a tap.
 
 ## Layout
 
-| Path | What it is |
-| --- | --- |
-| `packages/engine` | Rules, identity, event log, deterministic reducer, content packs. No DOM, no sockets. |
-| `packages/net` | Peer discovery, anti-entropy sync, QR join tickets, local storage. |
-| `apps/pwa` | The app you play. Vite + React 19 + HeroUI v3, installable and offline-capable. |
-| `docs/DESIGN.md` | The design, from 11 adversarially-reviewed literature sweeps. Long, and the argument for every decision is in it. |
-| `docs/FORK.md` | What was inherited from dohhh, what stays byte-identical, and how to port a fix across. |
-| `design/cards` | Card design source, published as a Claude Design canvas. |
+| Path              | What it is                                                                                                        |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `packages/engine` | Rules, identity, event log, deterministic reducer, content packs. No DOM, no sockets.                             |
+| `packages/net`    | Peer discovery, anti-entropy sync, QR join tickets, local storage.                                                |
+| `apps/pwa`        | The app you play. Vite + React 19 + HeroUI v3, installable and offline-capable.                                   |
+| `docs/DESIGN.md`  | The design, from 11 adversarially-reviewed literature sweeps. Long, and the argument for every decision is in it. |
+| `docs/FORK.md`    | What was inherited from dohhh, what stays byte-identical, and how to port a fix across.                           |
+| `design/cards`    | Card design source, published as a Claude Design canvas.                                                          |
 
 ## Running it
 

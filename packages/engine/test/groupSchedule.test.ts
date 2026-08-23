@@ -72,7 +72,9 @@ describe('meetsMinimumInterval', () => {
 
   it('accepts a recurrence past the floor', () => {
     const now = Date.now();
-    const p = player('p1', 1, { [question.id]: reviewItem(null, 'hard', now - (MIN_INTERVAL_DAYS + 0.1) * DAY)! });
+    const p = player('p1', 1, {
+      [question.id]: reviewItem(null, 'hard', now - (MIN_INTERVAL_DAYS + 0.1) * DAY)!,
+    });
     expect(meetsMinimumInterval(question, p, now)).toBe(true);
   });
 
@@ -89,7 +91,10 @@ describe('forceInjectionPool (P37 constraint 3)', () => {
   it('is inert below the consecutive-miss cap', () => {
     const now = Date.now();
     const p = player('p1', 1, { [easy!.id]: reviewItem(null, 'good', now - 200 * DAY)! });
-    const state = { scoredThisSession: new Set<QuestionId>(), consecutiveMisses: { p1: CONSECUTIVE_MISS_CAP - 1 } };
+    const state = {
+      scoredThisSession: new Set<QuestionId>(),
+      consecutiveMisses: { p1: CONSECUTIVE_MISS_CAP - 1 },
+    };
     expect(forceInjectionPool(SEED_PACK, scene, [p], state, now)).toBeNull();
   });
 
@@ -97,7 +102,10 @@ describe('forceInjectionPool (P37 constraint 3)', () => {
     const now = Date.now();
     // Freshly reviewed = high retrievability, well above the force-inject floor.
     const p = player('p1', 1, { [easy!.id]: reviewItem(null, 'good', now)! });
-    const state = { scoredThisSession: new Set<QuestionId>(), consecutiveMisses: { p1: CONSECUTIVE_MISS_CAP } };
+    const state = {
+      scoredThisSession: new Set<QuestionId>(),
+      consecutiveMisses: { p1: CONSECUTIVE_MISS_CAP },
+    };
     const forced = forceInjectionPool(SEED_PACK, scene, [p], state, now);
     expect(forced).not.toBeNull();
     expect(forced!.forPlayerId).toBe('p1');
@@ -119,7 +127,10 @@ describe('forceInjectionPool (P37 constraint 3)', () => {
     // A lapse a few days ago decays well under the force-inject floor by now,
     // unlike a review at `now` itself, which is always R = 1 regardless of grade.
     const p = player('p1', 1, { [hard!.id]: reviewItem(null, 'again', now - 5 * DAY)! });
-    const state = { scoredThisSession: new Set<QuestionId>(), consecutiveMisses: { p1: CONSECUTIVE_MISS_CAP } };
+    const state = {
+      scoredThisSession: new Set<QuestionId>(),
+      consecutiveMisses: { p1: CONSECUTIVE_MISS_CAP },
+    };
     expect(forceInjectionPool(SEED_PACK, scene, [p], state, now)).toBeNull();
   });
 });

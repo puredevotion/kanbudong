@@ -12,7 +12,14 @@
  * §11.9's "what it does not get" list.
  */
 
-import { default_w, isDue, retrievability, elapsedDaysSince, TARGET_RETENTION, type ItemMemory } from './memory.js';
+import {
+  default_w,
+  isDue,
+  retrievability,
+  elapsedDaysSince,
+  TARGET_RETENTION,
+  type ItemMemory,
+} from './memory.js';
 import type { ContentPack, Question, QuestionId } from './types.js';
 
 /** §11.9: "ends ... at ~40 retrievals, whichever comes first." */
@@ -66,13 +73,18 @@ export function buildSoloQueue(
   due.sort((a, b) => b.overdueBy - a.overdueBy);
 
   const ordered = due.map((d) => d.question);
-  const seededFirst = [...ordered].sort((a, b) => Number(seededToday.has(b.id)) - Number(seededToday.has(a.id)));
+  const seededFirst = [...ordered].sort(
+    (a, b) => Number(seededToday.has(b.id)) - Number(seededToday.has(a.id)),
+  );
 
   return { due: seededFirst, fresh };
 }
 
 /** Next item for the session: due items first, then fresh ones, skipping anything already presented this session. */
-export function nextSoloItem(queue: SoloQueue, presented: ReadonlySet<QuestionId>): Question | null {
+export function nextSoloItem(
+  queue: SoloQueue,
+  presented: ReadonlySet<QuestionId>,
+): Question | null {
   for (const question of queue.due) if (!presented.has(question.id)) return question;
   for (const question of queue.fresh) if (!presented.has(question.id)) return question;
   return null;

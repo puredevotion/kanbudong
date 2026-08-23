@@ -71,10 +71,14 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'dà fèn · grote portie (large portion). 份 can also mean "share" or "copy" elsewhere, so read it with 大 for this sense.',
       { hanzi: '大份', pinyin: 'dà fèn', nl: 'grote portie', en: 'large portion' },
-      { kind: 'word', hanzi: '大份', morphemes: [
-        { span: '大', gloss: 'big' },
-        { span: '份', gloss: 'portion' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '大份',
+        morphemes: [
+          { span: '大', gloss: 'big' },
+          { span: '份', gloss: 'portion' },
+        ],
+      },
       { tier: 1 },
     ],
   ],
@@ -85,10 +89,14 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'dà fèn · grote portie (large portion). 份 can also mean "share" or "copy" elsewhere, so read it with 大 for this sense.',
       { hanzi: '大份', pinyin: 'dà fèn', nl: 'grote portie', en: 'large portion' },
-      { kind: 'word', hanzi: '大份', morphemes: [
-        { span: '大', gloss: 'big' },
-        { span: '份', gloss: 'portion' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '大份',
+        morphemes: [
+          { span: '大', gloss: 'big' },
+          { span: '份', gloss: 'portion' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -97,10 +105,14 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'xiǎo fèn · kleine portie (small portion). Read the two characters together as one term, not separately.',
       { hanzi: '小份', pinyin: 'xiǎo fèn', nl: 'kleine portie', en: 'small portion' },
-      { kind: 'word', hanzi: '小份', morphemes: [
-        { span: '小', gloss: 'small' },
-        { span: '份', gloss: 'portion' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '小份',
+        morphemes: [
+          { span: '小', gloss: 'small' },
+          { span: '份', gloss: 'portion' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -109,10 +121,14 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'liángcài · koude gerechten (cold dishes). These are always listed as the first section on the menu.',
       { hanzi: '凉菜', pinyin: 'liángcài', nl: 'koude gerechten', en: 'cold dishes' },
-      { kind: 'word', hanzi: '凉菜', morphemes: [
-        { span: '凉', gloss: 'cool' },
-        { span: '菜', gloss: 'dish, vegetable' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '凉菜',
+        morphemes: [
+          { span: '凉', gloss: 'cool' },
+          { span: '菜', gloss: 'dish, vegetable' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -121,10 +137,14 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'rècài · warme gerechten (hot dishes). Usually the section right after the cold dishes.',
       { hanzi: '热菜', pinyin: 'rècài', nl: 'warme gerechten', en: 'hot dishes' },
-      { kind: 'word', hanzi: '热菜', morphemes: [
-        { span: '热', gloss: 'hot' },
-        { span: '菜', gloss: 'dish, vegetable' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '热菜',
+        morphemes: [
+          { span: '热', gloss: 'hot' },
+          { span: '菜', gloss: 'dish, vegetable' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -156,10 +176,14 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'yǐnliào · frisdrank (soft drinks). Different from 酒水, which means alcoholic drinks.',
       { hanzi: '饮料', pinyin: 'yǐnliào', nl: 'frisdrank', en: 'soft drinks' },
-      { kind: 'word', hanzi: '饮料', morphemes: [
-        { span: '饮', gloss: 'to drink' },
-        { span: '料', gloss: 'material, ingredient' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '饮料',
+        morphemes: [
+          { span: '饮', gloss: 'to drink' },
+          { span: '料', gloss: 'material, ingredient' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -174,10 +198,14 @@ export const MENU_ORDER: CategoryContent = {
         en: 'pack up, takeaway',
         context: { after: '费+1元' },
       },
-      { kind: 'word', hanzi: '打包', morphemes: [
-        { span: '打', gloss: 'to hit, do' },
-        { span: '包', gloss: 'filled bun, to wrap' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '打包',
+        morphemes: [
+          { span: '打', gloss: 'to hit, do' },
+          { span: '包', gloss: 'filled bun, to wrap' },
+        ],
+      },
     ],
     [
       'On the menu. What does this mean?',
@@ -191,18 +219,28 @@ export const MENU_ORDER: CategoryContent = {
         en: 'shopping cart',
         context: { after: ' 2' },
       },
-      { kind: 'word', hanzi: '购物车', morphemes: [
-        { span: '购', gloss: 'to purchase' },
-        { span: '物', gloss: 'thing, object' },
-        { span: '车', gloss: 'vehicle, cart' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '购物车',
+        morphemes: [
+          { span: '购', gloss: 'to purchase' },
+          { span: '物', gloss: 'thing, object' },
+          { span: '车', gloss: 'vehicle, cart' },
+        ],
+      },
     ],
     [
       'On the menu. What does this mean?',
       ['dish, vegetable', 'cold dishes', 'hot dishes'],
       0,
       'cài · gerecht, groente (dish, vegetable). Seen in 凉菜/热菜 (cold/hot dishes) on a menu section header. 采 (picking) under 艹 (plant): cài, produce picked for the table.',
-      { hanzi: '菜', pinyin: 'cài', nl: 'gerecht, groente', en: 'dish, vegetable', structure: 'top-bottom' },
+      {
+        hanzi: '菜',
+        pinyin: 'cài',
+        nl: 'gerecht, groente',
+        en: 'dish, vegetable',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '菜',
@@ -217,8 +255,14 @@ export const MENU_ORDER: CategoryContent = {
       'On the menu. What does this mean?',
       ['material, ingredient', 'soft drinks', 'dish, vegetable'],
       0,
-      'liào · materiaal, ingrediënt (material, ingredient). Seen in 饮料 (soft drinks) and 配料表 (ingredient list, on a package back panel). Picture 料 as a wooden dipper (斗) scooping out rice (米) - the raw ingredient before it\'s measured into anything: liào.',
-      { hanzi: '料', pinyin: 'liào', nl: 'materiaal, ingrediënt', en: 'material, ingredient', structure: 'left-right' },
+      "liào · materiaal, ingrediënt (material, ingredient). Seen in 饮料 (soft drinks) and 配料表 (ingredient list, on a package back panel). Picture 料 as a wooden dipper (斗) scooping out rice (米) - the raw ingredient before it's measured into anything: liào.",
+      {
+        hanzi: '料',
+        pinyin: 'liào',
+        nl: 'materiaal, ingrediënt',
+        en: 'material, ingredient',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '料',
@@ -233,8 +277,14 @@ export const MENU_ORDER: CategoryContent = {
       'On the menu. What does this mean?',
       ['market price', 'deep-fry', 'numbing, lip-tingling'],
       0,
-      'shíjià · dagprijs (market price, i.e. it varies by day). Worth memorizing as a whole word since the two characters don\'t hint at this meaning on their own.',
-      { hanzi: '时价', pinyin: 'shíjià', nl: 'dagprijs', en: 'market price', transparency: 'opaque' },
+      "shíjià · dagprijs (market price, i.e. it varies by day). Worth memorizing as a whole word since the two characters don't hint at this meaning on their own.",
+      {
+        hanzi: '时价',
+        pinyin: 'shíjià',
+        nl: 'dagprijs',
+        en: 'market price',
+        transparency: 'opaque',
+      },
       undefined,
       { tier: 2 },
     ],
@@ -243,7 +293,13 @@ export const MENU_ORDER: CategoryContent = {
       ['standard portion', 'soft drinks', 'flash-fry'],
       0,
       'lì · standaardportie (standard portion). Usually means "example" elsewhere, so this menu sense is a special case worth remembering. Picture 例 as a person (亻) standing at their assigned place in a lined-up row (列) — everyone gets the same standard-issue portion: lì.',
-      { hanzi: '例', pinyin: 'lì', nl: 'standaardportie', en: 'standard portion', structure: 'left-right' },
+      {
+        hanzi: '例',
+        pinyin: 'lì',
+        nl: 'standaardportie',
+        en: 'standard portion',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '例',
@@ -260,7 +316,13 @@ export const MENU_ORDER: CategoryContent = {
       ['signature dish', 'long-stew', 'cold dishes'],
       0,
       'zhāopái · huisspecialiteit (signature dish). The same word can also mean "shop sign" in other contexts.',
-      { hanzi: '招牌', pinyin: 'zhāopái', nl: 'huisspecialiteit', en: 'signature dish', transparency: 'opaque' },
+      {
+        hanzi: '招牌',
+        pinyin: 'zhāopái',
+        nl: 'huisspecialiteit',
+        en: 'signature dish',
+        transparency: 'opaque',
+      },
       undefined,
       { tier: 2 },
     ],
@@ -270,10 +332,14 @@ export const MENU_ORDER: CategoryContent = {
       0,
       'tèsè · specialiteit (house specialty). Easy to confuse with 特价 (special price) — look closely at the second character.',
       { hanzi: '特色', pinyin: 'tèsè', nl: 'specialiteit', en: 'house specialty' },
-      { kind: 'word', hanzi: '特色', morphemes: [
-        { span: '特', gloss: 'special' },
-        { span: '色', gloss: 'colour, character' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '特色',
+        morphemes: [
+          { span: '特', gloss: 'special' },
+          { span: '色', gloss: 'colour, character' },
+        ],
+      },
       {
         tier: 2,
         confusion_type: 'shared-morpheme',

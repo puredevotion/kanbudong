@@ -41,7 +41,10 @@ const ROLE_LABEL: Readonly<Record<ComponentRole, string>> = {
  * must not render the same "sound hint" tag a real pronunciation cue gets.
  */
 function roleLabel(role: ComponentRole, reliability: PhoneticReliability | undefined): string {
-  if (role === 'sound' && (reliability === undefined || reliability === 'unverified' || reliability === 'no-cue')) {
+  if (
+    role === 'sound' &&
+    (reliability === undefined || reliability === 'unverified' || reliability === 'no-cue')
+  ) {
     return 'no pronunciation cue';
   }
   return ROLE_LABEL[role];
@@ -116,7 +119,7 @@ export function DecompositionPanel({
   if (decomposition === undefined) {
     if (transparency === 'opaque') {
       return (
-        <p className="text-xs text-muted">
+        <p className='text-xs text-muted'>
           This one does not come apart into its pieces' meanings - learn it as a whole word.
         </p>
       );
@@ -130,10 +133,10 @@ export function DecompositionPanel({
         {decomposition.morphemes.map((m, i) => (
           <div
             key={`${m.span}-${i}`}
-            className="grow rounded-xl border border-border bg-surface px-3 py-3 text-center"
+            className='grow rounded-xl border border-border bg-surface px-3 py-3 text-center'
           >
-            <div className="font-han text-[2rem] font-medium leading-none">{m.span}</div>
-            <div className="mt-1.5 text-xs text-muted">{m.gloss}</div>
+            <div className='font-han text-[2rem] font-medium leading-none'>{m.span}</div>
+            <div className='mt-1.5 text-xs text-muted'>{m.gloss}</div>
           </div>
         ))}
       </div>
@@ -142,7 +145,7 @@ export function DecompositionPanel({
 
   if (structure === 'atomic') {
     return (
-      <p className="text-xs text-muted">
+      <p className='text-xs text-muted'>
         This character does not decompose into taught components - learn it whole.
       </p>
     );
@@ -162,13 +165,13 @@ export function DecompositionPanel({
               isDiscriminating ? 'border-2 border-foreground' : 'border-border'
             }`}
           >
-            <div className="font-han text-[2rem] font-medium leading-none">
+            <div className='font-han text-[2rem] font-medium leading-none'>
               {component?.displayGlyph ?? '?'}
             </div>
             {component?.meaning !== undefined && (
-              <div className="mt-1 text-xs leading-snug">{component.meaning}</div>
+              <div className='mt-1 text-xs leading-snug'>{component.meaning}</div>
             )}
-            <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
+            <div className='mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted'>
               {roleLabel(role, component?.reliability)}
             </div>
           </div>
@@ -202,11 +205,11 @@ export function ExplanationPanel({
       }`}
     >
       {isMnemonic && (
-        <p className="mb-1.5 text-[0.65rem] uppercase tracking-wide text-tier-mid">Memory aid</p>
+        <p className='mb-1.5 text-[0.65rem] uppercase tracking-wide text-tier-mid'>Memory aid</p>
       )}
-      <p className="text-lg leading-snug">{withGlyphs(explanation)}</p>
+      <p className='text-lg leading-snug'>{withGlyphs(explanation)}</p>
       {glossProvenance !== undefined && (
-        <p className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted/70">
+        <p className='mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted/70'>
           ({glossProvenance === 'etymological' ? 'etymological' : 'mnemonic, not history'})
         </p>
       )}
@@ -226,18 +229,18 @@ export function ExplanationPanel({
 export function SiblingsPanel({ siblings }: { siblings: readonly Question[] }): ReactNode {
   if (siblings.length === 0) return null;
   return (
-    <div className="flex flex-col gap-1.5">
-      <p className="text-[0.65rem] uppercase tracking-wide text-muted">The same move again</p>
-      <div className="flex gap-2">
+    <div className='flex flex-col gap-1.5'>
+      <p className='text-[0.65rem] uppercase tracking-wide text-muted'>The same move again</p>
+      <div className='flex gap-2'>
         {siblings.map((sibling) => (
           <div
             key={sibling.id}
-            className="grow rounded-xl border border-border bg-surface px-3 py-3 text-center"
+            className='grow rounded-xl border border-border bg-surface px-3 py-3 text-center'
           >
-            <div className="font-han text-[1.7rem] font-medium leading-none">
+            <div className='font-han text-[1.7rem] font-medium leading-none'>
               {sibling.face?.hanzi ?? '?'}
             </div>
-            <div className="mt-1.5 text-[0.65rem] text-muted">
+            <div className='mt-1.5 text-[0.65rem] text-muted'>
               {sibling.face?.en ?? sibling.face?.nl ?? ''}
             </div>
           </div>
@@ -274,20 +277,21 @@ export function ConfusablePanel({
 }): ReactNode {
   if (confusables.length === 0) return null;
   return (
-    <div className="rounded-xl border border-border bg-surface px-3 py-3">
-      <p className="text-[0.65rem] uppercase tracking-wide text-muted">
-        Don&apos;t confuse this with{confusionType !== undefined ? ` — ${CONFUSION_LABEL[confusionType]}` : ''}
+    <div className='rounded-xl border border-border bg-surface px-3 py-3'>
+      <p className='text-[0.65rem] uppercase tracking-wide text-muted'>
+        Don&apos;t confuse this with
+        {confusionType !== undefined ? ` — ${CONFUSION_LABEL[confusionType]}` : ''}
       </p>
-      <div className="mt-2 flex gap-2">
+      <div className='mt-2 flex gap-2'>
         {confusables.map((confusable) => (
           <div
             key={confusable.id}
-            className="grow rounded-xl border border-border px-3 py-3 text-center"
+            className='grow rounded-xl border border-border px-3 py-3 text-center'
           >
-            <div className="font-han text-[1.7rem] font-medium leading-none">
+            <div className='font-han text-[1.7rem] font-medium leading-none'>
               {confusable.face?.hanzi ?? '?'}
             </div>
-            <div className="mt-1.5 text-[0.65rem] text-muted">
+            <div className='mt-1.5 text-[0.65rem] text-muted'>
               {confusable.face?.en ?? confusable.face?.nl ?? ''}
             </div>
           </div>
@@ -325,9 +329,9 @@ export function SelfExplanationPrompt({
   const options = [semantic, phonetic] as const;
 
   return (
-    <div className="rounded-xl border border-border bg-surface px-3 py-3">
-      <p className="text-xs text-muted">Which part told you what this means?</p>
-      <div className="mt-2 flex gap-2">
+    <div className='rounded-xl border border-border bg-surface px-3 py-3'>
+      <p className='text-xs text-muted'>Which part told you what this means?</p>
+      <div className='mt-2 flex gap-2'>
         {options.map((cue) => {
           const component = resolveComponent(cue.componentId as string);
           const isPicked = picked === cue.componentId;
@@ -336,7 +340,7 @@ export function SelfExplanationPrompt({
           return (
             <button
               key={cue.componentId}
-              type="button"
+              type='button'
               disabled={picked !== null}
               onClick={() => {
                 setPicked(cue.componentId as string);
@@ -346,18 +350,20 @@ export function SelfExplanationPrompt({
                 revealCorrect ? 'border-2 border-foreground' : 'border-border'
               }`}
             >
-              <div className="font-han text-[2rem] font-medium leading-none">
+              <div className='font-han text-[2rem] font-medium leading-none'>
                 {component?.displayGlyph ?? '?'}
               </div>
               {picked !== null && component?.meaning !== undefined && (
-                <div className="mt-1 text-xs leading-snug">{component.meaning}</div>
+                <div className='mt-1 text-xs leading-snug'>{component.meaning}</div>
               )}
               {picked !== null && (
-                <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
+                <div className='mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted'>
                   {cue.kind === 'semantic_radical' ? 'meaning - this one' : 'sound, not meaning'}
                 </div>
               )}
-              {revealWrong && <div className="mt-0.5 text-[0.65rem] text-danger-text">not this one</div>}
+              {revealWrong && (
+                <div className='mt-0.5 text-[0.65rem] text-danger-text'>not this one</div>
+              )}
             </button>
           );
         })}
@@ -390,8 +396,8 @@ export function LociMnemonicPrompt({
   const isRow = first.position === 'left' || first.position === 'right';
 
   return (
-    <div className="rounded-xl border border-border bg-surface px-3 py-3">
-      <p className="text-xs text-muted">
+    <div className='rounded-xl border border-border bg-surface px-3 py-3'>
+      <p className='text-xs text-muted'>
         Some people remember shapes better as a small scene. Picture this one as a two-part room.
       </p>
       <div className={`mt-2 flex gap-2 ${isRow ? '' : 'flex-col'}`}>
@@ -400,15 +406,15 @@ export function LociMnemonicPrompt({
           return (
             <div
               key={tile.componentId}
-              className="grow rounded-xl border border-border bg-surface px-3 py-3 text-center"
+              className='grow rounded-xl border border-border bg-surface px-3 py-3 text-center'
             >
-              <div className="font-han text-[2rem] font-medium leading-none">
+              <div className='font-han text-[2rem] font-medium leading-none'>
                 {component?.displayGlyph ?? '?'}
               </div>
               {component?.meaning !== undefined && (
-                <div className="mt-1 text-xs leading-snug">{component.meaning}</div>
+                <div className='mt-1 text-xs leading-snug'>{component.meaning}</div>
               )}
-              <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
+              <div className='mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted'>
                 {tile.position} spot &middot;{' '}
                 {tile.role === 'meaning' || tile.role === 'iconic'
                   ? 'always the same kind of furniture'
@@ -425,17 +431,17 @@ export function LociMnemonicPrompt({
       </div>
       {!pictured ? (
         <button
-          type="button"
+          type='button'
           onClick={() => {
             setPictured(true);
             onUsed?.();
           }}
-          className="mt-2 w-full rounded-xl border border-border px-3 py-2 text-[0.65rem] uppercase tracking-wide text-muted"
+          className='mt-2 w-full rounded-xl border border-border px-3 py-2 text-[0.65rem] uppercase tracking-wide text-muted'
         >
           I pictured it
         </button>
       ) : (
-        <p className="mt-2 text-[0.65rem] uppercase tracking-wide text-muted">noted</p>
+        <p className='mt-2 text-[0.65rem] uppercase tracking-wide text-muted'>noted</p>
       )}
     </div>
   );

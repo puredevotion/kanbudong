@@ -60,7 +60,11 @@ describe('buildSoloQueue morning-after queue (§6.5)', () => {
     if (a === undefined || b === undefined) throw new Error('pack too small for this test');
     const overdue = reviewItem(null, 'good', now - 100 * DAY)!;
     const lessOverdue = reviewItem(null, 'good', now - 50 * DAY)!;
-    const queue = buildSoloQueue(SEED_PACK, memoryMap({ [a.id]: overdue, [b.id]: lessOverdue }), now);
+    const queue = buildSoloQueue(
+      SEED_PACK,
+      memoryMap({ [a.id]: overdue, [b.id]: lessOverdue }),
+      now,
+    );
     expect(queue.due[0]?.id).toBe(a.id);
   });
 });

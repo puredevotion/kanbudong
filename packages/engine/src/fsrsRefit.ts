@@ -76,13 +76,17 @@ export interface FsrsTrainingItem {
  * uses the fractional day count, so a refit's inputs are a faithful-but-
  * day-quantized reading of history, not a bit-for-bit replay.
  */
-export function buildFsrsTrainingSet(attempts: readonly RawSoloAttempt[]): readonly FsrsTrainingItem[] {
+export function buildFsrsTrainingSet(
+  attempts: readonly RawSoloAttempt[],
+): readonly FsrsTrainingItem[] {
   const byItem = new Map<QuestionId, FsrsTrainingReview[]>();
   const sorted = [...attempts].sort((a, b) => a.timestamp - b.timestamp);
   for (const attempt of sorted) {
     const grade: ReviewGrade = gradeFromAnswer(attempt.correct, attempt.priorLastReview === null);
     const elapsedDays =
-      attempt.priorLastReview === null ? 0 : Math.round((attempt.timestamp - attempt.priorLastReview) / MS_PER_DAY);
+      attempt.priorLastReview === null
+        ? 0
+        : Math.round((attempt.timestamp - attempt.priorLastReview) / MS_PER_DAY);
     const reviews = byItem.get(attempt.itemId) ?? [];
     reviews.push({ rating: ratingForGrade(grade), elapsedDays: Math.max(0, elapsedDays) });
     byItem.set(attempt.itemId, reviews);

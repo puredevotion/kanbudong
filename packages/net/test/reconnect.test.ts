@@ -1,4 +1,11 @@
-import { createGame, createIdentity, EventLog, SEED_PACK, SEED_PACK_HASH, type Identity } from '@kanbudong/engine';
+import {
+  createGame,
+  createIdentity,
+  EventLog,
+  SEED_PACK,
+  SEED_PACK_HASH,
+  type Identity,
+} from '@kanbudong/engine';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GameSession } from '../src/session.js';

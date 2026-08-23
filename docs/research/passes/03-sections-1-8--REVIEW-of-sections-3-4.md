@@ -2,7 +2,7 @@
 
 ### A1. The U+2EBC block is wrong, and it is wrong in the build gate
 
-> "**⺼ U+2EBC lives in the Kangxi Radicals block** and appears in *no* item string" (§3.3.4)
+> "**⺼ U+2EBC lives in the Kangxi Radicals block** and appears in _no_ item string" (§3.3.4)
 > "⺼ **U+2EBC lives in the Kangxi Radicals block** and appears in no item string" (§4.3.2 gate 2)
 
 Verified: `U+2EBC ⺼ CJK RADICAL MEAT` is in the **CJK Radicals Supplement** block (U+2E80–U+2EFF). The **Kangxi Radicals** block is U+2F00–U+2FDF; its meat radical is a different codepoint entirely, and U+2F82 — which is where a reader counting from radical 130 would land — is `KANGXI RADICAL MINISTER ⾂`.
@@ -13,22 +13,22 @@ This is not pedantry, it is the failure mode the passage exists to prevent. An e
 
 ### A2. The correction contradicts itself about whether ⺼ and 月 look different
 
-> "肉 does not 'flatten to 月' — it has a *distinct bound form*, ⺼"
+> "肉 does not 'flatten to 月' — it has a _distinct bound form_, ⺼"
 > "They are **homoglyphs in almost every font** and different codepoints."
 
-Both sentences are in §3.3.4, four lines apart. They cannot both ground the pedagogy. And the resolution matters more than the doc realises: in the PRC 新字形 standard that Noto Sans SC implements, the meat component inside 肝 肠 肚 is drawn *identically* to 月 — two horizontals touching both verticals. The distinct "meat" form with detached/slanted inner strokes is the Kangxi/traditional convention. So the standalone ⺼ glyph the reveal panel renders may show a shape the learner will **never** see inside any character in a Simplified-only bank.
+Both sentences are in §3.3.4, four lines apart. They cannot both ground the pedagogy. And the resolution matters more than the doc realises: in the PRC 新字形 standard that Noto Sans SC implements, the meat component inside 肝 肠 肚 is drawn _identically_ to 月 — two horizontals touching both verticals. The distinct "meat" form with detached/slanted inner strokes is the Kangxi/traditional convention. So the standalone ⺼ glyph the reveal panel renders may show a shape the learner will **never** see inside any character in a Simplified-only bank.
 
 That is a transfer-appropriate-processing violation by §3.2's own argument, committed by the fix to §3.3.4. The doc's absolute rule —
 
 > "**never substitute 月**, which reintroduces the exact error this ruling exists to remove"
 
-— conflates *identity* with *rendering*. Identity: the component is not 月, correct. Rendering: the correct picture of the component as it appears in this product's face may be exactly the 月 shape.
+— conflates _identity_ with _rendering_. Identity: the component is not 月, correct. Rendering: the correct picture of the component as it appears in this product's face may be exactly the 月 shape.
 
 **Should say:** component identity is a stored abstract ID, never a codepoint; the rendered glyph is the actual sub-glyph as it appears in the shipped face for that character (extracted or stored SVG), **primary**, not a fallback. Then assert at build time that the panel glyph and the in-character sub-glyph are the same shape.
 
 ### A3. 汆 vs 氽 — the doc commits its own flagship 人/入 error
 
-> "verified to contain all 3,000 HSK 3.0 characters *and* 焗 煲 涮 菌 藕 韭 笋 蒜 姜 葱 炝 烩 **氽** 煨 熘 腌 蕈 蚝 蛏 鲈 鳕 鳝" (§4.3.2)
+> "verified to contain all 3,000 HSK 3.0 characters _and_ 焗 煲 涮 菌 藕 韭 笋 蒜 姜 葱 炝 烩 **氽** 煨 熘 腌 蕈 蚝 蛏 鲈 鳕 鳝" (§4.3.2)
 
 Verified: `氽 U+6C3D` (tǔn — to float; deep-fry) and `汆 U+6C46` (cuān — to blanch/quick-boil) are different characters. The **cooking method** in that list is 汆 (汆丸子, 汆烫). The doc lists 氽. The two differ by 人 on top versus 入 on top — the precise confusion §3.4 nominates as "**critical**… the canonical beginner error."
 
@@ -40,8 +40,8 @@ A font-coverage verification list that itself contains the canonical beginner er
 
 > "A one-to-one mapping generates 頭發 for 头发 and 牛肉面 for 牛肉麵."
 
-First half: input 头发 (simplified), wrong output 頭發, correct 頭髮. Frame = *(wrong output, simplified input)*.
-Second half: 牛肉麵 is the **correct traditional output**, not the input. Frame = *(wrong output, correct output)*.
+First half: input 头发 (simplified), wrong output 頭發, correct 頭髮. Frame = _(wrong output, simplified input)_.
+Second half: 牛肉麵 is the **correct traditional output**, not the input. Frame = _(wrong output, correct output)_.
 
 The sentence switches frames mid-clause, in the one paragraph in the document about getting a mapping's direction right. An implementer reading it cannot tell whether the table maps simp→trad or trad→simp.
 
@@ -59,7 +59,7 @@ A directional complement in Mandarin is the V+来/去 construction (出去, 进�
 
 > "**饣** — 43 common characters … against **12** for 食, which are mostly traditional or rare (食 飧 飨 餍 餐 餮 饔 饕)."
 
-The parenthesis lists **eight**, not twelve, with no ellipsis (unlike the 饣 list, which has one). Either the count is wrong or four characters are missing. And "mostly traditional or rare" is false of the set as scoped for *this* product: 餐 is in 餐厅, 早餐, 午餐, 晚餐, 中餐, 西餐, 自助餐 — it is on more menu headers and fascias than most of the 饣 set. The doc dismisses it in half a sentence ("does not rescue the choice") without noting it is Tier-1 vocabulary for the exact domain being argued about.
+The parenthesis lists **eight**, not twelve, with no ellipsis (unlike the 饣 list, which has one). Either the count is wrong or four characters are missing. And "mostly traditional or rare" is false of the set as scoped for _this_ product: 餐 is in 餐厅, 早餐, 午餐, 晚餐, 中餐, 西餐, 自助餐 — it is on more menu headers and fascias than most of the 饣 set. The doc dismisses it in half a sentence ("does not rescue the choice") without noting it is Tier-1 vocabulary for the exact domain being argued about.
 
 ### A7. 页 is written off using a payoff test the document's own §4.9.3 fails
 
@@ -69,12 +69,12 @@ The parenthesis lists **eight**, not twelve, with no ellipsis (unlike the 饣 li
 
 ### A8. Smaller Chinese points, all verified
 
-- **药店/酒店 is miscategorised by the doc's own taxonomy.** > "**药店 and 酒店 share no component at all** (艹+约 vs 氵+酉) — they are priority 2." The *characters* 药/酒 share nothing, correct. But the **words** share 店 outright. Under §3.4(3) that is `shared-morpheme`, the fourth category the doc invents. The document spends §3.3.3.5 insisting word-level and character-level decomposition are different fields and then analyses a word pair at character level and files it in the wrong bucket.
+- **药店/酒店 is miscategorised by the doc's own taxonomy.** > "**药店 and 酒店 share no component at all** (艹+约 vs 氵+酉) — they are priority 2." The _characters_ 药/酒 share nothing, correct. But the **words** share 店 outright. Under §3.4(3) that is `shared-morpheme`, the fourth category the doc invents. The document spends §3.3.3.5 insisting word-level and character-level decomposition are different fields and then analyses a word pair at character level and files it in the wrong bucket.
 - **The confusable set contradicts itself in one sentence.** > "plus the pure visual set 大/太/**犬**/夫, 日/白/百/自, 千/干/于, 未/末, 己/已/**巳**, 天/**夭** … **Drop** the classic teaching-list pairs **夭** and **巳** and **曰/犬**". 夭, 巳 and 犬 are kept and dropped in consecutive sentences. Separately, "曰/犬" is not a confusable pair in any script — 曰 (yuē) and 犬 (quǎn) share nothing. It reads as a mangling of the two real pairs 曰/日 and 犬/大.
-- **筋's radical is named in the wrong register.** > "**筋** carries it inside 肋 (⿱⺮肋, where 肋 = ⿰⺼力) but takes **⺮ (bamboo)** as its Kangxi radical." The decomposition is right (肋 lèi = rib; 筋 indexes under 竹 with 6 residual strokes). But ⺮ is U+2EAE `CJK RADICAL BAMBOO`; the *Kangxi radical* is 竹 / U+2F75. The paragraph whose thesis is "bound form and head form are different codepoints and confusing them is a build defect" confuses bound form and head form.
+- **筋's radical is named in the wrong register.** > "**筋** carries it inside 肋 (⿱⺮肋, where 肋 = ⿰⺼力) but takes **⺮ (bamboo)** as its Kangxi radical." The decomposition is right (肋 lèi = rib; 筋 indexes under 竹 with 6 residual strokes). But ⺮ is U+2EAE `CJK RADICAL BAMBOO`; the _Kangxi radical_ is 竹 / U+2F75. The paragraph whose thesis is "bound form and head form are different codepoints and confusing them is a build defect" confuses bound form and head form.
 - **男 gets a hedge in a passage that bans hedges.** > "**男 is not a radical at all** (it is 田 + 力 and **indexes under one of those**)." It indexes under 田, kRSUnicode 102.2. A document that CI-fails hand-authored stroke counts should not write "one of those."
-- **"9 of the 13 core cooking methods"** — the 13 are never enumerated. The doc's §3.3.2(b) case against Hsiao & Shillcock is *precisely* that a ratio with an unstated denominator is not a finding. Same move, two pages later, in the doc's own voice.
-- **The 小心地滑 example is misfiled.** > "A naive per-character generator gets **小心地滑** — the most famous sign in China — wrong." The problem in 小心地滑 is **segmentation** (小心|地滑 vs 小心地|滑), which is §4.7's word-tokenisation issue, not §4.6.5's heteronym issue. And a naive generator emitting the citation reading dì gets this sign *right*; the failure is in the other direction (慢慢地走). The doc's flagship heteronym example is not a heteronym failure.
+- **"9 of the 13 core cooking methods"** — the 13 are never enumerated. The doc's §3.3.2(b) case against Hsiao & Shillcock is _precisely_ that a ratio with an unstated denominator is not a finding. Same move, two pages later, in the doc's own voice.
+- **The 小心地滑 example is misfiled.** > "A naive per-character generator gets **小心地滑** — the most famous sign in China — wrong." The problem in 小心地滑 is **segmentation** (小心|地滑 vs 小心地|滑), which is §4.7's word-tokenisation issue, not §4.6.5's heteronym issue. And a naive generator emitting the citation reading dì gets this sign _right_; the failure is in the other direction (慢慢地走). The doc's flagship heteronym example is not a heteronym failure.
 - **Correct and worth saying so:** 猪/羊/鸡/鸭肉, 肝 肠 肚 腰 脑 肺 肾 胗, 保质期/生产日期, 行 háng/xíng in 银行/行李寄存, 舌 = ⿱千口, 血/皮/舌 taking their own radicals, 蒸 containing 灬 inside 烝, the nine 火/灬 cooking methods, the T3-sandhi set (水饺 米粉 老板 两碗 九点), 不 → bú before T4, 一 → yì/yí, 好吃 as T3+T1 needing no stored surface field, 安全出口 vs 出口, the GB 2894 four-category colour/shape system, the 麻/辣 and 公斤/斤 analyses, and the many-to-one variant set (面→麵/麪, 发→發/髮, 干→乾/幹/干, 后→後/后, 里→裏/裡/里, 松→鬆/松). Those are right.
 
 ---
@@ -104,17 +104,17 @@ Three bare numbers — 3, 10–15%, 20 — tagged [E], sourced to a section of t
 > §4.12, banned as invented: "**re-queue at 5 and 15 intervening items**"
 > §3.4(2), shipped: "Schedule confusion-set members tight (**5–15 intervening items**, **[J]** magnitude)"
 
-The same two numbers, in the same slot, declared folklore in one section and shipped in another. Tagging it `[J]` does not rescue it: §3.0 requires [J] to carry *an owner and a planned test*, and §3.4(2) carries neither. The [J] tag is being used as a laundering device for exactly the numbers §4.12 exists to kill.
+The same two numbers, in the same slot, declared folklore in one section and shipped in another. Tagging it `[J]` does not rescue it: §3.0 requires [J] to carry _an owner and a planned test_, and §3.4(2) carries neither. The [J] tag is being used as a laundering device for exactly the numbers §4.12 exists to kill.
 
 The same pattern hits §4.12's ban on "at most four chunks on the resolution screen" versus §4.9.2's "One target. One decomposition. One contrast" — a three-element cap. The doc's stated reason for killing Cowan is:
 
-> "a screen whose elements all remain visible imposes essentially no storage demand — the display *is* the memory"
+> "a screen whose elements all remain visible imposes essentially no storage demand — the display _is_ the memory"
 
-If that argument is sound, it also destroys any *numeric display cap*, including 1+1+1, because element interactivity constrains how many elements must be **simultaneously integrated**, not how many may be **displayed**. Sweller and Mayer are substituted for Cowan and the number survives untouched. **The cap was retained and only its citation changed.** That is a restatement presented as a derivation.
+If that argument is sound, it also destroys any _numeric display cap_, including 1+1+1, because element interactivity constrains how many elements must be **simultaneously integrated**, not how many may be **displayed**. Sweller and Mayer are substituted for Cowan and the number survives untouched. **The cap was retained and only its citation changed.** That is a restatement presented as a derivation.
 
 ### B4. Untagged lines in a document whose thesis is that every line is tagged
 
-§3.3.2(d) "The reveal card is heading for overload" — no tag. §3.3.2(e) "Radical awareness develops with exposure" — no tag. §3.4 "公斤/斤 … is justified by *consequence*, not by the discrimination literature" — "consequence" is neither [E] nor [J]. §3.5(4) "for the first **200 items**" — a bare number with no register at all.
+§3.3.2(d) "The reveal card is heading for overload" — no tag. §3.3.2(e) "Radical awareness develops with exposure" — no tag. §3.4 "公斤/斤 … is justified by _consequence_, not by the discrimination literature" — "consequence" is neither [E] nor [J]. §3.5(4) "for the first **200 items**" — a bare number with no register at all.
 
 ---
 
@@ -129,18 +129,18 @@ The ruling is **CONTRADICTED**. Then:
 - §3.1(11) "Grey unearned **tiers**… gate the top tier on per-category component mastery" — tiers survive and are gated.
 - §4.10.3 "The inherited **45 s / 75 s / 120 s bet windows**" — three tiers, three timers, still in the spec.
 
-A ruling of CONTRADICTED that leaves the mechanic, the tier ladder and three per-tier timers standing is a ruling on the *rationale*, not on the decision. §3.2 handles the identical situation honestly ("What survives is narrower than what was proposed"). §3.1 does not, and the asymmetry is not accidental: §3.1 is one of the three invented decisions.
+A ruling of CONTRADICTED that leaves the mechanic, the tier ladder and three per-tier timers standing is a ruling on the _rationale_, not on the decision. §3.2 handles the identical situation honestly ("What survives is narrower than what was proposed"). §3.1 does not, and the asymmetry is not accidental: §3.1 is one of the three invented decisions.
 
 **Should say:** "**SUPPORTED** as a wagering and handicapping mechanic (systems cluster). **CONTRADICTED** as a scaffolding dial: response format is decoupled from the wager. The tier ladder survives as a stake ladder only."
 
 ### C2. §3.1(f) argues against a design §3.1(7) already deleted, and omits the shipped format
 
-> "Holding observed accuracy at 0.85 gives true R = 0.700 in 2AFC, 0.800 in 4AFC, 0.850 in free recall — the weakest players on the easiest format sit at the *lowest* true retrievability, the exact inverse of intent."
+> "Holding observed accuracy at 0.85 gives true R = 0.700 in 2AFC, 0.800 in 4AFC, 0.850 in free recall — the weakest players on the easiest format sit at the _lowest_ true retrievability, the exact inverse of intent."
 > "to hit true R = 0.85, target observed 0.925 in 2AFC, 0.8875 in 4AFC, 0.85 in free entry."
 
 Arithmetic verified correct for k=2 and k=4. **k=3 is absent from both tables, and k=3 is the format this document ships** (§3.1(7), §4.8.1, §4.9.2). The missing values are R = **0.775** (from observed 0.85) and observed **0.900** (for true R = 0.85).
 
-Worse: argument (f) depends on *k varying across tiers*. §3.1(7) fixes k = 3 everywhere. With k constant, the guessing floor is constant, the tier-vs-retrievability inversion disappears, and (f) no longer argues against anything. The document runs an argument against a configuration it has already removed, and computes it to four significant figures in the two formats it will never use.
+Worse: argument (f) depends on _k varying across tiers_. §3.1(7) fixes k = 3 everywhere. With k constant, the guessing floor is constant, the tier-vs-retrievability inversion disappears, and (f) no longer argues against anything. The document runs an argument against a configuration it has already removed, and computes it to four significant figures in the two formats it will never use.
 
 ### C3. §3.1(2) violates §3.1(9) seven lines later
 
@@ -153,17 +153,17 @@ Math Garden's ~75% is an **observed accuracy** target in arithmetic. At k=3, obs
 
 ### C4. §3.1(7) — Rodriguez is recruited, then violated, and the layout argument doesn't bind
 
-> "**Three options, not four.** [E — strong] Rodriguez (2005)… three options optimal… — *but only if the retained options are the effective ones*. Random removal reduces difficulty, discrimination and reliability."
+> "**Three options, not four.** [E — strong] Rodriguez (2005)… three options optimal… — _but only if the retained options are the effective ones_. Random removal reduces difficulty, discrimination and reliability."
 
 §3.4 then defines the distractor generators as visual neighbours and situational neighbours — i.e. the **most** effective distractors available. Going 4→3 there removes an effective option, which is the condition Rodriguez says degrades the item. And §3.4(1) mandates that first appearances get "semantically and visually **unrelated** (but domain-plausible) distractors" — weak distractors, two of them, in a three-option item. The doc's own closing bullet says weak filler is "destroying Rodriguez's three-option result." **§3.1(7) and §3.4(1) are mutually destructive and neither notices.**
 
 Meanwhile §4.8.1 says "**The interface cluster binds**" and justifies it with Parhi's 58 px row height. Row height does not constrain option count. Four rows at 62 px with 8 px gaps = **272 px**; the doc's own allocation is "bottom **~45%** of viewport" = **380 px** on a 844 px phone. The layout has ~108 px of slack. **The thumb-zone argument does not require dropping to three options**, so the entire weight rests on Rodriguez — whose stated precondition the design then violates.
 
-Also: Rodriguez is a meta-analysis of **assessment efficiency** (items per unit testing time, psychometric properties of a test). Importing it as a *learning* result into a spaced-repetition loop is a scope jump the doc flags meticulously for every other citation ("lab, English prose, short delays"; "arithmetic, Dutch schoolchildren") and not at all for this one — the one it calls "the single strongest psychometric claim in play."
+Also: Rodriguez is a meta-analysis of **assessment efficiency** (items per unit testing time, psychometric properties of a test). Importing it as a _learning_ result into a spaced-repetition loop is a scope jump the doc flags meticulously for every other citation ("lab, English prose, short delays"; "arithmetic, Dutch schoolchildren") and not at all for this one — the one it calls "the single strongest psychometric claim in play."
 
 And this ships an authoring error as prose:
 
-> "it lowers the guess floor from 25% to 33%… no: it *raises* it to 33%, and that is the price."
+> "it lowers the guess floor from 25% to 33%… no: it _raises_ it to 33%, and that is the price."
 
 Delete the self-correction. State 1/3 = 33.3%, and state the consequence: every retrievability target and every FSRS input changes.
 
@@ -171,7 +171,7 @@ Delete the self-correction. State 1/3 = 33.3%, and state the consequence: every 
 
 Every cited mechanism is killed: context reinstatement (d ≈ 0.28, recognition null, failed replication), picture superiority, perceptual disfluency. What is left standing, and what licenses the entire substrate-rendering programme:
 
-> "**Transfer-appropriate processing plus encoding specificity.** [E — strong] The effective retrieval cue is *the character form as it will be met*."
+> "**Transfer-appropriate processing plus encoding specificity.** [E — strong] The effective retrieval cue is _the character form as it will be met_."
 
 No source. No scope. §3.0 defines [E] as "with the source and its scope." **The single most consequential [E] in §3.2 is the only one that carries neither** — in the section ruling on one of the three author-invented decisions.
 
@@ -181,9 +181,9 @@ The reasoning defect underneath is sharper. The doc uses the recall/recognition 
 
 **Encoding specificity is the same principle.** If the recognition null voids context reinstatement, it voids the encoding-specificity half of the surviving argument too. The doc escapes by reclassifying:
 
-> "the rendering is not environmental context at all — it sits *inside* the stimulus at both study and test."
+> "the rendering is not environmental context at all — it sits _inside_ the stimulus at both study and test."
 
-But that reclassification is fatal in the other direction, and the doc never follows it through: if the plate is *inside the stimulus*, then the app is training the compound stimulus glyph+plate, and Masonheimer is not a "documented risk" to instrument — **it is the mechanism section's own prediction.** §3.2 files as a contested side-risk the thing its own framing entails.
+But that reclassification is fatal in the other direction, and the doc never follows it through: if the plate is _inside the stimulus_, then the app is training the compound stimulus glyph+plate, and Masonheimer is not a "documented risk" to instrument — **it is the mechanism section's own prediction.** §3.2 files as a contested side-risk the thing its own framing entails.
 
 **Should say:** "**SUPPORTED** for typeface-class variation, on stimulus-variability grounds (Pelzl 2025, heavily scoped). **[J], instrumented from v1**, for substrate and object rendering: the surviving argument is TAP applied to a compound stimulus, which predicts the Masonheimer failure as its default outcome rather than as a risk."
 
@@ -241,7 +241,7 @@ Zero of three are cleanly in scope. The headline overstates by one, which is the
 
 ### C10. §3.4 voids the classical literature and then imports RIF, which needs the same structure
 
-> "the classical work describes learning two *new* competing responses to a shared cue in list-to-list transfer, not discriminating one new sign from another in a recognition task **with the cue physically present**."
+> "the classical work describes learning two _new_ competing responses to a shared cue in list-to-list transfer, not discriminating one new sign from another in a recognition task **with the cue physically present**."
 
 Correct, and well argued. Then:
 
@@ -251,7 +251,7 @@ Retrieval-induced forgetting requires competitive retrieval from a shared cue �
 
 And ≈8.7 percentage points is quoted to one decimal as a magnitude to design against, five paragraphs after the doc says magnitudes are provisional.
 
-**Should say:** "RIF predicts a *direction* — asymmetric deck coverage may suppress the untested sibling — but it is lab-wordlist, minutes-to-a-day, competitive-retrieval, and the cue-present objection above applies with equal force. **[J]**: mark family members due-soon; test on delayed accuracy for the untested sibling. Drop the point estimate."
+**Should say:** "RIF predicts a _direction_ — asymmetric deck coverage may suppress the untested sibling — but it is lab-wordlist, minutes-to-a-day, competitive-retrieval, and the cue-present objection above applies with equal force. **[J]**: mark family members due-soon; test on delayed accuracy for the untested sibling. Drop the point estimate."
 
 ### C11. §3.4's lure budget prices a quantity this product never measures
 
@@ -259,14 +259,15 @@ And ≈8.7 percentage points is quoted to one decimal as a magnitude to design a
 
 12 − 5 = 7, arithmetically fine. But the measured outcome is **production of lures as answers** on a later recall test, in English prose, with university samples. §3.4 rules: "**never add a production mode**." The product has no test at which the measured quantity can occur. A 7-point budget for an outcome that cannot be observed in this product is false precision wearing a real citation.
 
-What plausibly transfers is increased lure *familiarity* in a recognition task — a different, unmeasured quantity with no number attached. Say that instead.
+What plausibly transfers is increased lure _familiarity_ in a recognition task — a different, unmeasured quantity with no number attached. Say that instead.
 
 ### C12. §3.5(2) applies an auditory-perception finding to a visual mark that §3.5(7) abolishes
 
 > "**prefer a contour glyph with the turning point marked** over a colour swatch. The timing of the F0 turning point (near onset for T2, mid for T3) is the discriminating cue non-tonal-L1 learners actually fail to use; L2 listeners lean on duration instead. [E — moderate; Zou, Caspers & Chen on Dutch L1 learners specifically, abstract-only]"
 
 Three problems stacked:
-1. **Scope violation of exactly the named kind.** This is a finding about where **listeners** fail to attend in an **acoustic** signal, used to specify the shape of a **printed mark** in a **silent reading** product. The doc scopes it as "abstract-only" and "Dutch L1" and omits the one scope note that matters: *auditory perception, not visual encoding*.
+
+1. **Scope violation of exactly the named kind.** This is a finding about where **listeners** fail to attend in an **acoustic** signal, used to specify the shape of a **printed mark** in a **silent reading** product. The doc scopes it as "abstract-only" and "Dutch L1" and omits the one scope note that matters: _auditory perception, not visual encoding_.
 2. **It specifies a thing the same section abolishes.** §3.5(7): "**v1 ships no tone channel as a thing to be learned.**" §4.5.4: "Not shipped in v1."
 3. §3.5(4) then constrains an object that does not exist: "**exclude the T2↔T3 swap from any pinyin distractor pool for the first 200 items**" — but §4.6.5 confines pinyin to the reveal and §3.5(7) says pinyin "appears as a pronunciation aid on the reveal, and that is all it is." **There is no pinyin distractor pool.** Plus "200" carries no register at all.
 
@@ -286,7 +287,7 @@ ETDRS is an acuity chart. The 1.7–2.0× ratio is threshold-derived. It is the 
 > "1. **Set one generous global size, safe for the most complex character in the bank, and stop.** [E]"
 > "3. … if a build-time `strokeCount` … is **≥ 15**, the item renders **one step up the type scale and at weight 500**."
 
-Rule 3 makes size a function of stroke count. Rule 1 says do not. Calling rule 3 "one bounded concession" does not dissolve the contradiction; it means rule 1 is wrong as stated and should read "size is not a *continuous* function of stroke count; one threshold step is permitted."
+Rule 3 makes size a function of stroke count. Rule 1 says do not. Calling rule 3 "one bounded concession" does not dissolve the contradiction; it means rule 1 is wrong as stated and should read "size is not a _continuous_ function of stroke count; one threshold step is permitted."
 
 ### D3. The ≥15-stroke list is contradicted by §4.3.2, and both claim in-session verification
 
@@ -323,14 +324,14 @@ Same subsection keeps three numbers it has already superseded: "the **inherited 
 ### D7. §4.5.5 uses a model it has just declared uninformative
 
 > "**Every published spaced-repetition model discriminates item-level recall near chance** in a real language-learning product (all within 0.04 AUC of chance…). **A precise wrong number is a visible lie.**"
-> "…where **SOLID silently falls back to LEARNING as retrievability decays**, surfaced as *'3 characters need a refresh.'*"
+> "…where **SOLID silently falls back to LEARNING as retrievability decays**, surfaced as _'3 characters need a refresh.'_"
 
 The fallback and the count are driven by the same near-chance item-level retrievability estimate. So is FSRS scheduling throughout §3.1(9) and §4.9.3. Either the model is informative enough to schedule with and to state coarsely, or it is not. The document reaches the right rule — item-level AUC near chance is compatible with useful aggregate calibration, which is exactly why deck-level and coarse states are defensible — and never states the reason, leaving the rule undefended against the first reviewer who reads the AUC sentence literally and asks why FSRS is in the build at all.
 
 ### D8. Two smaller ones
 
 - §4.8.1: "Minimum interactive height, anywhere: **56–60 CSS px** [E] Parhi; error rate stops improving above 9.6 mm." 9.6 mm = **60.5 px**; the cited floor is 9.2 mm = **58 px**. **56 is below both** and unsourced, and §4.11 gate 6 will be implemented at 56. Set it at 58.
-- §4.8.1: "plus the **retrieval-support argument**: adjacent on-screen items reduce the difficulty of the retrieval attempt" — offered as the reason to ban a *preview of the next item*. A next-item preview provides no retrieval support for the current item. The stated mechanism does not fit the banned artefact; coherence alone does the work.
+- §4.8.1: "plus the **retrieval-support argument**: adjacent on-screen items reduce the difficulty of the retrieval attempt" — offered as the reason to ban a _preview of the next item_. A next-item preview provides no retrieval support for the current item. The stated mechanism does not fit the banned artefact; coherence alone does the work.
 
 ---
 
@@ -349,19 +350,19 @@ The fallback and the count are driven by the same near-chance item-level retriev
 ## F. Silent omissions
 
 1. **§3.2 has three cluster verdicts, not four.** §3.0: "Four verdicts were returned per decision, one per cluster." §3.2 lists learning-science, interface-social, systems. **The chinese cluster is missing** — on the decision about rendering Chinese signage, the one whose evidence section is full of chinese-cluster material (楷体/隶书/行书, GB 7718, CTW `wordart`, 繁体字 on fascias). Either it abstained, in which case say so, or its verdict was dropped.
-2. **§3.2(9) puts transit at 5% while every worked example in the document is transit.** §3.4: "人/入 … sits at the centre of the **flagship metro scene**." §4.4.3's worked example is a station plate. §3.2's TAP example is 出口 on a metro plate. §4.6.2's ruby example is 出口. A 5% pillar cannot be the flagship scene. And the rebalance argument is one-sided: bilingual metro signage is also the only place a learner gets **free in-situ corrective feedback** on a wrong reading, which is an argument *for* front-loading it in a product that provides no feedback after the session. That counter-consideration is never raised.
+2. **§3.2(9) puts transit at 5% while every worked example in the document is transit.** §3.4: "人/入 … sits at the centre of the **flagship metro scene**." §4.4.3's worked example is a station plate. §3.2's TAP example is 出口 on a metro plate. §4.6.2's ruby example is 出口. A 5% pillar cannot be the flagship scene. And the rebalance argument is one-sided: bilingual metro signage is also the only place a learner gets **free in-situ corrective feedback** on a wrong reading, which is an argument _for_ front-loading it in a product that provides no feedback after the session. That counter-consideration is never raised.
 3. **§4.4.3 contradicts §3.2(8)'s non-picturable list.** §3.2(8) lists **禁止** as non-picturable; §4.4.3 says the prohibition sign is a red circle with a diagonal bar, so that "the illocutionary force arrives **before any character is decoded**." That is a picture, and more than that it is the overshadowing hazard §3.2(8) is about. **The safety pillar (15% of the bank) may be systematically unlearnable-by-character because the geometry answers the question first.** Neither section notices the other.
-4. **§4.9.3 licenses the small-type exception by relabeling the task.** "The task is not *'what does this character mean'* but *'tap the button that adds this to your cart'*… **Small type IS the difficulty being taught**, and the pairs that matter — 去结算 vs 取消, 提交订单 vs 加入购物车 — are **transactional, not orthographic**." You cannot tap the right button without discriminating the characters; asserting otherwise is restatement. And 提交订单 vs 加入购物车 differ in length and silhouette, so *that* pair is gestalt-solvable — which proves the template teaches shape, at 16 px, excluded from the naked probe. Either it teaches reading (28 px floor applies) or it does not (why is it in a reading product). The doc takes neither horn.
+4. **§4.9.3 licenses the small-type exception by relabeling the task.** "The task is not _'what does this character mean'_ but _'tap the button that adds this to your cart'_… **Small type IS the difficulty being taught**, and the pairs that matter — 去结算 vs 取消, 提交订单 vs 加入购物车 — are **transactional, not orthographic**." You cannot tap the right button without discriminating the characters; asserting otherwise is restatement. And 提交订单 vs 加入购物车 differ in length and silhouette, so _that_ pair is gestalt-solvable — which proves the template teaches shape, at 16 px, excluded from the naked probe. Either it teaches reading (28 px floor applies) or it does not (why is it in a reading product). The doc takes neither horn.
 5. **The document never states, in one place, what a v1 item looks like.** §3.1(4) escalates to "a **two-option** forced discrimination"; §3.1(9) logs the bottom tier as "**2-alternative**"; §4.8.1 hard-codes "**Options: three, not four**" with a three-row diagram; §4.9.2 fixes the reveal at "one row per option (**three rows**)". Whether a pinyin option pool exists is left undetermined across §3.1, §3.5(4) and §4.6.5. Three sections each partially specify the item and they do not compose.
-6. **§4.11 gate 10 is narrower than the defect it was written for.** "No item containing **期** tagged with the flesh component." §3.3.4 itself names **期 朗 服 有 望** as misfires. The gate tests one symptom in one character and will pass forever while the next 朗 or 服 ships wrong. §3.3.4's own gate 1 — no highlight rule may reference a character literal — is the real fix; gate 10 is theatre beside it. Replace with: *every item whose string contains a 月-shaped component must carry an explicit per-component record; no rule may match on a character literal.*
+6. **§4.11 gate 10 is narrower than the defect it was written for.** "No item containing **期** tagged with the flesh component." §3.3.4 itself names **期 朗 服 有 望** as misfires. The gate tests one symptom in one character and will pass forever while the next 朗 or 服 ships wrong. §3.3.4's own gate 1 — no highlight rule may reference a character literal — is the real fix; gate 10 is theatre beside it. Replace with: _every item whose string contains a 月-shaped component must carry an explicit per-component record; no rule may match on a character literal._
 7. **进口 is missing from the confusable set** — it is a real entrance sign, shares 口 with 出口, shares 进 with 进站, and additionally means "import." In "the flagship metro scene," its absence from a set that includes 硬座/软卧 is hard to explain.
 
 ---
 
 ## The three changes that would most improve this text
 
-**1. Fix the three shipping-content errors in §3.3.4 and §4.3.2, then make the correction structural rather than lexical.** U+2EBC is in the **CJK Radicals Supplement** (U+2E80–U+2EFF), **not** the Kangxi Radicals block — stated wrongly three times, including inside the build gate written to prevent exactly this class of bug, where it produces a subset range that silently drops the codepoint. 氽 must be **汆 U+6C46**; the doc's own font-verification list contains the 人/入 error it calls the canonical beginner error. And resolve the contradiction inside the correction itself — "a *distinct bound form*" versus "**homoglyphs in almost every font**" — by ruling that **component identity is a stored abstract ID and the rendered glyph is the actual sub-glyph from the shipped face**, so the panel can never teach a shape that does not occur in the bank. Then widen §4.11 gate 10 from "no item containing 期" to "no rule matches a character literal; every 月-shaped component carries an explicit record."
+**1. Fix the three shipping-content errors in §3.3.4 and §4.3.2, then make the correction structural rather than lexical.** U+2EBC is in the **CJK Radicals Supplement** (U+2E80–U+2EFF), **not** the Kangxi Radicals block — stated wrongly three times, including inside the build gate written to prevent exactly this class of bug, where it produces a subset range that silently drops the codepoint. 氽 must be **汆 U+6C46**; the doc's own font-verification list contains the 人/入 error it calls the canonical beginner error. And resolve the contradiction inside the correction itself — "a _distinct bound form_" versus "**homoglyphs in almost every font**" — by ruling that **component identity is a stored abstract ID and the rendered glyph is the actual sub-glyph from the shipped face**, so the panel can never teach a shape that does not occur in the bank. Then widen §4.11 gate 10 from "no item containing 期" to "no rule matches a character literal; every 月-shaped component carries an explicit record."
 
 **2. Repair the [E]/[J] apparatus, because it is currently the folklore channel it was built to close.** Abolish `[E-adjacent]` and `[E-anchored]` — five registers is two registers plus a place to hide. Forbid conferring [E] by internal cross-reference: `contexts.size >= 3`, the 10–15% probe rate and the >20-point threshold are tagged [E] and sourced only to §9–12, which is the "≥5 exposures, per Horwitz et al." mechanism with a section number in place of the fabricated author. Enforce §3.0's own requirement that every [J] carry **an owner and a test** — §3.4(2)'s "5–15 intervening items" has neither, and §4.12 bans those exact numbers, so the tag is laundering rather than disclosing. Add §4.12 entries for the numbers this document itself invented under cover of [J]: ~3 exposures, ~50–100 characters, 5–15 intervening items, 200 items, ~800 ms, ~2,000 ms.
 
-**3. Re-issue the four rulings so the headline matches the body, and admit that the derived decision was scrutinised harder than the invented ones.** §3.1 is **SUPPORTED as a stake-and-handicap mechanic, CONTRADICTED as a scaffolding dial** — "CONTRADICTED" is false when the tiers, the gating and three per-tier timers all survive. §3.2 is **SUPPORTED for typeface-class variation; [J], instrumented, for substrate rendering** — the surviving TAP claim is the section's only uncited [E], and its own framing ("inside the stimulus at both study and test") *predicts* Masonheimer rather than merely risking it. §3.4 covers **zero** of its three worked examples cleanly, not one, and the panel's real licence is the MC-lure mitigation, which is separately evidenced. And §3.3's three-week classroom curricula do not licence a tap-gated reveal inside a ~2 s socially-observed window — that is **[J]**, and its test is tap-open rate, because if nobody taps, the best-supported layer in the product ships dead. While re-issuing: fix the k=3 arithmetic (true R = **0.775** from observed 0.85; observed **0.900** for true R = 0.85), convert Klinkenberg's observed 75% to observed **0.833** at k=3 before feeding FSRS, and resolve §3.1(7) against §3.4(1) — four 62 px rows fit in 272 px of the 380 px allocated, so Parhi does not force three options, and Rodriguez's own precondition forbids the weak-distractor first appearances the design mandates.
+**3. Re-issue the four rulings so the headline matches the body, and admit that the derived decision was scrutinised harder than the invented ones.** §3.1 is **SUPPORTED as a stake-and-handicap mechanic, CONTRADICTED as a scaffolding dial** — "CONTRADICTED" is false when the tiers, the gating and three per-tier timers all survive. §3.2 is **SUPPORTED for typeface-class variation; [J], instrumented, for substrate rendering** — the surviving TAP claim is the section's only uncited [E], and its own framing ("inside the stimulus at both study and test") _predicts_ Masonheimer rather than merely risking it. §3.4 covers **zero** of its three worked examples cleanly, not one, and the panel's real licence is the MC-lure mitigation, which is separately evidenced. And §3.3's three-week classroom curricula do not licence a tap-gated reveal inside a ~2 s socially-observed window — that is **[J]**, and its test is tap-open rate, because if nobody taps, the best-supported layer in the product ships dead. While re-issuing: fix the k=3 arithmetic (true R = **0.775** from observed 0.85; observed **0.900** for true R = 0.85), convert Klinkenberg's observed 75% to observed **0.833** at k=3 before feeding FSRS, and resolve §3.1(7) against §3.4(1) — four 62 px rows fit in 272 px of the 380 px allocated, so Parhi does not force three options, and Rodriguez's own precondition forbids the weak-distractor first appearances the design mandates.

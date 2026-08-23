@@ -11,16 +11,16 @@ it.
 
 ```ts
 interface SignedEvent {
-  v: number;        // protocol version
-  gameId: string;   // "game_" + 10 base32 chars
-  author: string;   // "dh_" + 12 base32 chars, == hash of `pub`
-  pub: string;      // hex Ed25519 public key
-  seq: number;      // per-author, starts at 1, no gaps in a healthy log
-  lamport: number;  // total-order key
-  at: number;       // author's wall clock, DISPLAY ONLY
+  v: number; // protocol version
+  gameId: string; // "game_" + 10 base32 chars
+  author: string; // "dh_" + 12 base32 chars, == hash of `pub`
+  pub: string; // hex Ed25519 public key
+  seq: number; // per-author, starts at 1, no gaps in a healthy log
+  lamport: number; // total-order key
+  at: number; // author's wall clock, DISPLAY ONLY
   body: GameEventBody;
-  id: string;       // sha256 of the canonical signing payload
-  sig: string;      // hex Ed25519 signature over the same payload
+  id: string; // sha256 of the canonical signing payload
+  sig: string; // hex Ed25519 signature over the same payload
 }
 ```
 
@@ -37,14 +37,14 @@ protocol break.
 
 ### Verification, in order
 
-| Check | Failure |
-| --- | --- |
-| Shape and ranges | `malformed` |
-| `v === PROTOCOL_VERSION` | `wrong-protocol` |
-| `gameId` matches the log | `wrong-game` |
-| `sha256(payload) === id` | `bad-id` |
-| `playerIdFromPublicKey(pub) === author` | `impersonation` |
-| Ed25519 verify | `bad-signature` |
+| Check                                   | Failure          |
+| --------------------------------------- | ---------------- |
+| Shape and ranges                        | `malformed`      |
+| `v === PROTOCOL_VERSION`                | `wrong-protocol` |
+| `gameId` matches the log                | `wrong-game`     |
+| `sha256(payload) === id`                | `bad-id`         |
+| `playerIdFromPublicKey(pub) === author` | `impersonation`  |
+| Ed25519 verify                          | `bad-signature`  |
 
 ## Total order
 
@@ -53,22 +53,22 @@ sorts identically, which is what lets the reducer be pure.
 
 ## Events
 
-| Type | Author must be | Payload |
-| --- | --- | --- |
-| `game/created` | first event only; author becomes host | `name`, `joinCode`, `rules`, `packHash` |
-| `player/joined` | self-attested | `username` |
-| `team/created` | a known player, lobby phase (or `allowLateJoin`) | `teamId`, `name` |
-| `team/joined` | a known player, lobby phase (or `allowLateJoin`) | `teamId` |
-| `team/left` | a known player, lobby phase | `teamId` |
-| `game/started` | the host | - |
-| `turn/drawn` | a known player **not** on the acting team | `turnIndex`, `nonce` |
-| `turn/category` | a known player **not** on the acting team | `turnIndex`, `categoryId` |
-| `turn/difficulty` | a member of the acting team | `turnIndex`, `difficulty` |
-| `turn/timeout` | any known player | `turnIndex` |
-| `room/locked` | the host | `locked` |
-| `player/kicked` | the host | `targetId` |
-| `commit/made` | a known player | `subject`, `commitHash` |
-| `commit/revealed` | a known player, matching a prior `commit/made` | `subject`, `payload`, `salt` |
+| Type              | Author must be                                   | Payload                                 |
+| ----------------- | ------------------------------------------------ | --------------------------------------- |
+| `game/created`    | first event only; author becomes host            | `name`, `joinCode`, `rules`, `packHash` |
+| `player/joined`   | self-attested                                    | `username`                              |
+| `team/created`    | a known player, lobby phase (or `allowLateJoin`) | `teamId`, `name`                        |
+| `team/joined`     | a known player, lobby phase (or `allowLateJoin`) | `teamId`                                |
+| `team/left`       | a known player, lobby phase                      | `teamId`                                |
+| `game/started`    | the host                                         | -                                       |
+| `turn/drawn`      | a known player **not** on the acting team        | `turnIndex`, `nonce`                    |
+| `turn/category`   | a known player **not** on the acting team        | `turnIndex`, `categoryId`               |
+| `turn/difficulty` | a member of the acting team                      | `turnIndex`, `difficulty`               |
+| `turn/timeout`    | any known player                                 | `turnIndex`                             |
+| `room/locked`     | the host                                         | `locked`                                |
+| `player/kicked`   | the host                                         | `targetId`                              |
+| `commit/made`     | a known player                                   | `subject`, `commitHash`                 |
+| `commit/revealed` | a known player, matching a prior `commit/made`   | `subject`, `payload`, `salt`            |
 
 An event that fails its authority check lands in `state.rejected` with a reason
 and is not applied. Duplicates for a turn already resolved are refused by the
@@ -77,7 +77,7 @@ and is not applied. Duplicates for a turn already resolved are refused by the
 There is no `turn/answered` event: it existed through wire version 4 and was
 removed for universal-answer (Phase B, DESIGN.md §5.1 beat 4) rather than kept
 alongside `commit/made`/`commit/revealed`. It was never a distinct payload
-shape that needed preserving - the acting-team-only authority check *was* the
+shape that needed preserving - the acting-team-only authority check _was_ the
 entire mechanism that made an answer "private," and once more than one player
 may answer, that stops being true regardless of the event's name. See
 Commit-reveal below for what replaced it.
@@ -118,11 +118,11 @@ event gossips in clear to every peer immediately (see Sync below).
   copy of the content bank in R-10. Committing first does not make that
   impossible; it raises the cost from "read the wire" (every other peer's
   vantage point) to "modify your own client" (an attack on your own honesty,
-  not the protocol), and it lets every *other* peer verify after the fact that
+  not the protocol), and it lets every _other_ peer verify after the fact that
   a payload was fixed before it was revealed.
 - **Forfeiture is not this primitive's job.** A commit that is never revealed
   just stays pending; nothing here expires it. `unrevealedCommits(state,
-  subject)` in `reducer.ts` exposes which authors still have a pending commit
+subject)` in `reducer.ts` exposes which authors still have a pending commit
   for a subject, so a caller with turn-shaped context (a timeout firing, a
   turn resolving) can decide what "too late" means and treat an unrevealed
   commit as forfeited on its own terms. This file deliberately has no timeout
@@ -187,9 +187,9 @@ part that is achievable and cheap.
 
 ```ts
 type SyncMessage =
-  | { t: 'have';   gameId: string; vector: VersionVector; digest: string }
-  | { t: 'want';   gameId: string; vector: VersionVector }
-  | { t: 'events'; gameId: string; events: SignedEvent[] }
+  | { t: 'have'; gameId: string; vector: VersionVector; digest: string }
+  | { t: 'want'; gameId: string; vector: VersionVector }
+  | { t: 'events'; gameId: string; events: SignedEvent[] };
 ```
 
 Payloads are JSON strings on one trystero action (`dh`). Messages for another

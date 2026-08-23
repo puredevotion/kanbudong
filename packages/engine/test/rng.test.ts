@@ -46,8 +46,8 @@ describe('seeded rng', () => {
     }
     for (const count of counts) {
       // A fair generator lands well inside +/-15% of a tenth over 100k draws.
-      expect(count).toBeGreaterThan(draws / 10 * 0.85);
-      expect(count).toBeLessThan(draws / 10 * 1.15);
+      expect(count).toBeGreaterThan((draws / 10) * 0.85);
+      expect(count).toBeLessThan((draws / 10) * 1.15);
     }
   });
 

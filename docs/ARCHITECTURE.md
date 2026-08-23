@@ -58,11 +58,11 @@ join code as the shared secret.
 
 Consequences we accept and surface rather than hide:
 
-| Limit | Why | What the app does |
-| --- | --- | --- |
-| STUN-only, no TURN | A relay is a server, and we said there isn't one | Symmetric NAT and some carrier networks will not connect. The lobby says so after 15 s instead of spinning forever. |
-| Full mesh, O(n^2) | Every peer holds a connection to every other | No cap in the engine, tested to 8 devices, lobby warns above 10. Host-relay star topology is the known fix if playtests demand it. |
-| Public relays | Somebody has to carry the handshake | If none are reachable, the app says that, plainly. |
+| Limit              | Why                                              | What the app does                                                                                                                  |
+| ------------------ | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| STUN-only, no TURN | A relay is a server, and we said there isn't one | Symmetric NAT and some carrier networks will not connect. The lobby says so after 15 s instead of spinning forever.                |
+| Full mesh, O(n^2)  | Every peer holds a connection to every other     | No cap in the engine, tested to 8 devices, lobby warns above 10. Host-relay star topology is the known fix if playtests demand it. |
+| Public relays      | Somebody has to carry the handshake              | If none are reachable, the app says that, plainly.                                                                                 |
 
 ## Convergence without an authority
 
@@ -78,7 +78,7 @@ Authority is derived from state, never elected and never voted on:
 
 - **host** - opens and starts the game;
 - **acting team** - picks a difficulty and answers;
-- **drawer** - any peer *not* on the acting team publishes the turn nonce. First
+- **drawer** - any peer _not_ on the acting team publishes the turn nonce. First
   valid one in total order wins;
 - **anyone** - may propose a timeout.
 
@@ -91,7 +91,7 @@ Two properties do the heavy lifting:
    event claiming to be from someone else fails without consulting any registry.
 2. **Presence is not log data.** `GameState` contains no `now` and no
    "connected", so no rule can ever depend on something peers might disagree
-   about. Timers live in the UI; the *consequence* of a timer is an event.
+   about. Timers live in the UI; the _consequence_ of a timer is an event.
 
 ## Anti-entropy
 
@@ -103,7 +103,7 @@ The subtlety worth knowing about: a version vector records each author's highest
 **contiguous** sequence number, not their maximum. Tracking the maximum looks
 identical until a broadcast is lost - then a peer advertises seq 2 while seq 1 is
 missing and nothing ever re-sends it. A gap has to stop the counter. On top of
-that, receiving an event that *creates* a gap triggers an immediate `want`, so
+that, receiving an event that _creates_ a gap triggers an immediate `want`, so
 repair happens in milliseconds rather than at the next gossip tick. Both
 behaviours have tests, and both were found by tests rather than by reasoning.
 

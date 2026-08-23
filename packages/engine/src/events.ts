@@ -123,7 +123,12 @@ export type GameEventBody =
    * `payload` must be JSON-serialisable: it goes through `canonicalJson`
    * both here and wherever a caller re-derives the commit hash.
    */
-  | { readonly type: 'commit/revealed'; readonly subject: string; readonly payload: unknown; readonly salt: string };
+  | {
+      readonly type: 'commit/revealed';
+      readonly subject: string;
+      readonly payload: unknown;
+      readonly salt: string;
+    };
 
 export type GameEventType = GameEventBody['type'];
 

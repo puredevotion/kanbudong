@@ -50,7 +50,7 @@ describe('lociTiles / hasLociMnemonicPrompt', () => {
     expect(hasLociMnemonicPrompt(q)).toBe(false);
   });
 
-  it('places a top-bottom decomposition\'s two components at top and bottom', () => {
+  it("places a top-bottom decomposition's two components at top and bottom", () => {
     const q = baseQuestion({
       face: { hanzi: '肾', pinyin: 'shèn', nl: 'nier', structure: 'top-bottom' },
       decomposition: {

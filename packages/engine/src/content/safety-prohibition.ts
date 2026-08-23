@@ -28,11 +28,20 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       ['prohibition — red circle, diagonal bar', 'strictly forbidden', 'beware'],
       0,
       'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
-      { hanzi: '禁止', pinyin: 'jìnzhǐ', nl: 'verbod — rode cirkel met streep', en: 'prohibition — red circle, diagonal bar' },
-      { kind: 'word', hanzi: '禁止', morphemes: [
-        { span: '禁', gloss: 'to forbid' },
-        { span: '止', gloss: 'to stop' },
-      ] },
+      {
+        hanzi: '禁止',
+        pinyin: 'jìnzhǐ',
+        nl: 'verbod — rode cirkel met streep',
+        en: 'prohibition — red circle, diagonal bar',
+      },
+      {
+        kind: 'word',
+        hanzi: '禁止',
+        morphemes: [
+          { span: '禁', gloss: 'to forbid' },
+          { span: '止', gloss: 'to stop' },
+        ],
+      },
       { tier: 0 },
     ],
     [
@@ -41,10 +50,14 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       0,
       'qǐngwù · gelieve niet. The polite register. Same force as 禁止 in practice — a traveller who reads 请勿 as a suggestion is wrong. 勿 appears almost nowhere else, which is exactly why it is unambiguous once known.',
       { hanzi: '请勿', pinyin: 'qǐngwù', nl: 'gelieve niet', en: 'please do not' },
-      { kind: 'word', hanzi: '请勿', morphemes: [
-        { span: '请', gloss: 'please' },
-        { span: '勿', gloss: 'do not' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '请勿',
+        morphemes: [
+          { span: '请', gloss: 'please' },
+          { span: '勿', gloss: 'do not' },
+        ],
+      },
       { tier: 0 },
     ],
   ],
@@ -54,23 +67,40 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       ['prohibition — red circle, diagonal bar', 'beware', 'please do not'],
       0,
       'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
-      { hanzi: '禁止', pinyin: 'jìnzhǐ', nl: 'verbod — rode cirkel met streep', en: 'prohibition — red circle, diagonal bar' },
-      { kind: 'word', hanzi: '禁止', morphemes: [
-        { span: '禁', gloss: 'to forbid' },
-        { span: '止', gloss: 'to stop' },
-      ] },
+      {
+        hanzi: '禁止',
+        pinyin: 'jìnzhǐ',
+        nl: 'verbod — rode cirkel met streep',
+        en: 'prohibition — red circle, diagonal bar',
+      },
+      {
+        kind: 'word',
+        hanzi: '禁止',
+        morphemes: [
+          { span: '禁', gloss: 'to forbid' },
+          { span: '止', gloss: 'to stop' },
+        ],
+      },
       { tier: 0 },
     ],
     [
       'On a sign. What is forbidden?',
-      ['strictly forbidden', 'warning — yellow triangle, black border', 'prohibition — red circle, diagonal bar'],
+      [
+        'strictly forbidden',
+        'warning — yellow triangle, black border',
+        'prohibition — red circle, diagonal bar',
+      ],
       0,
       'yánjìn · streng verboden (strictly forbidden). The strongest prohibition wording; also appears in 严禁烟火 (fire and smoking strictly forbidden).',
       { hanzi: '严禁', pinyin: 'yánjìn', nl: 'streng verboden', en: 'strictly forbidden' },
-      { kind: 'word', hanzi: '严禁', morphemes: [
-        { span: '严', gloss: 'strict' },
-        { span: '禁', gloss: 'to forbid' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '严禁',
+        morphemes: [
+          { span: '严', gloss: 'strict' },
+          { span: '禁', gloss: 'to forbid' },
+        ],
+      },
       { tier: 1 },
     ],
   ],
@@ -80,11 +110,20 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       ['prohibition — red circle, diagonal bar', 'notice, safe condition — green square', 'danger'],
       0,
       'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
-      { hanzi: '禁止', pinyin: 'jìnzhǐ', nl: 'verbod — rode cirkel met streep', en: 'prohibition — red circle, diagonal bar' },
-      { kind: 'word', hanzi: '禁止', morphemes: [
-        { span: '禁', gloss: 'to forbid' },
-        { span: '止', gloss: 'to stop' },
-      ] },
+      {
+        hanzi: '禁止',
+        pinyin: 'jìnzhǐ',
+        nl: 'verbod — rode cirkel met streep',
+        en: 'prohibition — red circle, diagonal bar',
+      },
+      {
+        kind: 'word',
+        hanzi: '禁止',
+        morphemes: [
+          { span: '禁', gloss: 'to forbid' },
+          { span: '止', gloss: 'to stop' },
+        ],
+      },
       { tier: 0 },
     ],
     [

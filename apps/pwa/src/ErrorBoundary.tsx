@@ -19,14 +19,14 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { error: E
   override render(): ReactNode {
     if (this.state.error === null) return this.props.children;
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
-        <h1 className="text-lg font-semibold">Something went wrong</h1>
-        <p className="max-w-sm text-sm text-muted">
+      <div className='flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center'>
+        <h1 className='text-lg font-semibold'>Something went wrong</h1>
+        <p className='max-w-sm text-sm text-muted'>
           {this.state.error.message || 'The game hit an error it could not recover from.'}
         </p>
         <button
-          type="button"
-          className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white"
+          type='button'
+          className='rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white'
           onClick={() => globalThis.location.reload()}
         >
           Reload

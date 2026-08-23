@@ -137,7 +137,8 @@ describe('seed pack', () => {
   it('never explains an answer by its position', () => {
     // Options are shuffled per turn, so "the second option is..." is not merely
     // fragile - it is already wrong for every player who reads it.
-    const positional = /\b(first|second|third|fourth|last|latter)\s+(option|options|answer|statement|condition)\b/i;
+    const positional =
+      /\b(first|second|third|fourth|last|latter)\s+(option|options|answer|statement|condition)\b/i;
     const offenders = SEED_PACK.questions
       .filter((question) => positional.test(question.explanation))
       .map((question) => question.id);
@@ -225,10 +226,15 @@ describe('SignFace.context', () => {
       low: [
         [
           'On a shop door. What does it mean?',
-          ['o\'clock; time', 'w1', 'w2'],
+          ["o'clock; time", 'w1', 'w2'],
           0,
           'because',
-          { hanzi: '时', pinyin: 'shí', nl: 'uur; tijd', context: { before: '营业', after: '间 09:00–22:00' } },
+          {
+            hanzi: '时',
+            pinyin: 'shí',
+            nl: 'uur; tijd',
+            context: { before: '营业', after: '间 09:00–22:00' },
+          },
         ] as const,
       ],
       mid: [],
@@ -249,7 +255,9 @@ describe('SignFace.context', () => {
 
 describe('isomorph groups (DESIGN.md §5.1 confer beat)', () => {
   it('tags the menu-animal organ set as a real >=2 member group, and it validates clean', () => {
-    const tagged = SEED_PACK.questions.filter((q) => q.isomorph_group_id === 'menu-animal-organ-meat-radical');
+    const tagged = SEED_PACK.questions.filter(
+      (q) => q.isomorph_group_id === 'menu-animal-organ-meat-radical',
+    );
     expect(tagged.map((q) => q.id).sort()).toEqual([
       'menu-animal-high-3',
       'menu-animal-high-4',
@@ -267,7 +275,10 @@ describe('isomorph groups (DESIGN.md §5.1 confer beat)', () => {
   });
 
   it('rejects a group with only one member', () => {
-    const lone: Question = { ...(SEED_PACK.questions[0] as Question), isomorph_group_id: 'only-one' };
+    const lone: Question = {
+      ...(SEED_PACK.questions[0] as Question),
+      isomorph_group_id: 'only-one',
+    };
     const pack: ContentPack = { ...SEED_PACK, questions: [lone, ...SEED_PACK.questions.slice(1)] };
     expect(validatePack(pack)).toContain(
       'isomorph_group_id only-one: only one item - DESIGN.md §5.1 needs pairs or triples',

@@ -37,7 +37,11 @@ export interface PackStats {
   readonly total: number;
   /** Count per category per difficulty; the gaps are where authoring is owed. */
   readonly byCategory: Readonly<Record<CategoryId, Readonly<Record<Difficulty, number>>>>;
-  readonly thinnest: { readonly category: CategoryId; readonly difficulty: Difficulty; readonly count: number };
+  readonly thinnest: {
+    readonly category: CategoryId;
+    readonly difficulty: Difficulty;
+    readonly count: number;
+  };
 }
 
 export function packStats(pack: ContentPack): PackStats {
@@ -53,7 +57,11 @@ export function packStats(pack: ContentPack): PackStats {
     if (row === undefined) continue;
     row[q.difficulty] = (row[q.difficulty] ?? 0) + 1;
   }
-  let thinnest = { category: CATEGORY_IDS[0] as CategoryId, difficulty: 'low' as Difficulty, count: Number.POSITIVE_INFINITY };
+  let thinnest = {
+    category: CATEGORY_IDS[0] as CategoryId,
+    difficulty: 'low' as Difficulty,
+    count: Number.POSITIVE_INFINITY,
+  };
   for (const category of CATEGORY_IDS) {
     for (const difficulty of DIFFICULTY_ORDER) {
       const count = byCategory[category]?.[difficulty] ?? 0;
@@ -71,7 +79,11 @@ export function questionById(pack: ContentPack, id: QuestionId): Question | unde
   return pack.questions.find((q) => q.id === id);
 }
 
-export function questionsFor(pack: ContentPack, category: CategoryId, difficulty: Difficulty): Question[] {
+export function questionsFor(
+  pack: ContentPack,
+  category: CategoryId,
+  difficulty: Difficulty,
+): Question[] {
   return pack.questions.filter((q) => q.category === category && q.difficulty === difficulty);
 }
 
@@ -92,7 +104,10 @@ export const SIBLING_CAP = 4;
  * `DecompositionPanel` already hold for component highlighting (§3.3.4).
  * Excludes `question` itself and caps at {@link SIBLING_CAP}.
  */
-export function siblingsSharingComponent(pack: ContentPack, question: Question): readonly Question[] {
+export function siblingsSharingComponent(
+  pack: ContentPack,
+  question: Question,
+): readonly Question[] {
   const decomposition = question.decomposition;
   if (decomposition === undefined) return [];
 
@@ -103,7 +118,8 @@ export function siblingsSharingComponent(pack: ContentPack, question: Question):
     const out: Question[] = [];
     for (const q of pack.questions) {
       if (q.id === question.id) continue;
-      if (q.decomposition?.kind !== 'character' || q.decomposition.semantic_radical !== radical) continue;
+      if (q.decomposition?.kind !== 'character' || q.decomposition.semantic_radical !== radical)
+        continue;
       const hanzi = q.face?.hanzi ?? q.id;
       if (seen.has(hanzi)) continue;
       seen.add(hanzi);
@@ -257,13 +273,16 @@ export function validatePack(pack: ContentPack): string[] {
   for (const q of pack.questions) {
     for (const [field, value] of forbiddenCodepointStrings(q)) {
       if (CJK_RADICALS_SUPPLEMENT.test(value)) {
-        problems.push(`${q.id}: ${field} contains a CJK Radicals Supplement codepoint (e.g. U+2EBC) - shipped copy must use the ordinary character, never the bare radical shape`);
+        problems.push(
+          `${q.id}: ${field} contains a CJK Radicals Supplement codepoint (e.g. U+2EBC) - shipped copy must use the ordinary character, never the bare radical shape`,
+        );
       }
     }
     if (seen.has(q.id)) problems.push(`duplicate question id: ${q.id}`);
     seen.add(q.id);
     if (!categories.has(q.category)) problems.push(`${q.id}: unknown category ${q.category}`);
-    if (!DIFFICULTY_ORDER.includes(q.difficulty)) problems.push(`${q.id}: unknown difficulty ${q.difficulty}`);
+    if (!DIFFICULTY_ORDER.includes(q.difficulty))
+      problems.push(`${q.id}: unknown difficulty ${q.difficulty}`);
     if (q.options.length !== 3) problems.push(`${q.id}: needs exactly 3 options`);
     if (new Set(q.options).size !== q.options.length) problems.push(`${q.id}: duplicate options`);
     if (q.answer < 0 || q.answer > 2) problems.push(`${q.id}: answer out of range`);
@@ -288,7 +307,9 @@ export function validatePack(pack: ContentPack): string[] {
         // one that should fail this check.
         const usage = q.decomposition.components.find((c) => c.componentId === radical);
         if (usage !== undefined && usage.role !== 'meaning' && usage.role !== 'iconic') {
-          problems.push(`${q.id}: semantic_radical ${radical} has non-meaning role '${usage.role}' for this host`);
+          problems.push(
+            `${q.id}: semantic_radical ${radical} has non-meaning role '${usage.role}' for this host`,
+          );
         }
       }
     }
@@ -306,7 +327,9 @@ export function validatePack(pack: ContentPack): string[] {
       const distractorTexts = q.options.filter((_, i) => i !== q.answer);
       for (const text of distractorTexts) {
         if (!(text in q.distractorRationale)) {
-          problems.push(`${q.id}: distractor "${text}" has no whyPlausible entry in distractorRationale (DESIGN.md §11.6 correction 3)`);
+          problems.push(
+            `${q.id}: distractor "${text}" has no whyPlausible entry in distractorRationale (DESIGN.md §11.6 correction 3)`,
+          );
         }
       }
     }
@@ -318,7 +341,9 @@ export function validatePack(pack: ContentPack): string[] {
   }
   for (const [groupId, count] of isomorphGroups) {
     if (count < 2) {
-      problems.push(`isomorph_group_id ${groupId}: only one item - DESIGN.md §5.1 needs pairs or triples`);
+      problems.push(
+        `isomorph_group_id ${groupId}: only one item - DESIGN.md §5.1 needs pairs or triples`,
+      );
     }
   }
   return problems;

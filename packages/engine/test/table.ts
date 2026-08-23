@@ -140,13 +140,20 @@ export class Table {
     const options = state.active?.categoryOptions ?? [];
     const categoryId = options[0];
     if (categoryId === undefined) throw new Error('no category options to pick from');
-    this.push(chooseCategory(this.log, this.player(this.drawerIndex()), state.turnIndex, categoryId));
+    this.push(
+      chooseCategory(this.log, this.player(this.drawerIndex()), state.turnIndex, categoryId),
+    );
     return categoryId;
   }
 
   choose(difficulty: Difficulty): void {
     this.push(
-      chooseDifficulty(this.log, this.player(this.actorIndex()), this.state().turnIndex, difficulty),
+      chooseDifficulty(
+        this.log,
+        this.player(this.actorIndex()),
+        this.state().turnIndex,
+        difficulty,
+      ),
     );
   }
 
@@ -155,7 +162,10 @@ export class Table {
     const state = this.state();
     const presented = activeQuestion(state, SEED_PACK);
     if (presented === null) throw new Error('no live question to answer');
-    const chosen = (correct ? presented.correctIndex : (presented.correctIndex + 1) % 3) as 0 | 1 | 2;
+    const chosen = (correct ? presented.correctIndex : (presented.correctIndex + 1) % 3) as
+      | 0
+      | 1
+      | 2;
     this.answerAs(this.actorIndex(), chosen);
   }
 

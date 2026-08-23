@@ -8,7 +8,7 @@ session to session.
 ## Communication
 
 - Be concise. State results and decisions directly.
-- When summarising a batch of changes, use bullets — each one says *why* a
+- When summarising a batch of changes, use bullets — each one says _why_ a
   change was made, not just what changed.
 - Don't narrate errors made or approaches abandoned mid-task. Report the end
   state; the git history and this session's transcript already hold the rest.
@@ -35,7 +35,7 @@ session to session.
   reliably accept synthetic input — use it for visual/rendering confirmation,
   not interaction testing.
 - Content lives in `packages/engine/src/content/*.ts` as `[prompt, options,
-  answerIndex, explanation]` tuples (see `content/row.ts`). Explanations are
+answerIndex, explanation]` tuples (see `content/row.ts`). Explanations are
   player-facing copy, not authoring notes — no frequency ranks, doc
   cross-references (`§7.x`), or raw IDS decomposition strings (⿰⿱⿹) in
   anything a player reads.

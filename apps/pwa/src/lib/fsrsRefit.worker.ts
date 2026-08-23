@@ -15,7 +15,9 @@ export interface RefitRequest {
   readonly lengths: Uint32Array;
 }
 
-export type RefitResponse = { readonly ok: true; readonly w: number[] } | { readonly ok: false; readonly error: string };
+export type RefitResponse =
+  | { readonly ok: true; readonly w: number[] }
+  | { readonly ok: false; readonly error: string };
 
 let ready: Promise<void> | null = null;
 
@@ -37,7 +39,10 @@ self.onmessage = async (event: MessageEvent<RefitRequest>): Promise<void> => {
     const response: RefitResponse = { ok: true, w: Array.from(fitted) };
     (self as unknown as Worker).postMessage(response);
   } catch (error) {
-    const response: RefitResponse = { ok: false, error: error instanceof Error ? error.message : String(error) };
+    const response: RefitResponse = {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
     (self as unknown as Worker).postMessage(response);
   }
 };

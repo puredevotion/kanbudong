@@ -53,7 +53,10 @@ export class EventLog {
   private readonly authors = new Map<PlayerId, AuthorState>();
   private maxLamport = 0;
 
-  constructor(readonly gameId: GameId, events: readonly SignedEvent[] = []) {
+  constructor(
+    readonly gameId: GameId,
+    events: readonly SignedEvent[] = [],
+  ) {
     for (const event of events) this.insert(event);
   }
 

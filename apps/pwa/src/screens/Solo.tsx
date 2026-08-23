@@ -126,7 +126,12 @@ export function Solo(): ReactNode {
   const mnemonicKindRef = useRef<'self_explanation' | 'loci' | 'none'>('none');
   useEffect(() => {
     return () => {
-      if (playerId !== null && current !== null && breakdownOpenedRef.current && (showSelfExplain || showLoci)) {
+      if (
+        playerId !== null &&
+        current !== null &&
+        breakdownOpenedRef.current &&
+        (showSelfExplain || showLoci)
+      ) {
         recordMnemonicPromptUsed(playerId, current.id, mnemonicKindRef.current);
       }
       breakdownOpenedRef.current = false;
@@ -147,10 +152,10 @@ export function Solo(): ReactNode {
 
   if (done || current === null) {
     return (
-      <Screen title="Session complete">
+      <Screen title='Session complete'>
         <Card>
-          <Card.Content className="flex flex-col gap-2 py-6 text-center">
-            <Typography.Paragraph className="text-sm text-muted">
+          <Card.Content className='flex flex-col gap-2 py-6 text-center'>
+            <Typography.Paragraph className='text-sm text-muted'>
               {reviewed === 0
                 ? "Nothing was due — you're caught up."
                 : `You reviewed ${reviewed} item${reviewed === 1 ? '' : 's'}.`}
@@ -158,7 +163,7 @@ export function Solo(): ReactNode {
           </Card.Content>
         </Card>
         <ActionBar>
-          <Button variant="primary" size="lg" fullWidth onPress={() => navigate('/')}>
+          <Button variant='primary' size='lg' fullWidth onPress={() => navigate('/')}>
             Done
           </Button>
         </ActionBar>
@@ -198,12 +203,12 @@ export function Solo(): ReactNode {
 
   return (
     <Screen
-      title="Practice"
+      title='Practice'
       subtitle={`${reviewed + 1} of up to ${SOLO_SESSION_TARGET_RETRIEVALS}`}
     >
       {presentedQuestion !== null && (
-        <Card key={presentedQuestion.question.id} className="anim-enter">
-          <Card.Content className="flex flex-col gap-4 pt-4">
+        <Card key={presentedQuestion.question.id} className='anim-enter'>
+          <Card.Content className='flex flex-col gap-4 pt-4'>
             {presentedQuestion.question.face !== undefined && (
               <Sign
                 template={templateFor(presentedQuestion.question.category)}
@@ -212,9 +217,9 @@ export function Solo(): ReactNode {
                 context={presentedQuestion.question.face.context}
               />
             )}
-            <Card.Title className="text-xl">{presentedQuestion.question.prompt}</Card.Title>
+            <Card.Title className='text-xl'>{presentedQuestion.question.prompt}</Card.Title>
           </Card.Content>
-          <Card.Content className="flex flex-col gap-2">
+          <Card.Content className='flex flex-col gap-2'>
             {presentedQuestion.options.map((option, index) => {
               const isChosen = reveal?.chosenIndex === index;
               const isCorrectOption = reveal !== null && index === presentedQuestion.correctIndex;
@@ -230,7 +235,7 @@ export function Solo(): ReactNode {
                 <Button
                   key={option}
                   variant={variant}
-                  size="lg"
+                  size='lg'
                   fullWidth
                   isDisabled={reveal !== null}
                   onPress={() => submit(index)}
@@ -244,23 +249,25 @@ export function Solo(): ReactNode {
       )}
 
       {reveal !== null && (
-        <Card className="anim-reveal" variant={reveal.correct ? 'secondary' : 'tertiary'}>
-          <Card.Content className="flex flex-col gap-2 text-sm">
+        <Card className='anim-reveal' variant={reveal.correct ? 'secondary' : 'tertiary'}>
+          <Card.Content className='flex flex-col gap-2 text-sm'>
             {/* Stage 1: the target hanzi alone, then the correction - nothing else. */}
             {current.face !== undefined && (
-              <div className="font-han text-center text-[3rem] font-medium leading-none">
+              <div className='font-han text-center text-[3rem] font-medium leading-none'>
                 {current.face.hanzi}
               </div>
             )}
             {!hanziAlone && (
               <p
-                className={reveal.correct ? 'font-medium text-success' : 'font-medium text-danger-text'}
+                className={
+                  reveal.correct ? 'font-medium text-success' : 'font-medium text-danger-text'
+                }
               >
                 {reveal.correct ? 'Correct' : 'Not quite'}
               </p>
             )}
             {!hanziAlone && current.face !== undefined && (
-              <p className="text-muted">
+              <p className='text-muted'>
                 {current.face.pinyin}
                 {current.face.nl !== undefined && ` · ${current.face.nl}`}
                 {current.face.en !== undefined && ` (${current.face.en})`}
@@ -268,8 +275,8 @@ export function Solo(): ReactNode {
             )}
             {!reveal.correct && !hanziAlone && presentedQuestion !== null && (
               <p>
-                <span className="text-muted">You said: </span>
-                <span className="font-medium text-danger-text">
+                <span className='text-muted'>You said: </span>
+                <span className='font-medium text-danger-text'>
                   {presentedQuestion.options[reveal.chosenIndex]} — wrong
                 </span>
               </p>
@@ -277,8 +284,8 @@ export function Solo(): ReactNode {
 
             {!hanziAlone && !revealed && (
               <Button
-                variant="ghost"
-                size="sm"
+                variant='ghost'
+                size='sm'
                 fullWidth
                 onPress={() => {
                   breakdownOpenedRef.current = true;
@@ -290,9 +297,10 @@ export function Solo(): ReactNode {
             )}
 
             {!hanziAlone && revealed && presentedQuestion !== null && (
-              <div className="anim-fade-in flex flex-col gap-2">
-                {(current.decomposition !== undefined || current.face?.transparency === 'opaque') && (
-                  <div className="anim-fade-in flex flex-col gap-2">
+              <div className='anim-fade-in flex flex-col gap-2'>
+                {(current.decomposition !== undefined ||
+                  current.face?.transparency === 'opaque') && (
+                  <div className='anim-fade-in flex flex-col gap-2'>
                     <DecompositionPanel
                       decomposition={current.decomposition}
                       transparency={current.face?.transparency}
@@ -300,16 +308,20 @@ export function Solo(): ReactNode {
                     />
 
                     {showSelfExplain && showLoci && (
-                      <div className="flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted">
+                      <div className='flex gap-3 text-[0.65rem] uppercase tracking-wide text-muted'>
                         <button
-                          type="button"
+                          type='button'
                           onClick={() => setMnemonicMode('self_explanation')}
-                          className={mnemonicMode === 'self_explanation' ? 'font-semibold text-foreground' : ''}
+                          className={
+                            mnemonicMode === 'self_explanation'
+                              ? 'font-semibold text-foreground'
+                              : ''
+                          }
                         >
                           which part means it
                         </button>
                         <button
-                          type="button"
+                          type='button'
                           onClick={() => setMnemonicMode('loci')}
                           className={mnemonicMode === 'loci' ? 'font-semibold text-foreground' : ''}
                         >
@@ -335,16 +347,24 @@ export function Solo(): ReactNode {
                     )}
 
                     {confusables.length > 0 && (
-                      <ConfusablePanel confusables={confusables} confusionType={current.confusion_type} />
+                      <ConfusablePanel
+                        confusables={confusables}
+                        confusionType={current.confusion_type}
+                      />
                     )}
 
                     {siblings.length > 0 &&
                       (!showSiblings ? (
-                        <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
+                        <Button
+                          variant='ghost'
+                          size='sm'
+                          fullWidth
+                          onPress={() => setShowSiblings(true)}
+                        >
                           See the same move again
                         </Button>
                       ) : (
-                        <div className="anim-fade-in">
+                        <div className='anim-fade-in'>
                           <SiblingsPanel siblings={siblings} />
                         </div>
                       ))}
@@ -365,11 +385,17 @@ export function Solo(): ReactNode {
 
       <ActionBar>
         {reveal === null ? (
-          <Button variant="ghost" fullWidth onPress={() => navigate('/')}>
+          <Button variant='ghost' fullWidth onPress={() => navigate('/')}>
             Stop for now
           </Button>
         ) : (
-          <Button variant="primary" size="lg" fullWidth isDisabled={!dwellElapsed} onPress={advance}>
+          <Button
+            variant='primary'
+            size='lg'
+            fullWidth
+            isDisabled={!dwellElapsed}
+            onPress={advance}
+          >
             Next
           </Button>
         )}

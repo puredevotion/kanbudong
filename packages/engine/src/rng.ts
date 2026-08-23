@@ -29,7 +29,7 @@ export function createRng(...seedParts: readonly (string | number)[]): Rng {
   let s3 = readU32(digest, 12) || 4;
 
   const uint32 = (): number => {
-    const result = (Math.imul(rotl(Math.imul(s1, 5) >>> 0, 7), 9) >>> 0);
+    const result = Math.imul(rotl(Math.imul(s1, 5) >>> 0, 7), 9) >>> 0;
     const t = (s1 << 9) >>> 0;
     s2 = (s2 ^ s0) >>> 0;
     s3 = (s3 ^ s1) >>> 0;

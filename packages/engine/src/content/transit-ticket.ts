@@ -1,4 +1,10 @@
-import { BUILDING_RADICAL, CHENG_PHONETIC, EARTH_SEMANTIC, METAL_RADICAL, FOOD_RADICAL } from '../components.js';
+import {
+  BUILDING_RADICAL,
+  CHENG_PHONETIC,
+  EARTH_SEMANTIC,
+  METAL_RADICAL,
+  FOOD_RADICAL,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -109,7 +115,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['shop (older, smaller)', 'collect a printed ticket', 'large retail complex'],
       0,
       'pù · winkeltje, meaning a smaller, older-style shop. Read as pù here, not pū — 铺 has two readings depending on meaning.',
-      { hanzi: '铺', pinyin: 'pù', nl: 'winkeltje', en: 'shop (older, smaller)', structure: 'left-right' },
+      {
+        hanzi: '铺',
+        pinyin: 'pù',
+        nl: 'winkeltje',
+        en: 'shop (older, smaller)',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '铺',
@@ -132,7 +144,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['establishment, house of', 'transfer, change lines', 'entrance'],
       0,
       'guǎn · gelegenheid, an establishment or "house of ___". Can be food-related, like 面馆 (noodle shop) and 茶馆 (teahouse), or not, like 宾馆 (hotel) and 图书馆 (library) — the meaning depends on what comes before it.',
-      { hanzi: '馆', pinyin: 'guǎn', nl: 'gelegenheid', en: 'establishment, house of', structure: 'left-right' },
+      {
+        hanzi: '馆',
+        pinyin: 'guǎn',
+        nl: 'gelegenheid',
+        en: 'establishment, house of',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '馆',
@@ -146,7 +164,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['large retail complex', 'platform', 'exit'],
       0,
       'chéng · markthal, centrum. Literally "city", used for a large retail complex focused on one type of product, like 美食城 (food court) or 电脑城 (computer mall).',
-      { hanzi: '城', pinyin: 'chéng', nl: 'markthal, centrum', en: 'large retail complex', structure: 'left-right' },
+      {
+        hanzi: '城',
+        pinyin: 'chéng',
+        nl: 'markthal, centrum',
+        en: 'large retail complex',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '城',
@@ -163,7 +187,13 @@ export const TRANSIT_TICKET: CategoryContent = {
       ['venue, ground', 'shop', 'high-speed rail (G)'],
       0,
       'chǎng · terrein, plein, a venue or open ground. Read chǎng here, as in 停车场 (parking lot), 广场 (square), 商场 (shopping mall). Picture 场 as flat earth (土) with a banner flapping over it (the strokes on the right) — open ground cleared and staked out for an event: chǎng.',
-      { hanzi: '场', pinyin: 'chǎng', nl: 'terrein, plein', en: 'venue, ground', structure: 'left-right' },
+      {
+        hanzi: '场',
+        pinyin: 'chǎng',
+        nl: 'terrein, plein',
+        en: 'venue, ground',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '场',
@@ -178,10 +208,14 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'zhōngxīn · centrum, "centre". Seen in 购物中心 (shopping centre), 服务中心 (service centre).',
       { hanzi: '中心', pinyin: 'zhōngxīn', nl: 'centrum', en: 'centre' },
-      { kind: 'word', hanzi: '中心', morphemes: [
-        { span: '中', gloss: 'middle' },
-        { span: '心', gloss: 'heart' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '中心',
+        morphemes: [
+          { span: '中', gloss: 'middle' },
+          { span: '心', gloss: 'heart' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -190,17 +224,25 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'shìchǎng · markt, "market". 菜市场 is the wet market, where fresh produce is sold.',
       { hanzi: '市场', pinyin: 'shìchǎng', nl: 'markt', en: 'market' },
-      { kind: 'word', hanzi: '市场', morphemes: [
-        { span: '市', gloss: 'market, city' },
-        { span: '场', gloss: 'venue, ground' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '市场',
+        morphemes: [
+          { span: '市', gloss: 'market, city' },
+          { span: '场', gloss: 'venue, ground' },
+        ],
+      },
       { tier: 1 },
     ],
     [
       'At the ticket hall. What does it mean?',
-      ["Beijing's transit card (Yikatong)", "Shenzhen's transit card (Shenzhen Tong)", 'single-journey ticket'],
+      [
+        "Beijing's transit card (Yikatong)",
+        "Shenzhen's transit card (Shenzhen Tong)",
+        'single-journey ticket',
+      ],
       0,
-      'yīkǎtōng · Beijing OV-kaart (Yikatong) — Beijing\'s own branded transit card, not a generic term; Shenzhen issues a different card under a different name, 深圳通.',
+      "yīkǎtōng · Beijing OV-kaart (Yikatong) — Beijing's own branded transit card, not a generic term; Shenzhen issues a different card under a different name, 深圳通.",
       {
         hanzi: '一卡通',
         pinyin: 'yīkǎtōng',
@@ -208,17 +250,25 @@ export const TRANSIT_TICKET: CategoryContent = {
         en: "Beijing's transit card (Yikatong)",
         context: { after: '充值、退卡' },
       },
-      { kind: 'word', hanzi: '一卡通', morphemes: [
-        { span: '一', gloss: 'one' },
-        { span: '卡', gloss: 'card' },
-        { span: '通', gloss: 'to pass through' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '一卡通',
+        morphemes: [
+          { span: '一', gloss: 'one' },
+          { span: '卡', gloss: 'card' },
+          { span: '通', gloss: 'to pass through' },
+        ],
+      },
     ],
     [
       'At the ticket hall. What does it mean?',
-      ["Shenzhen's transit card (Shenzhen Tong)", "Beijing's transit card (Yikatong)", 'security check'],
+      [
+        "Shenzhen's transit card (Shenzhen Tong)",
+        "Beijing's transit card (Yikatong)",
+        'security check',
+      ],
       0,
-      'shēnzhèntōng · Shenzhen OV-kaart (Shenzhentong) — Shenzhen\'s own branded transit card; Beijing issues a different card under a different name, 一卡通.',
+      "shēnzhèntōng · Shenzhen OV-kaart (Shenzhentong) — Shenzhen's own branded transit card; Beijing issues a different card under a different name, 一卡通.",
       {
         hanzi: '深圳通',
         pinyin: 'shēnzhèntōng',
@@ -236,10 +286,14 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'gāotiě · hogesnelheidstrein, "high-speed rail". Marked G on tickets and boards; D (动车) is a different, slightly slower train with different pricing and seat classes.',
       { hanzi: '高铁', pinyin: 'gāotiě', nl: 'hogesnelheidstrein', en: 'high-speed rail (G)' },
-      { kind: 'word', hanzi: '高铁', morphemes: [
-        { span: '高', gloss: 'high' },
-        { span: '铁', gloss: 'rail, iron' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '高铁',
+        morphemes: [
+          { span: '高', gloss: 'high' },
+          { span: '铁', gloss: 'rail, iron' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -248,10 +302,14 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'huǒchē · trein, "train". Literally "fire vehicle" — one of the most common everyday words for train.',
       { hanzi: '火车', pinyin: 'huǒchē', nl: 'trein', en: 'train' },
-      { kind: 'word', hanzi: '火车', morphemes: [
-        { span: '火', gloss: 'fire' },
-        { span: '车', gloss: 'vehicle' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '火车',
+        morphemes: [
+          { span: '火', gloss: 'fire' },
+          { span: '车', gloss: 'vehicle' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -260,10 +318,14 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'hòuchē · wachten op de trein, "wait for the train". Seen on 候车室, the waiting room — stations usually hold you in a hall before letting you onto the platform.',
       { hanzi: '候车', pinyin: 'hòuchē', nl: 'wachten op de trein', en: 'wait for the train' },
-      { kind: 'word', hanzi: '候车', morphemes: [
-        { span: '候', gloss: 'to wait' },
-        { span: '车', gloss: 'vehicle' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '候车',
+        morphemes: [
+          { span: '候', gloss: 'to wait' },
+          { span: '车', gloss: 'vehicle' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -272,10 +334,14 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'jiǎnpiào · kaartcontrole, "ticket check". Worth knowing well: the gates for 检票时间 close a few minutes before departure and do not reopen.',
       { hanzi: '检票', pinyin: 'jiǎnpiào', nl: 'kaartcontrole', en: 'ticket check' },
-      { kind: 'word', hanzi: '检票', morphemes: [
-        { span: '检', gloss: 'to inspect' },
-        { span: '票', gloss: 'ticket, note' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '检票',
+        morphemes: [
+          { span: '检', gloss: 'to inspect' },
+          { span: '票', gloss: 'ticket, note' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -284,10 +350,14 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'chēxiāng · rijtuig, wagon, "carriage" or "coach". A less common character, so worth memorizing on its own rather than expecting to recognize it from context.',
       { hanzi: '车厢', pinyin: 'chēxiāng', nl: 'rijtuig, wagon', en: 'carriage, coach' },
-      { kind: 'word', hanzi: '车厢', morphemes: [
-        { span: '车', gloss: 'vehicle' },
-        { span: '厢', gloss: 'compartment' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '车厢',
+        morphemes: [
+          { span: '车', gloss: 'vehicle' },
+          { span: '厢', gloss: 'compartment' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -296,11 +366,15 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'shēnfènzhèng · identiteitsbewijs, "ID card". Foreigners use a passport (护照) instead, which automatic gates often reject — go to the staffed counter (人工窗口) instead.',
       { hanzi: '身份证', pinyin: 'shēnfènzhèng', nl: 'identiteitsbewijs', en: 'ID card' },
-      { kind: 'word', hanzi: '身份证', morphemes: [
-        { span: '身', gloss: 'body' },
-        { span: '份', gloss: 'portion, share' },
-        { span: '证', gloss: 'certificate' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '身份证',
+        morphemes: [
+          { span: '身', gloss: 'body' },
+          { span: '份', gloss: 'portion, share' },
+          { span: '证', gloss: 'certificate' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -309,10 +383,14 @@ export const TRANSIT_TICKET: CategoryContent = {
       0,
       'qǔpiào · ticket ophalen, "collect a printed ticket" — for picking up a ticket you already booked online.',
       { hanzi: '取票', pinyin: 'qǔpiào', nl: 'ticket ophalen', en: 'collect a printed ticket' },
-      { kind: 'word', hanzi: '取票', morphemes: [
-        { span: '取', gloss: 'to take, collect' },
-        { span: '票', gloss: 'ticket, note' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '取票',
+        morphemes: [
+          { span: '取', gloss: 'to take, collect' },
+          { span: '票', gloss: 'ticket, note' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -327,11 +405,15 @@ export const TRANSIT_TICKET: CategoryContent = {
         en: 'ticket gate',
         context: { after: '5' },
       },
-      { kind: 'word', hanzi: '检票口', morphemes: [
-        { span: '检', gloss: 'to inspect' },
-        { span: '票', gloss: 'ticket, note' },
-        { span: '口', gloss: 'mouth, opening' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '检票口',
+        morphemes: [
+          { span: '检', gloss: 'to inspect' },
+          { span: '票', gloss: 'ticket, note' },
+          { span: '口', gloss: 'mouth, opening' },
+        ],
+      },
     ],
     [
       'At the ticket hall. What does it mean?',

@@ -50,7 +50,7 @@ export const MENU_COOKING: CategoryContent = {
       'On the menu. What does this cooking method do to it?',
       ['stir-fry', 'pan-fry', 'beef'],
       0,
-      'chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus. Built from 火 (fire) plus 少, which rhymes with the whole character\'s reading (shǎo/chǎo) without being an exact match.',
+      "chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus. Built from 火 (fire) plus 少, which rhymes with the whole character's reading (shǎo/chǎo) without being an exact match.",
       { hanzi: '炒', pinyin: 'chǎo', nl: 'roerbakken', en: 'stir-fry', structure: 'left-right' },
       {
         kind: 'character',
@@ -69,7 +69,7 @@ export const MENU_COOKING: CategoryContent = {
       'On the menu. What does this cooking method do to it?',
       ['stir-fry', 'cold dishes', 'market price'],
       0,
-      'chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus. Built from 火 (fire) plus 少, which rhymes with the whole character\'s reading (shǎo/chǎo) without being an exact match.',
+      "chǎo · roerbakken (stir-fry). The most common cooking word you will see on menus. Built from 火 (fire) plus 少, which rhymes with the whole character's reading (shǎo/chǎo) without being an exact match.",
       { hanzi: '炒', pinyin: 'chǎo', nl: 'roerbakken', en: 'stir-fry', structure: 'left-right' },
       {
         kind: 'character',
@@ -96,7 +96,13 @@ export const MENU_COOKING: CategoryContent = {
       ['roast, grill', 'hot dishes', 'stir-fry'],
       0,
       'kǎo · roosteren, grillen (roasted, grilled). Dry heat cooking — think skewers and barbecue stalls. Built from 火 (fire) plus 考, which happens to give the whole character its exact reading, kǎo.',
-      { hanzi: '烤', pinyin: 'kǎo', nl: 'roosteren, grillen', en: 'roast, grill', structure: 'left-right' },
+      {
+        hanzi: '烤',
+        pinyin: 'kǎo',
+        nl: 'roosteren, grillen',
+        en: 'roast, grill',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '烤',
@@ -141,7 +147,13 @@ export const MENU_COOKING: CategoryContent = {
       ['braise in soy', 'stir-fry', 'numbing, lip-tingling'],
       0,
       'shāo · braiseren (braised in soy sauce). Often seen as 红烧 — usually one of the mildest dishes on the menu.',
-      { hanzi: '烧', pinyin: 'shāo', nl: 'braiseren', en: 'braise in soy', structure: 'left-right' },
+      {
+        hanzi: '烧',
+        pinyin: 'shāo',
+        nl: 'braiseren',
+        en: 'braise in soy',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '烧',
@@ -186,7 +198,13 @@ export const MENU_COOKING: CategoryContent = {
       ['pan-fry', '"from" (a price)', 'hot dishes'],
       0,
       'jiān · bakken in de pan (pan-fried). Tells 煎饺 (pan-fried dumplings) apart from 蒸饺 (steamed dumplings).',
-      { hanzi: '煎', pinyin: 'jiān', nl: 'bakken in de pan', en: 'pan-fry', structure: 'top-bottom' },
+      {
+        hanzi: '煎',
+        pinyin: 'jiān',
+        nl: 'bakken in de pan',
+        en: 'pan-fry',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '煎',
@@ -217,7 +235,13 @@ export const MENU_COOKING: CategoryContent = {
       ['tossed, dressed', 'blood, as a set curd', 'master-stock braise'],
       0,
       'bàn · aanmaken (tossed, dressed). Almost always served cold — the one method here that changes the serving temperature. Built from 扌 (hand) plus 半, which happens to give the whole character its exact reading, bàn.',
-      { hanzi: '拌', pinyin: 'bàn', nl: 'aanmaken', en: 'tossed, dressed', structure: 'left-right' },
+      {
+        hanzi: '拌',
+        pinyin: 'bàn',
+        nl: 'aanmaken',
+        en: 'tossed, dressed',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '拌',
@@ -243,7 +267,13 @@ export const MENU_COOKING: CategoryContent = {
       ['swish in broth', 'chilli-hot', 'boil'],
       0,
       'shuàn · kort dompelen (swished through broth). This is hotpot — you cook the food yourself at the table.',
-      { hanzi: '涮', pinyin: 'shuàn', nl: 'kort dompelen', en: 'swish in broth', structure: 'left-right' },
+      {
+        hanzi: '涮',
+        pinyin: 'shuàn',
+        nl: 'kort dompelen',
+        en: 'swish in broth',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '涮',
@@ -259,7 +289,13 @@ export const MENU_COOKING: CategoryContent = {
       ['swish in broth', 'pan-fry', 'gizzard'],
       0,
       'shuàn · kort dompelen (swished through broth). This is hotpot — you cook the food yourself at the table.',
-      { hanzi: '涮', pinyin: 'shuàn', nl: 'kort dompelen', en: 'swish in broth', structure: 'left-right' },
+      {
+        hanzi: '涮',
+        pinyin: 'shuàn',
+        nl: 'kort dompelen',
+        en: 'swish in broth',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '涮',

@@ -345,7 +345,8 @@ export const useApp = create<AppState>((set, get) => {
     dismissError: () => set({ error: null }),
 
     addTeam: (name) => commit((session, identity) => openTeam(session.log, identity, name)),
-    sitWith: (teamId) => commit((session, identity) => joinTeamEvent(session.log, identity, teamId)),
+    sitWith: (teamId) =>
+      commit((session, identity) => joinTeamEvent(session.log, identity, teamId)),
     leaveCurrentTeam: (teamId) =>
       commit((session, identity) => leaveTeamEvent(session.log, identity, teamId)),
     setRoomLocked: (locked) =>
@@ -387,12 +388,16 @@ export const useApp = create<AppState>((set, get) => {
         return;
       }
       const salt = randomHex(8);
-      const committed = session.commit(commitAnswer(session.log, identity, turnIndex, chosenIndex, salt));
+      const committed = session.commit(
+        commitAnswer(session.log, identity, turnIndex, chosenIndex, salt),
+      );
       if (!committed.accepted) {
         set({ error: explainRejection(committed.reason ?? 'unknown') });
         return;
       }
-      const revealed = session.commit(revealAnswer(session.log, identity, turnIndex, chosenIndex, salt));
+      const revealed = session.commit(
+        revealAnswer(session.log, identity, turnIndex, chosenIndex, salt),
+      );
       if (!revealed.accepted) {
         set({ error: explainRejection(revealed.reason ?? 'unknown') });
       }
@@ -416,7 +421,9 @@ export const useApp = create<AppState>((set, get) => {
       }
     },
     callTime: () =>
-      commitActiveTurn((session, identity, turnIndex) => callTimeout(session.log, identity, turnIndex)),
+      commitActiveTurn((session, identity, turnIndex) =>
+        callTimeout(session.log, identity, turnIndex),
+      ),
   };
 
   /**

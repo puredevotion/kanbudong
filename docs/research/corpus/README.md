@@ -1,15 +1,15 @@
 # Corpus data
 
-Reference data the research used to *verify* content — pinyin, components,
+Reference data the research used to _verify_ content — pinyin, components,
 frequency, simplified/traditional mappings. None of it is shipped in the app
 bundle; `DESIGN.md` §9 governs what may be.
 
 ## Committed here
 
-| File | Source | Licence |
-| --- | --- | --- |
-| `hsk30-chars.txt`, `hsk30-words.txt` | [`elkmovie/hsk30`](https://github.com/elkmovie/hsk30) — OCR of the official HSK 3.0 lists | **MIT**, © 2021 Pleco Inc. |
-| `opencc-STCharacters.txt`, `opencc-TSCharacters.txt` | [OpenCC](https://github.com/BYVoid/OpenCC) | **Apache-2.0** |
+| File                                                 | Source                                                                                    | Licence                    |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------- |
+| `hsk30-chars.txt`, `hsk30-words.txt`                 | [`elkmovie/hsk30`](https://github.com/elkmovie/hsk30) — OCR of the official HSK 3.0 lists | **MIT**, © 2021 Pleco Inc. |
+| `opencc-STCharacters.txt`, `opencc-TSCharacters.txt` | [OpenCC](https://github.com/BYVoid/OpenCC)                                                | **Apache-2.0**             |
 
 The HSK files carry an "OCR'ed but not extensively proofread" warning from their
 maintainer. Treat them as a band-tagging convenience, not ground truth — and note
@@ -18,13 +18,13 @@ on trademark grounds. The band is an internal integer.
 
 ## Deliberately not committed
 
-| Data | Why not | Get it with |
-| --- | --- | --- |
-| **Make Me a Hanzi** decomposition | **LGPL-3.0-or-later.** `DESIGN.md` §9.2 keeps it out of the build environment entirely so the in-house decomposition work stays provably clean. Verification-only, on a scratch copy. | `fetch.sh` |
-| **pinyin-data** | MIT and safe, but 985 KB of reference table that would sit in `docs/` going stale. | `fetch.sh` |
-| **Character frequency list** | No licence header and no recorded provenance in the copy the agents fetched. Committing data whose licence nobody has established is the mistake this table exists to avoid. | `fetch.sh`, with the caveat noted there |
-| **jieba dictionary** | 5 MB, and a segmentation dictionary rather than research. | not needed |
-| Published paper PDFs | Copyright. Cite the URL, do not redistribute. | `SOURCES.md` |
+| Data                              | Why not                                                                                                                                                                               | Get it with                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| **Make Me a Hanzi** decomposition | **LGPL-3.0-or-later.** `DESIGN.md` §9.2 keeps it out of the build environment entirely so the in-house decomposition work stays provably clean. Verification-only, on a scratch copy. | `fetch.sh`                              |
+| **pinyin-data**                   | MIT and safe, but 985 KB of reference table that would sit in `docs/` going stale.                                                                                                    | `fetch.sh`                              |
+| **Character frequency list**      | No licence header and no recorded provenance in the copy the agents fetched. Committing data whose licence nobody has established is the mistake this table exists to avoid.          | `fetch.sh`, with the caveat noted there |
+| **jieba dictionary**              | 5 MB, and a segmentation dictionary rather than research.                                                                                                                             | not needed                              |
+| Published paper PDFs              | Copyright. Cite the URL, do not redistribute.                                                                                                                                         | `SOURCES.md`                            |
 
 ## The verification these enable
 

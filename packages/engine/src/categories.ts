@@ -25,8 +25,18 @@ export const CATEGORIES: readonly Category[] = [
   // Market - 30%
   { id: 'market-label', name: 'Shelf-edge price label', glyph: '价' },
   { id: 'market-weight', name: 'Weight and unit', glyph: '斤' },
-  { id: 'market-panel', name: 'Packaged-food back panel', glyph: '质', visualTemplate: 'market-panel' },
-  { id: 'market-checkout', name: 'Checkout and payment', glyph: '付', visualTemplate: 'market-checkout' },
+  {
+    id: 'market-panel',
+    name: 'Packaged-food back panel',
+    glyph: '质',
+    visualTemplate: 'market-panel',
+  },
+  {
+    id: 'market-checkout',
+    name: 'Checkout and payment',
+    glyph: '付',
+    visualTemplate: 'market-checkout',
+  },
   // Menu - 30%
   { id: 'menu-cooking', name: 'Cooking method', glyph: '炒' },
   { id: 'menu-animal', name: 'Animal and cut', glyph: '肉' },
@@ -37,7 +47,12 @@ export const CATEGORIES: readonly Category[] = [
   { id: 'menu-order', name: 'The ordering screen', glyph: '单', visualTemplate: 'menu-order' },
   // Street - 20%
   { id: 'street-trade', name: 'Shopfront trade', glyph: '店' },
-  { id: 'street-promo', name: 'Discount and promotion', glyph: '折', visualTemplate: 'street-promo' },
+  {
+    id: 'street-promo',
+    name: 'Discount and promotion',
+    glyph: '折',
+    visualTemplate: 'street-promo',
+  },
   { id: 'street-way', name: 'Fascia wayfinding', glyph: '向', visualTemplate: 'street-way' },
   { id: 'street-open', name: 'Open or closed', glyph: '营' },
   // Safety - 15%

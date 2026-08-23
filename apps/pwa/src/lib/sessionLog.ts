@@ -39,10 +39,16 @@ function save(playerId: PlayerId, events: readonly SessionEvent[]): void {
 }
 
 /** Records one session start, deduped to at most one per mode per calendar day. */
-export function recordSessionStart(playerId: PlayerId, mode: AttemptMode, now: number = Date.now()): void {
+export function recordSessionStart(
+  playerId: PlayerId,
+  mode: AttemptMode,
+  now: number = Date.now(),
+): void {
   const events = load(playerId);
   const today = new Date(now).toDateString();
-  const alreadyToday = events.some((e) => e.mode === mode && new Date(e.startedAt).toDateString() === today);
+  const alreadyToday = events.some(
+    (e) => e.mode === mode && new Date(e.startedAt).toDateString() === today,
+  );
   if (alreadyToday) return;
   const next = [...events, { mode, startedAt: now }].slice(-MAX_EVENTS);
   save(playerId, next);

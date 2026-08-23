@@ -11,25 +11,25 @@ entries in this shape.
 
 ## Shenzhen Metro (`transit-shenzhen`, `packages/engine/src/content/cityPacks/shenzhen.ts`)
 
-| Field | Value |
-|---|---|
-| Source | Public knowledge of the Shenzhen Metro system map (Lines 1, 2, 3, 4, 5, 7) — general reference knowledge of a public transit network's station names, not a scraped dataset or a single cited document. |
-| Licence | Station names are facts (place names/proper nouns) — not a copyrightable expression under any jurisdiction's copyright law, so no licence attaches to the names themselves. This differs from the Wikidata/OSM sourcing DESIGN.md §11.6/§12.1 #14 anticipated for a data-driven pipeline; this pack was hand-authored from confident general knowledge, not pulled from either dataset, because no live network fetch was available in the authoring environment. |
-| Confidence | 55 stations. Every entry is one the author (an LLM authoring this content) holds high confidence in as a real, correctly-named, correctly-spelled station on the line stated. Stations recalled with any doubt about exact characters, line assignment, or existence were left out rather than guessed — per this task's instruction that a wrong station name in a "real signage" product is a correctness bug, not a style nit. |
-| Date | 2026-08-23. |
-| Known gap | Not the ~400-station figure DESIGN.md's §11.6 prose uses — that figure was written against Beijing/Shanghai/Chengdu-scale coverage. Shenzhen's newer lines (6, 8, 9, 10, 11, 12, 14, 16, 20 and later extensions) are entirely excluded: the author has materially lower confidence in station names on lines opened more recently, so none were authored rather than risk unverifiable entries. |
-| Distractors | Precomputed, static literal data in `shenzhen.ts` (no runtime generation). Both wrong options per item are themselves real Shenzhen Metro stations from this same 55-station list, preferentially same-line siblings. Every distractor carries an authored `distractorRationale` entry (DESIGN.md §11.6 correction 3 / §9.1). |
+| Field       | Value                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Source      | Public knowledge of the Shenzhen Metro system map (Lines 1, 2, 3, 4, 5, 7) — general reference knowledge of a public transit network's station names, not a scraped dataset or a single cited document.                                                                                                                                                                                                                                                           |
+| Licence     | Station names are facts (place names/proper nouns) — not a copyrightable expression under any jurisdiction's copyright law, so no licence attaches to the names themselves. This differs from the Wikidata/OSM sourcing DESIGN.md §11.6/§12.1 #14 anticipated for a data-driven pipeline; this pack was hand-authored from confident general knowledge, not pulled from either dataset, because no live network fetch was available in the authoring environment. |
+| Confidence  | 55 stations. Every entry is one the author (an LLM authoring this content) holds high confidence in as a real, correctly-named, correctly-spelled station on the line stated. Stations recalled with any doubt about exact characters, line assignment, or existence were left out rather than guessed — per this task's instruction that a wrong station name in a "real signage" product is a correctness bug, not a style nit.                                 |
+| Date        | 2026-08-23.                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Known gap   | Not the ~400-station figure DESIGN.md's §11.6 prose uses — that figure was written against Beijing/Shanghai/Chengdu-scale coverage. Shenzhen's newer lines (6, 8, 9, 10, 11, 12, 14, 16, 20 and later extensions) are entirely excluded: the author has materially lower confidence in station names on lines opened more recently, so none were authored rather than risk unverifiable entries.                                                                  |
+| Distractors | Precomputed, static literal data in `shenzhen.ts` (no runtime generation). Both wrong options per item are themselves real Shenzhen Metro stations from this same 55-station list, preferentially same-line siblings. Every distractor carries an authored `distractorRationale` entry (DESIGN.md §11.6 correction 3 / §9.1).                                                                                                                                     |
 
 ## Singapore MRT (`transit-singapore`, `packages/engine/src/content/cityPacks/singapore.ts`)
 
-| Field | Value |
-|---|---|
-| Source | Public knowledge of the Singapore MRT system (North South, East West, North East, Circle and Downtown Lines) and each station's official Chinese name, as printed on platform signage and rolling stock. |
-| Licence | Same reasoning as Shenzhen: station names are facts/proper nouns, not copyrightable expression. Not sourced from Wikidata or OpenStreetMap directly (no live fetch available); both remain the preferred sources named in `docs/LICENSING.md` for any future re-derivation or expansion of this pack. |
-| Confidence | 49 stations. Same "leave it out rather than guess" standard as Shenzhen. Several stations the author could not confidently name in Chinese (particularly some West Region East West Line extensions, and several Circle Line stations whose Chinese names the author could not distinguish with confidence from a neighbour's) were deliberately excluded. |
-| Date | 2026-08-23. |
-| Known gap | Not all six MRT lines are represented (Thomson-East Coast Line and the Bukit Panjang/Sengkang/Punggol LRT systems are entirely excluded) for the same confidence reason. |
-| Distractors | Same precomputed/static/authored-`distractorRationale` treatment as Shenzhen, drawn from this same 49-station list, preferentially same-line siblings. |
+| Field       | Value                                                                                                                                                                                                                                                                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Source      | Public knowledge of the Singapore MRT system (North South, East West, North East, Circle and Downtown Lines) and each station's official Chinese name, as printed on platform signage and rolling stock.                                                                                                                                                   |
+| Licence     | Same reasoning as Shenzhen: station names are facts/proper nouns, not copyrightable expression. Not sourced from Wikidata or OpenStreetMap directly (no live fetch available); both remain the preferred sources named in `docs/LICENSING.md` for any future re-derivation or expansion of this pack.                                                      |
+| Confidence  | 49 stations. Same "leave it out rather than guess" standard as Shenzhen. Several stations the author could not confidently name in Chinese (particularly some West Region East West Line extensions, and several Circle Line stations whose Chinese names the author could not distinguish with confidence from a neighbour's) were deliberately excluded. |
+| Date        | 2026-08-23.                                                                                                                                                                                                                                                                                                                                                |
+| Known gap   | Not all six MRT lines are represented (Thomson-East Coast Line and the Bukit Panjang/Sengkang/Punggol LRT systems are entirely excluded) for the same confidence reason.                                                                                                                                                                                   |
+| Distractors | Same precomputed/static/authored-`distractorRationale` treatment as Shenzhen, drawn from this same 49-station list, preferentially same-line siblings.                                                                                                                                                                                                     |
 
 ## Codepoint delta (DESIGN.md §11.6 correction 1 / gate 1)
 
@@ -38,7 +38,7 @@ entries in this shape.
 pack files under `packages/engine/src/content/cityPacks/` means the existing
 gate-1 script picks their characters up automatically on the next
 `pnpm fonts:subset` run — no script change was needed to bring them inside
-gate 1's *scope*. What follows is the actual delta for whoever runs that
+gate 1's _scope_. What follows is the actual delta for whoever runs that
 build next, computed by diffing this pack's CJK codepoints (`U+2E80–U+2FFF`,
 `U+3400–U+9FFF`, `U+F900–U+FAFF`, matching `bank_characters()`'s own ranges)
 against every other file already in `packages/engine/src/content/`.
@@ -78,7 +78,7 @@ print(sorted(city - existing, key=ord))
 
 ## What is NOT in scope of this manifest
 
-Neither pack's *delivery* is built — see the header comment in
+Neither pack's _delivery_ is built — see the header comment in
 `packages/engine/src/content/cityPacks/index.ts` for the full list of what
 "downloadable, selected at onboarding" (DESIGN.md §11.6) still needs before
 either pack can actually reach a player: a pack registry/selector in

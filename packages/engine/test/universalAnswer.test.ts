@@ -51,7 +51,9 @@ describe('universal answer (Phase B)', () => {
     expect(state.history).toHaveLength(1);
     const [record] = state.history;
     expect(record?.correct).toBe(true);
-    expect(record?.answererId).toBe(table.player(table.actorIndex() === 0 ? 0 : table.actorIndex()).id);
+    expect(record?.answererId).toBe(
+      table.player(table.actorIndex() === 0 ? 0 : table.actorIndex()).id,
+    );
     expect(record?.otherAnswers).toEqual([
       {
         playerId: table.player(2).id,
@@ -101,9 +103,9 @@ describe('universal answer (Phase B)', () => {
     table.choose('mid');
     table.commitAnswerOnly(2, 0);
     table.commitAnswerOnly(2, 1);
-    expect(table.state().rejected.some((r) => r.reason === 'already committed for this subject')).toBe(
-      true,
-    );
+    expect(
+      table.state().rejected.some((r) => r.reason === 'already committed for this subject'),
+    ).toBe(true);
     expect(unrevealedCommits(table.state(), `answer:${table.state().turnIndex}`)).toEqual([
       table.player(2).id,
     ]);
@@ -116,9 +118,9 @@ describe('universal answer (Phase B)', () => {
     table.choose('mid');
     table.answerAs(2, 0);
     table.commitAnswerOnly(2, 1);
-    expect(table.state().rejected.some((r) => r.reason === 'already revealed for this subject')).toBe(
-      true,
-    );
+    expect(
+      table.state().rejected.some((r) => r.reason === 'already revealed for this subject'),
+    ).toBe(true);
   });
 
   it('refuses a reveal whose payload is not a valid option index, and never scores it', () => {
@@ -134,10 +136,12 @@ describe('universal answer (Phase B)', () => {
     const state = table.state();
     expect(state.active).not.toBeNull();
     expect(state.history).toEqual([]);
-    expect(state.rejected.some((r) => r.reason === 'malformed or unresolvable turn answer')).toBe(true);
+    expect(state.rejected.some((r) => r.reason === 'malformed or unresolvable turn answer')).toBe(
+      true,
+    );
   });
 
-  it('replays identically no matter what order gossip delivers several players\' commits and reveals in', () => {
+  it("replays identically no matter what order gossip delivers several players' commits and reveals in", () => {
     const table = fourPlayerTable();
     table.draw();
     table.pickCategory();

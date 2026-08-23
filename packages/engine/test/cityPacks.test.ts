@@ -63,7 +63,10 @@ describe('city packs', () => {
           const distractors = q.options.filter((_, i) => i !== q.answer);
           for (const text of distractors) {
             const rationale = q.distractorRationale?.[text];
-            expect(rationale, `${q.id}: distractor "${text}" has no whyPlausible entry`).toBeTruthy();
+            expect(
+              rationale,
+              `${q.id}: distractor "${text}" has no whyPlausible entry`,
+            ).toBeTruthy();
             expect(rationale?.trim().length ?? 0).toBeGreaterThan(10);
           }
         }
@@ -75,11 +78,16 @@ describe('city packs', () => {
        * equals the `en` face of some other item in this same pack."
        */
       it('draws every distractor from a real station elsewhere in the same pack', () => {
-        const realNames = new Set(pack.questions.map((q) => q.face?.en).filter((v): v is string => v !== undefined));
+        const realNames = new Set(
+          pack.questions.map((q) => q.face?.en).filter((v): v is string => v !== undefined),
+        );
         for (const q of pack.questions) {
           const distractors = q.options.filter((_, i) => i !== q.answer);
           for (const text of distractors) {
-            expect(realNames.has(text), `${q.id}: distractor "${text}" is not a real station name in this pack`).toBe(true);
+            expect(
+              realNames.has(text),
+              `${q.id}: distractor "${text}" is not a real station name in this pack`,
+            ).toBe(true);
           }
         }
       });

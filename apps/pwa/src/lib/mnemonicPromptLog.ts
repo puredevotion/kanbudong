@@ -1,4 +1,9 @@
-import type { MnemonicPromptEvent, MnemonicPromptKind, PlayerId, QuestionId } from '@kanbudong/engine';
+import type {
+  MnemonicPromptEvent,
+  MnemonicPromptKind,
+  PlayerId,
+  QuestionId,
+} from '@kanbudong/engine';
 
 /**
  * Local half of the mnemonic-prompt-usage log (`packages/engine/src/mnemonicPromptLog.ts`

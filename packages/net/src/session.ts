@@ -318,7 +318,8 @@ export class GameSession {
         }
         // Same vector but a different digest means genuine divergence, which no
         // amount of backfill fixes. Surface it rather than playing on.
-        this.diverged = !weMayBeBehind && missingForThem.length === 0 && message.digest !== this.log.digest();
+        this.diverged =
+          !weMayBeBehind && missingForThem.length === 0 && message.digest !== this.log.digest();
         this.emit();
         return;
       }
@@ -349,7 +350,10 @@ export class GameSession {
 
   private sendEvents(events: readonly SignedEvent[]): void {
     for (let i = 0; i < events.length; i += BACKFILL_CHUNK) {
-      for (const batch of splitByByteSize(events.slice(i, i + BACKFILL_CHUNK), BACKFILL_MAX_BYTES)) {
+      for (const batch of splitByByteSize(
+        events.slice(i, i + BACKFILL_CHUNK),
+        BACKFILL_MAX_BYTES,
+      )) {
         this.post({ t: 'events', gameId: this.log.gameId, events: batch });
       }
     }

@@ -20,42 +20,81 @@ export const SAFETY_INSTRUCTION: CategoryContent = {
   low: [
     [
       'On a blue sign. What is it telling you to do?',
-      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
+      [
+        'mandatory — solid blue circle',
+        'prohibition — red circle, diagonal bar',
+        'be careful, mind',
+      ],
       0,
       'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
-      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel', en: 'mandatory — solid blue circle' },
-      { kind: 'word', hanzi: '指令', morphemes: [
-        { span: '指', gloss: 'to point' },
-        { span: '令', gloss: 'command' },
-      ] },
+      {
+        hanzi: '指令',
+        pinyin: 'zhǐlìng',
+        nl: 'gebod — blauwe cirkel',
+        en: 'mandatory — solid blue circle',
+      },
+      {
+        kind: 'word',
+        hanzi: '指令',
+        morphemes: [
+          { span: '指', gloss: 'to point' },
+          { span: '令', gloss: 'command' },
+        ],
+      },
       { tier: 0 },
     ],
   ],
   mid: [
     [
       'On a blue sign. What is it telling you to do?',
-      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
+      [
+        'mandatory — solid blue circle',
+        'prohibition — red circle, diagonal bar',
+        'be careful, mind',
+      ],
       0,
       'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
-      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel', en: 'mandatory — solid blue circle' },
-      { kind: 'word', hanzi: '指令', morphemes: [
-        { span: '指', gloss: 'to point' },
-        { span: '令', gloss: 'command' },
-      ] },
+      {
+        hanzi: '指令',
+        pinyin: 'zhǐlìng',
+        nl: 'gebod — blauwe cirkel',
+        en: 'mandatory — solid blue circle',
+      },
+      {
+        kind: 'word',
+        hanzi: '指令',
+        morphemes: [
+          { span: '指', gloss: 'to point' },
+          { span: '令', gloss: 'command' },
+        ],
+      },
       { tier: 0 },
     ],
   ],
   high: [
     [
       'On a blue sign. What is it telling you to do?',
-      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
+      [
+        'mandatory — solid blue circle',
+        'prohibition — red circle, diagonal bar',
+        'be careful, mind',
+      ],
       0,
       'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
-      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel', en: 'mandatory — solid blue circle' },
-      { kind: 'word', hanzi: '指令', morphemes: [
-        { span: '指', gloss: 'to point' },
-        { span: '令', gloss: 'command' },
-      ] },
+      {
+        hanzi: '指令',
+        pinyin: 'zhǐlìng',
+        nl: 'gebod — blauwe cirkel',
+        en: 'mandatory — solid blue circle',
+      },
+      {
+        kind: 'word',
+        hanzi: '指令',
+        morphemes: [
+          { span: '指', gloss: 'to point' },
+          { span: '令', gloss: 'command' },
+        ],
+      },
       { tier: 0 },
     ],
     [

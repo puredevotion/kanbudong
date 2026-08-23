@@ -44,7 +44,11 @@ export const APP_ID = 'dohhh-mesh-v1';
  */
 const ICE_SERVERS: { urls: string; username?: string; credential?: string }[] = [
   { urls: 'stun:stun.cloudflare.com:3478' },
-  { urls: 'turn:free.expressturn.com:3478', username: '000000002102686914', credential: '3IKoQJiNR4nqwoGkzwjscX68lC4=' },
+  {
+    urls: 'turn:free.expressturn.com:3478',
+    username: '000000002102686914',
+    credential: '3IKoQJiNR4nqwoGkzwjscX68lC4=',
+  },
   {
     urls: 'turns:global.relay.metered.ca:443?transport=tcp',
     username: '5c0e0a6595f967157b857768',

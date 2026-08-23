@@ -26,9 +26,21 @@ const OUT = join(ROOT, 'apps/pwa/public/fonts');
 const NM = join(ROOT, 'apps/pwa/node_modules');
 
 const FACES = [
-  ['@fontsource/noto-sans-sc', 'noto-sans-sc-chinese-simplified-400-normal.woff2', 'han-sans-400.woff2'],
-  ['@fontsource/noto-sans-sc', 'noto-sans-sc-chinese-simplified-700-normal.woff2', 'han-sans-700.woff2'],
-  ['@fontsource/noto-serif-sc', 'noto-serif-sc-chinese-simplified-700-normal.woff2', 'han-serif-700.woff2'],
+  [
+    '@fontsource/noto-sans-sc',
+    'noto-sans-sc-chinese-simplified-400-normal.woff2',
+    'han-sans-400.woff2',
+  ],
+  [
+    '@fontsource/noto-sans-sc',
+    'noto-sans-sc-chinese-simplified-700-normal.woff2',
+    'han-sans-700.woff2',
+  ],
+  [
+    '@fontsource/noto-serif-sc',
+    'noto-serif-sc-chinese-simplified-700-normal.woff2',
+    'han-serif-700.woff2',
+  ],
 ];
 
 mkdirSync(OUT, { recursive: true });
@@ -42,4 +54,6 @@ for (const [pkg, file, out] of FACES) {
   console.log(`  ${out.padEnd(20)} ${kb.toFixed(0)} KB`);
 }
 copyFileSync(join(NM, '@fontsource/noto-sans-sc/LICENSE'), join(OUT, 'OFL.txt'));
-console.log(`fonts: ${(total / 1024).toFixed(1)} MB, full simplified coverage, precached by the service worker`);
+console.log(
+  `fonts: ${(total / 1024).toFixed(1)} MB, full simplified coverage, precached by the service worker`,
+);

@@ -59,18 +59,28 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'chāoshì · supermarkt (supermarket).',
       { hanzi: '超市', pinyin: 'chāoshì', nl: 'supermarkt', en: 'supermarket' },
-      { kind: 'word', hanzi: '超市', morphemes: [
-        { span: '超', gloss: 'to exceed, super-' },
-        { span: '市', gloss: 'market, city' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '超市',
+        morphemes: [
+          { span: '超', gloss: 'to exceed, super-' },
+          { span: '市', gloss: 'market, city' },
+        ],
+      },
       { tier: 1 },
     ],
     [
       'On the checkout screen. What does it mean?',
       ['market, city', 'shop', 'venue, ground'],
       0,
-      'shì · markt, stad (market, city). Seen in 超市 (supermarket) and 市场 (market). Picture 市 as an awning (亠) strung up over a stall\'s hanging cloth banner (巾) - a market stall set up for the day: shì.',
-      { hanzi: '市', pinyin: 'shì', nl: 'markt, stad', en: 'market, city', structure: 'top-bottom' },
+      "shì · markt, stad (market, city). Seen in 超市 (supermarket) and 市场 (market). Picture 市 as an awning (亠) strung up over a stall's hanging cloth banner (巾) - a market stall set up for the day: shì.",
+      {
+        hanzi: '市',
+        pinyin: 'shì',
+        nl: 'markt, stad',
+        en: 'market, city',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '市',
@@ -87,23 +97,35 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'chāoshì · supermarkt (supermarket).',
       { hanzi: '超市', pinyin: 'chāoshì', nl: 'supermarkt', en: 'supermarket' },
-      { kind: 'word', hanzi: '超市', morphemes: [
-        { span: '超', gloss: 'to exceed, super-' },
-        { span: '市', gloss: 'market, city' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '超市',
+        morphemes: [
+          { span: '超', gloss: 'to exceed, super-' },
+          { span: '市', gloss: 'market, city' },
+        ],
+      },
       { tier: 1 },
     ],
     [
       'On the checkout screen. What does it mean?',
-      ['convenience store', 'long thin things — fish, streets, trousers', 'garments, items, matters'],
+      [
+        'convenience store',
+        'long thin things — fish, streets, trousers',
+        'garments, items, matters',
+      ],
       0,
       'biànlìdiàn · buurtwinkel (convenience store). 便 is pronounced biàn here, but pián in 便宜 (cheap) — same character, different reading.',
       { hanzi: '便利店', pinyin: 'biànlìdiàn', nl: 'buurtwinkel', en: 'convenience store' },
-      { kind: 'word', hanzi: '便利店', morphemes: [
-        { span: '便', gloss: 'convenient' },
-        { span: '利', gloss: 'benefit' },
-        { span: '店', gloss: 'shop' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '便利店',
+        morphemes: [
+          { span: '便', gloss: 'convenient' },
+          { span: '利', gloss: 'benefit' },
+          { span: '店', gloss: 'shop' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -112,11 +134,15 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'shōuyíntái · kassa (checkout). Often shortened to just 收银 on overhead lane signs.',
       { hanzi: '收银台', pinyin: 'shōuyíntái', nl: 'kassa', en: 'checkout' },
-      { kind: 'word', hanzi: '收银台', morphemes: [
-        { span: '收', gloss: 'to collect' },
-        { span: '银', gloss: 'silver, money' },
-        { span: '台', gloss: 'counter' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '收银台',
+        morphemes: [
+          { span: '收', gloss: 'to collect' },
+          { span: '银', gloss: 'silver, money' },
+          { span: '台', gloss: 'counter' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -125,10 +151,14 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'jiézhàng · afrekenen (settle up, pay).',
       { hanzi: '结账', pinyin: 'jiézhàng', nl: 'afrekenen', en: 'settle up, pay' },
-      { kind: 'word', hanzi: '结账', morphemes: [
-        { span: '结', gloss: 'to settle, tie off' },
-        { span: '账', gloss: 'account' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '结账',
+        morphemes: [
+          { span: '结', gloss: 'to settle, tie off' },
+          { span: '账', gloss: 'account' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -137,18 +167,28 @@ export const MARKET_CHECKOUT: CategoryContent = {
       0,
       'sǎomǎ · scannen, QR-code scannen (scan the QR code). The standard way to say "scan to pay" in China.',
       { hanzi: '扫码', pinyin: 'sǎomǎ', nl: 'scannen, QR-code scannen', en: 'scan the QR code' },
-      { kind: 'word', hanzi: '扫码', morphemes: [
-        { span: '扫', gloss: 'to sweep, scan' },
-        { span: '码', gloss: 'code, number' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '扫码',
+        morphemes: [
+          { span: '扫', gloss: 'to sweep, scan' },
+          { span: '码', gloss: 'code, number' },
+        ],
+      },
       { tier: 1 },
     ],
     [
       'On the checkout screen. What does it mean?',
       ['code, number', 'scan the QR code', 'flat things — tickets, cards, tables'],
       0,
-      'mǎ · code, nummer (code, number). Seen in 扫码 (scan the code) and 密码 (password). Picture 码 as a stone (石) marker carved with a horse\'s (马) number on it - a code chiselled in for good: mǎ.',
-      { hanzi: '码', pinyin: 'mǎ', nl: 'code, nummer', en: 'code, number', structure: 'left-right' },
+      "mǎ · code, nummer (code, number). Seen in 扫码 (scan the code) and 密码 (password). Picture 码 as a stone (石) marker carved with a horse's (马) number on it - a code chiselled in for good: mǎ.",
+      {
+        hanzi: '码',
+        pinyin: 'mǎ',
+        nl: 'code, nummer',
+        en: 'code, number',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '码',
@@ -209,11 +249,15 @@ export const MARKET_CHECKOUT: CategoryContent = {
         en: 'stored-value card',
         context: { after: '余额查询' },
       },
-      { kind: 'word', hanzi: '储值卡', morphemes: [
-        { span: '储', gloss: 'to store' },
-        { span: '值', gloss: 'value' },
-        { span: '卡', gloss: 'card' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '储值卡',
+        morphemes: [
+          { span: '储', gloss: 'to store' },
+          { span: '值', gloss: 'value' },
+          { span: '卡', gloss: 'card' },
+        ],
+      },
     ],
     [
       'On the checkout screen. What does it mean?',
@@ -228,7 +272,7 @@ export const MARKET_CHECKOUT: CategoryContent = {
       'On the checkout screen. What does it mean?',
       ['official receipt, fapiao', 'settle up, pay', 'checkout'],
       0,
-      'fāpiào · officiële kwitantie (fapiao) — the official tax receipt needed for expense claims; ask for it before paying, since most shops won\'t print one afterwards.',
+      "fāpiào · officiële kwitantie (fapiao) — the official tax receipt needed for expense claims; ask for it before paying, since most shops won't print one afterwards.",
       {
         hanzi: '发票',
         pinyin: 'fāpiào',
@@ -236,17 +280,27 @@ export const MARKET_CHECKOUT: CategoryContent = {
         en: 'official receipt, fapiao',
         context: { after: '请在结账前告知收银员' },
       },
-      { kind: 'word', hanzi: '发票', morphemes: [
-        { span: '发', gloss: 'to issue' },
-        { span: '票', gloss: 'ticket, note' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '发票',
+        morphemes: [
+          { span: '发', gloss: 'to issue' },
+          { span: '票', gloss: 'ticket, note' },
+        ],
+      },
     ],
     [
       'On the checkout screen. What does it mean?',
       ['to collect, receive', 'settle up, pay', 'stored-value card'],
       0,
       'shōu · innen, ontvangen (to collect, receive). Seen in 收银台 (checkout counter, literally "collect money counter") and 收据 (receipt).',
-      { hanzi: '收', pinyin: 'shōu', nl: 'innen, ontvangen', en: 'to collect, receive', structure: 'left-right' },
+      {
+        hanzi: '收',
+        pinyin: 'shōu',
+        nl: 'innen, ontvangen',
+        en: 'to collect, receive',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '收',
@@ -260,7 +314,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['silver, money', 'to collect, receive', 'settle up, pay'],
       0,
       'yín · zilver, geld (silver, money). The character behind 银行 (bank) and 收银台 (checkout counter). Carries the 钅 (metal) radical, the same one in 锅 (pot) and 铺 (shop).',
-      { hanzi: '银', pinyin: 'yín', nl: 'zilver, geld', en: 'silver, money', structure: 'left-right' },
+      {
+        hanzi: '银',
+        pinyin: 'yín',
+        nl: 'zilver, geld',
+        en: 'silver, money',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '银',
@@ -274,7 +334,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['counter, platform, stand', 'silver, money', 'account, bill'],
       0,
       'tái · toonbank, platform (counter, platform, stand). Seen in 收银台 (checkout counter) and 站台 (train platform). Picture 台 as a little stool set above an open, mouth-shaped stage - a small platform to stand and speak from: tái.',
-      { hanzi: '台', pinyin: 'tái', nl: 'toonbank, platform', en: 'counter, platform, stand', structure: 'top-bottom' },
+      {
+        hanzi: '台',
+        pinyin: 'tái',
+        nl: 'toonbank, platform',
+        en: 'counter, platform, stand',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '台',
@@ -288,7 +354,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['to tie, settle', 'to collect, receive', 'account, bill'],
       0,
       'jié · afronden, knopen (to tie off, settle). Seen in 结账 (settle the bill) and 结婚 (get married, literally "tie the knot"). Carries the 纟 (silk/thread) radical, common in words about binding things together.',
-      { hanzi: '结', pinyin: 'jié', nl: 'afronden, knopen', en: 'to tie, settle', structure: 'left-right' },
+      {
+        hanzi: '结',
+        pinyin: 'jié',
+        nl: 'afronden, knopen',
+        en: 'to tie, settle',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '结',
@@ -302,7 +374,13 @@ export const MARKET_CHECKOUT: CategoryContent = {
       ['account, bill', 'to tie, settle', 'counter, platform, stand'],
       0,
       'zhàng · rekening (account, bill). Seen in 结账 (settle the bill). Carries the 贝 (shell) radical - cowrie shells were ancient currency, so it marks money-related characters.',
-      { hanzi: '账', pinyin: 'zhàng', nl: 'rekening', en: 'account, bill', structure: 'left-right' },
+      {
+        hanzi: '账',
+        pinyin: 'zhàng',
+        nl: 'rekening',
+        en: 'account, bill',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '账',
@@ -317,8 +395,14 @@ export const MARKET_CHECKOUT: CategoryContent = {
       'On the checkout screen. What does it mean?',
       ['hundred million', 'animals, one of a pair, some containers', '2, capital form'],
       0,
-      'yì · honderd miljoen (hundred million, 10⁸). Seen on property prices, news tickers, and lottery boards — it\'s the next step up from 万 in China\'s 10,000-based number grouping. Picture 亿 as a person (亻) standing beside a tiny swallow-shaped squiggle (乙) that has multiplied into an enormous flock — one person surrounded by a hundred million birds: yì.',
-      { hanzi: '亿', pinyin: 'yì', nl: 'honderd miljoen', en: 'hundred million', structure: 'left-right' },
+      "yì · honderd miljoen (hundred million, 10⁸). Seen on property prices, news tickers, and lottery boards — it's the next step up from 万 in China's 10,000-based number grouping. Picture 亿 as a person (亻) standing beside a tiny swallow-shaped squiggle (乙) that has multiplied into an enormous flock — one person surrounded by a hundred million birds: yì.",
+      {
+        hanzi: '亿',
+        pinyin: 'yì',
+        nl: 'honderd miljoen',
+        en: 'hundred million',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '亿',

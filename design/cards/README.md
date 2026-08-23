@@ -3,12 +3,12 @@
 Source for the Mandarin reading game's card design, published as a Claude Design
 canvas.
 
-| File | What it is |
-| --- | --- |
-| `Main.dc.html` | The turn loop, clickable: bet, sign, answer, breakdown. Switches between all five sign types. |
-| `Breakdown.dc.html` | The component-breakdown surface at full height, using 牛肉. |
-| `Signs.dc.html` | The five sign treatments side by side, with what makes each one hard. |
-| `canvas.json` | Layout: turn loop, breakdown, sign sheet. |
+| File                | What it is                                                                                    |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| `Main.dc.html`      | The turn loop, clickable: bet, sign, answer, breakdown. Switches between all five sign types. |
+| `Breakdown.dc.html` | The component-breakdown surface at full height, using 牛肉.                                   |
+| `Signs.dc.html`     | The five sign treatments side by side, with what makes each one hard.                         |
+| `canvas.json`       | Layout: turn loop, breakdown, sign sheet.                                                     |
 
 Direction settled: **signage-led**. Two earlier alternatives (a continuity
 direction that kept dohhh's card skin, and an editorial/flashcard-quiet one) were
@@ -20,17 +20,17 @@ decision ever needs revisiting.
 Each category renders as the kind of physical thing you actually meet the
 characters on, rather than one plate that changes colour by topic:
 
-| Category | Object | Item |
-| --- | --- | --- |
-| `transit` | Station wayfinding plate — enamel, blue band, exit letter, arrow | 出口 |
-| `menu` | Printed menu section — serif, price column, dotted leaders | 辣 |
-| `street` | Shopfront fascia — gold on red, display weight, inset rule | 药店 |
-| `market` | Shelf-edge price label — the price shouts over the character | 斤 |
-| `safety` | Hazard board — yellow warns, red forbids | 小心地滑 |
+| Category  | Object                                                           | Item     |
+| --------- | ---------------------------------------------------------------- | -------- |
+| `transit` | Station wayfinding plate — enamel, blue band, exit letter, arrow | 出口     |
+| `menu`    | Printed menu section — serif, price column, dotted leaders       | 辣       |
+| `street`  | Shopfront fascia — gold on red, display weight, inset rule       | 药店     |
+| `market`  | Shelf-edge price label — the price shouts over the character     | 斤       |
+| `safety`  | Hazard board — yellow warns, red forbids                         | 小心地滑 |
 
 Recognising the object is half of reading the sign: you know a price label is a
 price label before you can read a character of it, and that knowledge is what
-makes the characters guessable. Two of the treatments are deliberately *hard* —
+makes the characters guessable. Two of the treatments are deliberately _hard_ —
 the fascia is loud and tightly tracked, the price label buries 斤 under a large
 number — because those are the real reading conditions.
 
@@ -77,15 +77,15 @@ the category — the internal structure of five characters on a card whose item 
 a single word. That is the coherence principle being violated by exactly the
 material most tempting to add.
 
-The honesty those panels carried is kept, compressed into one line: *some
+The honesty those panels carried is kept, compressed into one line: _some
 characters are pictures and most are not, and when you cannot see it, it is not
-there.* That line is what stops a learner inventing etymology. The tour was not
+there._ That line is what stops a learner inventing etymology. The tour was not
 doing that work.
 
 ### ⺼ is not 月
 
 The component in 肝 肠 肚 腰 脑 肺 肾 胗 is **⺼, U+2EBC, Kangxi radical 130 "meat"** — the
-bound form of 肉. It is *not* 月, U+6708, the moon. They are homoglyphs: identical in
+bound form of 肉. It is _not_ 月, U+6708, the moon. They are homoglyphs: identical in
 almost every font, different characters underneath. Verified against Make Me a Hanzi:
 all eight organ characters carry ⺼; 期 朋 朗 服 有 望 carry the real 月.
 
@@ -97,18 +97,18 @@ shelf-life label contains a body part.
 Nothing is lost, only relocated. Each radical gets taught on a card where it is
 the operative component rather than a bolt-on:
 
-| Radical | Taught on an item whose answer is | Then opens |
-| --- | --- | --- |
-| ⺼ (bound form of 肉) | an organ dish | 肝 肠 肚 腰 脑 |
-| 鸟 | poultry | 鸡 鸭 鹅 鸽 |
-| 鱼 | seafood | 鱿 鳗 鲈 鳕 |
+| Radical               | Taught on an item whose answer is | Then opens     |
+| --------------------- | --------------------------------- | -------------- |
+| ⺼ (bound form of 肉) | an organ dish                     | 肝 肠 肚 腰 脑 |
+| 鸟                    | poultry                           | 鸡 鸭 鹅 鸽    |
+| 鱼                    | seafood                           | 鱿 鳗 鲈 鳕    |
 
 ## The bet is scaffolding, not difficulty
 
-| Bet | What you lose |
-| --- | --- |
-| +1 / −1 | Nothing — pinyin under the sign, answers in English. |
-| +5 / −3 | No pinyin. |
+| Bet       | What you lose                                          |
+| --------- | ------------------------------------------------------ |
+| +1 / −1   | Nothing — pinyin under the sign, answers in English.   |
+| +5 / −3   | No pinyin.                                             |
 | +15 / −10 | No pinyin, and the four answers are Chinese signs too. |
 
 That keeps dohhh's pre-commitment wager intact while making it do pedagogical

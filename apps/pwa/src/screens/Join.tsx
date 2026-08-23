@@ -33,11 +33,11 @@ export function Join(): ReactNode {
   const codeReady = isValidJoinCode(code);
 
   return (
-    <Screen title="Join a game" subtitle="Scan the host's code, or type the four words.">
-      <div className="flex gap-2">
+    <Screen title='Join a game' subtitle="Scan the host's code, or type the four words.">
+      <div className='flex gap-2'>
         <Button
           variant={mode === 'scan' ? 'primary' : 'ghost'}
-          size="sm"
+          size='sm'
           fullWidth
           onPress={() => setMode('scan')}
         >
@@ -45,7 +45,7 @@ export function Join(): ReactNode {
         </Button>
         <Button
           variant={mode === 'type' ? 'primary' : 'ghost'}
-          size="sm"
+          size='sm'
           fullWidth
           onPress={() => setMode('type')}
         >
@@ -54,10 +54,10 @@ export function Join(): ReactNode {
       </div>
 
       {error !== null && (
-        <Notice tone="danger">
-          <div className="flex flex-col gap-2">
+        <Notice tone='danger'>
+          <div className='flex flex-col gap-2'>
             <span>{error}</span>
-            <Button variant="ghost" size="sm" onPress={dismissError}>
+            <Button variant='ghost' size='sm' onPress={dismissError}>
               Try again
             </Button>
           </div>
@@ -65,9 +65,9 @@ export function Join(): ReactNode {
       )}
 
       {busy !== null && (
-        <div className="flex items-center gap-3 rounded-xl border border-default-200/40 px-4 py-3">
-          <Spinner size="sm" />
-          <span className="text-sm text-default-foreground">{busy}</span>
+        <div className='flex items-center gap-3 rounded-xl border border-default-200/40 px-4 py-3'>
+          <Spinner size='sm' />
+          <span className='text-sm text-default-foreground'>{busy}</span>
         </div>
       )}
 
@@ -86,7 +86,7 @@ export function Join(): ReactNode {
               Ask the host to read them out. Order matters; capitals do not.
             </Card.Description>
           </Card.Header>
-          <Card.Content className="flex flex-col gap-3">
+          <Card.Content className='flex flex-col gap-3'>
             {words.map((word, index) => (
               <WordField
                 key={index}
@@ -104,8 +104,8 @@ export function Join(): ReactNode {
       <ActionBar>
         {mode === 'type' && (
           <Button
-            variant="primary"
-            size="lg"
+            variant='primary'
+            size='lg'
             fullWidth
             isDisabled={!codeReady || busy !== null}
             onPress={() => void joinByCode(code)}
@@ -113,7 +113,7 @@ export function Join(): ReactNode {
             {codeReady ? 'Join this game' : 'Enter all four words'}
           </Button>
         )}
-        <Button variant="ghost" fullWidth onPress={() => navigate('/')}>
+        <Button variant='ghost' fullWidth onPress={() => navigate('/')}>
           Back
         </Button>
       </ActionBar>
@@ -139,27 +139,25 @@ function WordField({
   const exact = matches.length === 1 && matches[0] === value.trim().toLowerCase();
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-center gap-2">
-        <span className="w-4 shrink-0 text-center font-mono text-xs text-muted">
-          {position}
-        </span>
+    <div className='flex flex-col gap-1.5'>
+      <div className='flex items-center gap-2'>
+        <span className='w-4 shrink-0 text-center font-mono text-xs text-muted'>{position}</span>
         <Input
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="word"
+          placeholder='word'
           aria-label={`Word ${position} of the join code`}
-          autoComplete="off"
-          autoCapitalize="none"
-          autoCorrect="off"
+          autoComplete='off'
+          autoCapitalize='none'
+          autoCorrect='off'
           spellCheck={false}
           fullWidth
         />
       </div>
       {matches.length > 0 && !exact && (
-        <div className="ml-6 flex flex-wrap gap-1.5">
+        <div className='ml-6 flex flex-wrap gap-1.5'>
           {matches.map((match) => (
-            <Button key={match} variant="ghost" size="sm" onPress={() => onChange(match)}>
+            <Button key={match} variant='ghost' size='sm' onPress={() => onChange(match)}>
               {match}
             </Button>
           ))}

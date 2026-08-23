@@ -27,7 +27,7 @@ describe('medianDays', () => {
     expect(medianDays([])).toBeNull();
   });
 
-  it('matches DESIGN.md §12.2\'s worked thresholds', () => {
+  it("matches DESIGN.md §12.2's worked thresholds", () => {
     // "the median multiplayer gap exceeds ~7 days while solo sits under ~3"
     expect(medianDays([8, 9, 10])).toBeGreaterThan(7);
     expect(medianDays([1, 2, 3])).toBeLessThan(3);

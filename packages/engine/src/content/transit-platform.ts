@@ -1,4 +1,10 @@
-import { EARTH_SEMANTIC, STAND_SEMANTIC, TWO_HANDS_RADICAL, WOOD_RADICAL, ZHAN_PHONETIC } from '../components.js';
+import {
+  EARTH_SEMANTIC,
+  STAND_SEMANTIC,
+  TWO_HANDS_RADICAL,
+  WOOD_RADICAL,
+  ZHAN_PHONETIC,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -56,7 +62,13 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       ['station, stop', 'exit', 'platform'],
       0,
       'zhàn · station, stop. Appears in compounds like 加油站 (gas station) and 火车站 (train station).',
-      { hanzi: '站', pinyin: 'zhàn', nl: 'station, halte', en: 'station, stop', structure: 'left-right' },
+      {
+        hanzi: '站',
+        pinyin: 'zhàn',
+        nl: 'station, halte',
+        en: 'station, stop',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '站',
@@ -74,10 +86,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'chūkǒu · uitgang (exit). Blue or black signage marks a regular exit; a green 安全出口 sign marks an emergency exit.',
       { hanzi: '出口', pinyin: 'chūkǒu', nl: 'uitgang', en: 'exit' },
-      { kind: 'word', hanzi: '出口', morphemes: [
-        { span: '出', gloss: 'to exit' },
-        { span: '口', gloss: 'mouth, opening' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '出口',
+        morphemes: [
+          { span: '出', gloss: 'to exit' },
+          { span: '口', gloss: 'mouth, opening' },
+        ],
+      },
       {
         tier: 0,
         // DESIGN.md §2.3/§3.4's own named shared-morpheme example: 出口/入口
@@ -93,10 +109,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'rùkǒu · ingang (entrance). 入 (rù) looks almost identical to 人 (rén, "person") — just one stroke apart, so watch out for mixing them up.',
       { hanzi: '入口', pinyin: 'rùkǒu', nl: 'ingang', en: 'entrance' },
-      { kind: 'word', hanzi: '入口', morphemes: [
-        { span: '入', gloss: 'to enter' },
-        { span: '口', gloss: 'mouth, opening' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '入口',
+        morphemes: [
+          { span: '入', gloss: 'to enter' },
+          { span: '口', gloss: 'mouth, opening' },
+        ],
+      },
       { tier: 0, confusion_type: 'shared-morpheme', confusable_with: ['transit-platform-low-2'] },
     ],
     [
@@ -105,10 +125,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'hào xiàn · lijnnummer (line number), as in 4号线 = "Line 4". The colored roundel on the sign usually matches the line\'s official color, so you can double-check yourself.',
       { hanzi: '号线', pinyin: 'hào xiàn', nl: 'lijnnummer', en: 'line number' },
-      { kind: 'word', hanzi: '号线', morphemes: [
-        { span: '号', gloss: 'number' },
-        { span: '线', gloss: 'line, thread' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '号线',
+        morphemes: [
+          { span: '号', gloss: 'number' },
+          { span: '线', gloss: 'line, thread' },
+        ],
+      },
       { tier: 0 },
     ],
     [
@@ -117,10 +141,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'huànchéng · overstappen (transfer, change lines). 换 (huàn) sounds the same as 唤 and 焕, all read huàn; 乘 (chéng) is the harder character to remember here.',
       { hanzi: '换乘', pinyin: 'huànchéng', nl: 'overstappen', en: 'transfer, change lines' },
-      { kind: 'word', hanzi: '换乘', morphemes: [
-        { span: '换', gloss: 'to exchange' },
-        { span: '乘', gloss: 'to ride' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '换乘',
+        morphemes: [
+          { span: '换', gloss: 'to exchange' },
+          { span: '乘', gloss: 'to ride' },
+        ],
+      },
       { tier: 0 },
     ],
   ],
@@ -131,10 +159,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'dìtiě · metro. 铁 (tiě, "metal/iron") carries the metal radical 钅, also seen in 银 (silver), 铺 (shop) and 锅 (pot).',
       { hanzi: '地铁', pinyin: 'dìtiě', nl: 'metro', en: 'metro' },
-      { kind: 'word', hanzi: '地铁', morphemes: [
-        { span: '地', gloss: 'ground' },
-        { span: '铁', gloss: 'rail, iron' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '地铁',
+        morphemes: [
+          { span: '地', gloss: 'ground' },
+          { span: '铁', gloss: 'rail, iron' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -143,10 +175,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'ānjiǎn · veiligheidscontrole (security check). Expect a screening line before boarding.',
       { hanzi: '安检', pinyin: 'ānjiǎn', nl: 'veiligheidscontrole', en: 'security check' },
-      { kind: 'word', hanzi: '安检', morphemes: [
-        { span: '安', gloss: 'safe' },
-        { span: '检', gloss: 'to inspect' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '安检',
+        morphemes: [
+          { span: '安', gloss: 'safe' },
+          { span: '检', gloss: 'to inspect' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -155,10 +191,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'fāngxiàng · richting (direction). 方 (fāng) can be read differently in other words, but on platform signs it is always fāng.',
       { hanzi: '方向', pinyin: 'fāngxiàng', nl: 'richting', en: 'direction' },
-      { kind: 'word', hanzi: '方向', morphemes: [
-        { span: '方', gloss: 'direction, square' },
-        { span: '向', gloss: 'toward' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '方向',
+        morphemes: [
+          { span: '方', gloss: 'direction, square' },
+          { span: '向', gloss: 'toward' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -174,7 +214,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       'In the metro. What does it mean?',
       ['first/last train', 'wait for the train', 'bound for'],
       0,
-      'shǒumòchē · eerste/laatste trein (first/last train). 首末车时间 posted at every platform gives the day\'s operating hours.',
+      "shǒumòchē · eerste/laatste trein (first/last train). 首末车时间 posted at every platform gives the day's operating hours.",
       {
         hanzi: '首末车',
         pinyin: 'shǒumòchē',
@@ -182,17 +222,21 @@ export const TRANSIT_PLATFORM: CategoryContent = {
         en: 'first/last train',
         context: { after: '时间：06:00–23:00' },
       },
-      { kind: 'word', hanzi: '首末车', morphemes: [
-        { span: '首', gloss: 'first, head' },
-        { span: '末', gloss: 'last, end' },
-        { span: '车', gloss: 'vehicle' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '首末车',
+        morphemes: [
+          { span: '首', gloss: 'first, head' },
+          { span: '末', gloss: 'last, end' },
+          { span: '车', gloss: 'vehicle' },
+        ],
+      },
     ],
     [
       'In the metro. What does it mean?',
       ['last train', 'first/last train', 'transfer, change lines'],
       0,
-      'mòbānchē · laatste trein (last train) — the specific departure you don\'t want to miss; 首班车 is its opposite, the first train of the day.',
+      "mòbānchē · laatste trein (last train) — the specific departure you don't want to miss; 首班车 is its opposite, the first train of the day.",
       {
         hanzi: '末班车',
         pinyin: 'mòbānchē',
@@ -200,10 +244,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
         en: 'last train',
         context: { before: '本站', after: '22:30发车' },
       },
-      { kind: 'word', hanzi: '末班车', morphemes: [
-        { span: '末', gloss: 'last, end' },
-        { span: '车', gloss: 'vehicle' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '末班车',
+        morphemes: [
+          { span: '末', gloss: 'last, end' },
+          { span: '车', gloss: 'vehicle' },
+        ],
+      },
     ],
     [
       'In the metro. What does it mean?',
@@ -227,10 +275,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'kāi wǎng · richting, naar (bound for). This phrase is followed by the destination city or station name, which is the part you actually need to read.',
       { hanzi: '开往', pinyin: 'kāi wǎng', nl: 'richting, naar', en: 'bound for' },
-      { kind: 'word', hanzi: '开往', morphemes: [
-        { span: '开', gloss: 'to open, start' },
-        { span: '往', gloss: 'toward, past' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '开往',
+        morphemes: [
+          { span: '开', gloss: 'to open, start' },
+          { span: '往', gloss: 'toward, past' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -239,10 +291,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'dānchéngpiào · enkeltje (single-journey ticket). 单 (dān) can be read differently elsewhere, but here it is dān; note 程 in this word sounds the same as the chéng in 换乘 (transfer), even though they are different characters.',
       { hanzi: '单程票', pinyin: 'dānchéngpiào', nl: 'enkeltje', en: 'single-journey ticket' },
-      { kind: 'word', hanzi: '单程票', morphemes: [
-        { span: '单', gloss: 'single' },
-        { span: '票', gloss: 'ticket, note' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '单程票',
+        morphemes: [
+          { span: '单', gloss: 'single' },
+          { span: '票', gloss: 'ticket, note' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -251,10 +307,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       0,
       'zhàntái · perron (platform). 台 (tái) can be read differently in other words, but on platform signs it is always tái.',
       { hanzi: '站台', pinyin: 'zhàntái', nl: 'perron', en: 'platform' },
-      { kind: 'word', hanzi: '站台', morphemes: [
-        { span: '站', gloss: 'station' },
-        { span: '台', gloss: 'counter, platform' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '站台',
+        morphemes: [
+          { span: '站', gloss: 'station' },
+          { span: '台', gloss: 'counter, platform' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -303,7 +363,13 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       ['to open, start', 'toward', 'to ride'],
       0,
       'kāi · openen, starten (to open, start). Seen in 开往 (bound for, literally "starts toward"). Picture 开 as a gate\'s crossbar (一) lifted straight up and off by two hands (廾), swinging it open: kāi.',
-      { hanzi: '开', pinyin: 'kāi', nl: 'openen, starten', en: 'to open, start', structure: 'top-bottom' },
+      {
+        hanzi: '开',
+        pinyin: 'kāi',
+        nl: 'openen, starten',
+        en: 'to open, start',
+        structure: 'top-bottom',
+      },
       {
         kind: 'character',
         hanzi: '开',

@@ -23,7 +23,7 @@ function charQuestion(hanzi: string, id: string): Question {
 }
 
 describe('deriveComponentCharIds', () => {
-  it('resolves a word span\'s morphemes to the matching single-character questions', () => {
+  it("resolves a word span's morphemes to the matching single-character questions", () => {
     const qi1 = charQuestion('期', 'menu-cooking-low-1');
     const qi2 = charQuestion('保', 'menu-cooking-low-2');
     const qi3 = charQuestion('质', 'menu-cooking-low-3');
@@ -62,7 +62,11 @@ describe('deriveComponentCharIds', () => {
       answer: 0,
       explanation: 'e',
       face: { hanzi: '保质期', pinyin: 'bǎozhìqī', nl: 'x' },
-      decomposition: { kind: 'word', hanzi: '保质期', morphemes: [{ span: '期', gloss: 'period' }] },
+      decomposition: {
+        kind: 'word',
+        hanzi: '保质期',
+        morphemes: [{ span: '期', gloss: 'period' }],
+      },
     };
     const xingqi: Question = {
       id: 'transit-platform-low-1',
@@ -176,7 +180,10 @@ describe('word decomposition resolves against the real seed pack (eligibility-ga
   it('carries the same component_char_ids on the built SEED_PACK questions themselves', () => {
     for (const [id] of previouslyInert) {
       const word = SEED_PACK.questions.find((q) => q.id === id);
-      expect(word?.component_char_ids?.length ?? 0, `${id} should carry component_char_ids`).toBeGreaterThan(0);
+      expect(
+        word?.component_char_ids?.length ?? 0,
+        `${id} should carry component_char_ids`,
+      ).toBeGreaterThan(0);
     }
   });
 });
@@ -211,9 +218,7 @@ describe('every WordDecomposition in the real seed pack resolves non-empty (DESI
 describe('expand output feeds deriveComponentCharIds unchanged', () => {
   it('exercises the authoring pipeline shape, not just hand-built Question objects', () => {
     const chunk: CategoryContent = {
-      low: [
-        ['p', ['a', 'b', 'c'], 0, 'e', { hanzi: '期', pinyin: 'qī', nl: 'x' }],
-      ],
+      low: [['p', ['a', 'b', 'c'], 0, 'e', { hanzi: '期', pinyin: 'qī', nl: 'x' }]],
       mid: [],
       high: [],
     };

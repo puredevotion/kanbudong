@@ -1,4 +1,10 @@
-import { AXE_RADICAL, BUILDING_RADICAL, DOOR_RADICAL, GRASS_RADICAL, MOUND_RADICAL } from '../components.js';
+import {
+  AXE_RADICAL,
+  BUILDING_RADICAL,
+  DOOR_RADICAL,
+  GRASS_RADICAL,
+  MOUND_RADICAL,
+} from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -58,12 +64,16 @@ export const STREET_TRADE: CategoryContent = {
       'On a shopfront. What is this place?',
       ['toilet (blunt)', 'hotpot', 'laundry'],
       0,
-      'cèsuǒ · wc (blunt word for toilet). 厕 shares its reading with 侧 and 测, but the part it\'s built from, 则, is actually read zé — so that part alone won\'t tell you the sound.',
+      "cèsuǒ · wc (blunt word for toilet). 厕 shares its reading with 侧 and 测, but the part it's built from, 则, is actually read zé — so that part alone won't tell you the sound.",
       { hanzi: '厕所', pinyin: 'cèsuǒ', nl: 'wc', en: 'toilet (blunt)' },
-      { kind: 'word', hanzi: '厕所', morphemes: [
-        { span: '厕', gloss: 'toilet' },
-        { span: '所', gloss: 'place' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '厕所',
+        morphemes: [
+          { span: '厕', gloss: 'toilet' },
+          { span: '所', gloss: 'place' },
+        ],
+      },
       {
         tier: 0,
         confusion_type: 'meaning-visually-distinct',
@@ -76,11 +86,15 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'xǐshǒujiān · washroom (the polite word for toilet). 手 (hand) and 间 (room) are both very common, but 洗 (wash) is much rarer and worth learning on its own.',
       { hanzi: '洗手间', pinyin: 'xǐshǒujiān', nl: 'toilet', en: 'washroom (polite)' },
-      { kind: 'word', hanzi: '洗手间', morphemes: [
-        { span: '洗', gloss: 'to wash' },
-        { span: '手', gloss: 'hand' },
-        { span: '间', gloss: 'room' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '洗手间',
+        morphemes: [
+          { span: '洗', gloss: 'to wash' },
+          { span: '手', gloss: 'hand' },
+          { span: '间', gloss: 'room' },
+        ],
+      },
       {
         tier: 0,
         confusion_type: 'meaning-visually-distinct',
@@ -95,10 +109,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'yàodiàn · apotheek (pharmacy). Look for the green cross sign — it marks a pharmacy just like in many European countries.',
       { hanzi: '药店', pinyin: 'yàodiàn', nl: 'apotheek', en: 'pharmacy' },
-      { kind: 'word', hanzi: '药店', morphemes: [
-        { span: '药', gloss: 'medicine' },
-        { span: '店', gloss: 'shop' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '药店',
+        morphemes: [
+          { span: '药', gloss: 'medicine' },
+          { span: '店', gloss: 'shop' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -107,22 +125,30 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'yīyuàn · ziekenhuis (hospital). Don\'t mix it up with 邮 (mail) — they look similar at a glance. 急诊 means "emergency room."',
       { hanzi: '医院', pinyin: 'yīyuàn', nl: 'ziekenhuis', en: 'hospital' },
-      { kind: 'word', hanzi: '医院', morphemes: [
-        { span: '医', gloss: 'medicine, doctor' },
-        { span: '院', gloss: 'institution, courtyard' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '医院',
+        morphemes: [
+          { span: '医', gloss: 'medicine, doctor' },
+          { span: '院', gloss: 'institution, courtyard' },
+        ],
+      },
       { tier: 1 },
     ],
     [
       'On a shopfront. What is this place?',
       ['bank', 'post office', 'restaurant'],
       0,
-      'yínháng · bank. Note that 行 is read háng here, not the more common xíng — it\'s a heteronym worth remembering.',
+      "yínháng · bank. Note that 行 is read háng here, not the more common xíng — it's a heteronym worth remembering.",
       { hanzi: '银行', pinyin: 'yínháng', nl: 'bank', en: 'bank' },
-      { kind: 'word', hanzi: '银行', morphemes: [
-        { span: '银', gloss: 'silver, money' },
-        { span: '行', gloss: 'trade house' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '银行',
+        morphemes: [
+          { span: '银', gloss: 'silver, money' },
+          { span: '行', gloss: 'trade house' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -131,23 +157,31 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'yóujú · postkantoor (post office). Usually marked with green signage.',
       { hanzi: '邮局', pinyin: 'yóujú', nl: 'postkantoor', en: 'post office' },
-      { kind: 'word', hanzi: '邮局', morphemes: [
-        { span: '邮', gloss: 'mail, post' },
-        { span: '局', gloss: 'office, bureau' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '邮局',
+        morphemes: [
+          { span: '邮', gloss: 'mail, post' },
+          { span: '局', gloss: 'office, bureau' },
+        ],
+      },
       { tier: 1 },
     ],
     [
       'On a shopfront. What is this place?',
       ['local police station', 'hotel (mid-range)', 'snacks, cheap eats'],
       0,
-      'pàichūsuǒ · politiebureau (local police station). This is where you\'d report a lost passport.',
+      "pàichūsuǒ · politiebureau (local police station). This is where you'd report a lost passport.",
       { hanzi: '派出所', pinyin: 'pàichūsuǒ', nl: 'politiebureau', en: 'local police station' },
-      { kind: 'word', hanzi: '派出所', morphemes: [
-        { span: '派', gloss: 'to dispatch' },
-        { span: '出', gloss: 'to exit' },
-        { span: '所', gloss: 'place' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '派出所',
+        morphemes: [
+          { span: '派', gloss: 'to dispatch' },
+          { span: '出', gloss: 'to exit' },
+          { span: '所', gloss: 'place' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -156,10 +190,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'kuàidì · pakketpunt (courier/parcel pickup point). 递 is pronounced dì, exactly like its 弟 component — a rare case where the shape gives you the full sound. Common signage reads 顺丰 or 菜鸟驿站.',
       { hanzi: '快递', pinyin: 'kuàidì', nl: 'pakketpunt', en: 'courier, parcel point' },
-      { kind: 'word', hanzi: '快递', morphemes: [
-        { span: '快', gloss: 'fast' },
-        { span: '递', gloss: 'to deliver, hand over' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '快递',
+        morphemes: [
+          { span: '快', gloss: 'fast' },
+          { span: '递', gloss: 'to deliver, hand over' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -168,11 +206,15 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'jiāyóuzhàn · tankstation (petrol station). 站 (station) also shows up in words for bus and train stations.',
       { hanzi: '加油站', pinyin: 'jiāyóuzhàn', nl: 'tankstation', en: 'petrol station' },
-      { kind: 'word', hanzi: '加油站', morphemes: [
-        { span: '加', gloss: 'to add' },
-        { span: '油', gloss: 'oil' },
-        { span: '站', gloss: 'station' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '加油站',
+        morphemes: [
+          { span: '加', gloss: 'to add' },
+          { span: '油', gloss: 'oil' },
+          { span: '站', gloss: 'station' },
+        ],
+      },
       { tier: 1 },
     ],
     [
@@ -181,11 +223,15 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'tíngchēchǎng · parkeerplaats (car park). Often just marked with a big letter P.',
       { hanzi: '停车场', pinyin: 'tíngchēchǎng', nl: 'parkeerplaats', en: 'car park' },
-      { kind: 'word', hanzi: '停车场', morphemes: [
-        { span: '停', gloss: 'to stop' },
-        { span: '车', gloss: 'vehicle' },
-        { span: '场', gloss: 'ground, venue' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '停车场',
+        morphemes: [
+          { span: '停', gloss: 'to stop' },
+          { span: '车', gloss: 'vehicle' },
+          { span: '场', gloss: 'ground, venue' },
+        ],
+      },
       { tier: 1 },
     ],
   ],
@@ -196,10 +242,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'zhěnsuǒ · huisartsenpraktijk (clinic). 诊 uses the 讠 (speech) radical, also seen in 证 and 话.',
       { hanzi: '诊所', pinyin: 'zhěnsuǒ', nl: 'huisartsenpraktijk', en: 'clinic' },
-      { kind: 'word', hanzi: '诊所', morphemes: [
-        { span: '诊', gloss: 'to diagnose' },
-        { span: '所', gloss: 'place' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '诊所',
+        morphemes: [
+          { span: '诊', gloss: 'to diagnose' },
+          { span: '所', gloss: 'place' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -208,10 +258,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'lǐfà · kapper (barber/hairdresser). Here 发 is read fà, not the more common fā — worth remembering for this word specifically.',
       { hanzi: '理发', pinyin: 'lǐfà', nl: 'kapper', en: 'barber, hairdresser' },
-      { kind: 'word', hanzi: '理发', morphemes: [
-        { span: '理', gloss: 'to manage, reason' },
-        { span: '发', gloss: 'hair' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '理发',
+        morphemes: [
+          { span: '理', gloss: 'to manage, reason' },
+          { span: '发', gloss: 'hair' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -220,10 +274,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'xǐyī · wasserij (laundry). Same 洗 (wash) character as in 洗手间 — worth recognizing on sight.',
       { hanzi: '洗衣', pinyin: 'xǐyī', nl: 'wasserij', en: 'laundry' },
-      { kind: 'word', hanzi: '洗衣', morphemes: [
-        { span: '洗', gloss: 'to wash' },
-        { span: '衣', gloss: 'clothing' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '洗衣',
+        morphemes: [
+          { span: '洗', gloss: 'to wash' },
+          { span: '衣', gloss: 'clothing' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -232,22 +290,30 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'jiǔdiàn · hotel. 酒 (wine/alcohol) is built from 酉, a component tied to fermentation. Don\'t confuse it with the similar-looking 洒 (sǎ, "to sprinkle").',
       { hanzi: '酒店', pinyin: 'jiǔdiàn', nl: 'hotel', en: 'hotel (larger)' },
-      { kind: 'word', hanzi: '酒店', morphemes: [
-        { span: '酒', gloss: 'wine, alcohol' },
-        { span: '店', gloss: 'shop' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '酒店',
+        morphemes: [
+          { span: '酒', gloss: 'wine, alcohol' },
+          { span: '店', gloss: 'shop' },
+        ],
+      },
       { tier: 2 },
     ],
     [
       'On a shopfront. What is this place?',
       ['hotel (mid-range)', 'hospital', 'clinic'],
       0,
-      'bīnguǎn · hotel (mid-range). 招待所 are cheaper guesthouses that often won\'t accept foreign guests.',
+      "bīnguǎn · hotel (mid-range). 招待所 are cheaper guesthouses that often won't accept foreign guests.",
       { hanzi: '宾馆', pinyin: 'bīnguǎn', nl: 'hotel', en: 'hotel (mid-range)' },
-      { kind: 'word', hanzi: '宾馆', morphemes: [
-        { span: '宾', gloss: 'guest' },
-        { span: '馆', gloss: 'establishment' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '宾馆',
+        morphemes: [
+          { span: '宾', gloss: 'guest' },
+          { span: '馆', gloss: 'establishment' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -256,10 +322,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'fàndiàn · restaurant or hotel — the word itself is genuinely ambiguous, so you need context to tell which one it is.',
       { hanzi: '饭店', pinyin: 'fàndiàn', nl: 'restaurant of hotel', en: 'restaurant or hotel' },
-      { kind: 'word', hanzi: '饭店', morphemes: [
-        { span: '饭', gloss: 'cooked rice, meal' },
-        { span: '店', gloss: 'shop' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '饭店',
+        morphemes: [
+          { span: '饭', gloss: 'cooked rice, meal' },
+          { span: '店', gloss: 'shop' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -268,22 +338,30 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'cāntīng · restaurant. Unlike 饭店, this word unambiguously means restaurant, not hotel.',
       { hanzi: '餐厅', pinyin: 'cāntīng', nl: 'restaurant', en: 'restaurant' },
-      { kind: 'word', hanzi: '餐厅', morphemes: [
-        { span: '餐', gloss: 'meal' },
-        { span: '厅', gloss: 'hall' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '餐厅',
+        morphemes: [
+          { span: '餐', gloss: 'meal' },
+          { span: '厅', gloss: 'hall' },
+        ],
+      },
       { tier: 2 },
     ],
     [
       'On a shopfront. What is this place?',
       ['snacks, cheap eats', 'restaurant', 'noodle shop'],
       0,
-      'xiǎochī · snackbar (cheap eats). Usually the cheapest hot food you\'ll find on the street.',
+      "xiǎochī · snackbar (cheap eats). Usually the cheapest hot food you'll find on the street.",
       { hanzi: '小吃', pinyin: 'xiǎochī', nl: 'snackbar', en: 'snacks, cheap eats' },
-      { kind: 'word', hanzi: '小吃', morphemes: [
-        { span: '小', gloss: 'small' },
-        { span: '吃', gloss: 'to eat' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '小吃',
+        morphemes: [
+          { span: '小', gloss: 'small' },
+          { span: '吃', gloss: 'to eat' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -292,10 +370,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'miànguǎn · noedelzaak (noodle shop).',
       { hanzi: '面馆', pinyin: 'miànguǎn', nl: 'noedelzaak', en: 'noodle shop' },
-      { kind: 'word', hanzi: '面馆', morphemes: [
-        { span: '面', gloss: 'wheat noodles' },
-        { span: '馆', gloss: 'establishment' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '面馆',
+        morphemes: [
+          { span: '面', gloss: 'wheat noodles' },
+          { span: '馆', gloss: 'establishment' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -304,10 +386,14 @@ export const STREET_TRADE: CategoryContent = {
       0,
       'huǒguō · hotpot. 锅 (pot) uses the 钅 (metal) radical, common in words for cookware.',
       { hanzi: '火锅', pinyin: 'huǒguō', nl: 'hotpot', en: 'hotpot' },
-      { kind: 'word', hanzi: '火锅', morphemes: [
-        { span: '火', gloss: 'fire' },
-        { span: '锅', gloss: 'pot' },
-      ] },
+      {
+        kind: 'word',
+        hanzi: '火锅',
+        morphemes: [
+          { span: '火', gloss: 'fire' },
+          { span: '锅', gloss: 'pot' },
+        ],
+      },
       { tier: 2 },
     ],
     [
@@ -354,7 +440,13 @@ export const STREET_TRADE: CategoryContent = {
       ['institution, courtyard', 'place', 'to diagnose'],
       0,
       'yuàn · instelling, binnenplaats (institution, courtyard). Seen in 医院 (hospital). Picture 院 as a walled mound (阝) enclosing a complete (完), tidy courtyard: yuàn.',
-      { hanzi: '院', pinyin: 'yuàn', nl: 'instelling, binnenplaats', en: 'institution, courtyard', structure: 'left-right' },
+      {
+        hanzi: '院',
+        pinyin: 'yuàn',
+        nl: 'instelling, binnenplaats',
+        en: 'institution, courtyard',
+        structure: 'left-right',
+      },
       {
         kind: 'character',
         hanzi: '院',

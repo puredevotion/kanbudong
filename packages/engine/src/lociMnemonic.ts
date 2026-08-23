@@ -29,7 +29,9 @@ export interface LociTile {
   readonly position: LociPosition;
 }
 
-function positionsFor(structure: CharacterStructure | undefined): readonly [LociPosition, LociPosition] | undefined {
+function positionsFor(
+  structure: CharacterStructure | undefined,
+): readonly [LociPosition, LociPosition] | undefined {
   if (structure === 'left-right') return ['left', 'right'];
   if (structure === 'top-bottom') return ['top', 'bottom'];
   return undefined;

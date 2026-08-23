@@ -32,7 +32,7 @@ export function Create(): ReactNode {
 
   return (
     <Screen
-      title="Host a game"
+      title='Host a game'
       subtitle={`You will be the host, ${identity?.username ?? 'you'}. Others scan your code to join.`}
     >
       <Card>
@@ -44,8 +44,8 @@ export function Create(): ReactNode {
           <Input
             value={name}
             onChange={(event) => setName(event.target.value)}
-            placeholder="Thursday night"
-            aria-label="Game name"
+            placeholder='Thursday night'
+            aria-label='Game name'
             maxLength={40}
             fullWidth
           />
@@ -64,12 +64,12 @@ export function Create(): ReactNode {
           <Input
             value={target}
             onChange={(event) => setTarget(event.target.value)}
-            inputMode="numeric"
-            aria-label="Target score"
+            inputMode='numeric'
+            aria-label='Target score'
             fullWidth
           />
           {!targetOk && (
-            <p className="mt-2 text-xs text-danger-text">Pick a number between 5 and 1000.</p>
+            <p className='mt-2 text-xs text-danger-text'>Pick a number between 5 and 1000.</p>
           )}
         </Card.Content>
       </Card>
@@ -79,22 +79,22 @@ export function Create(): ReactNode {
           <Card.Title>House rules</Card.Title>
           <Card.Description>Both off is the game exactly as specified.</Card.Description>
         </Card.Header>
-        <Card.Content className="flex flex-col gap-4">
+        <Card.Content className='flex flex-col gap-4'>
           <Switch isSelected={capStreak} onChange={setCapStreak}>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium">Pass the turn after 3 in a row</span>
-              <span className="text-xs text-muted">
+            <div className='flex flex-col'>
+              <span className='text-sm font-medium'>Pass the turn after 3 in a row</span>
+              <span className='text-xs text-muted'>
                 Without this, a team that keeps answering correctly keeps the turn forever - which
                 can mean one team plays the whole game while everyone watches.
               </span>
             </div>
           </Switch>
           <Switch isSelected={floorScore} onChange={setFloorScore}>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium">Never go below zero</span>
-              <span className="text-xs text-muted">
-                Kinder, but it makes the high-level question a free bet, which is the whole
-                tension gone.
+            <div className='flex flex-col'>
+              <span className='text-sm font-medium'>Never go below zero</span>
+              <span className='text-xs text-muted'>
+                Kinder, but it makes the high-level question a free bet, which is the whole tension
+                gone.
               </span>
             </div>
           </Switch>
@@ -108,15 +108,15 @@ export function Create(): ReactNode {
 
       <ActionBar>
         <Button
-          variant="primary"
-          size="lg"
+          variant='primary'
+          size='lg'
           fullWidth
           isDisabled={!targetOk}
           onPress={() => host(name.trim().length === 0 ? '看不懂' : name.trim(), rules)}
         >
           Open the lobby
         </Button>
-        <Button variant="ghost" fullWidth onPress={() => navigate('/')}>
+        <Button variant='ghost' fullWidth onPress={() => navigate('/')}>
           Back
         </Button>
       </ActionBar>

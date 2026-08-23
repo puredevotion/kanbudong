@@ -346,7 +346,9 @@ describe('moderation (kick and lock)', () => {
     table.push(setRoomLocked(table.log, table.player(0), true));
 
     const stranger = createIdentity('Stranger');
-    table.push(makeEvent(table.log, stranger, { type: 'player/joined', username: stranger.username }));
+    table.push(
+      makeEvent(table.log, stranger, { type: 'player/joined', username: stranger.username }),
+    );
     expect(table.state().players[stranger.id]).toBeUndefined();
     expect(table.state().rejected.some((r) => r.reason === 'this room is locked')).toBe(true);
 
@@ -373,7 +375,9 @@ describe('moderation (kick and lock)', () => {
     const table = twoTeams();
     table.push(kickPlayer(table.log, table.player(0), table.player(0).id));
     expect(table.state().bannedIds).toHaveLength(0);
-    expect(table.state().rejected.some((r) => r.reason.includes('cannot kick themselves'))).toBe(true);
+    expect(table.state().rejected.some((r) => r.reason.includes('cannot kick themselves'))).toBe(
+      true,
+    );
   });
 
   it('removes a kicked player from their team and refuses everything they sign afterward', () => {
@@ -390,7 +394,9 @@ describe('moderation (kick and lock)', () => {
     // Everything they sign from here on is refused, including a
     // re-announcement - a kick is not "kicked until your next join."
     table.push(makeEvent(table.log, target, { type: 'player/joined', username: target.username }));
-    expect(table.state().rejected.some((r) => r.reason.includes('removed from this game'))).toBe(true);
+    expect(table.state().rejected.some((r) => r.reason.includes('removed from this game'))).toBe(
+      true,
+    );
   });
 });
 
