@@ -11,9 +11,11 @@ import { MENU_ANIMAL } from './menu-animal.js';
 import { MENU_COOKING } from './menu-cooking.js';
 import { MENU_FLAVOUR } from './menu-flavour.js';
 import { MENU_ORDER } from './menu-order.js';
+import { SAFETY_EXIT } from './safety-exit.js';
 import { SAFETY_INSTRUCTION } from './safety-instruction.js';
 import { SAFETY_PROHIBITION } from './safety-prohibition.js';
 import { SAFETY_WARNING } from './safety-warning.js';
+import { STREET_OPEN } from './street-open.js';
 import { STREET_TRADE } from './street-trade.js';
 import { TRANSIT_PLATFORM } from './transit-platform.js';
 import { TRANSIT_TICKET } from './transit-ticket.js';
@@ -23,11 +25,17 @@ import { TRANSIT_TICKET } from './transit-ticket.js';
  * verified against a 44,437-line reference table, characters against a
  * decomposition set.
  *
- * BRIDGE CONTENT. It uses the inherited four-option question shape so the tree
- * builds and plays today. DESIGN.md §6.1 defines the real item as a *span* — a
- * one-to-four-character string met as a unit on a physical surface — carrying a
- * `transparency` field and a component table underneath it. Replacing this pack
- * is the first content task here, and the shape below is not a decision.
+ * Ideographic description sequences are stored verbatim (⿰阝完, not a prose
+ * paraphrase): no CJK webfont draws U+2FF0–U+2FFB, so apps/pwa/src/ui/glyphs.tsx
+ * shims them as inline SVG. Content stays canonical; the font gap is the
+ * renderer's problem.
+ *
+ * Every item carries a `face` — the characters on their own, so a sign template
+ * can set them at display size rather than parsing them back out of a sentence.
+ *
+ * BRIDGE CONTENT. The four-option shape is inherited, not chosen. DESIGN.md §6.1
+ * defines the real item as a span with a `transparency` field and a component
+ * table underneath it, and replacing this pack is the first content task here.
  */
 export const SEED_PACK: ContentPack = {
   id: 'kanbudong.seed',
@@ -43,9 +51,11 @@ export const SEED_PACK: ContentPack = {
     ...expand('menu-cooking', MENU_COOKING),
     ...expand('menu-flavour', MENU_FLAVOUR),
     ...expand('menu-order', MENU_ORDER),
+    ...expand('safety-exit', SAFETY_EXIT),
     ...expand('safety-instruction', SAFETY_INSTRUCTION),
     ...expand('safety-prohibition', SAFETY_PROHIBITION),
     ...expand('safety-warning', SAFETY_WARNING),
+    ...expand('street-open', STREET_OPEN),
     ...expand('street-trade', STREET_TRADE),
     ...expand('transit-platform', TRANSIT_PLATFORM),
     ...expand('transit-ticket', TRANSIT_TICKET),

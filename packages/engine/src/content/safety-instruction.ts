@@ -1,29 +1,32 @@
 import type { CategoryContent } from './row.js';
 
-/** safety-instruction — generated from DESIGN.md §7. Bridge content; §6.1's span model replaces it. */
+/** safety-instruction — generated from DESIGN.md §7, filed by GB 2894 category. */
 export const SAFETY_INSTRUCTION: CategoryContent = {
   low: [
     [
-      '停业 — you see this on a sign. What does it mean?',
-      ['closed down, ceased trading', 'please do not', 'warning — yellow triangle, black border', 'prohibition — red circle, diagonal bar'],
+      'On a blue sign. What is it telling you to do?',
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
       0,
-      'tíngyè · closed down for good (gesloten, permanent). Unlike 休息 (temporarily closed, e.g. on a break), this means the business will not reopen — so it is not worth waiting outside for.',
+      'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
+      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
     ],
   ],
   mid: [
     [
-      '停业 — you see this on a sign. What does it mean?',
-      ['closed down, ceased trading', 'please do not', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
+      'On a blue sign. What is it telling you to do?',
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
       0,
-      'tíngyè · closed down for good (gesloten, permanent). Unlike 休息 (temporarily closed, e.g. on a break), this means the business will not reopen — so it is not worth waiting outside for.',
+      'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
+      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
     ],
   ],
   high: [
     [
-      '停业 — you see this on a sign. What does it mean?',
-      ['closed down, ceased trading', 'be careful, mind', 'prohibition — red circle, diagonal bar', 'mandatory — solid blue circle'],
+      'On a blue sign. What is it telling you to do?',
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
       0,
-      'tíngyè · closed down for good (gesloten, permanent). Unlike 休息 (temporarily closed, e.g. on a break), this means the business will not reopen — so it is not worth waiting outside for.',
+      'zhǐlìng · gebod — blauwe cirkel (mandatory — solid blue circle). Easy to misread as "just information" — it is actually an order: you must do this.',
+      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
     ],
   ],
 };

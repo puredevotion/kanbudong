@@ -46,7 +46,7 @@ import { create } from 'zustand';
 
 import { navigate } from './router.js';
 
-const LAST_GAME_KEY = 'dohhh.lastGame.v1';
+const LAST_GAME_KEY = 'kanbudong.lastGame.v1';
 /**
  * Purely local, purely cosmetic: a label for *this device*, distinct from
  * the player's username. The hash (identity.id) is what every signature and
@@ -55,7 +55,7 @@ const LAST_GAME_KEY = 'dohhh.lastGame.v1';
  * than one device. Never touches the engine, never leaves this device,
  * never rides in an event.
  */
-const DEVICE_LABEL_KEY = 'dohhh.deviceLabel.v1';
+const DEVICE_LABEL_KEY = 'kanbudong.deviceLabel.v1';
 
 interface LastGame {
   readonly gameId: GameId;
@@ -161,7 +161,7 @@ export const useApp = create<AppState>((set, get) => {
       for (const { id, reason } of snapshot.state?.rejected ?? []) {
         if (loggedRejections.has(id)) continue;
         loggedRejections.add(id);
-        console.warn(`[dohhh] event ${id} rejected: ${reason}`);
+        console.warn(`[kanbudong] event ${id} rejected: ${reason}`);
       }
       // A game is its log, so persisting the log is persisting the game:
       // reloading the tab mid-round rejoins and the peers backfill the rest.

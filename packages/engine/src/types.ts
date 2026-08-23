@@ -26,6 +26,23 @@ export interface Category {
   readonly glyph: string;
 }
 
+/**
+ * What a sign template actually draws. Held apart from `prompt` because the
+ * prompt is a sentence and this is an object on a surface: the renderer needs the
+ * characters on their own to set them at display size in the app's own face.
+ *
+ * A step towards DESIGN.md §6.1's span model, not the whole of it — there is no
+ * `transparency` field and no component table yet.
+ */
+export interface SignFace {
+  /** The span as it appears on the surface. One to four characters. */
+  readonly hanzi: string;
+  /** Tone-marked, verified against a reference table at build time. */
+  readonly pinyin: string;
+  /** Dutch gloss. The English one is the correct answer, so it is not repeated. */
+  readonly nl: string;
+}
+
 export interface Question {
   readonly id: QuestionId;
   readonly category: CategoryId;
@@ -41,6 +58,8 @@ export interface Question {
    * rather than an argument across the table (R-18).
    */
   readonly explanation: string;
+  /** Absent on items that are a question about a sign rather than a sign itself. */
+  readonly face?: SignFace;
 }
 
 export interface ContentPack {

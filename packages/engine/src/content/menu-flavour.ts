@@ -1,47 +1,53 @@
 import type { CategoryContent } from './row.js';
 
-/** menu-flavour — generated from DESIGN.md §7. Bridge content; §6.1's span model replaces it. */
+/** menu-flavour — generated from DESIGN.md §7. IDS notation verbatim; ui/glyphs.tsx draws it. */
 export const MENU_FLAVOUR: CategoryContent = {
   low: [
     [
-      '辣 — you see this on a sign. What does it mean?',
+      'Beside a dish. What is it warning you about?',
       ['chilli-hot', 'cold dishes', 'sweet', 'liver'],
       0,
       'là · pittig, heet (chilli-hot, spicy). The most important warning character to recognize.',
+      { hanzi: '辣', pinyin: 'là', nl: 'pittig, heet' },
     ],
     [
-      '麻 — you see this on a sign. What does it mean?',
+      'Beside a dish. What is it warning you about?',
       ['numbing, lip-tingling', 'sour', '"from" (a price)', 'soft drinks'],
       0,
       'má · verdovend, tintelend (numbing, lip-tingling). This is not spicy heat — it is a tingling, numbing sensation with no exact Dutch or English word.',
+      { hanzi: '麻', pinyin: 'má', nl: 'verdovend, tintelend' },
     ],
   ],
   mid: [
     [
-      '咸 — you see this on a sign. What does it mean?',
+      'Beside a dish. What is it warning you about?',
       ['salty', 'vegetarian', 'soft drinks', 'numbing, lip-tingling'],
       0,
       'xián · zout (salty). Dishes labelled this way tend to be saltier than "salty" usually implies in Dutch or English.',
+      { hanzi: '咸', pinyin: 'xián', nl: 'zout' },
     ],
     [
-      '酸 — you see this on a sign. What does it mean?',
+      'Beside a dish. What is it warning you about?',
       ['sour', 'tossed, dressed', 'kidney', 'cold dishes'],
       0,
       'suān · zuur (sour). Also marks pickled-vegetable dishes.',
+      { hanzi: '酸', pinyin: 'suān', nl: 'zuur' },
     ],
     [
-      '甜 — you see this on a sign. What does it mean?',
+      'Beside a dish. What is it warning you about?',
       ['sweet', 'house specialty', 'egg', 'brain'],
       0,
       'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added.',
+      { hanzi: '甜', pinyin: 'tián', nl: 'zoet' },
     ],
   ],
   high: [
     [
-      '甜 — you see this on a sign. What does it mean?',
+      'Beside a dish. What is it warning you about?',
       ['sweet', 'tendon', 'skin, crackling', 'lamb, mutton, goat'],
       0,
       'tián · zoet (sweet). In a savoury dish name, this means the sauce has sugar added.',
+      { hanzi: '甜', pinyin: 'tián', nl: 'zoet' },
     ],
   ],
 };

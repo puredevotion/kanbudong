@@ -204,7 +204,7 @@ function Row({
  */
 async function resumeProbe(): Promise<boolean> {
   try {
-    const raw = globalThis.localStorage?.getItem('dohhh.lastGame.v1');
+    const raw = globalThis.localStorage?.getItem('kanbudong.lastGame.v1');
     if (raw == null) return false;
     const parsed = JSON.parse(raw) as { gameId?: string };
     return typeof parsed.gameId === 'string';

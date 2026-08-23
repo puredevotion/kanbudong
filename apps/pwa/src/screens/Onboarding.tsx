@@ -22,18 +22,25 @@ export function Onboarding(): ReactNode {
     <Screen>
       <div className="flex flex-1 flex-col justify-center gap-8 py-10">
         <div className="text-center">
-          <div className="mx-auto mb-6 h-20 w-20 rounded-full border-4 border-tier-low/70 p-2">
-            <div className="h-full w-full rounded-full border-4 border-tier-mid/70 p-1.5">
-              <div className="h-full w-full rounded-full border-4 border-tier-high/80" />
+          <div className="mx-auto mb-6 w-fit overflow-hidden rounded-[3px] shadow-[0_12px_26px_-10px_rgba(0,0,0,0.6)]">
+            <div className="bg-[oklch(0.42_0.13_250)] px-3 py-1 text-center">
+              <span className="text-[0.6rem] font-semibold tracking-[0.18em] text-white/85">METRO</span>
+            </div>
+            <div className="bg-[#f4f4f2] px-5 py-3">
+              <span className="font-han text-[2.6rem] font-medium leading-none tracking-[0.04em] text-[#14140f]">
+                出口
+              </span>
             </div>
           </div>
-          <Typography.Heading level={1} className="text-3xl font-semibold tracking-tight">
+          <Typography.Heading level={1} className="font-han text-3xl font-semibold tracking-tight">
             看不懂
           </Typography.Heading>
+          <Typography.Paragraph className="mx-auto mt-1 max-w-xs text-sm text-muted">
+            <span className="italic">kànbudǒng</span> &mdash; &ldquo;I look at it and I don&rsquo;t get it.&rdquo;
+          </Typography.Paragraph>
           <Typography.Paragraph className="mx-auto mt-3 max-w-xs text-sm text-muted">
-            Eighteen categories. Three levels of nerve. Fifteen points if you are right about the
-            hard one, ten off if you are not - and you choose the level before you see the
-            question.
+            Learn to read the signs. Menus, metro, price labels, shopfronts &mdash; the things you
+            actually have to read, on the objects you actually meet them on.
           </Typography.Paragraph>
         </div>
 

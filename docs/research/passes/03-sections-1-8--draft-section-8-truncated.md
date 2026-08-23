@@ -1,0 +1,55 @@
+first, because this is contested and the digests say so explicitly.
+
+**For Dutch (L1).** Two glossing meta-analyses agree on direction: L1 glosses beat L2 glosses at Hedges' g = 0.33 (78 effect sizes, 26 studies, N = 2,189), clearest for **beginners** and on immediate posttests; a second (359 effect sizes, 42 studies, N = 3,802) finds glossed > unglossed and L1 > L2. Both graded **moderate** — abstract-only, no bias diagnostic — and g = 0.33 is a **small** effect.
+
+**For English (L2).** The L2 Status Factor predicts English would be the privileged transfer source, because of shared late-learned metalinguistic status. And one 2025 dissent reports both gloss languages at medium effect and argues learner preference can decide.
+
+**What it turns on, and why neither side is strong.** There is **no study of Dutch–English bilinguals learning Mandarin.** The L3 theory cuts both ways: the Typological Primacy Model predicts transfer follows psychotypological proximity, and **Mandarin is remote from both Dutch and English**, which drains the L2-status argument for English almost entirely. On the other side, the glossing literature's central limitation is decisive here: in that literature **a gloss is met WHILE READING A TEXT**, where sentence context constrains the choice. 看不懂 has no text — it is context-free isolated cards — so the gloss-type moderator does not transfer, and it is confounded with an added retrieval demand anyway (a multiple-choice gloss is a gloss plus a test). This is the weakest evidential link in the whole content cluster.
+
+### The ruling
+
+> **Default to the user's L1 by locale — Dutch for `nl`, English otherwise. Store `gloss: {nl, en}` on every item from day one. Render one; put the other behind a tap on the answer side. Ship a single user-facing toggle. And instrument it as the product's first content A/B, because the literature cannot settle the Dutch–English–Mandarin triad and your own data can.**
+
+Four reasons, in order of weight:
+
+1. **The only meta-analytic evidence points at L1, and points hardest at beginners** — exactly this population. It is a small effect measured on the wrong task, so it is a **prior, not a finding**; but a weak prior beats no prior.
+2. **The cost of being wrong is small and symmetrical**, because the effect is small. This is a cheap decision to make and an expensive one to defer — retrofitting a second gloss language into a live bank is the expensive version.
+3. **The theoretical argument for English is defeated on its own terms** by psychotypological distance.
+4. **The decisive reason is domain-specific and nobody in the research raised it: for this particular bank, several of the highest-consequence glosses are ones where Dutch is strictly more precise than English, and one where the English gloss actively conceals a Dutch error.**
+
+### The domain argument, concretely
+
+| Item | English gloss | Dutch gloss | Why Dutch wins |
+|---|---|---|---|
+| **斤** | "catty (500 g)" — opaque; or "pound", which is **wrong** (454 g) | **"pond" (500 g)** | Dutch *pond* is exactly 500 g in everyday usage. **1 斤 = 1 pond** is an exact, familiar, zero-arithmetic mapping. English has no such word. This is the single strongest instance. |
+| **两** | "50 g (one tenth of a catty)" | **"half ons"** | Dutch *ons* = 100 g. Again exact and familiar. |
+| **3楼** | "3rd floor" — correct for an American, **silently wrong for a Dutch or British reader** | **"de tweede verdieping"** | The English gloss *hides* the off-by-one. The Dutch gloss forces it to be handled. `hazard` |
+| **折** | "discount" — invites the "80% off" misreading | **"je betaalt 80% — dus 20% korting"** | Phrasing the Dutch as *what you pay* neutralises the trap at the gloss level. |
+| **辣** | "spicy" — ambiguous between chilli-hot and merely seasoned | **"pittig, heet"** | Dutch *pittig* is tighter. |
+| **麻** | *no English word* | *no Dutch word* | **Both** glosses must be a sentence, not a word: *"dit is geen hitte — je mond wordt verdoofd. Er is geen Nederlands woord voor."* And **"pittig" is wrong** — that is 辣. |
+| **能量** | "energy (kJ)" | **"energie, in kJ (÷ 4,184 voor kcal)"** | Dutch labels carry kJ+kcal, so a Dutch reader is *less* likely to misread than an American — but the gloss must still carry the unit and the conversion. |
+| **素** | "vegetarian" | **"vegetarisch — maar niet betrouwbaar: vaak 蚝油 of 高汤"** | The qualifier is the content. Both languages need it. `hazard` |
+| **饭店** | "restaurant or hotel" | **"betekent zowel restaurant als hotel"** | Equally awkward in both. Neither language rescues it. |
+| **无障碍** | "accessible, step-free" | **"toegankelijk, zonder drempels"** — *not* the narrower "rolstoeltoegankelijk" | A case where the obvious Dutch gloss over-narrows and must be corrected. Dutch is not automatically better; it is better **when authored**. |
+
+That last row is the honest counterweight and belongs in the doc: the argument is not "Dutch is a better language for glossing Mandarin". It is that **this bank is dense with unit, quantity and floor-numbering traps where Dutch has an exact everyday word and English does not** — and where an English gloss read by a Dutch speaker is a second translation step that can silently fail.
+
+### Consequences that fall out of the ruling
+
+1. **Per-player gloss language at one table.** Each phone renders the option rows in that player's own locale; the shared reveal renders the table's host locale. This is free because input is private anyway (§5.6), and it means a mixed Dutch/English table needs no compromise.
+2. **`lang` attributes are a build gate, not a nicety.** `lang="zh-Hans"` on every hanzi, `lang="nl"` or `lang="en"` on every gloss. Without them the app is unusable with a screen reader and non-conformant under EN 301 549. CI gate 7.
+3. **Both glosses appear on the reveal, always** — the rendered one in the body, the other behind a tap. The reveal already has to carry both for the confusable table's "where you would meet it" clause.
+4. **Gloss lint rules.** Cap gloss length at ~120 characters. **Reject a single-word gloss for any item flagged `no_single_word_equivalent`** — 麻, 鲜, 香, 卤, 涮, 拌, 斋, 荤, 时价, 折, 满减, 无座. Require a "where you meet it" clause on every member of a `confusable_with` set. Require a unit and a worked conversion on every `compute` item.
+5. **The "point at this" screen ships in both languages** and is always accessible, at large type, unscored, outside the game loop: 不要香菜 · 不辣 · 微辣 · 我不吃猪肉 · 我对花生过敏.
+6. **The `vwo_400` tag is a distribution wedge, not a curriculum decision.** Chinese is a Dutch VWO exam subject examined **only as a schoolexamen** (no centraal examen), with PTA tests structurally based on HSK and requiring active mastery of **400 characters**. Tag every item `vwo_400` and `hsk_band` and offer Dutch secondary students a filtered deck. Two columns for a wedge into a small, enumerable list of Dutch schools. *(Graded moderate: slo.nl was egress-blocked, the start year is unresolved, and the per-skill CEFR targets are unverified. The 400-character figure and the schoolexamen-only structure are the load-bearing parts and are confirmed by multiple secondary sources — **one email to SLO settles all of it**, and that email should be sent before anything ships against it.)*
+7. **Neither gloss language ever displays a level label.** No CEFR letter anywhere in the UI — it is contested and uncomputable. **The letters "HSK" never appear in UI or store metadata** (binding from §9–12); `hsk_band` is an internal integer and the player-facing bands get your own vocabulary. The exposure that actually bites here is **trademark, not copyright**.
+8. **Glosses seed from CC-CEDICT as a quarantined build artefact** (binding from §9–12): `/assets/gloss.cedict.json` under CC BY-SA 4.0 with `LICENSE-CC-BY-SA-4.0.txt` beside it, never inlined into the JS bundle, published in the repo so the ShareAlike obligation is discharged once at build time. The derived gloss table **is** an adaptation; the app code is mere aggregation, and keeping that boundary clean keeps ShareAlike off your source. Note the DRM trap: BY-SA 4.0 §2(a)(5)(B) forbids applying effective technological measures, so the same bundle wrapped for the App Store behind FairPlay puts the gloss file's terms in tension with the channel. **Stay a PWA, or serve gloss assets as separately-fetched non-DRM'd files.**
+9. **Instrument the A/B properly.** Gloss language is a *learning-relevant* feature, so §5.9 binds: it may not be settled on preference, perceived helpfulness or in-session accuracy. The admissible metric is **delayed accuracy at ≥1 week on transfer items**. Randomise at the player level at onboarding, keep the toggle available (a player who switches leaves the analysis), and expect a small effect or none.
+
+### One last note on why both must be stored from day one
+
+Mandarin offers **no cognates to Dutch or English**. Every item is a pure arbitrary paired associate — form, sound and meaning all novel — so the cognate facilitation that carries a European-language vocabulary app is simply absent here. Budget far more exposures per item than a Spanish or German app would, and size the bank accordingly.
+
+But grade that carefully: the *absence of cognates* is well-attested; the retrieval-count consequence usually attached to it — "8–12 successful retrievals rather than 3–4" — is an **inference from that absence, not a measured figure for Chinese.** **Measure `retrievals_to_stable_recall` from your own log (§6.6) and do not plan against a borrowed number.** The same discipline kills the other tempting anchor: the widely cited "112–141 hours to functional reading" figure comes from a study of **Spanish and French** learners and contains no Mandarin data. Transferring hours-to-proficiency from two shallow-orthography Romance languages — where the learner already knows the script and shares thousands of cognates — to a logographic script with zero orthographic transfer is invalid and under-budgets badly. The relevant comparator is the Category IV classification: **~2,200 class hours to professional proficiency for Mandarin against ~600–750 for Spanish or French**, for aptitude-screened full-time adult diplomats — and even that is a whole-language classroom figure for a goal this product does not have.
+
+**So project no total-hours figure at all.** Do not scope the product as "learn Mandarin", never set the in-app goal to a level label, and architect for churn as the primary failure mode: **a three-week gap must not reset progress, and the first re-entry after a lapse should be a 60-second "what you still know" review built from the player's own scheduler state.**
