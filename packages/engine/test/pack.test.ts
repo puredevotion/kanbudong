@@ -44,11 +44,21 @@ describe('seed pack', () => {
   });
 
   /**
-   * 14 of 42 cells currently hold exactly one question, so those scenes repeat
-   * immediately at that tier. That is a property of bridge content generated
-   * from a curriculum, not of the engine - but it is the kind of thing that is
-   * invisible until someone plays it, so it is asserted here. Tighten the bound
-   * as the bank grows; never loosen it.
+   * 19 of 48 cells hold exactly one question, so those scenes repeat immediately
+   * at that tier. That is a property of bridge content generated from a
+   * curriculum, not of the engine, and it is invisible until someone plays it -
+   * hence asserting it.
+   *
+   * This bound was 14. It was raised deliberately, once, and the reason is worth
+   * recording because the rule attached to it said never to raise it: splitting
+   * the Safety domain into its four GB 2894 categories (prohibition, warning,
+   * instruction, notice) spread the same items over more scenes. That split was
+   * not optional - the previous arrangement drew 禁止 "forbidden" on a yellow
+   * WARNING board, teaching the colour convention backwards, when colour is the
+   * one thing a player can act on before decoding a single character.
+   *
+   * So: correctness bought thinness, knowingly. Tighten this as the bank grows.
+   * Raising it again needs a reason of the same weight, written here.
    */
   it('records how thin the thinnest cells still are', () => {
     const stats = packStats(SEED_PACK);
@@ -58,7 +68,7 @@ describe('seed pack', () => {
         if ((stats.byCategory[category]?.[difficulty] ?? 0) === 1) singletons += 1;
       }
     }
-    expect(singletons).toBeLessThanOrEqual(14);
+    expect(singletons).toBeLessThanOrEqual(19);
   });
 
   it('has unique category ids, names and glyphs', () => {

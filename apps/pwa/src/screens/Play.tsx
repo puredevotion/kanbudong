@@ -14,6 +14,7 @@ import {
   scoreboard,
   teamOf,
   type CategoryId,
+  type SignFace,
   type Difficulty,
   type GameState,
   type TurnRecord,
@@ -24,6 +25,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
 import { withGlyphs } from '../ui/glyphs.jsx';
+import { Sign, domainOf } from '../ui/signs.jsx';
 
 export function Play(): ReactNode {
   const snapshot = useApp((s) => s.snapshot);
@@ -138,6 +140,8 @@ export function Play(): ReactNode {
           canAnswerNow={canAnswer(state, me)}
           iAmActing={iAmActing}
           prompt={question.question.prompt}
+          face={question.question.face}
+          categoryId={active.categoryId}
           options={question.options}
           repeat={active.repeat}
           categoryName={category?.name ?? active.categoryId}
@@ -553,6 +557,8 @@ function LiveQuestion({
   canAnswerNow,
   iAmActing,
   prompt,
+  face,
+  categoryId,
   options,
   repeat,
   categoryName,
@@ -565,6 +571,8 @@ function LiveQuestion({
   canAnswerNow: boolean;
   iAmActing: boolean;
   prompt: string;
+  face: SignFace | undefined;
+  categoryId: CategoryId;
   options: readonly string[];
   repeat: boolean;
   categoryName: string;
@@ -616,15 +624,26 @@ function LiveQuestion({
         </span>
       </div>
 
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm text-muted">
+          {categoryName}
+          {repeat && ' - seen before, the pack ran dry'}
+        </span>
+      </div>
+
+      {face !== undefined && (
+        <Sign
+          domain={domainOf(categoryId)}
+          category={categoryId}
+          hanzi={face.hanzi}
+          pinyin={difficulty === 'low' ? face.pinyin : undefined}
+        />
+      )}
+
+      <p className="text-xl font-medium leading-snug tracking-[-0.01em]">{prompt}</p>
+
       <Card>
-        <Card.Header>
-          <Card.Description>
-            {categoryName}
-            {repeat && ' - seen before, the pack ran dry'}
-          </Card.Description>
-          <Card.Title className="font-han text-xl leading-snug">{prompt}</Card.Title>
-        </Card.Header>
-        <Card.Content className="flex flex-col gap-2.5">
+        <Card.Content className="flex flex-col gap-2.5 pt-4">
           {options.map((option, index) => (
             <button
               key={option}
@@ -746,7 +765,7 @@ function useCountdown(key: string, durationMs: number): number {
   return Math.max(0, started.current.at + durationMs - now);
 }
 
-const TURN_START_KEY = 'dohhh.turnStart.v1';
+const TURN_START_KEY = 'kanbudong.turnStart.v1';
 
 /** One slot, overwritten every phase change - only the current turn's phase ever needs restoring. */
 function readOrStampTurnStart(key: string): number {

@@ -48,6 +48,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    rollupOptions: { input: { main: 'index.html', signs: 'signs.html' } },
     target: 'es2022',
     sourcemap: true,
   },

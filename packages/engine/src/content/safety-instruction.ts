@@ -1,29 +1,32 @@
 import type { CategoryContent } from './row.js';
 
-/** safety-instruction — generated from DESIGN.md §7. IDS notation is verbatim; ui/glyphs.tsx draws it. */
+/** safety-instruction — generated from DESIGN.md §7, filed by GB 2894 category. */
 export const SAFETY_INSTRUCTION: CategoryContent = {
   low: [
     [
-      '停业 — you see this on a sign. What does it mean?',
-      ['closed down, ceased trading', 'please do not', 'warning — yellow triangle, black border', 'prohibition — red circle, diagonal bar'],
+      'On a blue sign. What is it telling you to do?',
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
       0,
-      'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
+      'zhǐlìng · gebod — blauwe cirkel. The one category Europeans systematically misread as informational. Blue is an order.',
+      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
     ],
   ],
   mid: [
     [
-      '停业 — you see this on a sign. What does it mean?',
-      ['closed down, ceased trading', 'please do not', 'prohibition — red circle, diagonal bar', 'be careful, mind'],
+      'On a blue sign. What is it telling you to do?',
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
       0,
-      'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
+      'zhǐlìng · gebod — blauwe cirkel. The one category Europeans systematically misread as informational. Blue is an order.',
+      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
     ],
   ],
   high: [
     [
-      '停业 — you see this on a sign. What does it mean?',
-      ['closed down, ceased trading', 'be careful, mind', 'prohibition — red circle, diagonal bar', 'mandatory — solid blue circle'],
+      'On a blue sign. What is it telling you to do?',
+      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
       0,
-      'tíngyè · gesloten (permanent). The third state, distinguished from 休息 because the consequence differs — one is worth waiting for.',
+      'zhǐlìng · gebod — blauwe cirkel. The one category Europeans systematically misread as informational. Blue is an order.',
+      { hanzi: '指令', pinyin: 'zhǐlìng', nl: 'gebod — blauwe cirkel' },
     ],
   ],
 };

@@ -1,47 +1,46 @@
 import type { CategoryContent } from './row.js';
 
-/** safety-warning — generated from DESIGN.md §7. IDS notation is verbatim; ui/glyphs.tsx draws it. */
+/** safety-warning — generated from DESIGN.md §7, filed by GB 2894 category. */
 export const SAFETY_WARNING: CategoryContent = {
   low: [
     [
-      '禁止 — you see this on a sign. What does it mean?',
-      ['prohibition — red circle, diagonal bar', 'be careful, mind', 'strictly forbidden', 'beware'],
-      0,
-      'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
-    ],
-    [
-      '警告 — you see this on a sign. What does it mean?',
+      'On a yellow sign. What is it warning you about?',
       ['warning — yellow triangle, black border', 'be careful, mind', 'mandatory — solid blue circle', 'prohibition — red circle, diagonal bar'],
       0,
       'jǐnggào · waarschuwing — gele driehoek. Yellow warns. Distinguishing "you may be hurt" from "you may not do this" is the highest-value discrimination in the bank.',
+      { hanzi: '警告', pinyin: 'jǐnggào', nl: 'waarschuwing — gele driehoek' },
     ],
     [
-      '指令 — you see this on a sign. What does it mean?',
-      ['mandatory — solid blue circle', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading', 'be careful, mind'],
+      'On a yellow sign. What is it warning you about?',
+      ['be careful, mind', 'beware', 'notice, safe condition — green square', 'strictly forbidden'],
       0,
-      'zhǐlìng · gebod — blauwe cirkel. The one category Europeans systematically misread as informational. Blue is an order.',
-    ],
-    [
-      '提示 — you see this on a sign. What does it mean?',
-      ['notice, safe condition — green square', 'mandatory — solid blue circle', 'be careful, mind', 'prohibition — red circle, diagonal bar'],
-      0,
-      'tíshì · aanwijzing — groen vierkant. Green is where safety is, not where danger is. Sets up 安全出口 below.',
+      'xiǎoxīn · voorzichtig, pas op. The most common hazard opener on the ground: 小心地滑, 小心台阶. 心 is rank 86 and 小 rank 87, so the cost is near zero.',
+      { hanzi: '小心', pinyin: 'xiǎoxīn', nl: 'voorzichtig, pas op' },
     ],
   ],
   mid: [
     [
-      '禁止 — you see this on a sign. What does it mean?',
-      ['prohibition — red circle, diagonal bar', 'beware', 'please do not', 'attention'],
+      'On a yellow sign. What is it warning you about?',
+      ['attention', 'danger', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading'],
       0,
-      'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
+      'zhùyì · let op. Heads a hazard without naming its severity. 注 = ⿰氵主.',
+      { hanzi: '注意', pinyin: 'zhùyì', nl: 'let op' },
+    ],
+    [
+      'On a yellow sign. What is it warning you about?',
+      ['beware', 'mandatory — solid blue circle', 'danger', 'prohibition — red circle, diagonal bar'],
+      0,
+      'dāngxīn · pas op. The 小心 variant used on formal yellow triangles: 当心碰头. Same slot, different register.',
+      { hanzi: '当心', pinyin: 'dāngxīn', nl: 'pas op' },
     ],
   ],
   high: [
     [
-      '禁止 — you see this on a sign. What does it mean?',
-      ['prohibition — red circle, diagonal bar', 'notice, safe condition — green square', 'danger', 'closed down, ceased trading'],
+      'On a yellow sign. What is it warning you about?',
+      ['beware', 'closed down, ceased trading', 'mandatory — solid blue circle', 'prohibition — red circle, diagonal bar'],
       0,
-      'jìnzhǐ · verbod — rode cirkel met streep. Red forbids. The shape carries the whole message; the characters under it are confirmation, not information.',
+      'dāngxīn · pas op. The 小心 variant used on formal yellow triangles: 当心碰头. Same slot, different register.',
+      { hanzi: '当心', pinyin: 'dāngxīn', nl: 'pas op' },
     ],
   ],
 };

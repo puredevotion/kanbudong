@@ -115,7 +115,7 @@ export function Lobby(): ReactNode {
 
       {snapshot.peerVersionMismatch && (
         <Notice tone="warn">
-          Another device in this room is running a different version of Dohhh or a different
+          Another device in this room is running a different version of 看不懂 or a different
           question pack. It has been ignored rather than risking a mismatched game - update every
           device to the same version.
         </Notice>

@@ -1,5 +1,5 @@
 import { createRng } from '../rng.js';
-import type { CategoryId, Difficulty, Question } from '../types.js';
+import type { CategoryId, Difficulty, Question, SignFace } from '../types.js';
 
 /**
  * Compact authoring format: `[prompt, options, answerIndex, explanation]`.
@@ -19,6 +19,8 @@ export type Row = readonly [
   options: readonly [string, string, string, string],
   answer: 0 | 1 | 2 | 3,
   explanation: string,
+  /** What the sign template draws. Absent on items that are not a sign. */
+  face?: SignFace,
 ];
 
 export type CategoryContent = Readonly<Record<Difficulty, readonly Row[]>>;
@@ -37,9 +39,17 @@ export function expand(category: CategoryId, ...chunks: readonly CategoryContent
   for (const difficulty of ['low', 'mid', 'high'] as const) {
     const rows = chunks.flatMap((chunk) => chunk[difficulty]);
     rows.forEach((row, index) => {
-      const [prompt, options, answer, explanation] = row;
+      const [prompt, options, answer, explanation, face] = row;
       const id = `${category}-${difficulty}-${index + 1}`;
-      out.push({ ...rotate(options, answer, id), id, category, difficulty, prompt, explanation });
+      out.push({
+        ...rotate(options, answer, id),
+        id,
+        category,
+        difficulty,
+        prompt,
+        explanation,
+        ...(face === undefined ? {} : { face }),
+      });
     });
   }
   return out;

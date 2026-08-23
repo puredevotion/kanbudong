@@ -22,6 +22,9 @@ export function packHash(pack: ContentPack): string {
         prompt: q.prompt,
         options: q.options,
         answer: q.answer,
+        // The rendered characters are what the player is asked to read, so a
+        // change here is a change to the game, not to presentation.
+        face: q.face === undefined ? null : q.face.hanzi,
       }),
     )
     .sort();

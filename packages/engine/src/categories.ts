@@ -34,10 +34,12 @@ export const CATEGORIES: readonly Category[] = [
   { id: 'menu-order', name: 'The ordering screen', glyph: '单' },
   // Street - 20%
   { id: 'street-trade', name: 'Shopfront trade', glyph: '店' },
+  { id: 'street-open', name: 'Open or closed', glyph: '营' },
   // Safety - 15%
   { id: 'safety-prohibition', name: 'Prohibition', glyph: '禁' },
   { id: 'safety-warning', name: 'Warning', glyph: '心' },
   { id: 'safety-instruction', name: 'Instruction', glyph: '请' },
+  { id: 'safety-exit', name: 'Exit and emergency', glyph: '出' },
   // Transit - 5%
   { id: 'transit-platform', name: 'Platform and direction', glyph: '铁' },
   { id: 'transit-ticket', name: 'Ticket and fare', glyph: '票' },
@@ -49,13 +51,11 @@ export const CATEGORIES: readonly Category[] = [
  * the pack cannot answer:
  *
  *   street-promo   Discount and promotion
- *   street-open    Open or closed
  *   street-way     Fascia wayfinding
- *   safety-exit    Exit and emergency
  *
- * That last one is the most conspicuous gap - 出口 is the single highest-value
- * thing to read in China and currently sits under transit-platform. Restore all
- * four as the bank grows; this list is a content gap, not a design change.
+ * Restore them as the bank grows; this list is a content gap, not a design
+ * change. Note 出口 still sits under transit-platform rather than safety-exit,
+ * which is where a player would look for it.
  */
 export const CATEGORY_IDS: readonly CategoryId[] = CATEGORIES.map((c) => c.id);
 

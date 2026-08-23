@@ -171,7 +171,7 @@ export function StalledWarning({
   if (status === 'failed') {
     return (
       <Notice tone="danger">
-        Could not reach any peer-discovery relay. Check this device is online. Dohhh needs one
+        Could not reach any peer-discovery relay. Check this device is online. 看不懂 needs one
         brief handshake through public infrastructure before it can talk device-to-device.
       </Notice>
     );
