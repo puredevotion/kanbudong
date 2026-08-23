@@ -24,7 +24,7 @@ describe('glossProvenance: mnemonic-only', () => {
   const mnemonicOnly = SEED_PACK.questions.filter((q) => q.glossProvenance === 'mnemonic-only');
 
   it('finds the mnemonic-only items this content pass added', () => {
-    expect(mnemonicOnly.length).toBeGreaterThanOrEqual(28);
+    expect(mnemonicOnly.length).toBeGreaterThanOrEqual(54);
   });
 
   it('never carries a decomposition alongside a mnemonic-only gloss', () => {

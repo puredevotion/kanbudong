@@ -1,3 +1,4 @@
+import { AGAIN_RADICAL, MOUTH_RADICAL, PERSON_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -19,6 +20,17 @@ import type { CategoryContent } from './row.js';
  * (confusable-pair backfill, Aug 2026): both share 冷, both differ in exactly
  * the one character that matters, and their own explanations already flagged
  * each other by name before this field existed.
+ *
+ * Rest-of-bank coverage pass (Aug 2026): 号 gets a verified CharacterDecomposition
+ * (semantic 口, `MOUTH_RADICAL`; its phonetic half 丂 is not a tone-or-syllable
+ * match for hào, so semantic-only). 份 reuses `PERSON_RADICAL` (亻, from
+ * street-open.ts's 停); its phonetic half 分 (fēn) is a tone-only near miss for
+ * fèn, so semantic-only. 双 is a genuine ⿰又又 - the same "又 doubled" hint its
+ * own explanation already gave before this field existed - so it carries
+ * `AGAIN_RADICAL` twice with no phonetic claim. 个/半/只 have no MMH semantic/
+ * phonetic split clean enough to verify (个 and 半 are ideographic with no
+ * reusable radical; 只's MMH radical 口 does not track its measure-word sense),
+ * so each carries a labelled `glossProvenance: 'mnemonic-only'` story instead.
  */
 export const MARKET_PANEL: CategoryContent = {
   low: [
@@ -26,10 +38,10 @@ export const MARKET_PANEL: CategoryContent = {
       'On the back of the packet. What does it mean?',
       ['general measure word', 'garments, items, matters', 'half'],
       0,
-      'gè · algemeen maatwoord (general measure word). Works for almost anything, so when in doubt, use this one.',
+      'gè · algemeen maatwoord (general measure word). Works for almost anything, so when in doubt, use this one. Picture 个 as a single person (人) with one straight stroke (丨) planted beside them like a tally mark — one person, one count: gè.',
       { hanzi: '个', pinyin: 'gè', nl: 'algemeen maatwoord', en: 'general measure word' },
       undefined,
-      { tier: 0, freqRank: 12 },
+      { tier: 0, freqRank: 12, glossProvenance: 'mnemonic-only' },
     ],
   ],
   mid: [
@@ -106,26 +118,37 @@ export const MARKET_PANEL: CategoryContent = {
         nl: 'dag (spreektaal); nummer',
         en: 'day of month (spoken); number',
         context: { before: '产品批', after: ' 20260815' },
+        structure: 'top-bottom',
       },
-      undefined,
+      {
+        kind: 'character',
+        hanzi: '号',
+        components: [{ componentId: MOUTH_RADICAL.id, role: 'semantic' }],
+        semantic_radical: MOUTH_RADICAL.id,
+      },
       { tier: 1, freqRank: 487 },
     ],
     [
       'On the back of the packet. What does it mean?',
       ['half', 'kilogram = 2 斤', 'hundred'],
       0,
-      'bàn · half. Used for half past the hour, and also in 半份 (half portion) and 半斤 (250 g) on menus and at the market — one character, several everyday uses.',
+      'bàn · half. Used for half past the hour, and also in 半份 (half portion) and 半斤 (250 g) on menus and at the market — one character, several everyday uses. Picture 半 as two short strokes slicing straight down through a whole (十) — cutting it cleanly in two: bàn.',
       { hanzi: '半', pinyin: 'bàn', nl: 'half', en: 'half' },
       undefined,
-      { tier: 1, freqRank: 513 },
+      { tier: 1, freqRank: 513, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the back of the packet. What does it mean?',
       ['portion, serving', 'half', 'buy one get one free'],
       0,
-      'fèn · portie (portion, serving). Seen in 大份/中份/小份/半份 (large/medium/small/half portion) on menus. Looks similar to 分 (which can also be read fèn) — focus on what the word means rather than the tone.',
-      { hanzi: '份', pinyin: 'fèn', nl: 'portie', en: 'portion, serving' },
-      undefined,
+      'fèn · portie (portion, serving). Seen in 大份/中份/小份/半份 (large/medium/small/half portion) on menus. Looks similar to 分 (which can also be read fèn) — focus on what the word means rather than the tone. Carries the 亻 (person) radical, the same one in 停 (to stop).',
+      { hanzi: '份', pinyin: 'fèn', nl: 'portie', en: 'portion, serving', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '份',
+        components: [{ componentId: PERSON_RADICAL.id, role: 'semantic' }],
+        semantic_radical: PERSON_RADICAL.id,
+      },
       { tier: 1, freqRank: 784 },
     ],
     [
@@ -227,10 +250,10 @@ export const MARKET_PANEL: CategoryContent = {
       'On the back of the packet. What does it mean?',
       ['animals, one of a pair, some containers', 'net content', 'members\' price'],
       0,
-      'zhī · dieren, één van een paar (measure word for animals, one of a pair, some containers). As "only", the same character is read zhǐ instead.',
+      'zhī · dieren, één van een paar (measure word for animals, one of a pair, some containers). As "only", the same character is read zhǐ instead. Picture 只 as a little bird (the top strokes) perched with its two legs (八) apart on a branch — one single bird, one single thing: zhī.',
       { hanzi: '只', pinyin: 'zhī', nl: 'dieren, één van een paar', en: 'animals, one of a pair, some containers' },
       undefined,
-      { tier: 2, freqRank: 97 },
+      { tier: 2, freqRank: 97, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the back of the packet. What does it mean?',
@@ -246,8 +269,16 @@ export const MARKET_PANEL: CategoryContent = {
       ['pairs', 'general measure word', '2, capital form'],
       0,
       'shuāng · paar (pairs). Shoes, chopsticks, socks. Written with 又 doubled — a visual hint at "a pair".',
-      { hanzi: '双', pinyin: 'shuāng', nl: 'paar', en: 'pairs' },
-      undefined,
+      { hanzi: '双', pinyin: 'shuāng', nl: 'paar', en: 'pairs', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '双',
+        components: [
+          { componentId: AGAIN_RADICAL.id, role: 'semantic' },
+          { componentId: AGAIN_RADICAL.id, role: 'semantic' },
+        ],
+        semantic_radical: AGAIN_RADICAL.id,
+      },
       { tier: 2, freqRank: 581 },
     ],
     [

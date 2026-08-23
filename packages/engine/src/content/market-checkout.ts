@@ -1,3 +1,4 @@
+import { METAL_RADICAL, SHELL_RADICAL, SILK_RADICAL, TAP_RADICAL } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -16,6 +17,16 @@ import type { CategoryContent } from './row.js';
 // transparent compounds: 收银台 "collect" + "silver, money" + "counter" (the
 // explanation already notes the shortened 收银 form); 结账 "settle" +
 // "account".
+//
+// 收/银/台/结/账 (eligibility-gap backfill, Aug 2026): standalone items for
+// every morpheme 收银台/结账 name, so `deriveComponentCharIds` has a
+// single-character question to resolve each morpheme against - without
+// these, both words' WordDecomposition was structurally inert (see
+// content/index.ts). 收/银/结/账 carry a verified CharacterDecomposition
+// against the gitignored Make Me a Hanzi scratch copy; 银 reuses
+// `METAL_RADICAL` from menu-animal.ts's 锅/transit-ticket.ts's 铺. 台 has no
+// MMH etymology entry at all, so it ships `glossProvenance: 'mnemonic-only'`
+// instead of a fabricated decomposition claim.
 export const MARKET_CHECKOUT: CategoryContent = {
   low: [
     [
@@ -85,19 +96,19 @@ export const MARKET_CHECKOUT: CategoryContent = {
       'On the checkout screen. What does it mean?',
       ['hundred', 'hundred million', 'bottle'],
       0,
-      'bǎi · honderd (hundred). Below 10,000, Chinese numbers work just like European ones.',
+      'bǎi · honderd (hundred). Below 10,000, Chinese numbers work just like European ones. Picture 百 as the number 一 (one) capping a wide, wide mouth (白 shape) stretched open to shout out a big round number: bǎi.',
       { hanzi: '百', pinyin: 'bǎi', nl: 'honderd', en: 'hundred' },
       undefined,
-      { tier: 1, freqRank: 407 },
+      { tier: 1, freqRank: 407, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the checkout screen. What does it mean?',
       ['thousand', 'settle up, pay', '2, capital form'],
       0,
-      'qiān · duizend (thousand). The last unit before Chinese numbers start grouping by 10,000 instead of 1,000.',
+      'qiān · duizend (thousand). The last unit before Chinese numbers start grouping by 10,000 instead of 1,000. Picture 千 as a single stroke driven straight down through 十 (ten) — pushing "ten" up a whole order of magnitude: qiān.',
       { hanzi: '千', pinyin: 'qiān', nl: 'duizend', en: 'thousand' },
       undefined,
-      { tier: 1, freqRank: 599 },
+      { tier: 1, freqRank: 599, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the checkout screen. What does it mean?',
@@ -134,6 +145,71 @@ export const MARKET_CHECKOUT: CategoryContent = {
         context: { after: '请在结账前告知收银员' },
       },
     ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['to collect, receive', 'settle up, pay', 'stored-value card'],
+      0,
+      'shōu · innen, ontvangen (to collect, receive). Seen in 收银台 (checkout counter, literally "collect money counter") and 收据 (receipt).',
+      { hanzi: '收', pinyin: 'shōu', nl: 'innen, ontvangen', en: 'to collect, receive', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '收',
+        components: [{ componentId: TAP_RADICAL.id, role: 'semantic' }],
+        semantic_radical: TAP_RADICAL.id,
+      },
+      { freqRank: 351 },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['silver, money', 'to collect, receive', 'settle up, pay'],
+      0,
+      'yín · zilver, geld (silver, money). The character behind 银行 (bank) and 收银台 (checkout counter). Carries the 钅 (metal) radical, the same one in 锅 (pot) and 铺 (shop).',
+      { hanzi: '银', pinyin: 'yín', nl: 'zilver, geld', en: 'silver, money', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '银',
+        components: [{ componentId: METAL_RADICAL.id, role: 'semantic' }],
+        semantic_radical: METAL_RADICAL.id,
+      },
+      { freqRank: 757 },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['counter, platform, stand', 'silver, money', 'account, bill'],
+      0,
+      'tái · toonbank, platform (counter, platform, stand). Seen in 收银台 (checkout counter) and 站台 (train platform). Picture 台 as a little stool set above an open, mouth-shaped stage - a small platform to stand and speak from: tái.',
+      { hanzi: '台', pinyin: 'tái', nl: 'toonbank, platform', en: 'counter, platform, stand' },
+      undefined,
+      { freqRank: 388, glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['to tie, settle', 'to collect, receive', 'account, bill'],
+      0,
+      'jié · afronden, knopen (to tie off, settle). Seen in 结账 (settle the bill) and 结婚 (get married, literally "tie the knot"). Carries the 纟 (silk/thread) radical, common in words about binding things together.',
+      { hanzi: '结', pinyin: 'jié', nl: 'afronden, knopen', en: 'to tie, settle', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '结',
+        components: [{ componentId: SILK_RADICAL.id, role: 'semantic' }],
+        semantic_radical: SILK_RADICAL.id,
+      },
+      { freqRank: 236 },
+    ],
+    [
+      'On the checkout screen. What does it mean?',
+      ['account, bill', 'to tie, settle', 'counter, platform, stand'],
+      0,
+      'zhàng · rekening (account, bill). Seen in 结账 (settle the bill). Carries the 贝 (shell) radical - cowrie shells were ancient currency, so it marks money-related characters.',
+      { hanzi: '账', pinyin: 'zhàng', nl: 'rekening', en: 'account, bill', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '账',
+        components: [{ componentId: SHELL_RADICAL.id, role: 'semantic' }],
+        semantic_radical: SHELL_RADICAL.id,
+      },
+      { freqRank: 2179 },
+    ],
   ],
   high: [
     [
@@ -149,28 +225,28 @@ export const MARKET_CHECKOUT: CategoryContent = {
       'On the checkout screen. What does it mean?',
       ['1, capital form', 'production date', 'animals, one of a pair, some containers'],
       0,
-      'yī · 1, de formele schrijfwijze voor documenten (the "capital form" used on official documents, to prevent fraud). A 100-yuan note reads 壹佰圆 — recognizing this character is the difference between reading a banknote and just looking at one.',
+      'yī · 1, de formele schrijfwijze voor documenten (the "capital form" used on official documents, to prevent fraud). A 100-yuan note reads 壹佰圆 — recognizing this character is the difference between reading a banknote and just looking at one. Picture 壹 as a whole treasury (士 + 冖 + 豆) locked away just to protect a single "1" from being forged: yī.',
       { hanzi: '壹', pinyin: 'yī', nl: '1, schrijfwijze op documenten', en: '1, capital form' },
       undefined,
-      { tier: 2, freqRank: 4652 },
+      { tier: 2, freqRank: 4652, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the checkout screen. What does it mean?',
       ['2, capital form', 'kilogram = 2 斤', 'garments, items, matters'],
       0,
-      'èr · 2, de formele schrijfwijze voor documenten (capital form). It contains both the ordinary 二 it stands in for and the money radical 贝 — the one capital-form numeral you can partly guess at.',
+      'èr · 2, de formele schrijfwijze voor documenten (capital form). It contains both the ordinary 二 it stands in for and the money radical 贝 — the one capital-form numeral you can partly guess at. Picture 贰 as a money pouch (贝) stitched shut around a plain "2" (二), locked up with extra stitching so nobody can quietly turn it into another number: èr.',
       { hanzi: '贰', pinyin: 'èr', nl: '2, schrijfwijze op documenten', en: '2, capital form' },
       undefined,
-      { tier: 2, freqRank: 3894 },
+      { tier: 2, freqRank: 3894, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the checkout screen. What does it mean?',
       ['3, capital form', '50 g, one tenth of a 斤', 'hundred'],
       0,
-      'sān · 3, de formele schrijfwijze voor documenten (capital form). It contains its own 三, the same way 贰 contains 二.',
+      'sān · 3, de formele schrijfwijze voor documenten (capital form). It contains its own 三, the same way 贰 contains 二. Picture 叁 as a plain "3" (三) stacked up under two extra strokes on top, like a wax seal pressed down to stop anyone adding another line and turning it into a bigger number: sān.',
       { hanzi: '叁', pinyin: 'sān', nl: '3, schrijfwijze op documenten', en: '3, capital form' },
       undefined,
-      { tier: 2, freqRank: 4396 },
+      { tier: 2, freqRank: 4396, glossProvenance: 'mnemonic-only' },
     ],
   ],
 };

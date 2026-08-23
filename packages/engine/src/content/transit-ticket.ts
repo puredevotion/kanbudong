@@ -37,6 +37,14 @@ import type { CategoryContent } from './row.js';
  * compounds - 高 "high" + 铁 "rail/iron" and 火 "fire" + 车 "vehicle" - each
  * already spelled out in its own explanation before this field existed, same
  * pattern as street-trade.ts's 快递.
+ *
+ * 铁/高/火/车 (eligibility-gap backfill, Aug 2026): standalone items for every
+ * morpheme 高铁/火车 name, so `deriveComponentCharIds` can resolve both words
+ * - see the audit note in content/index.ts. 铁 reuses `METAL_RADICAL` (its
+ * phonetic half 失 shī/yì is not a tone-or-syllable match for tiě, so
+ * semantic-only); Make Me a Hanzi records 高/火/车 as plain pictographs with
+ * no semantic/phonetic split to verify, so all three ship
+ * `glossProvenance: 'mnemonic-only'` instead.
  */
 export const TRANSIT_TICKET: CategoryContent = {
   low: [
@@ -250,6 +258,47 @@ export const TRANSIT_TICKET: CategoryContent = {
         en: 'ticket gate',
         context: { after: '5' },
       },
+    ],
+    [
+      'At the ticket hall. What does it mean?',
+      ['iron, rail', 'ground, land', 'metro'],
+      0,
+      'tiě · ijzer, spoor (iron, rail). Seen in 地铁 (metro), 高铁 (high-speed rail) and 火车 (train). Carries the 钅 (metal) radical, the same one in 银 (silver) and 铺 (shop).',
+      { hanzi: '铁', pinyin: 'tiě', nl: 'ijzer, spoor', en: 'iron, rail', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '铁',
+        components: [{ componentId: METAL_RADICAL.id, role: 'semantic' }],
+        semantic_radical: METAL_RADICAL.id,
+      },
+      { freqRank: 779 },
+    ],
+    [
+      'At the ticket hall. What does it mean?',
+      ['tall, high', 'fast, quick', 'iron, rail'],
+      0,
+      'gāo · hoog (tall, high). Seen in 高铁 (high-speed rail, literally "tall/fast rail"). Picture 高 as a tall tower: a peaked roof at the top, a little window partway down, and a wide gate at street level: gāo.',
+      { hanzi: '高', pinyin: 'gāo', nl: 'hoog', en: 'tall, high' },
+      undefined,
+      { freqRank: 134, glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'At the ticket hall. What does it mean?',
+      ['fire', 'vehicle', 'tall, high'],
+      0,
+      'huǒ · vuur (fire). Seen in 火车 (train, literally "fire vehicle" - after the old steam engines) and 火锅 (hotpot). Picture 火 as two small flames flaring up above a flickering base: huǒ.',
+      { hanzi: '火', pinyin: 'huǒ', nl: 'vuur', en: 'fire' },
+      undefined,
+      { freqRank: 433, glossProvenance: 'mnemonic-only' },
+    ],
+    [
+      'At the ticket hall. What does it mean?',
+      ['vehicle, car', 'fire', 'tall, high'],
+      0,
+      'chē · voertuig (vehicle, car). Seen in 火车 (train), 车厢 (carriage) and 停车场 (car park). Picture 车 as a cart seen from directly above: a single axle running through the middle, with a wheel at each end: chē.',
+      { hanzi: '车', pinyin: 'chē', nl: 'voertuig', en: 'vehicle, car' },
+      undefined,
+      { freqRank: 361, glossProvenance: 'mnemonic-only' },
     ],
   ],
 };

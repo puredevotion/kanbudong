@@ -1,3 +1,4 @@
+import { FIRE_DOTS_RADICAL, PERSON_RADICAL, SUN_RADICAL, TING_PHONETIC } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -21,6 +22,18 @@ import type { CategoryContent } from './row.js';
  * explanation already named 停业 as the thing it is distinguished from before
  * this field existed. 停业 appears three times in this file (low/mid/high);
  * all three carry the tag.
+ *
+ * 停 (eligibility-gap backfill, Aug 2026): a standalone item for 停业's/
+ * street-trade.ts's 停车场's first morpheme, so `deriveComponentCharIds` can
+ * resolve both words - see the audit note in content/index.ts. Verified
+ * against the gitignored Make Me a Hanzi scratch copy: semantic 亻 (person)
+ * plus an exact-tone phonetic match on 亭 (tíng = tíng).
+ *
+ * Rest-of-bank coverage pass (Aug 2026): 时 gets a verified
+ * CharacterDecomposition (semantic 日, `SUN_RADICAL`; MMH's own entry records
+ * no phonetic component for this character at all). 点 reuses
+ * `FIRE_DOTS_RADICAL` (灬, from menu-cooking.ts's 煮/煎); its phonetic half 占
+ * (zhàn) is not a tone-or-syllable match for diǎn, so semantic-only.
  */
 export const STREET_OPEN: CategoryContent = {
   low: [
@@ -41,15 +54,21 @@ export const STREET_OPEN: CategoryContent = {
       'On a shop door. What does it mean?',
       ['o\'clock; time', 'members\' price', 'scan the QR code'],
       0,
-      'shí · uur; tijd (o\'clock; time). Opening-hours plaques show 营业时间 09:00–22:00 in 24-hour numbers, so mostly you just need to read the digits.',
+      'shí · uur; tijd (o\'clock; time). Opening-hours plaques show 营业时间 09:00–22:00 in 24-hour numbers, so mostly you just need to read the digits. Carries the 日 (sun/day) radical.',
       {
         hanzi: '时',
         pinyin: 'shí',
         nl: 'uur; tijd',
         en: 'o\'clock; time',
         context: { before: '营业', after: '间 09:00–22:00' },
+        structure: 'left-right',
       },
-      undefined,
+      {
+        kind: 'character',
+        hanzi: '时',
+        components: [{ componentId: SUN_RADICAL.id, role: 'semantic' }],
+        semantic_radical: SUN_RADICAL.id,
+      },
       { tier: 1, freqRank: 25 },
     ],
   ],
@@ -71,15 +90,21 @@ export const STREET_OPEN: CategoryContent = {
       'On a shop door. What does it mean?',
       ['o\'clock (spoken)', 'day of month (spoken); number', 'yuan (spoken)'],
       0,
-      'diǎn · uur (spreektaal, o\'clock). E.g. 晚上十点打烊 = closes at 10pm — the characters don\'t say morning or afternoon on their own, so you get that from context. Often paired with 半.',
+      'diǎn · uur (spreektaal, o\'clock). E.g. 晚上十点打烊 = closes at 10pm — the characters don\'t say morning or afternoon on their own, so you get that from context. Often paired with 半. Carries the 灬 (fire) radical, the same one under 煮/煎 (boil/pan-fry) on a menu.',
       {
         hanzi: '点',
         pinyin: 'diǎn',
         nl: 'uur (spreektaal)',
         en: 'o\'clock (spoken)',
         context: { before: '晚上十', after: '打烊' },
+        structure: 'top-bottom',
       },
-      undefined,
+      {
+        kind: 'character',
+        hanzi: '点',
+        components: [{ componentId: FIRE_DOTS_RADICAL.id, role: 'semantic' }],
+        semantic_radical: FIRE_DOTS_RADICAL.id,
+      },
       { tier: 1, freqRank: 128 },
     ],
     [
@@ -127,6 +152,23 @@ export const STREET_OPEN: CategoryContent = {
         confusion_type: 'shared-morpheme',
         confusable_with: ['street-open-mid-4'],
       },
+    ],
+    [
+      'On a shop door. What does it mean?',
+      ['to stop', 'fast, quick', 'account, bill'],
+      0,
+      'tíng · stoppen (to stop). Seen in 停业 (closed down) and 停车场 (car park). 亭 (tíng), the shape on the right, gives the exact sound - a rare case where the phonetic half is a perfect match.',
+      { hanzi: '停', pinyin: 'tíng', nl: 'stoppen', en: 'to stop', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '停',
+        components: [
+          { componentId: PERSON_RADICAL.id, role: 'semantic' },
+          { componentId: TING_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: PERSON_RADICAL.id,
+      },
+      { freqRank: 693 },
     ],
   ],
 };

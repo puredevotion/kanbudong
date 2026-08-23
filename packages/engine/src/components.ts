@@ -281,6 +281,189 @@ export const GRAIN_RADICAL: Component = {
   role: 'semantic',
 };
 
+/**
+ * Rest-of-bank decomposition/mnemonic pass (Aug 2026, DESIGN.md §9.1 coverage
+ * push): components for the remaining still-undecomposed single characters in
+ * market-checkout/market-panel/menu-animal/street-open, verified against the
+ * gitignored Make Me a Hanzi scratch copy.
+ */
+
+/** 号 hào = ⿱口丂 (口, "mouth" + 丂). 丂's readings (kǎo/qiǎo/yú) are not a tone-or-syllable match for hào, so semantic-only. */
+export const MOUTH_RADICAL: Component = {
+  id: 'kangxi-30-mouth',
+  displayGlyph: '口',
+  role: 'semantic',
+};
+
+/** 双 shuāng = ⿰又又, two of the same "again/hand" radical side by side - MMH's own ideographic hint. Same component listed twice; no phonetic half to claim. */
+export const AGAIN_RADICAL: Component = {
+  id: 'kangxi-29-again',
+  displayGlyph: '又',
+  role: 'semantic',
+};
+
+/**
+ * 素 sù = ⿱龶糸 ("silk thread hanging off a tree" per MMH). 糸 is the
+ * traditional/standalone form of the same silk radical rendered as 纟 in
+ * `SILK_RADICAL` (结's component) - kept as a separate id because the
+ * rendered shape differs, the same "identity is the id, not the glyph" rule
+ * `FIRE_DOTS_RADICAL` states for 火/灬.
+ */
+export const SILK_RADICAL_FULL: Component = {
+  id: 'kangxi-120-silk-full',
+  displayGlyph: '糸',
+  role: 'semantic',
+};
+
+/** 鸡 jī = ⿰又鸟 ("another kind of bird" per MMH's ideographic hint). 鸟 is the recognizable semantic half; 又 (yòu) is not a tone-or-syllable match for jī, so semantic-only. */
+export const BIRD_RADICAL: Component = {
+  id: 'kangxi-196-bird',
+  displayGlyph: '鸟',
+  role: 'semantic',
+};
+
+/**
+ * 虫 chóng ("insect/worm" radical), shared by 虾 (⿰虫下, phonetic 下 xià not
+ * an exact match for xiā) and 蛋 (⿱疋虫, phonetic 延 yán not an exact match
+ * for dàn) - both semantic-only.
+ */
+export const INSECT_RADICAL: Component = {
+  id: 'kangxi-142-insect',
+  displayGlyph: '虫',
+  role: 'semantic',
+};
+
+/** 筋 jīn = ⿱⺮肋 ("bamboo-like tendons" per MMH's ideographic hint). ⺮ is the recognizable semantic half; MMH records no separate phonetic component. */
+export const BAMBOO_RADICAL: Component = {
+  id: 'kangxi-118-bamboo',
+  displayGlyph: '⺮',
+  role: 'semantic',
+};
+
+/** 时 shí = ⿰日寸 (日, "sun/day" + 寸). MMH's own entry names 日 as the semantic half and records no phonetic component for this character, so semantic-only. */
+export const SUN_RADICAL: Component = {
+  id: 'kangxi-72-sun',
+  displayGlyph: '日',
+  role: 'semantic',
+};
+
+/**
+ * 包 bāo = ⿹勹巳. MMH's own ideographic hint says 勹 ("wrap, swaddle") "also
+ * provides the pronunciation" - and unlike 快's 夬 (rejected, wrong tone),
+ * 勹's own reading is bāo, an exact match. No separate semantic component is
+ * claimed: 巳 is not a recognizable radical anywhere else in this table, and
+ * MMH itself does not name a `semantic` field for this entry (only `hint`
+ * prose), so this ships as the one component actually verified - the
+ * phonetic half - rather than inventing a semantic pairing MMH does not
+ * support.
+ */
+export const WRAP_PHONETIC: Component = {
+  id: 'phonetic-bao-wrap',
+  displayGlyph: '勹',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/**
+ * Word-decomposition eligibility backfill (Aug 2026, DESIGN.md §9.1): 收/银/
+ * 结/账/洗/药/邮/局/快/递/停/地/铁 are the standalone characters authored so
+ * `deriveComponentCharIds` (eligibility.ts) can resolve the ten word items
+ * that previously named these morphemes with no matching single-character
+ * item in the pack - see the audit note in content/index.ts. Every one below
+ * is verified against the gitignored Make Me a Hanzi scratch copy, same
+ * process as every earlier radical set on this page.
+ */
+
+/** 收 shōu = ⿰丩攵 (丩 jiū + 攵, "tap/rap" radical). 丩 is not a tone-or-syllable match for shōu, so semantic-only. */
+export const TAP_RADICAL: Component = {
+  id: 'kangxi-66-tap',
+  displayGlyph: '攵',
+  role: 'semantic',
+};
+
+/**
+ * 结 jié = ⿰纟吉 (silk radical + 吉). 吉's own reading is jí - same tone as
+ * jié but a different syllable (ji vs jie), so it fails the exact-match bar
+ * this bank holds phonetic hints to and 结 ships semantic-only.
+ */
+export const SILK_RADICAL: Component = {
+  id: 'kangxi-120-silk',
+  displayGlyph: '纟',
+  role: 'semantic',
+};
+
+/** 账 zhàng = ⿰贝长 (贝, "shell" - the money radical - + 长). 长 is read zhǎng/cháng, neither an exact match for zhàng, so semantic-only. */
+export const SHELL_RADICAL: Component = {
+  id: 'kangxi-154-shell',
+  displayGlyph: '贝',
+  role: 'semantic',
+};
+
+/**
+ * 邮 yóu = ⿰由阝 (由 + 阝, the "right-ear" 邑/place radical, Kangxi 163). Held
+ * as a distinct component id from any future "left-ear" 阝 (阜/mound, Kangxi
+ * 170) precisely because the two are homoglyphs with different Kangxi
+ * radicals occupying the same glyph slot - the same trap `MEAT_RADICAL`'s
+ * doc comment names for ⺼/月, not assumed to be safe here just because no
+ * left-ear character has been authored yet.
+ */
+export const CITY_RADICAL: Component = {
+  id: 'kangxi-163-city-right-ear',
+  displayGlyph: '阝',
+  role: 'semantic',
+};
+
+/** 邮 yóu and 由 yóu share the same syllable including tone - verified against `pinyin-data`, the same 'exact' bar as `ZHAN_PHONETIC`/`GUO_PHONETIC`. */
+export const YOU_PHONETIC: Component = {
+  id: 'phonetic-you',
+  displayGlyph: '由',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/** 递 dì = ⿺辶弟 (辶, "walk" radical + 弟). Structure is a lower-left partial enclosure, distinct from the ⿰ left-right pairs above. */
+export const WALK_RADICAL: Component = {
+  id: 'kangxi-162-walk',
+  displayGlyph: '辶',
+  role: 'semantic',
+};
+
+/** 递 dì and 弟 dì share the same syllable including tone - verified against `pinyin-data`; this bank's own street-trade.ts explanation for 快递 already named this pairing before the component existed. */
+export const DI_PHONETIC: Component = {
+  id: 'phonetic-di',
+  displayGlyph: '弟',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/** 停 tíng = ⿰亻亭 (人/亻, "person" radical + 亭). */
+export const PERSON_RADICAL: Component = {
+  id: 'kangxi-9-person',
+  displayGlyph: '亻',
+  role: 'semantic',
+};
+
+/** 停 tíng and 亭 tíng share the same syllable including tone - verified against `pinyin-data`. */
+export const TING_PHONETIC: Component = {
+  id: 'phonetic-ting',
+  displayGlyph: '亭',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/**
+ * 快 kuài = ⿰忄夬 (心/忄, "heart" radical + 夬). MMH's own etymology calls 夬
+ * "decisive" and notes it "also provides the pronunciation," but 夬's actual
+ * readings (guài, jué) are not a tone-or-syllable match for kuài, so no
+ * phonetic claim ships - the same near-miss discipline as 站/占-style
+ * rejections elsewhere in this table.
+ */
+export const HEART_RADICAL: Component = {
+  id: 'kangxi-61-heart',
+  displayGlyph: '忄',
+  role: 'semantic',
+};
+
 export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [MEAT_RADICAL.id]: MEAT_RADICAL,
   [GAN_PHONETIC.id]: GAN_PHONETIC,
@@ -302,6 +485,24 @@ export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [METAL_RADICAL.id]: METAL_RADICAL,
   [GUO_PHONETIC.id]: GUO_PHONETIC,
   [GRAIN_RADICAL.id]: GRAIN_RADICAL,
+  [TAP_RADICAL.id]: TAP_RADICAL,
+  [SILK_RADICAL.id]: SILK_RADICAL,
+  [SHELL_RADICAL.id]: SHELL_RADICAL,
+  [CITY_RADICAL.id]: CITY_RADICAL,
+  [YOU_PHONETIC.id]: YOU_PHONETIC,
+  [WALK_RADICAL.id]: WALK_RADICAL,
+  [DI_PHONETIC.id]: DI_PHONETIC,
+  [PERSON_RADICAL.id]: PERSON_RADICAL,
+  [TING_PHONETIC.id]: TING_PHONETIC,
+  [HEART_RADICAL.id]: HEART_RADICAL,
+  [MOUTH_RADICAL.id]: MOUTH_RADICAL,
+  [AGAIN_RADICAL.id]: AGAIN_RADICAL,
+  [SILK_RADICAL_FULL.id]: SILK_RADICAL_FULL,
+  [BIRD_RADICAL.id]: BIRD_RADICAL,
+  [INSECT_RADICAL.id]: INSECT_RADICAL,
+  [BAMBOO_RADICAL.id]: BAMBOO_RADICAL,
+  [SUN_RADICAL.id]: SUN_RADICAL,
+  [WRAP_PHONETIC.id]: WRAP_PHONETIC,
 };
 
 export function resolveComponent(id: ComponentId): Component | undefined {

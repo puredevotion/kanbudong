@@ -1,4 +1,4 @@
-import { STAND_SEMANTIC, ZHAN_PHONETIC } from '../components.js';
+import { EARTH_SEMANTIC, STAND_SEMANTIC, ZHAN_PHONETIC } from '../components.js';
 import type { CategoryContent } from './row.js';
 
 /**
@@ -21,6 +21,13 @@ import type { CategoryContent } from './row.js';
  * 地铁 (word-decomposition backfill, Aug 2026) is a genuinely transparent
  * compound - 地 "ground" + 铁 "rail/iron" - and this file's own explanation
  * already calls out 铁's metal radical before this field existed.
+ *
+ * 地 (eligibility-gap backfill, Aug 2026): a standalone item for 地铁's first
+ * morpheme, so `deriveComponentCharIds` can resolve it - see the audit note
+ * in content/index.ts. Reuses `EARTH_SEMANTIC` from transit-ticket.ts's 城,
+ * verified against the same gitignored Make Me a Hanzi scratch copy; its
+ * phonetic half 也 (yě/yí) is not a tone-or-syllable match for dì, so
+ * semantic-only.
  */
 export const TRANSIT_PLATFORM: CategoryContent = {
   low: [
@@ -150,6 +157,20 @@ export const TRANSIT_PLATFORM: CategoryContent = {
         en: 'last train',
         context: { before: '本站', after: '22:30发车' },
       },
+    ],
+    [
+      'In the metro. What does it mean?',
+      ['ground, land', 'metro', 'transfer, change lines'],
+      0,
+      'dì · grond, land (ground, land). Seen in 地铁 (metro, literally "ground/underground railway") and 地图 (map). Carries the 土 (earth) radical, the same one in 场 (venue, ground) and 城 (large retail complex).',
+      { hanzi: '地', pinyin: 'dì', nl: 'grond, land', en: 'ground, land', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '地',
+        components: [{ componentId: EARTH_SEMANTIC.id, role: 'semantic' }],
+        semantic_radical: EARTH_SEMANTIC.id,
+      },
+      { freqRank: 21 },
     ],
   ],
   high: [

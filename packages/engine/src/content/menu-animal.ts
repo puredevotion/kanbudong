@@ -6,6 +6,11 @@ import {
   METAL_RADICAL,
   GUO_PHONETIC,
   GRAIN_RADICAL,
+  BIRD_RADICAL,
+  INSECT_RADICAL,
+  WRAP_PHONETIC,
+  BAMBOO_RADICAL,
+  SILK_RADICAL_FULL,
 } from '../components.js';
 import type { CategoryContent } from './row.js';
 
@@ -31,6 +36,29 @@ import type { CategoryContent } from './row.js';
  * fěn. 面 (noodles) is left undecomposed: Make Me a Hanzi has no
  * decomposition data for it at all (it is itself a pictograph, "a person's
  * face", with no component breakdown recorded).
+ *
+ * Rest-of-bank coverage pass (Aug 2026): 鸡 gets a verified CharacterDecomposition
+ * (semantic 鸟, `BIRD_RADICAL`; MMH's own hint for its other half, 又, is
+ * "another kind of", not a phonetic claim, and 又's reading yòu doesn't match
+ * jī anyway). 虾/蛋 both carry `INSECT_RADICAL` (虫); neither phonetic half
+ * (下/延) is a tone-or-syllable match for xiā/dàn, so both are semantic-only.
+ * 包 carries `WRAP_PHONETIC` alone: MMH's own hint says 勹 ("wrap, swaddle")
+ * "also provides the pronunciation," and unlike 快's rejected 夬, 勹's actual
+ * reading (bāo) is an exact match - no separate semantic component is claimed
+ * since MMH names none. 素 carries `SILK_RADICAL_FULL` (糸, the traditional/
+ * standalone form of `SILK_RADICAL`'s 纟 - a different id because the
+ * rendered shape differs, same rule `FIRE_DOTS_RADICAL` states for 火/灬); MMH
+ * records no phonetic component for it. 肉/牛/羊/鱼/血/舌 have no MMH semantic/
+ * phonetic split clean enough to ship as a verified decomposition (each is
+ * either a bare pictograph with an unresolved sub-shape in MMH's own data, or
+ * an ideographic compound with no recognizable reusable radical), so each
+ * carries a labelled `glossProvenance: 'mnemonic-only'` story instead - 舌's
+ * explanation already
+ * named its real 千+口 shape in prose before this pass; the prose is kept,
+ * reframed as an invented picture rather than an assertion. 皮 is left exactly
+ * as the organ-set backfill already decided: MMH's own decomposition records
+ * an unresolved component (⿸？攴), so neither a verified decomposition nor an
+ * honest mnemonic is available - unchanged from that phase's call.
  */
 export const MENU_ANIMAL: CategoryContent = {
   low: [
@@ -38,18 +66,23 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['meat — by default pork', 'brain', 'kidney'],
       0,
-      'ròu · vlees (meat) — on menus this means pork unless another meat is specified.',
+      'ròu · vlees (meat) — on menus this means pork unless another meat is specified. Picture 肉 as a rack of ribs seen from the side: the outer frame is the ribcage, and the strokes inside are meat still clinging to the bone: ròu.',
       { hanzi: '肉', pinyin: 'ròu', nl: 'vlees — standaard varkensvlees', en: 'meat — by default pork' },
       undefined,
-      { tier: 0, freqRank: 869 },
+      { tier: 0, freqRank: 869, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the menu. What are you about to eat?',
       ['vegetarian', 'steam', 'house specialty'],
       0,
-      'sù · vegetarisch (vegetarian) — though "vegetarian" dishes are often still cooked with oyster sauce or meat stock.',
-      { hanzi: '素', pinyin: 'sù', nl: 'vegetarisch', en: 'vegetarian' },
-      undefined,
+      'sù · vegetarisch (vegetarian) — though "vegetarian" dishes are often still cooked with oyster sauce or meat stock. Carries the 糸 (silk) radical - plain silk thread, nothing dyed or dressed up.',
+      { hanzi: '素', pinyin: 'sù', nl: 'vegetarisch', en: 'vegetarian', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '素',
+        components: [{ componentId: SILK_RADICAL_FULL.id, role: 'semantic' }],
+        semantic_radical: SILK_RADICAL_FULL.id,
+      },
       { tier: 0 },
     ],
     [
@@ -67,19 +100,24 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['chicken', 'intestine', 'flash-fry'],
       0,
-      'jī · kip (chicken).',
-      { hanzi: '鸡', pinyin: 'jī', nl: 'kip', en: 'chicken' },
-      undefined,
+      'jī · kip (chicken). Carries the 鸟 (bird) radical.',
+      { hanzi: '鸡', pinyin: 'jī', nl: 'kip', en: 'chicken', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '鸡',
+        components: [{ componentId: BIRD_RADICAL.id, role: 'semantic' }],
+        semantic_radical: BIRD_RADICAL.id,
+      },
       { tier: 1, freqRank: 1249 },
     ],
     [
       'On the menu. What are you about to eat?',
       ['beef', 'kidney', 'tendon'],
       0,
-      'niú · rund (beef).',
+      'niú · rund (beef). Picture 牛 as an ox\'s head seen head-on: two horns curving up and out, one line down for the face: niú.',
       { hanzi: '牛', pinyin: 'niú', nl: 'rund', en: 'beef' },
       undefined,
-      { tier: 1, freqRank: 881 },
+      { tier: 1, freqRank: 881, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the menu. What are you about to eat?',
@@ -99,36 +137,46 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['lamb, mutton, goat', 'vegetarian', 'shrimp, prawn'],
       0,
-      'yáng · lam, schaap, geit — one character covers lamb, mutton and goat.',
+      'yáng · lam, schaap, geit — one character covers lamb, mutton and goat. Picture 羊 as a sheep\'s head seen head-on: two curling horns on top, a long face underneath: yáng.',
       { hanzi: '羊', pinyin: 'yáng', nl: 'lam, schaap, geit', en: 'lamb, mutton, goat' },
       undefined,
-      { tier: 1, freqRank: 1340 },
+      { tier: 1, freqRank: 1340, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the menu. What are you about to eat?',
       ['fish', 'tongue', 'brain'],
       0,
-      'yú · vis (fish) — one of the most common proteins you\'ll see on a menu.',
+      'yú · vis (fish) — one of the most common proteins you\'ll see on a menu. Picture 鱼 as a fish swimming straight up: the top is its mouth breaking the surface, the middle strokes are its fins, the box below is its scaled body: yú.',
       { hanzi: '鱼', pinyin: 'yú', nl: 'vis', en: 'fish' },
       undefined,
-      { tier: 1, freqRank: 452 },
+      { tier: 1, freqRank: 452, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the menu. What are you about to eat?',
       ['shrimp, prawn', 'chicken', 'brain'],
       0,
-      'xiā · garnaal (shrimp, prawn) — worth recognizing if you have a shellfish allergy.',
-      { hanzi: '虾', pinyin: 'xiā', nl: 'garnaal', en: 'shrimp, prawn' },
-      undefined,
+      'xiā · garnaal (shrimp, prawn) — worth recognizing if you have a shellfish allergy. Carries the 虫 (insect/small-creature) radical, the same one in 蛋 (egg).',
+      { hanzi: '虾', pinyin: 'xiā', nl: 'garnaal', en: 'shrimp, prawn', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '虾',
+        components: [{ componentId: INSECT_RADICAL.id, role: 'semantic' }],
+        semantic_radical: INSECT_RADICAL.id,
+      },
       { tier: 1, freqRank: 2460 },
     ],
     [
       'On the menu. What are you about to eat?',
       ['egg', 'soup', 'shrimp, prawn'],
       0,
-      'dàn · ei (egg).',
-      { hanzi: '蛋', pinyin: 'dàn', nl: 'ei', en: 'egg' },
-      undefined,
+      'dàn · ei (egg). Carries the same 虫 (insect/small-creature) radical as 虾 (shrimp).',
+      { hanzi: '蛋', pinyin: 'dàn', nl: 'ei', en: 'egg', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '蛋',
+        components: [{ componentId: INSECT_RADICAL.id, role: 'semantic' }],
+        semantic_radical: INSECT_RADICAL.id,
+      },
       { tier: 1, freqRank: 1157 },
     ],
     [
@@ -186,9 +234,13 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['filled steamed bun', 'swish in broth', 'gizzard'],
       0,
-      'bāo · gevuld gestoomd broodje (filled steamed bun) — unlike 馒头, which is the plain, unfilled version.',
+      'bāo · gevuld gestoomd broodje (filled steamed bun) — unlike 馒头, which is the plain, unfilled version. 勹 (bāo), the outer wrapping shape, gives the exact sound.',
       { hanzi: '包', pinyin: 'bāo', nl: 'gevuld gestoomd broodje', en: 'filled steamed bun' },
-      undefined,
+      {
+        kind: 'character',
+        hanzi: '包',
+        components: [{ componentId: WRAP_PHONETIC.id, role: 'phonetic' }],
+      },
       { tier: 1 },
     ],
     [
@@ -335,27 +387,32 @@ export const MENU_ANIMAL: CategoryContent = {
       'On the menu. What are you about to eat?',
       ['blood, as a set curd', 'swish in broth', 'liver'],
       0,
-      'xuè · bloed, als gestolde koek (blood, served as a set curd) — as in 鸭血 (duck blood), 毛血旺. Despite sitting beside seven meat-radical characters on this menu, 血 does not carry the meat radical at all - its own radical is 血.',
+      'xuè · bloed, als gestolde koek (blood, served as a set curd) — as in 鸭血 (duck blood), 毛血旺. Despite sitting beside seven meat-radical characters on this menu, 血 does not carry the meat radical at all - its own radical is 血. Picture 血 as a wide, shallow bowl with a single drop splashed into it - a bowl catching blood: xuè.',
       { hanzi: '血', pinyin: 'xuè', nl: 'bloed, als gestolde koek', en: 'blood, as a set curd' },
       undefined,
-      { tier: 2, freqRank: 631 },
+      { tier: 2, freqRank: 631, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the menu. What are you about to eat?',
       ['tongue', 'egg', 'blood, as a set curd'],
       0,
-      'shé · tong (tongue) — as in 牛舌 (beef tongue). Also does not carry the meat radical: it is 千 over 口.',
+      'shé · tong (tongue) — as in 牛舌 (beef tongue). Also does not carry the meat radical. Picture 舌 as a tongue sticking straight out of an open mouth (口), with the stroke above it as the tongue itself: shé.',
       { hanzi: '舌', pinyin: 'shé', nl: 'tong', en: 'tongue', structure: 'top-bottom' },
       undefined,
-      { tier: 2, freqRank: 1914 },
+      { tier: 2, freqRank: 1914, glossProvenance: 'mnemonic-only' },
     ],
     [
       'On the menu. What are you about to eat?',
       ['tendon', 'kidney', 'standard portion'],
       0,
-      'jīn · pees (tendon).',
-      { hanzi: '筋', pinyin: 'jīn', nl: 'pees', en: 'tendon' },
-      undefined,
+      'jīn · pees (tendon). Carries the 竹 (bamboo) radical on top - tendons pictured as bamboo-like strands.',
+      { hanzi: '筋', pinyin: 'jīn', nl: 'pees', en: 'tendon', structure: 'top-bottom' },
+      {
+        kind: 'character',
+        hanzi: '筋',
+        components: [{ componentId: BAMBOO_RADICAL.id, role: 'semantic' }],
+        semantic_radical: BAMBOO_RADICAL.id,
+      },
       { tier: 2 },
     ],
     [

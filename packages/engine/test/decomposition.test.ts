@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  AGAIN_RADICAL,
   ANIMAL_RADICAL,
+  BAMBOO_RADICAL,
   BAN_PHONETIC,
   BAO_PHONETIC,
+  BIRD_RADICAL,
   CHENG_PHONETIC,
+  CITY_RADICAL,
   COMPONENTS,
+  DI_PHONETIC,
   EARTH_SEMANTIC,
   expand,
   FIRE_DOTS_RADICAL,
@@ -15,14 +20,27 @@ import {
   GRASS_RADICAL,
   GUO_PHONETIC,
   HAND_RADICAL,
+  HEART_RADICAL,
+  INSECT_RADICAL,
   KAO_PHONETIC,
   MEAT_RADICAL,
   MEN_PHONETIC,
   METAL_RADICAL,
+  MOUTH_RADICAL,
+  PERSON_RADICAL,
   SEED_PACK,
+  SHELL_RADICAL,
+  SILK_RADICAL,
+  SILK_RADICAL_FULL,
   STAND_SEMANTIC,
+  SUN_RADICAL,
+  TAP_RADICAL,
+  TING_PHONETIC,
   validatePack,
+  WALK_RADICAL,
   WATER_RADICAL,
+  WRAP_PHONETIC,
+  YOU_PHONETIC,
   ZHAN_PHONETIC,
   type CategoryContent,
   type CharacterDecomposition,
@@ -440,5 +458,206 @@ describe('validatePack component references', () => {
     };
     const problems = validatePack(pack);
     expect(problems).toEqual(['menu-cooking-low-1: unknown component id does-not-exist']);
+  });
+});
+
+describe('eligibility-gap backfill (Aug 2026): standalone characters for previously-inert word decompositions', () => {
+  const findCharDecomp = (category: string, hanzi: string): CharacterDecomposition | undefined =>
+    SEED_PACK.questions
+      .filter((q) => q.category === category)
+      .map((q) => q.decomposition)
+      .find((d): d is CharacterDecomposition => d?.kind === 'character' && d.hanzi === hanzi);
+
+  it('tags 收 with the tap radical, semantic-only', () => {
+    const d = findCharDecomp('market-checkout', '收');
+    expect(d?.semantic_radical).toBe(TAP_RADICAL.id);
+    expect(d?.components.some((c) => c.role === 'phonetic')).toBe(false);
+  });
+
+  it('tags 银/铁 with the metal radical (reused from 锅/铺), semantic-only', () => {
+    for (const [category, hanzi] of [
+      ['market-checkout', '银'],
+      ['transit-ticket', '铁'],
+    ] as const) {
+      const d = findCharDecomp(category, hanzi);
+      expect(d?.semantic_radical, `${hanzi} should carry METAL_RADICAL`).toBe(METAL_RADICAL.id);
+      expect(d?.components.some((c) => c.role === 'phonetic')).toBe(false);
+    }
+  });
+
+  it('tags 结/账 with new semantic-only radicals (silk, shell)', () => {
+    const jie = findCharDecomp('market-checkout', '结');
+    expect(jie?.semantic_radical).toBe(SILK_RADICAL.id);
+    const zhang = findCharDecomp('market-checkout', '账');
+    expect(zhang?.semantic_radical).toBe(SHELL_RADICAL.id);
+  });
+
+  it('tags 洗 with the water radical (reused from 汤/涮) and 药 with the grass radical (reused from 茶)', () => {
+    const xi = findCharDecomp('street-way', '洗');
+    expect(xi?.semantic_radical).toBe(WATER_RADICAL.id);
+    const yao = findCharDecomp('street-way', '药');
+    expect(yao?.semantic_radical).toBe(GRASS_RADICAL.id);
+  });
+
+  it('tags 地 with the earth radical (reused from 城)', () => {
+    const di = findCharDecomp('transit-platform', '地');
+    expect(di?.semantic_radical).toBe(EARTH_SEMANTIC.id);
+  });
+
+  it('tags 邮/递/停 with an exact-match phonetic pairing (由/弟/亭)', () => {
+    const you = findCharDecomp('street-way', '邮');
+    expect(you?.semantic_radical).toBe(CITY_RADICAL.id);
+    expect(you?.components).toContainEqual({ componentId: YOU_PHONETIC.id, role: 'phonetic' });
+    expect(COMPONENTS[YOU_PHONETIC.id]?.reliability).toBe('exact');
+
+    const di = findCharDecomp('street-way', '递');
+    expect(di?.semantic_radical).toBe(WALK_RADICAL.id);
+    expect(di?.components).toContainEqual({ componentId: DI_PHONETIC.id, role: 'phonetic' });
+    expect(COMPONENTS[DI_PHONETIC.id]?.reliability).toBe('exact');
+
+    const ting = findCharDecomp('street-open', '停');
+    expect(ting?.semantic_radical).toBe(PERSON_RADICAL.id);
+    expect(ting?.components).toContainEqual({ componentId: TING_PHONETIC.id, role: 'phonetic' });
+    expect(COMPONENTS[TING_PHONETIC.id]?.reliability).toBe('exact');
+  });
+
+  it('tags 快 with the heart radical, no phonetic claim (夬 guài/jué does not match kuài)', () => {
+    const kuai = findCharDecomp('street-way', '快');
+    expect(kuai?.semantic_radical).toBe(HEART_RADICAL.id);
+    expect(kuai?.components.some((c) => c.role === 'phonetic')).toBe(false);
+  });
+
+  it('gives 台 a labelled mnemonic-only story instead of a fabricated decomposition (MMH has no etymology entry for it)', () => {
+    const tai = SEED_PACK.questions.find((q) => q.category === 'market-checkout' && q.face?.hanzi === '台');
+    expect(tai?.glossProvenance).toBe('mnemonic-only');
+    expect(tai?.decomposition).toBeUndefined();
+  });
+
+  it('gives 高/火/车 labelled mnemonic-only stories (Make Me a Hanzi records them as bare pictographs, no split)', () => {
+    for (const hanzi of ['高', '火', '车']) {
+      const q = SEED_PACK.questions.find((qq) => qq.category === 'transit-ticket' && qq.face?.hanzi === hanzi);
+      expect(q?.glossProvenance, `${hanzi} should be mnemonic-only`).toBe('mnemonic-only');
+      expect(q?.decomposition).toBeUndefined();
+    }
+  });
+
+  it('gives 手/间/局 labelled mnemonic-only stories (no clean semantic/phonetic split to verify)', () => {
+    for (const hanzi of ['手', '间', '局']) {
+      const q = SEED_PACK.questions.find((qq) => qq.category === 'street-way' && qq.face?.hanzi === hanzi);
+      expect(q?.glossProvenance, `${hanzi} should be mnemonic-only`).toBe('mnemonic-only');
+      expect(q?.decomposition).toBeUndefined();
+    }
+  });
+});
+
+describe('rest-of-bank coverage pass (Aug 2026): remaining single characters', () => {
+  const findCharDecomp = (category: string, hanzi: string): CharacterDecomposition | undefined =>
+    SEED_PACK.questions
+      .filter((q) => q.category === category)
+      .map((q) => q.decomposition)
+      .find((d): d is CharacterDecomposition => d?.kind === 'character' && d.hanzi === hanzi);
+
+  it('tags 号/份/双 in market-panel with real, verified decompositions', () => {
+    const hao = findCharDecomp('market-panel', '号');
+    expect(hao?.semantic_radical).toBe(MOUTH_RADICAL.id);
+    expect(hao?.components.some((c) => c.role === 'phonetic')).toBe(false);
+
+    const fen = findCharDecomp('market-panel', '份');
+    expect(fen?.semantic_radical).toBe(PERSON_RADICAL.id);
+
+    const shuang = findCharDecomp('market-panel', '双');
+    expect(shuang?.components).toEqual([
+      { componentId: AGAIN_RADICAL.id, role: 'semantic' },
+      { componentId: AGAIN_RADICAL.id, role: 'semantic' },
+    ]);
+  });
+
+  it('gives 个/半/只 in market-panel labelled mnemonic-only stories', () => {
+    for (const hanzi of ['个', '半', '只']) {
+      const q = SEED_PACK.questions.find((qq) => qq.category === 'market-panel' && qq.face?.hanzi === hanzi);
+      expect(q?.glossProvenance, `${hanzi} should be mnemonic-only`).toBe('mnemonic-only');
+      expect(q?.decomposition).toBeUndefined();
+    }
+  });
+
+  it('gives 百/千/壹/贰/叁 in market-checkout labelled mnemonic-only stories', () => {
+    for (const hanzi of ['百', '千', '壹', '贰', '叁']) {
+      const q = SEED_PACK.questions.find((qq) => qq.category === 'market-checkout' && qq.face?.hanzi === hanzi);
+      expect(q?.glossProvenance, `${hanzi} should be mnemonic-only`).toBe('mnemonic-only');
+    }
+  });
+
+  it('tags 鸡/虾/蛋/筋/包 in menu-animal with real, verified decompositions', () => {
+    const ji = findCharDecomp('menu-animal', '鸡');
+    expect(ji?.semantic_radical).toBe(BIRD_RADICAL.id);
+
+    const xia = findCharDecomp('menu-animal', '虾');
+    expect(xia?.semantic_radical).toBe(INSECT_RADICAL.id);
+    const dan = findCharDecomp('menu-animal', '蛋');
+    expect(dan?.semantic_radical).toBe(INSECT_RADICAL.id);
+
+    const jin = findCharDecomp('menu-animal', '筋');
+    expect(jin?.semantic_radical).toBe(BAMBOO_RADICAL.id);
+
+    const bao = findCharDecomp('menu-animal', '包');
+    expect(bao?.components).toEqual([{ componentId: WRAP_PHONETIC.id, role: 'phonetic' }]);
+    expect(COMPONENTS[WRAP_PHONETIC.id]?.reliability).toBe('exact');
+
+    const su = findCharDecomp('menu-animal', '素');
+    expect(su?.semantic_radical).toBe(SILK_RADICAL_FULL.id);
+    expect(su?.components.some((c) => c.role === 'phonetic')).toBe(false);
+  });
+
+  it('gives 肉/牛/羊/鱼/血/舌 in menu-animal labelled mnemonic-only stories', () => {
+    for (const hanzi of ['肉', '牛', '羊', '鱼', '血', '舌']) {
+      const q = SEED_PACK.questions.find((qq) => qq.category === 'menu-animal' && qq.face?.hanzi === hanzi);
+      expect(q?.glossProvenance, `${hanzi} should be mnemonic-only`).toBe('mnemonic-only');
+      expect(q?.decomposition).toBeUndefined();
+    }
+  });
+
+  it('never claims a decomposition or mnemonic for 皮/票/行 - left exactly as earlier phases decided', () => {
+    for (const [category, hanzi] of [
+      ['menu-animal', '皮'],
+      ['transit-platform', '票'],
+      ['transit-ticket', '行'],
+    ] as const) {
+      const q = SEED_PACK.questions.find((qq) => qq.category === category && qq.face?.hanzi === hanzi);
+      expect(q?.decomposition, `${hanzi} should have no decomposition`).toBeUndefined();
+      expect(q?.glossProvenance, `${hanzi} should have no glossProvenance`).toBeUndefined();
+    }
+  });
+
+  it('tags 时 with the sun radical and 点 with the fire-dots radical (reused from 煮/煎)', () => {
+    const shi = findCharDecomp('street-open', '时');
+    expect(shi?.semantic_radical).toBe(SUN_RADICAL.id);
+    const dian = findCharDecomp('street-open', '点');
+    expect(dian?.semantic_radical).toBe(FIRE_DOTS_RADICAL.id);
+  });
+
+  it('registers every new component in COMPONENTS with no dangling id anywhere in SEED_PACK', () => {
+    for (const id of [
+      TAP_RADICAL.id,
+      SILK_RADICAL.id,
+      SHELL_RADICAL.id,
+      CITY_RADICAL.id,
+      YOU_PHONETIC.id,
+      WALK_RADICAL.id,
+      DI_PHONETIC.id,
+      PERSON_RADICAL.id,
+      TING_PHONETIC.id,
+      HEART_RADICAL.id,
+      MOUTH_RADICAL.id,
+      AGAIN_RADICAL.id,
+      SILK_RADICAL_FULL.id,
+      BIRD_RADICAL.id,
+      INSECT_RADICAL.id,
+      BAMBOO_RADICAL.id,
+      SUN_RADICAL.id,
+      WRAP_PHONETIC.id,
+    ]) {
+      expect(COMPONENTS[id], `${id} should be registered in COMPONENTS`).toBeDefined();
+    }
+    expect(validatePack(SEED_PACK)).toEqual([]);
   });
 });

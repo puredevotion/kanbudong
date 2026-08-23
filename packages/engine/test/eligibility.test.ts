@@ -4,6 +4,7 @@ import {
   deriveComponentCharIds,
   expand,
   isSpanEligible,
+  SEED_PACK,
   type CategoryContent,
   type Question,
 } from '../src/index.js';
@@ -123,6 +124,60 @@ describe('isSpanEligible', () => {
   it('is always eligible when there is nothing to gate on', () => {
     const noGate: Question = { ...wordQuestion, component_char_ids: undefined };
     expect(isSpanEligible(noGate, () => false)).toBe(true);
+  });
+});
+
+/**
+ * DESIGN.md §9.1 coverage audit (Aug 2026): every `WordDecomposition` in the
+ * real seed pack previously named morphemes with no matching standalone
+ * single-character item, so `component_char_ids` silently resolved to
+ * nothing for all ten of them - word decomposition was structurally inert
+ * bank-wide, not a few edge cases. This guards the fix: every one of those
+ * ten words must now resolve a non-empty `component_char_ids` on the actual
+ * built pack, not just on hand-built fixtures.
+ */
+describe('word decomposition resolves against the real seed pack (eligibility-gap backfill, Aug 2026)', () => {
+  const previouslyInert: readonly [id: string, hanzi: string][] = [
+    ['market-checkout-mid-3', '收银台'],
+    ['market-checkout-mid-4', '结账'],
+    ['street-trade-low-2', '洗手间'],
+    ['street-trade-mid-1', '药店'],
+    ['street-trade-mid-4', '邮局'],
+    ['street-trade-mid-6', '快递'],
+    ['street-trade-mid-8', '停车场'],
+    ['transit-platform-mid-1', '地铁'],
+    ['transit-ticket-high-1', '高铁'],
+    ['transit-ticket-high-2', '火车'],
+  ];
+
+  const derived = deriveComponentCharIds(SEED_PACK.questions);
+
+  it('resolves a non-empty component_char_ids for every previously-inert word', () => {
+    for (const [id, hanzi] of previouslyInert) {
+      const ids = derived.get(id);
+      expect(ids, `${id} (${hanzi}) should resolve at least one component character`).toBeDefined();
+      expect(ids?.length ?? 0, `${id} (${hanzi}) resolved zero components`).toBeGreaterThan(0);
+    }
+  });
+
+  it('resolves one component id per morpheme, none of them dangling', () => {
+    const byId = new Map(SEED_PACK.questions.map((q) => [q.id, q] as const));
+    for (const [id] of previouslyInert) {
+      const word = byId.get(id);
+      if (word?.decomposition?.kind !== 'word') throw new Error(`fixture missing: ${id}`);
+      const ids = derived.get(id) ?? [];
+      expect(ids.length).toBe(word.decomposition.morphemes.length);
+      for (const charId of ids) {
+        expect(byId.has(charId), `${charId} should be a real question in the pack`).toBe(true);
+      }
+    }
+  });
+
+  it('carries the same component_char_ids on the built SEED_PACK questions themselves', () => {
+    for (const [id] of previouslyInert) {
+      const word = SEED_PACK.questions.find((q) => q.id === id);
+      expect(word?.component_char_ids?.length ?? 0, `${id} should carry component_char_ids`).toBeGreaterThan(0);
+    }
   });
 });
 
