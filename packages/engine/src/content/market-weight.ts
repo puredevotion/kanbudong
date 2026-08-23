@@ -1,6 +1,6 @@
 import type { CategoryContent } from './row.js';
 
-/** market-weight — generated from DESIGN.md §7. Bridge content; §6.1's span model replaces it. */
+/** market-weight — generated from DESIGN.md §7. IDS notation is verbatim; ui/glyphs.tsx draws it. */
 export const MARKET_WEIGHT: CategoryContent = {
   low: [
     [

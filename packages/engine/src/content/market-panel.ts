@@ -1,6 +1,6 @@
 import type { CategoryContent } from './row.js';
 
-/** market-panel — generated from DESIGN.md §7. Bridge content; §6.1's span model replaces it. */
+/** market-panel — generated from DESIGN.md §7. IDS notation is verbatim; ui/glyphs.tsx draws it. */
 export const MARKET_PANEL: CategoryContent = {
   low: [
     [
@@ -81,7 +81,7 @@ export const MARKET_PANEL: CategoryContent = {
       '杯 — you see this on a sign. What does it mean?',
       ['cup, glass', 'checkout', 'ten thousand', '1, capital form'],
       0,
-      'bēi · kopje, glas. Drinks. 木 left, 不 right.',
+      'bēi · kopje, glas. Drinks. ⿰木不.',
     ],
     [
       '碗 — you see this on a sign. What does it mean?',
@@ -131,7 +131,7 @@ export const MARKET_PANEL: CategoryContent = {
       '双 — you see this on a sign. What does it mean?',
       ['pairs', '0.01 yuan', 'general measure word', '2, capital form'],
       0,
-      'shuāng · paar. Shoes, chopsticks, socks. 又 left, 又 right.',
+      'shuāng · paar. Shoes, chopsticks, socks. ⿰又又.',
     ],
     [
       '条 — you see this on a sign. What does it mean?',

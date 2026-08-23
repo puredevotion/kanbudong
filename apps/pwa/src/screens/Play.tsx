@@ -23,6 +23,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
 import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
+import { withGlyphs } from '../ui/glyphs.jsx';
 
 export function Play(): ReactNode {
   const snapshot = useApp((s) => s.snapshot);
@@ -361,7 +362,7 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
       </Card.Header>
       {question !== undefined && (
         <Card.Content className="flex flex-col gap-2 text-sm">
-          <p className="text-default-foreground">{question.prompt}</p>
+          <p className="font-han text-default-foreground">{question.prompt}</p>
           {record.chosenText !== null && (
             <p>
               <span className="text-muted">{record.correct ? 'Answered: ' : 'They said: '}</span>
@@ -378,7 +379,7 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
               <span className="font-medium text-success">{correctText}</span>
             </p>
           )}
-          <p className="text-muted">{question.explanation}</p>
+          <p className="text-muted">{withGlyphs(question.explanation)}</p>
         </Card.Content>
       )}
     </Card>
@@ -621,7 +622,7 @@ function LiveQuestion({
             {categoryName}
             {repeat && ' - seen before, the pack ran dry'}
           </Card.Description>
-          <Card.Title className="text-xl leading-snug">{prompt}</Card.Title>
+          <Card.Title className="font-han text-xl leading-snug">{prompt}</Card.Title>
         </Card.Header>
         <Card.Content className="flex flex-col gap-2.5">
           {options.map((option, index) => (

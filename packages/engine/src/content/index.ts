@@ -21,13 +21,16 @@ import { TRANSIT_TICKET } from './transit-ticket.js';
 /**
  * The seed bank, generated from the curriculum tables in DESIGN.md §7 — pinyin
  * verified against a 44,437-line reference table, characters against a
- * decomposition set, and every codepoint against the produced font subset.
+ * decomposition set.
  *
- * BRIDGE CONTENT. It uses the inherited four-option question shape so the tree
- * builds and plays today. DESIGN.md §6.1 defines the real item as a *span* — a
- * one-to-four-character string met as a unit on a physical surface — carrying a
- * `transparency` field and a component table underneath it. Replacing this pack
- * is the first content task here, and the shape below is not a decision.
+ * Ideographic description sequences are stored verbatim (⿰阝完, not a prose
+ * paraphrase): no CJK webfont draws U+2FF0–U+2FFB, so apps/pwa/src/ui/glyphs.tsx
+ * shims them as inline SVG at render time. Content stays canonical; the font gap
+ * is a rendering concern.
+ *
+ * BRIDGE CONTENT. The four-option shape is inherited, not chosen — DESIGN.md §6.1
+ * defines the real item as a span with a transparency field and a component table
+ * underneath it.
  */
 export const SEED_PACK: ContentPack = {
   id: 'kanbudong.seed',

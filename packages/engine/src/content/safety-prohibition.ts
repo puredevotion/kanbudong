@@ -1,6 +1,6 @@
 import type { CategoryContent } from './row.js';
 
-/** safety-prohibition — generated from DESIGN.md §7. Bridge content; §6.1's span model replaces it. */
+/** safety-prohibition — generated from DESIGN.md §7. IDS notation is verbatim; ui/glyphs.tsx draws it. */
 export const SAFETY_PROHIBITION: CategoryContent = {
   low: [
     [
@@ -33,7 +33,7 @@ export const SAFETY_PROHIBITION: CategoryContent = {
       '注意 — you see this on a sign. What does it mean?',
       ['attention', 'danger', 'prohibition — red circle, diagonal bar', 'closed down, ceased trading'],
       0,
-      'zhùyì · let op. Heads a hazard without naming its severity. 注 = 氵 left, 主 right.',
+      'zhùyì · let op. Heads a hazard without naming its severity. 注 = ⿰氵主.',
     ],
     [
       '当心 — you see this on a sign. What does it mean?',

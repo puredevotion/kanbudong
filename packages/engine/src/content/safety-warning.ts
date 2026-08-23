@@ -1,6 +1,6 @@
 import type { CategoryContent } from './row.js';
 
-/** safety-warning — generated from DESIGN.md §7. Bridge content; §6.1's span model replaces it. */
+/** safety-warning — generated from DESIGN.md §7. IDS notation is verbatim; ui/glyphs.tsx draws it. */
 export const SAFETY_WARNING: CategoryContent = {
   low: [
     [
