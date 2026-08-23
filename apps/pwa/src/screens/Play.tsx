@@ -1,5 +1,7 @@
 import {
   activeQuestion,
+  actingTeam,
+  answeredPlayerIds,
   canAnswer,
   canChooseCategory,
   canChooseDifficulty,
@@ -8,6 +10,7 @@ import {
   DIFFICULTY_ORDER,
   DIFFICULTY_TIERS,
   discriminatingCues,
+  hasAnswered,
   hasSelfExplanationPrompt,
   isActingPlayer,
   isBanned,
@@ -157,6 +160,7 @@ export function Play(): ReactNode {
       ) : (
         <LiveQuestion
           state={state}
+          me={me}
           canAnswerNow={canAnswer(state, me)}
           iAmActing={iAmActing}
           prompt={question.question.prompt}
@@ -562,9 +566,42 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
               )}
             </p>
           )}
+
+          {!hanziAlone && record.otherAnswers.length > 0 && (
+            <OtherAnswers record={record} state={state} />
+          )}
         </Card.Content>
       )}
     </Card>
+  );
+}
+
+/**
+ * DESIGN.md §5.1 beat 4: every seated player answered privately, but only the
+ * acting team's reveal (rendered above, marked "They said") touched the bet
+ * and the score - everyone else's is a private review row for that player,
+ * surfaced here once the turn has fully resolved so this is never an early
+ * hint (see `otherAnswersForTurn`'s doc comment: `[]` until the `TurnRecord`
+ * exists).
+ */
+function OtherAnswers({ record, state }: { record: TurnRecord; state: GameState }): ReactNode {
+  return (
+    <div className="flex flex-col gap-1.5 border-t border-black/10 pt-2.5">
+      <p className="text-[0.65rem] uppercase tracking-wide text-muted/70">
+        Everyone else&apos;s answer - review only, none of this touched the score
+      </p>
+      {record.otherAnswers.map((other) => {
+        const name = state.players[other.playerId]?.username ?? 'Someone';
+        return (
+          <p key={other.playerId} className="text-[0.85rem]">
+            <span className="text-[#5a5a52]">{name}: </span>
+            <span className={other.correct ? 'font-medium text-success' : 'font-medium text-danger-text'}>
+              {other.chosenText ?? 'no answer'}
+            </span>
+          </p>
+        );
+      })}
+    </div>
   );
 }
 
@@ -732,6 +769,7 @@ function ChooseTier({
 
 function LiveQuestion({
   state,
+  me,
   canAnswerNow,
   iAmActing,
   prompt,
@@ -746,6 +784,7 @@ function LiveQuestion({
   amOpponent,
 }: {
   state: GameState;
+  me: string;
   canAnswerNow: boolean;
   iAmActing: boolean;
   prompt: string;
@@ -787,6 +826,13 @@ function LiveQuestion({
     if (pending) setPending(false);
   }
   const locked = pending || !canAnswerNow;
+  // DESIGN.md §5.1 beat 4: every seated player answers, not just the acting
+  // team, so "have I already answered" (as opposed to "can I still answer
+  // because the turn is still live") is its own question the copy below
+  // needs - canAnswerNow alone can't distinguish "I'm done" from "the turn
+  // moved on without me".
+  const iHaveAnswered = hasAnswered(state, me);
+  const activeTeamName = actingTeam(state)?.name ?? 'the team on the clock';
   // DESIGN.md §4.10.3: a silent, generous window with a subtle desaturation
   // in its final fifth, rather than a ticking digit or shrinking bar - this
   // sits alongside the existing numeric readout below rather than replacing
@@ -857,18 +903,52 @@ function LiveQuestion({
         </Card.Content>
       </Card>
 
-      {iAmActing && nominatedName !== null && (
+      {iHaveAnswered ? (
+        <p className="text-center text-sm text-muted">Your answer is locked in.</p>
+      ) : iAmActing && nominatedName !== null ? (
         <p className="text-center text-xs text-muted">
           {nominatedName}&apos;s turn to answer for the team - though anyone on it can tap.
         </p>
-      )}
-      {!iAmActing && (
+      ) : (
         <p className="text-center text-sm text-muted">
-          Their question. You can see it, so no helping.
+          Everyone answers this one. Only {activeTeamName}&apos;s pick affects the score, but
+          yours still counts toward your own review queue.
         </p>
       )}
 
+      <PresenceDots state={state} />
+
       <CallTimeButton onPress={onTimeout} />
+    </div>
+  );
+}
+
+/**
+ * DESIGN.md §5.3: "a filled dot per player showing that they contributed,
+ * never how much or how accurately." `answeredPlayerIds` only ever returns
+ * ids, never a payload, so there is nothing here to leak - this is the one
+ * place it is safe to read the answer window's progress before the turn
+ * resolves.
+ */
+function PresenceDots({ state }: { state: GameState }): ReactNode {
+  const ids = Object.keys(state.players);
+  const answered = new Set(answeredPlayerIds(state));
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className="flex items-center justify-center gap-1.5">
+        {ids.map((id) => (
+          <span
+            key={id}
+            aria-hidden="true"
+            className={`h-2 w-2 rounded-full ${
+              answered.has(id) ? 'bg-primary' : 'border border-default-200/50'
+            }`}
+          />
+        ))}
+      </div>
+      <span className="sr-only" role="status" aria-live="polite">
+        {answered.size} of {ids.length} players have answered.
+      </span>
     </div>
   );
 }
