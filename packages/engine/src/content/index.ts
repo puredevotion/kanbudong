@@ -1,4 +1,5 @@
 import { CATEGORIES } from '../categories.js';
+import { withComponentCharIds } from '../eligibility.js';
 import { packHash } from '../pack.js';
 import type { ContentPack } from '../types.js';
 
@@ -47,7 +48,7 @@ export const SEED_PACK: ContentPack = {
   version: '0.1.0',
   name: '看不懂 Seed Bank',
   categories: CATEGORIES,
-  questions: [
+  questions: withComponentCharIds([
     ...expand('market-checkout', MARKET_CHECKOUT),
     ...expand('market-label', MARKET_LABEL),
     ...expand('market-panel', MARKET_PANEL),
@@ -66,7 +67,7 @@ export const SEED_PACK: ContentPack = {
     ...expand('street-way', STREET_WAY),
     ...expand('transit-platform', TRANSIT_PLATFORM),
     ...expand('transit-ticket', TRANSIT_TICKET),
-  ],
+  ]),
 };
 
 export const SEED_PACK_HASH = packHash(SEED_PACK);

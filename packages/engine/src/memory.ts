@@ -130,6 +130,13 @@ export function isDue(memory: ItemMemory | null, now: number, target: number = T
  * `null`, when an unseen item is only ever exposed and never actually
  * reviewed) — per §6.3/§6.5's ban on exposure rows feeding the scheduler.
  */
+function fullUpdate(memory: ItemMemory | null, grade: ReviewGrade, now: number): ItemMemory {
+  const state: FSRSState | null = memory === null ? null : { stability: memory.stability, difficulty: memory.difficulty };
+  const t = memory === null ? 0 : elapsedDaysSince(memory.lastReview, now);
+  const next = algorithm.next_state(state, t, GRADE_TO_RATING[grade]);
+  return { stability: next.stability, difficulty: next.difficulty, lastReview: now };
+}
+
 export function reviewItem(
   memory: ItemMemory | null,
   grade: ReviewGrade,
@@ -137,12 +144,31 @@ export function reviewItem(
   role: ReviewRole = 'review',
 ): ItemMemory | null {
   if (role === 'exposure') return memory;
+  return fullUpdate(memory, grade, now);
+}
 
-  const state: FSRSState | null = memory === null ? null : { stability: memory.stability, difficulty: memory.difficulty };
-  const t = memory === null ? 0 : elapsedDaysSince(memory.lastReview, now);
-  const next = algorithm.next_state(state, t, GRADE_TO_RATING[grade]);
+/**
+ * §6.1's "credited exposure at discounted weight": when a span resolves,
+ * each of its component characters is credited a fraction of what a direct
+ * review of that character would move - "enough to move a character node,
+ * not enough to graduate it alone" - so a character met only inside larger
+ * spans (期 inside both 保质期 and 星期) still compounds towards
+ * introduction without ever counting as if it had been reviewed on its own.
+ * A separate function rather than a `reviewItem` parameter, so a caller
+ * crediting a component can never be mistaken for one reporting a real
+ * review of it.
+ */
+export const COMPONENT_CREDIT_WEIGHT = 0.25;
 
-  return { stability: next.stability, difficulty: next.difficulty, lastReview: now };
+export function creditComponentExposure(memory: ItemMemory | null, grade: ReviewGrade, now: number): ItemMemory {
+  const full = fullUpdate(memory, grade, now);
+  const baseStability = memory?.stability ?? 0;
+  const baseDifficulty = memory?.difficulty ?? full.difficulty;
+  return {
+    stability: baseStability + (full.stability - baseStability) * COMPONENT_CREDIT_WEIGHT,
+    difficulty: baseDifficulty + (full.difficulty - baseDifficulty) * COMPONENT_CREDIT_WEIGHT,
+    lastReview: now,
+  };
 }
 
 /**

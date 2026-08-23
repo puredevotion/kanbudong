@@ -117,6 +117,15 @@ export interface Question {
   /** DESIGN.md §6.3(1)/§7.7: static, hand-assigned; see {@link Tier}. */
   readonly tier?: Tier;
   /**
+   * DESIGN.md §6.1: the character nodes a multi-character span decomposes
+   * into, derived from `decomposition` (when it is a `WordDecomposition`)
+   * against the pack's own single-character questions - never hand-authored,
+   * so a morpheme and its character item cannot drift out of sync. Absent on
+   * single-character spans and on spans with no resolvable word-level
+   * decomposition.
+   */
+  readonly component_char_ids?: readonly QuestionId[];
+  /**
    * DESIGN.md §9.2a: CTW-derived signage-frequency rank, stored as an
    * authoring-order *input* and tie-breaker only. Never sorted or seeded on
    * at runtime, and never shipped as its own column with a `CTW` source tag

@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { gradeFromAnswer, isDue, retrievability, reviewItem, TARGET_RETENTION } from '../src/index.js';
+import {
+  COMPONENT_CREDIT_WEIGHT,
+  creditComponentExposure,
+  gradeFromAnswer,
+  isDue,
+  retrievability,
+  reviewItem,
+  TARGET_RETENTION,
+} from '../src/index.js';
 
 const DAY = 86_400_000;
 
@@ -63,6 +71,36 @@ describe('reviewItem', () => {
   it('leaves an unseen item unseen when its only response is an exposure', () => {
     const now = Date.now();
     expect(reviewItem(null, 'good', now, 'exposure')).toBeNull();
+  });
+});
+
+describe('creditComponentExposure', () => {
+  it('moves an unseen character node by less than a full review would', () => {
+    const now = Date.now();
+    const full = reviewItem(null, 'good', now)!;
+    const credited = creditComponentExposure(null, 'good', now);
+    expect(credited.stability).toBeGreaterThan(0);
+    expect(credited.stability).toBeLessThan(full.stability);
+  });
+
+  it('is deterministic: the same inputs produce the same credited state', () => {
+    const now = Date.now();
+    expect(creditComponentExposure(null, 'good', now)).toEqual(creditComponentExposure(null, 'good', now));
+  });
+
+  it('credits the same node twice via two different containing spans (期 via 保质期 and 星期), moving it each time', () => {
+    const now = Date.now();
+    const afterFirstSpan = creditComponentExposure(null, 'good', now);
+    const afterSecondSpan = creditComponentExposure(afterFirstSpan, 'good', now + 1000);
+    expect(afterSecondSpan.stability).toBeGreaterThan(afterFirstSpan.stability);
+    // Still discounted relative to what treating the second credit as a full review would do.
+    const asFullReview = reviewItem(afterFirstSpan, 'good', now + 1000)!;
+    expect(afterSecondSpan.stability).toBeLessThan(asFullReview.stability);
+  });
+
+  it('is a fraction under 1 of a full review\'s movement, per §6.1\'s "not enough to graduate it alone"', () => {
+    expect(COMPONENT_CREDIT_WEIGHT).toBeGreaterThan(0);
+    expect(COMPONENT_CREDIT_WEIGHT).toBeLessThan(1);
   });
 });
 

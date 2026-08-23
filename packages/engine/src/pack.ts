@@ -154,6 +154,7 @@ export function validatePack(pack: ContentPack): string[] {
   const problems: string[] = [];
   const seen = new Set<string>();
   const categories = new Set(pack.categories.map((c) => c.id));
+  const allIds = new Set(pack.questions.map((q) => q.id));
   for (const q of pack.questions) {
     if (seen.has(q.id)) problems.push(`duplicate question id: ${q.id}`);
     seen.add(q.id);
@@ -173,6 +174,11 @@ export function validatePack(pack: ContentPack): string[] {
       const radical = q.decomposition.semantic_radical;
       if (radical !== undefined && !(radical in COMPONENTS)) {
         problems.push(`${q.id}: unknown semantic_radical component id ${radical}`);
+      }
+    }
+    for (const charId of q.component_char_ids ?? []) {
+      if (!allIds.has(charId)) {
+        problems.push(`${q.id}: unknown component_char_ids entry ${charId}`);
       }
     }
   }
