@@ -35,6 +35,16 @@ export interface Component {
   readonly role: ComponentRole;
   /** Only meaningful when `role` is `'phonetic'`; absent otherwise. */
   readonly reliability?: PhoneticReliability;
+  /**
+   * A short gloss of what this component itself represents - the Kangxi
+   * radical's traditional meaning for `role: 'semantic'` entries, or the
+   * plain character meaning for `role: 'phonetic'` entries (a phonetic
+   * component is always a real character with a real meaning, even though
+   * that meaning is irrelevant to why it is used here - no fake semantic
+   * story is invented for it). Rendered inline in a small UI tile, so this
+   * stays a few words, not a sentence.
+   */
+  readonly meaning: string;
 }
 
 /**
@@ -77,6 +87,7 @@ export const MEAT_RADICAL: Component = {
   id: 'kangxi-130-meat',
   displayGlyph: '⺼',
   role: 'semantic',
+  meaning: 'flesh, meat, body part',
 };
 
 /**
@@ -90,6 +101,7 @@ export const GAN_PHONETIC: Component = {
   displayGlyph: '干',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'dry; to do',
 };
 
 /**
@@ -102,6 +114,7 @@ export const STAND_SEMANTIC: Component = {
   id: 'kangxi-117-stand',
   displayGlyph: '立',
   role: 'semantic',
+  meaning: 'to stand',
 };
 
 /**
@@ -115,6 +128,7 @@ export const ZHAN_PHONETIC: Component = {
   displayGlyph: '占',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'to occupy, to take up',
 };
 
 /** 城 chéng = ⿰土成 (earth + 成). Verified against the same gitignored Make Me a Hanzi scratch copy as `STAND_SEMANTIC`. */
@@ -122,6 +136,7 @@ export const EARTH_SEMANTIC: Component = {
   id: 'kangxi-32-earth',
   displayGlyph: '土',
   role: 'semantic',
+  meaning: 'earth, soil',
 };
 
 /** 城 chéng and 成 chéng share the same syllable including tone — verified against `pinyin-data`, structure against the same scratch copy as `EARTH_SEMANTIC`. */
@@ -130,6 +145,7 @@ export const CHENG_PHONETIC: Component = {
   displayGlyph: '成',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'to become, to succeed',
 };
 
 /**
@@ -141,6 +157,7 @@ export const GRASS_RADICAL: Component = {
   id: 'kangxi-140-grass',
   displayGlyph: '艹',
   role: 'semantic',
+  meaning: 'grass, plant',
 };
 
 /**
@@ -156,6 +173,7 @@ export const FIRE_RADICAL: Component = {
   id: 'kangxi-86-fire',
   displayGlyph: '火',
   role: 'semantic',
+  meaning: 'fire',
 };
 
 /**
@@ -167,6 +185,7 @@ export const KAO_PHONETIC: Component = {
   displayGlyph: '考',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'to test, to examine',
 };
 
 /** 焖 mèn and 闷 mèn share the same syllable including tone - verified against `pinyin-data`. */
@@ -175,6 +194,7 @@ export const MEN_PHONETIC: Component = {
   displayGlyph: '闷',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'stuffy; bored, depressed',
 };
 
 /** 爆 bào and 暴 bào share the same syllable including tone - verified against `pinyin-data`. */
@@ -183,6 +203,7 @@ export const BAO_PHONETIC: Component = {
   displayGlyph: '暴',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'violent, sudden; to expose',
 };
 
 /**
@@ -197,6 +218,7 @@ export const FIRE_DOTS_RADICAL: Component = {
   id: 'kangxi-86-fire-dots',
   displayGlyph: '灬',
   role: 'semantic',
+  meaning: 'fire (four-dot form)',
 };
 
 /**
@@ -207,6 +229,7 @@ export const WATER_RADICAL: Component = {
   id: 'kangxi-85-water',
   displayGlyph: '氵',
   role: 'semantic',
+  meaning: 'water',
 };
 
 /**
@@ -218,6 +241,7 @@ export const ANIMAL_RADICAL: Component = {
   id: 'kangxi-94-animal',
   displayGlyph: '犭',
   role: 'semantic',
+  meaning: 'dog; animal, beast',
 };
 
 /**
@@ -230,6 +254,7 @@ export const FOOD_RADICAL: Component = {
   id: 'kangxi-184-food',
   displayGlyph: '饣',
   role: 'semantic',
+  meaning: 'food, to eat',
 };
 
 /**
@@ -241,6 +266,7 @@ export const HAND_RADICAL: Component = {
   id: 'kangxi-64-hand',
   displayGlyph: '扌',
   role: 'semantic',
+  meaning: 'hand',
 };
 
 /** 拌 bàn and 半 bàn share the same syllable including tone - verified against `pinyin-data`. */
@@ -249,6 +275,7 @@ export const BAN_PHONETIC: Component = {
   displayGlyph: '半',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'half',
 };
 
 /**
@@ -260,6 +287,7 @@ export const METAL_RADICAL: Component = {
   id: 'kangxi-167-metal',
   displayGlyph: '钅',
   role: 'semantic',
+  meaning: 'metal, gold',
 };
 
 /** 锅 guō and 呙 guō share the same syllable including tone - verified against `pinyin-data`. */
@@ -268,6 +296,7 @@ export const GUO_PHONETIC: Component = {
   displayGlyph: '呙',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'a surname',
 };
 
 /**
@@ -279,6 +308,7 @@ export const GRAIN_RADICAL: Component = {
   id: 'kangxi-119-grain',
   displayGlyph: '米',
   role: 'semantic',
+  meaning: 'rice, grain',
 };
 
 /**
@@ -293,6 +323,7 @@ export const MOUTH_RADICAL: Component = {
   id: 'kangxi-30-mouth',
   displayGlyph: '口',
   role: 'semantic',
+  meaning: 'mouth',
 };
 
 /** 双 shuāng = ⿰又又, two of the same "again/hand" radical side by side - MMH's own ideographic hint. Same component listed twice; no phonetic half to claim. */
@@ -300,6 +331,7 @@ export const AGAIN_RADICAL: Component = {
   id: 'kangxi-29-again',
   displayGlyph: '又',
   role: 'semantic',
+  meaning: 'again; right hand',
 };
 
 /**
@@ -313,6 +345,7 @@ export const SILK_RADICAL_FULL: Component = {
   id: 'kangxi-120-silk-full',
   displayGlyph: '糸',
   role: 'semantic',
+  meaning: 'silk, thread',
 };
 
 /** 鸡 jī = ⿰又鸟 ("another kind of bird" per MMH's ideographic hint). 鸟 is the recognizable semantic half; 又 (yòu) is not a tone-or-syllable match for jī, so semantic-only. */
@@ -320,6 +353,7 @@ export const BIRD_RADICAL: Component = {
   id: 'kangxi-196-bird',
   displayGlyph: '鸟',
   role: 'semantic',
+  meaning: 'bird',
 };
 
 /**
@@ -331,6 +365,7 @@ export const INSECT_RADICAL: Component = {
   id: 'kangxi-142-insect',
   displayGlyph: '虫',
   role: 'semantic',
+  meaning: 'insect, worm',
 };
 
 /** 筋 jīn = ⿱⺮肋 ("bamboo-like tendons" per MMH's ideographic hint). ⺮ is the recognizable semantic half; MMH records no separate phonetic component. */
@@ -338,6 +373,7 @@ export const BAMBOO_RADICAL: Component = {
   id: 'kangxi-118-bamboo',
   displayGlyph: '⺮',
   role: 'semantic',
+  meaning: 'bamboo',
 };
 
 /** 时 shí = ⿰日寸 (日, "sun/day" + 寸). MMH's own entry names 日 as the semantic half and records no phonetic component for this character, so semantic-only. */
@@ -345,6 +381,7 @@ export const SUN_RADICAL: Component = {
   id: 'kangxi-72-sun',
   displayGlyph: '日',
   role: 'semantic',
+  meaning: 'sun, day',
 };
 
 /**
@@ -362,6 +399,7 @@ export const WRAP_PHONETIC: Component = {
   displayGlyph: '勹',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'to wrap, to embrace',
 };
 
 /**
@@ -379,6 +417,7 @@ export const TAP_RADICAL: Component = {
   id: 'kangxi-66-tap',
   displayGlyph: '攵',
   role: 'semantic',
+  meaning: 'to tap, rap, knock',
 };
 
 /**
@@ -390,6 +429,7 @@ export const SILK_RADICAL: Component = {
   id: 'kangxi-120-silk',
   displayGlyph: '纟',
   role: 'semantic',
+  meaning: 'silk, thread',
 };
 
 /** 账 zhàng = ⿰贝长 (贝, "shell" - the money radical - + 长). 长 is read zhǎng/cháng, neither an exact match for zhàng, so semantic-only. */
@@ -397,6 +437,7 @@ export const SHELL_RADICAL: Component = {
   id: 'kangxi-154-shell',
   displayGlyph: '贝',
   role: 'semantic',
+  meaning: 'shell, cowrie (money)',
 };
 
 /**
@@ -411,6 +452,7 @@ export const CITY_RADICAL: Component = {
   id: 'kangxi-163-city-right-ear',
   displayGlyph: '阝',
   role: 'semantic',
+  meaning: 'city, settlement',
 };
 
 /** 邮 yóu and 由 yóu share the same syllable including tone - verified against `pinyin-data`, the same 'exact' bar as `ZHAN_PHONETIC`/`GUO_PHONETIC`. */
@@ -419,6 +461,7 @@ export const YOU_PHONETIC: Component = {
   displayGlyph: '由',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'from, via; reason',
 };
 
 /** 递 dì = ⿺辶弟 (辶, "walk" radical + 弟). Structure is a lower-left partial enclosure, distinct from the ⿰ left-right pairs above. */
@@ -426,6 +469,7 @@ export const WALK_RADICAL: Component = {
   id: 'kangxi-162-walk',
   displayGlyph: '辶',
   role: 'semantic',
+  meaning: 'to walk, to move',
 };
 
 /** 递 dì and 弟 dì share the same syllable including tone - verified against `pinyin-data`; this bank's own street-trade.ts explanation for 快递 already named this pairing before the component existed. */
@@ -434,6 +478,7 @@ export const DI_PHONETIC: Component = {
   displayGlyph: '弟',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'younger brother',
 };
 
 /** 停 tíng = ⿰亻亭 (人/亻, "person" radical + 亭). */
@@ -441,6 +486,7 @@ export const PERSON_RADICAL: Component = {
   id: 'kangxi-9-person',
   displayGlyph: '亻',
   role: 'semantic',
+  meaning: 'person',
 };
 
 /** 停 tíng and 亭 tíng share the same syllable including tone - verified against `pinyin-data`. */
@@ -449,6 +495,7 @@ export const TING_PHONETIC: Component = {
   displayGlyph: '亭',
   role: 'phonetic',
   reliability: 'exact',
+  meaning: 'pavilion',
 };
 
 /**
@@ -462,6 +509,7 @@ export const HEART_RADICAL: Component = {
   id: 'kangxi-61-heart',
   displayGlyph: '忄',
   role: 'semantic',
+  meaning: 'heart, mind',
 };
 
 export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {

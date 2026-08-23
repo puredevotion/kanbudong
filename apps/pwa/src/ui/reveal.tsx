@@ -130,6 +130,9 @@ export function DecompositionPanel({
             <div className="font-han text-[2rem] font-medium leading-none">
               {component?.displayGlyph ?? '?'}
             </div>
+            {component?.meaning !== undefined && (
+              <div className="mt-1 text-xs leading-snug">{component.meaning}</div>
+            )}
             <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
               {role === 'semantic' ? 'meaning' : role === 'phonetic' ? 'sound hint' : ''}
             </div>
@@ -311,6 +314,9 @@ export function SelfExplanationPrompt({
               <div className="font-han text-[2rem] font-medium leading-none">
                 {component?.displayGlyph ?? '?'}
               </div>
+              {picked !== null && component?.meaning !== undefined && (
+                <div className="mt-1 text-xs leading-snug">{component.meaning}</div>
+              )}
               {picked !== null && (
                 <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
                   {cue.kind === 'semantic_radical' ? 'meaning - this one' : 'sound, not meaning'}
@@ -364,6 +370,9 @@ export function LociMnemonicPrompt({
               <div className="font-han text-[2rem] font-medium leading-none">
                 {component?.displayGlyph ?? '?'}
               </div>
+              {component?.meaning !== undefined && (
+                <div className="mt-1 text-xs leading-snug">{component.meaning}</div>
+              )}
               <div className="mt-1.5 text-[0.65rem] uppercase tracking-wide text-muted">
                 {tile.position} spot &middot;{' '}
                 {tile.role === 'semantic' ? 'always the same kind of furniture' : 'what the room sounds like'}
