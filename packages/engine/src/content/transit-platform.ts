@@ -44,7 +44,14 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       'chūkǒu · uitgang (exit). Blue or black signage marks a regular exit; a green 安全出口 sign marks an emergency exit.',
       { hanzi: '出口', pinyin: 'chūkǒu', nl: 'uitgang', en: 'exit' },
       undefined,
-      { tier: 0 },
+      {
+        tier: 0,
+        // DESIGN.md §2.3/§3.4's own named shared-morpheme example: 出口/入口
+        // share 口 and the opposite heads 出/入, real siblings rather than an
+        // invented pair.
+        confusion_type: 'shared-morpheme',
+        confusable_with: ['transit-platform-low-3'],
+      },
     ],
     [
       'In the metro. What does it mean?',
@@ -53,7 +60,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       'rùkǒu · ingang (entrance). 入 (rù) looks almost identical to 人 (rén, "person") — just one stroke apart, so watch out for mixing them up.',
       { hanzi: '入口', pinyin: 'rùkǒu', nl: 'ingang', en: 'entrance' },
       undefined,
-      { tier: 0 },
+      { tier: 0, confusion_type: 'shared-morpheme', confusable_with: ['transit-platform-low-2'] },
     ],
     [
       'In the metro. What does it mean?',

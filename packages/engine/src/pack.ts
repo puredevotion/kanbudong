@@ -75,6 +75,71 @@ export function questionsFor(pack: ContentPack, category: CategoryId, difficulty
   return pack.questions.filter((q) => q.category === category && q.difficulty === difficulty);
 }
 
+/**
+ * design/cards/README.md "the same move again": how many sibling examples the
+ * breakdown surface shows before it stops being "almost no new load" and
+ * starts being a lecture on the whole category - the design doc's own worked
+ * example (牛肉/猪肉/羊肉/鸡肉/鸭肉) is four.
+ */
+export const SIBLING_CAP = 4;
+
+/**
+ * Other real pack items built the same way as `question`, for the
+ * breakdown's "same construction" panel. Identity is always a stored
+ * component id (`semantic_radical` for a {@link CharacterDecomposition}) or a
+ * stored morpheme span (for a {@link WordDecomposition}) - never a substring
+ * or glyph match against the rendered hanzi, same rule `validatePack` and
+ * `DecompositionPanel` already hold for component highlighting (§3.3.4).
+ * Excludes `question` itself and caps at {@link SIBLING_CAP}.
+ */
+export function siblingsSharingComponent(pack: ContentPack, question: Question): readonly Question[] {
+  const decomposition = question.decomposition;
+  if (decomposition === undefined) return [];
+
+  if (decomposition.kind === 'character') {
+    const radical = decomposition.semantic_radical;
+    if (radical === undefined) return [];
+    return pack.questions
+      .filter(
+        (q) =>
+          q.id !== question.id &&
+          q.decomposition?.kind === 'character' &&
+          q.decomposition.semantic_radical === radical,
+      )
+      .slice(0, SIBLING_CAP);
+  }
+
+  const spans = new Set(decomposition.morphemes.map((m) => m.span));
+  return pack.questions
+    .filter((q) => {
+      if (q.id === question.id) return false;
+      if (q.decomposition?.kind !== 'word') return false;
+      return q.decomposition.morphemes.some((m) => spans.has(m.span));
+    })
+    .slice(0, SIBLING_CAP);
+}
+
+/**
+ * `question.confusable_with` resolved to real pack items, for the
+ * breakdown's confusable panel (§2.3/§3.4). Dangling ids are dropped rather
+ * than thrown on - `validatePack` is where a dangling `confusable_with`
+ * becomes a build-time failure; this stays a pure, always-safe read.
+ *
+ * Unconditional: the doc comment on `confusable_with` gates this panel on
+ * "once both members are consolidated," which would need per-player FSRS
+ * memory state threaded into the reveal UI - a bigger plumbing change than
+ * this selector should take on. Shipped unconditionally for now; real
+ * consolidation-gating is follow-up work, same deferral as distractor
+ * selection from a confusable family (see the doc comment on
+ * `Question.confusion_type`).
+ */
+export function confusablesFor(pack: ContentPack, question: Question): readonly Question[] {
+  return (question.confusable_with ?? []).flatMap((id) => {
+    const other = questionById(pack, id);
+    return other === undefined ? [] : [other];
+  });
+}
+
 export interface SelectQuestionInput {
   readonly pack: ContentPack;
   readonly category: CategoryId;
@@ -208,6 +273,11 @@ export function validatePack(pack: ContentPack): string[] {
     for (const charId of q.component_char_ids ?? []) {
       if (!allIds.has(charId)) {
         problems.push(`${q.id}: unknown component_char_ids entry ${charId}`);
+      }
+    }
+    for (const confusableId of q.confusable_with ?? []) {
+      if (!allIds.has(confusableId)) {
+        problems.push(`${q.id}: unknown confusable_with entry ${confusableId}`);
       }
     }
     if (q.distractorRationale !== undefined) {

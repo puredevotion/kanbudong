@@ -1,10 +1,12 @@
 import {
   buildSoloQueue,
+  confusablesFor,
   gradeFromAnswer,
   nextSoloItem,
   presentQuestion,
   reviewItem,
   SEED_PACK,
+  siblingsSharingComponent,
   SOLO_SESSION_TARGET_RETRIEVALS,
   type PresentedQuestion,
   type Question,
@@ -20,7 +22,13 @@ import { recordSessionStart } from '../lib/sessionLog.js';
 import { getItemMemory, loadAllMemory, putItemMemory } from '../lib/soloMemory.js';
 import { useApp } from '../lib/store.js';
 import { ActionBar, Screen } from '../ui/atoms.jsx';
-import { DecompositionPanel, useRevealDwell, useStage1HanziAlone } from '../ui/reveal.jsx';
+import {
+  ConfusablePanel,
+  DecompositionPanel,
+  SiblingsPanel,
+  useRevealDwell,
+  useStage1HanziAlone,
+} from '../ui/reveal.jsx';
 import { Sign, templateFor } from '../ui/signs.jsx';
 
 /**
@@ -39,6 +47,8 @@ export function Solo(): ReactNode {
   const [done, setDone] = useState(false);
   const [stage2, setStage2] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [showSiblings, setShowSiblings] = useState(false);
+  const [showConfusables, setShowConfusables] = useState(false);
 
   const playerId = identity?.id ?? null;
 
@@ -134,6 +144,15 @@ export function Solo(): ReactNode {
     setReveal({ chosenIndex, correct });
   };
 
+  const siblings = useMemo(
+    () => (current === null ? [] : siblingsSharingComponent(SEED_PACK, current)),
+    [current],
+  );
+  const confusables = useMemo(
+    () => (current === null ? [] : confusablesFor(SEED_PACK, current)),
+    [current],
+  );
+
   const advance = (): void => {
     setPresented((prev) => new Set(prev).add(current.id));
     setReviewed((n) => n + 1);
@@ -141,6 +160,8 @@ export function Solo(): ReactNode {
     setReveal(null);
     setStage2(false);
     setShowBreakdown(false);
+    setShowSiblings(false);
+    setShowConfusables(false);
   };
 
   return (
@@ -263,12 +284,39 @@ export function Solo(): ReactNode {
                         See how it&apos;s made
                       </Button>
                     ) : (
-                      <div className="anim-fade-in">
+                      <div className="anim-fade-in flex flex-col gap-2">
                         <DecompositionPanel
                           decomposition={current.decomposition}
                           transparency={current.face?.transparency}
                           structure={current.face?.structure}
                         />
+
+                        {siblings.length > 0 &&
+                          (!showSiblings ? (
+                            <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
+                              See the same move again
+                            </Button>
+                          ) : (
+                            <div className="anim-fade-in">
+                              <SiblingsPanel siblings={siblings} />
+                            </div>
+                          ))}
+
+                        {confusables.length > 0 &&
+                          (!showConfusables ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              fullWidth
+                              onPress={() => setShowConfusables(true)}
+                            >
+                              See what this is easy to confuse with
+                            </Button>
+                          ) : (
+                            <div className="anim-fade-in">
+                              <ConfusablePanel confusables={confusables} confusionType={current.confusion_type} />
+                            </div>
+                          ))}
                       </div>
                     )}
                   </>

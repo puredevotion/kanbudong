@@ -1,8 +1,10 @@
 import {
   resolveComponent,
   type CharacterStructure,
+  type ConfusionType,
   type Decomposition,
   type LociTile,
+  type Question,
   type SelfExplanationCue,
   type Transparency,
 } from '@kanbudong/engine';
@@ -132,6 +134,89 @@ export function DecompositionPanel({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/**
+ * design/cards/README.md "the same move again": step 3 of the breakdown -
+ * other real pack items built the same way as the one just studied, glyph
+ * plus gloss each, "almost no new load". Purely presentational: the caller
+ * resolves `siblings` via `siblingsSharingComponent(pack, question)` before
+ * rendering, so this component never touches the pack itself. Renders
+ * nothing when there is nothing to show, same convention as
+ * {@link DecompositionPanel}.
+ */
+export function SiblingsPanel({ siblings }: { siblings: readonly Question[] }): ReactNode {
+  if (siblings.length === 0) return null;
+  return (
+    <div className="flex flex-col gap-1.5">
+      <p className="text-[0.65rem] uppercase tracking-wide text-muted">The same move again</p>
+      <div className="flex gap-2">
+        {siblings.map((sibling) => (
+          <div
+            key={sibling.id}
+            className="grow rounded-xl border border-border bg-surface px-3 py-3 text-center"
+          >
+            <div className="font-han text-[1.7rem] font-medium leading-none">
+              {sibling.face?.hanzi ?? '?'}
+            </div>
+            <div className="mt-1.5 text-[0.65rem] text-muted">
+              {sibling.face?.en ?? sibling.face?.nl ?? ''}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const CONFUSION_LABEL: Readonly<Record<ConfusionType, string>> = {
+  form: 'looks almost identical',
+  'meaning-visually-distinct': 'easy to mix up the meaning of',
+  both: 'similar in both shape and meaning',
+  'shared-morpheme': 'built from the same characters, opposite meaning',
+};
+
+/**
+ * design/cards/README.md "the confusable" - step 4 of the breakdown. Shown
+ * unconditionally rather than gated on both items' FSRS consolidation state
+ * per the doc comment on `Question.confusable_with` ("once both members are
+ * consolidated"): implementing that gate would mean threading per-player
+ * memory state into the reveal UI, a bigger architectural change than this
+ * panel warrants. Flagged as follow-up, not done here.
+ *
+ * Purely presentational, same contract as {@link SiblingsPanel}: the caller
+ * resolves `confusables` via `confusablesFor(pack, question)`.
+ */
+export function ConfusablePanel({
+  confusables,
+  confusionType,
+}: {
+  confusables: readonly Question[];
+  confusionType: ConfusionType | undefined;
+}): ReactNode {
+  if (confusables.length === 0) return null;
+  return (
+    <div className="rounded-xl border border-border bg-surface px-3 py-3">
+      <p className="text-[0.65rem] uppercase tracking-wide text-muted">
+        Don&apos;t confuse this with{confusionType !== undefined ? ` — ${CONFUSION_LABEL[confusionType]}` : ''}
+      </p>
+      <div className="mt-2 flex gap-2">
+        {confusables.map((confusable) => (
+          <div
+            key={confusable.id}
+            className="grow rounded-xl border border-border px-3 py-3 text-center"
+          >
+            <div className="font-han text-[1.7rem] font-medium leading-none">
+              {confusable.face?.hanzi ?? '?'}
+            </div>
+            <div className="mt-1.5 text-[0.65rem] text-muted">
+              {confusable.face?.en ?? confusable.face?.nl ?? ''}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

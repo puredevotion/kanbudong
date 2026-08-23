@@ -7,6 +7,7 @@ import {
   canChooseDifficulty,
   canDraw,
   categoryById,
+  confusablesFor,
   DIFFICULTY_ORDER,
   DIFFICULTY_TIERS,
   discriminatingCues,
@@ -18,6 +19,7 @@ import {
   questionById,
   SEED_PACK,
   scoreboard,
+  siblingsSharingComponent,
   teamOf,
   type CategoryId,
   type SignFace,
@@ -34,9 +36,11 @@ import { useApp } from '../lib/store.js';
 import { ConnectionPill, Notice, Screen, StalledWarning, TierBadge, useElapsed } from '../ui/atoms.jsx';
 import { withGlyphs } from '../ui/glyphs.jsx';
 import {
+  ConfusablePanel,
   DecompositionPanel,
   LociMnemonicPrompt,
   SelfExplanationPrompt,
+  SiblingsPanel,
   useRevealDwell,
   useStage1HanziAlone,
 } from '../ui/reveal.jsx';
@@ -400,11 +404,15 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
   const hanziAlone = useStage1HanziAlone(record.turnIndex);
   const [stage2, setStage2] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [showSiblings, setShowSiblings] = useState(false);
+  const [showConfusables, setShowConfusables] = useState(false);
   const [mnemonicMode, setMnemonicMode] = useState<'self_explanation' | 'loci'>('self_explanation');
 
   const showSelfExplain = question !== undefined && hasSelfExplanationPrompt(question);
   const tiles = question !== undefined ? lociTiles(question) : undefined;
   const showLoci = tiles !== undefined;
+  const siblings = question !== undefined ? siblingsSharingComponent(SEED_PACK, question) : [];
+  const confusables = question !== undefined ? confusablesFor(SEED_PACK, question) : [];
 
   // DESIGN.md §10's instrumentation ruling: log exactly one outcome per
   // reveal that actually offered a mnemonic prompt, defaulting to 'none' so
@@ -549,6 +557,33 @@ function Outcome({ record, state }: { record: TurnRecord; state: GameState }): R
                         transparency={face?.transparency}
                         structure={face?.structure}
                       />
+
+                      {siblings.length > 0 &&
+                        (!showSiblings ? (
+                          <Button variant="ghost" size="sm" fullWidth onPress={() => setShowSiblings(true)}>
+                            See the same move again
+                          </Button>
+                        ) : (
+                          <div className="anim-fade-in">
+                            <SiblingsPanel siblings={siblings} />
+                          </div>
+                        ))}
+
+                      {confusables.length > 0 &&
+                        (!showConfusables ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            fullWidth
+                            onPress={() => setShowConfusables(true)}
+                          >
+                            See what this is easy to confuse with
+                          </Button>
+                        ) : (
+                          <div className="anim-fade-in">
+                            <ConfusablePanel confusables={confusables} confusionType={question.confusion_type} />
+                          </div>
+                        ))}
                     </div>
                   )}
                 </>
