@@ -217,5 +217,15 @@ export function validatePack(pack: ContentPack): string[] {
       }
     }
   }
+  const isomorphGroups = new Map<string, number>();
+  for (const q of pack.questions) {
+    if (q.isomorph_group_id === undefined) continue;
+    isomorphGroups.set(q.isomorph_group_id, (isomorphGroups.get(q.isomorph_group_id) ?? 0) + 1);
+  }
+  for (const [groupId, count] of isomorphGroups) {
+    if (count < 2) {
+      problems.push(`isomorph_group_id ${groupId}: only one item - DESIGN.md §5.1 needs pairs or triples`);
+    }
+  }
   return problems;
 }

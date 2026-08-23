@@ -195,6 +195,16 @@ export interface Question {
   /** Must not be scheduled in the same acquisition block (§2.3). Opposite of `confusable_with` - never fuse the two. */
   readonly interference_set?: readonly QuestionId[];
   /**
+   * DESIGN.md §5.1's confer beat: after a spoken "why isn't it X?" exchange,
+   * the table answers one further item alone, no discussion - the beat the
+   * document calls load-bearing for the whole peer-instruction result.
+   * Items sharing an `isomorph_group_id` are authored in pairs or triples as
+   * equivalent-difficulty alternatives of each other, so a confer beat and
+   * its follow-up item are never the same item twice. Schema-only until the
+   * confer beat itself is built (six-beat turn rebuild, Phase D).
+   */
+  readonly isomorph_group_id?: string;
+  /**
    * DESIGN.md §3.3.3(7): set only when `explanation` carries an origin story
    * (etymological or otherwise), never as a blanket default - most items have
    * no origin story in their explanation at all, and absence here means
