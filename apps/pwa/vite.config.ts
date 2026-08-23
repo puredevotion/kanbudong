@@ -18,7 +18,7 @@ export default defineConfig({
       includeAssets: ['apple-touch-icon.png'],
       manifest: {
         name: '看不懂 — read the signs',
-        short_name: '看不懂 — read the signs',
+        short_name: '看不懂',
         description: 'Learn to read Chinese signs. Co-located multiplayer, no server, no account.',
         theme_color: '#18182b',
         background_color: '#18182b',
