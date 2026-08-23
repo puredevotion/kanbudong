@@ -92,9 +92,65 @@ export const GAN_PHONETIC: Component = {
   reliability: 'exact',
 };
 
+/**
+ * 站 zhàn = ⿰立占 (stand + 占). Verified against Make Me a Hanzi's
+ * `dictionary.txt` (LGPL-3.0-or-later, gitignored scratch copy fetched by
+ * `docs/research/corpus/fetch.sh`, verification-only per DESIGN.md §9.2 —
+ * this table itself is hand-authored, nothing here is copied from that file).
+ */
+export const STAND_SEMANTIC: Component = {
+  id: 'kangxi-117-stand',
+  displayGlyph: '立',
+  role: 'semantic',
+};
+
+/**
+ * 站 zhàn and 占 zhàn share the same syllable including tone — verified
+ * against `pinyin-data` (MIT), the same standard the organ set's 肝/干 hint
+ * was checked against. Structure confirmed against the gitignored Make Me a
+ * Hanzi scratch copy (see `STAND_SEMANTIC`); not shipped or copied verbatim.
+ */
+export const ZHAN_PHONETIC: Component = {
+  id: 'phonetic-zhan',
+  displayGlyph: '占',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/** 城 chéng = ⿰土成 (earth + 成). Verified against the same gitignored Make Me a Hanzi scratch copy as `STAND_SEMANTIC`. */
+export const EARTH_SEMANTIC: Component = {
+  id: 'kangxi-32-earth',
+  displayGlyph: '土',
+  role: 'semantic',
+};
+
+/** 城 chéng and 成 chéng share the same syllable including tone — verified against `pinyin-data`, structure against the same scratch copy as `EARTH_SEMANTIC`. */
+export const CHENG_PHONETIC: Component = {
+  id: 'phonetic-cheng',
+  displayGlyph: '成',
+  role: 'phonetic',
+  reliability: 'exact',
+};
+
+/**
+ * 茶 chá = ⿱艹⿱人木 (grass over [person over wood]). Make Me a Hanzi records
+ * only the semantic half of this one (`hint: 'plant'`) with no phonetic
+ * field at all, so no phonetic claim is made for 茶 anywhere in this bank.
+ */
+export const GRASS_RADICAL: Component = {
+  id: 'kangxi-140-grass',
+  displayGlyph: '艹',
+  role: 'semantic',
+};
+
 export const COMPONENTS: Readonly<Record<ComponentId, Component>> = {
   [MEAT_RADICAL.id]: MEAT_RADICAL,
   [GAN_PHONETIC.id]: GAN_PHONETIC,
+  [STAND_SEMANTIC.id]: STAND_SEMANTIC,
+  [ZHAN_PHONETIC.id]: ZHAN_PHONETIC,
+  [EARTH_SEMANTIC.id]: EARTH_SEMANTIC,
+  [CHENG_PHONETIC.id]: CHENG_PHONETIC,
+  [GRASS_RADICAL.id]: GRASS_RADICAL,
 };
 
 export function resolveComponent(id: ComponentId): Component | undefined {

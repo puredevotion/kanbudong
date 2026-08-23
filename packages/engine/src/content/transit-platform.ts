@@ -1,6 +1,19 @@
+import { STAND_SEMANTIC, ZHAN_PHONETIC } from '../components.js';
 import type { CategoryContent } from './row.js';
 
-/** transit-platform — generated from DESIGN.md §7. IDS notation verbatim; ui/glyphs.tsx draws it. */
+/**
+ * transit-platform — generated from DESIGN.md §7. IDS notation verbatim;
+ * ui/glyphs.tsx draws it. `freqRank` (single characters only) is Jun Da's
+ * Modern Chinese Character Frequency List (lingua.mtsu.edu/chinese-computing,
+ * 193,504,018-character corpus, 9,933 distinct characters, dated 2004-03-30)
+ * — a different corpus from the one DESIGN.md's own prose cites, so numbers
+ * here do not match DESIGN.md's inline ranks character-for-character. 站's
+ * decomposition is verified against the gitignored Make Me a Hanzi scratch
+ * copy (see `STAND_SEMANTIC`/`ZHAN_PHONETIC` in components.ts). 票 is
+ * structurally an ideographic compound ("flames over an altar") rather than
+ * a clean semantic/phonetic split, so it ships `structure: 'atomic'` with no
+ * decomposition claim, same treatment as 皮 in the organ set.
+ */
 export const TRANSIT_PLATFORM: CategoryContent = {
   low: [
     [
@@ -8,35 +21,53 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       ['station, stop', 'exit', 'platform'],
       0,
       'zhàn · station, stop. Appears in compounds like 加油站 (gas station) and 火车站 (train station).',
-      { hanzi: '站', pinyin: 'zhàn', nl: 'station, halte' },
+      { hanzi: '站', pinyin: 'zhàn', nl: 'station, halte', en: 'station, stop', structure: 'left-right' },
+      {
+        kind: 'character',
+        hanzi: '站',
+        components: [
+          { componentId: STAND_SEMANTIC.id, role: 'semantic' },
+          { componentId: ZHAN_PHONETIC.id, role: 'phonetic' },
+        ],
+        semantic_radical: STAND_SEMANTIC.id,
+      },
+      { tier: 0, freqRank: 544 },
     ],
     [
       'In the metro. What does it mean?',
       ['exit', 'station, stop', 'metro'],
       0,
       'chūkǒu · uitgang (exit). Blue or black signage marks a regular exit; a green 安全出口 sign marks an emergency exit.',
-      { hanzi: '出口', pinyin: 'chūkǒu', nl: 'uitgang' },
+      { hanzi: '出口', pinyin: 'chūkǒu', nl: 'uitgang', en: 'exit' },
+      undefined,
+      { tier: 0 },
     ],
     [
       'In the metro. What does it mean?',
       ['entrance', 'line number', 'metro'],
       0,
       'rùkǒu · ingang (entrance). 入 (rù) looks almost identical to 人 (rén, "person") — just one stroke apart, so watch out for mixing them up.',
-      { hanzi: '入口', pinyin: 'rùkǒu', nl: 'ingang' },
+      { hanzi: '入口', pinyin: 'rùkǒu', nl: 'ingang', en: 'entrance' },
+      undefined,
+      { tier: 0 },
     ],
     [
       'In the metro. What does it mean?',
       ['line number', 'high-speed rail (G)', 'metro'],
       0,
       'hào xiàn · lijnnummer (line number), as in 4号线 = "Line 4". The colored roundel on the sign usually matches the line\'s official color, so you can double-check yourself.',
-      { hanzi: '号线', pinyin: 'hào xiàn', nl: 'lijnnummer' },
+      { hanzi: '号线', pinyin: 'hào xiàn', nl: 'lijnnummer', en: 'line number' },
+      undefined,
+      { tier: 0 },
     ],
     [
       'In the metro. What does it mean?',
       ['transfer, change lines', 'train', 'ticket check'],
       0,
       'huànchéng · overstappen (transfer, change lines). 换 (huàn) sounds the same as 唤 and 焕, all read huàn; 乘 (chéng) is the harder character to remember here.',
-      { hanzi: '换乘', pinyin: 'huànchéng', nl: 'overstappen' },
+      { hanzi: '换乘', pinyin: 'huànchéng', nl: 'overstappen', en: 'transfer, change lines' },
+      undefined,
+      { tier: 0 },
     ],
   ],
   mid: [
@@ -45,28 +76,36 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       ['metro', 'ticket check', 'train'],
       0,
       'dìtiě · metro. 铁 (tiě, "metal/iron") carries the metal radical 钅, also seen in 银 (silver), 铺 (shop) and 锅 (pot).',
-      { hanzi: '地铁', pinyin: 'dìtiě', nl: 'metro' },
+      { hanzi: '地铁', pinyin: 'dìtiě', nl: 'metro', en: 'metro' },
+      undefined,
+      { tier: 1 },
     ],
     [
       'In the metro. What does it mean?',
       ['security check', 'line number', 'train'],
       0,
       'ānjiǎn · veiligheidscontrole (security check). Expect a screening line before boarding.',
-      { hanzi: '安检', pinyin: 'ānjiǎn', nl: 'veiligheidscontrole' },
+      { hanzi: '安检', pinyin: 'ānjiǎn', nl: 'veiligheidscontrole', en: 'security check' },
+      undefined,
+      { tier: 1 },
     ],
     [
       'In the metro. What does it mean?',
       ['direction', 'transfer, change lines', 'bound for'],
       0,
       'fāngxiàng · richting (direction). 方 (fāng) can be read differently in other words, but on platform signs it is always fāng.',
-      { hanzi: '方向', pinyin: 'fāngxiàng', nl: 'richting' },
+      { hanzi: '方向', pinyin: 'fāngxiàng', nl: 'richting', en: 'direction' },
+      undefined,
+      { tier: 1 },
     ],
     [
       'In the metro. What does it mean?',
       ['ticket', 'bound for', 'carriage, coach'],
       0,
       'piào · kaartje (ticket). Shows up in many related terms: 单程票 (single ticket), 检票 (ticket check), 取票 (collect ticket), 售票 (sell tickets), 补票 (top up fare), 退票 (refund ticket).',
-      { hanzi: '票', pinyin: 'piào', nl: 'kaartje' },
+      { hanzi: '票', pinyin: 'piào', nl: 'kaartje', en: 'ticket', structure: 'atomic' },
+      undefined,
+      { tier: 1, freqRank: 910 },
     ],
   ],
   high: [
@@ -75,21 +114,27 @@ export const TRANSIT_PLATFORM: CategoryContent = {
       ['bound for', 'direction', 'collect a printed ticket'],
       0,
       'kāi wǎng · richting, naar (bound for). This phrase is followed by the destination city or station name, which is the part you actually need to read.',
-      { hanzi: '开往', pinyin: 'kāi wǎng', nl: 'richting, naar' },
+      { hanzi: '开往', pinyin: 'kāi wǎng', nl: 'richting, naar', en: 'bound for' },
+      undefined,
+      { tier: 2 },
     ],
     [
       'In the metro. What does it mean?',
       ['single-journey ticket', 'centre', 'high-speed rail (G)'],
       0,
       'dānchéngpiào · enkeltje (single-journey ticket). 单 (dān) can be read differently elsewhere, but here it is dān; note 程 in this word sounds the same as the chéng in 换乘 (transfer), even though they are different characters.',
-      { hanzi: '单程票', pinyin: 'dānchéngpiào', nl: 'enkeltje' },
+      { hanzi: '单程票', pinyin: 'dānchéngpiào', nl: 'enkeltje', en: 'single-journey ticket' },
+      undefined,
+      { tier: 2 },
     ],
     [
       'In the metro. What does it mean?',
       ['platform', 'ticket', 'carriage, coach'],
       0,
       'zhàntái · perron (platform). 台 (tái) can be read differently in other words, but on platform signs it is always tái.',
-      { hanzi: '站台', pinyin: 'zhàntái', nl: 'perron' },
+      { hanzi: '站台', pinyin: 'zhàntái', nl: 'perron', en: 'platform' },
+      undefined,
+      { tier: 2 },
     ],
   ],
 };

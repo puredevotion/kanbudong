@@ -1,14 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  CHENG_PHONETIC,
   COMPONENTS,
+  EARTH_SEMANTIC,
   expand,
+  GRASS_RADICAL,
   MEAT_RADICAL,
   SEED_PACK,
+  STAND_SEMANTIC,
   validatePack,
+  ZHAN_PHONETIC,
   type CategoryContent,
   type CharacterDecomposition,
   type ContentPack,
+  type WordDecomposition,
 } from '../src/index.js';
 
 describe('CharacterDecomposition', () => {
@@ -111,6 +117,69 @@ describe('menu-animal organ set: ⺼/月 reverse-error guard (DESIGN.md §7.1)',
     const decomposed = new Set(organDecompositions.map((d) => d.hanzi));
     for (const hanzi of CARRIES_MEAT_RADICAL) {
       expect(decomposed.has(hanzi), `${hanzi} is missing its CharacterDecomposition`).toBe(true);
+    }
+  });
+});
+
+describe('Phase 2 backfill: 站/城/茶/快递 decomposition claims (market/transit/street strands)', () => {
+  const findCharDecomp = (category: string, hanzi: string): CharacterDecomposition | undefined =>
+    SEED_PACK.questions
+      .filter((q) => q.category === category)
+      .map((q) => q.decomposition)
+      .find((d): d is CharacterDecomposition => d?.kind === 'character' && d.hanzi === hanzi);
+
+  it('tags 站 with the ⿰立占 semantic/phonetic split, phonetic verified exact (zhàn = zhàn)', () => {
+    const d = findCharDecomp('transit-platform', '站');
+    expect(d).toBeDefined();
+    expect(d?.semantic_radical).toBe(STAND_SEMANTIC.id);
+    expect(d?.components).toEqual([
+      { componentId: STAND_SEMANTIC.id, role: 'semantic' },
+      { componentId: ZHAN_PHONETIC.id, role: 'phonetic' },
+    ]);
+    expect(COMPONENTS[ZHAN_PHONETIC.id]?.reliability).toBe('exact');
+  });
+
+  it('tags 城 with the ⿰土成 semantic/phonetic split, phonetic verified exact (chéng = chéng)', () => {
+    const d = findCharDecomp('transit-ticket', '城');
+    expect(d).toBeDefined();
+    expect(d?.semantic_radical).toBe(EARTH_SEMANTIC.id);
+    expect(d?.components).toEqual([
+      { componentId: EARTH_SEMANTIC.id, role: 'semantic' },
+      { componentId: CHENG_PHONETIC.id, role: 'phonetic' },
+    ]);
+    expect(COMPONENTS[CHENG_PHONETIC.id]?.reliability).toBe('exact');
+  });
+
+  it('tags 茶 with a semantic-only decomposition (⺿ grass radical), no phonetic claim', () => {
+    const d = findCharDecomp('street-trade', '茶');
+    expect(d).toBeDefined();
+    expect(d?.semantic_radical).toBe(GRASS_RADICAL.id);
+    expect(d?.components).toEqual([{ componentId: GRASS_RADICAL.id, role: 'semantic' }]);
+    expect(d?.components.some((c) => c.role === 'phonetic')).toBe(false);
+  });
+
+  it('never claims 场 or 行 carry a verified phonetic component (both left undecomposed)', () => {
+    expect(findCharDecomp('transit-ticket', '场')).toBeUndefined();
+    expect(findCharDecomp('transit-ticket', '行')).toBeUndefined();
+  });
+
+  it('gives 快递 a word-level decomposition (快 + 递), not a character-level one', () => {
+    const wordDecomp = SEED_PACK.questions
+      .filter((q) => q.category === 'street-trade')
+      .map((q) => q.decomposition)
+      .find((d): d is WordDecomposition => d?.kind === 'word' && d.hanzi === '快递');
+    expect(wordDecomp).toBeDefined();
+    expect(wordDecomp?.morphemes.map((m) => m.span)).toEqual(['快', '递']);
+  });
+
+  it('marks the known non-compositional spans opaque: 时价, 招牌, 保质期, 咖啡', () => {
+    const opaqueHanzi = new Set(
+      SEED_PACK.questions
+        .filter((q) => q.face?.transparency === 'opaque')
+        .map((q) => q.face?.hanzi),
+    );
+    for (const hanzi of ['时价', '招牌', '保质期', '咖啡']) {
+      expect(opaqueHanzi.has(hanzi), `${hanzi} should be marked transparency: 'opaque'`).toBe(true);
     }
   });
 });
