@@ -79,8 +79,12 @@ import type { CategoryContent } from './row.js';
  * platform.ts's 出口/入口), 装, 重 (also unlocks menu-flavour.ts's 重辣) and
  * 证 (also unlocks transit-ticket.ts's 身份证). 储存条件 resolves fully
  * without any new standalone - both its second-half morphemes, 条 and 件,
- * already exist above as measure-word items. 生产厂家 resolves via 生 alone;
- * 厂/家 are not separately authored. All new standalones ship
+ * already exist above as measure-word items. 生产厂家's `component_char_ids`
+ * eligibility resolves via 生 alone (厂/家 have no standalone item, so the
+ * scheduler credit only reaches 生) - but the reveal's word-tile display is a
+ * separate concern from eligibility, and a user caught it showing only two
+ * of four characters' glosses. All four morphemes are listed regardless of
+ * whether each has a standalone item backing it. All new standalones ship
  * `glossProvenance: 'mnemonic-only'`.
  */
 export const MARKET_PANEL: CategoryContent = {
@@ -375,6 +379,8 @@ export const MARKET_PANEL: CategoryContent = {
         morphemes: [
           { span: '生', gloss: 'to produce, give birth' },
           { span: '产', gloss: 'to produce' },
+          { span: '厂', gloss: 'factory' },
+          { span: '家', gloss: 'specialist, -er (suffix)' },
         ],
       },
     ],

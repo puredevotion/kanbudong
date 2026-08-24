@@ -249,6 +249,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
         hanzi: '末班车',
         morphemes: [
           { span: '末', gloss: 'last, end' },
+          { span: '班', gloss: 'scheduled run, shift' },
           { span: '车', gloss: 'vehicle' },
         ],
       },
@@ -296,6 +297,7 @@ export const TRANSIT_PLATFORM: CategoryContent = {
         hanzi: '单程票',
         morphemes: [
           { span: '单', gloss: 'single' },
+          { span: '程', gloss: 'journey, distance' },
           { span: '票', gloss: 'ticket, note' },
         ],
       },

@@ -109,6 +109,7 @@ export const MARKET_LABEL: CategoryContent = {
           { span: '买', gloss: 'to buy' },
           { span: '一', gloss: 'one' },
           { span: '送', gloss: 'to give' },
+          { span: '一', gloss: 'one' },
         ],
       },
       { tier: 1 },
